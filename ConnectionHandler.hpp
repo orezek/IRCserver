@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/17 20:40:44 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/17 21:29:47 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ class ConnectionHandler
 
 	public:
 		ConnectionHandler();
+		ConnectionHandler(int serverPortNumber, std::string ircPassword);
 		ConnectionHandler(const ConnectionHandler &obj);
 		~ConnectionHandler();
 		ConnectionHandler &operator=(const ConnectionHandler &obj);
@@ -56,6 +57,14 @@ class ConnectionHandler
 		void runSelect(void);
 		int	checkForNewClients(void);
 		int handleNewClients(void);
+
+		// Getters and Setters extend as per need
+
+		int &getMasterSocketFd(void);
+		int closeServerFd(void);
+
+		//void setSrvPortNumber(int srvPortNumber);
+		//void setIrcPassword(std::string password);
 
 		const static int	MAX_CLIENTS = 1024;
 		const static int	MAX_BUFF_SIZE = 1024;

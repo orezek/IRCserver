@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/17 19:53:16 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/17 21:28:36 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,27 @@ ConnectionHandler::ConnectionHandler()
 {
 	this->serverPortNumber = 0;
 	this->ircPassword = "default";
+	this->masterSocketFd = 0;
+	this->selectResponse = 0;
+	this->maxFd = 0;
+	this->ipAddressLenSrv = 0;
+	this->clientSockets = std::vector<int>(MAX_CLIENTS, -1);
+	FD_ZERO(&this->readFds);
+
+	memset(&this->ipServerAddress, 0, sizeof(this->ipServerAddress));
+	this->ipServerAddress.sin_addr.s_addr = INADDR_ANY;
+	this->ipServerAddress.sin_family = AF_INET;
+	this->ipServerAddress.sin_port = htons(this->serverPortNumber);
+	memset(&this->ipClientAddress, 0, sizeof(this->ipClientAddress));
+	this->ipClientAddress.sin_addr.s_addr = INADDR_ANY;
+	this->ipClientAddress.sin_family = AF_INET;
+	this->ipServerAddress.sin_port = htons(this->serverPortNumber);
+}
+
+ConnectionHandler::ConnectionHandler(int serverPortNumber, std::string ircPassword)
+{
+	this->serverPortNumber = serverPortNumber;
+	this->ircPassword = ircPassword;
 	this->masterSocketFd = 0;
 	this->selectResponse = 0;
 	this->maxFd = 0;
@@ -110,7 +131,7 @@ int ConnectionHandler::enableSocketBinding(void)
 {
 	this->ipServerAddress.sin_addr.s_addr = INADDR_ANY; // all interfaces on the srv machine
 	this->ipServerAddress.sin_family = AF_INET; // IPv4
-	this->ipServerAddress.sin_port = htons(serverPortNumber);
+	this->ipServerAddress.sin_port = htons(this->serverPortNumber);
 	if(bind(this->masterSocketFd, (struct sockaddr *)&this->ipServerAddress, sizeof(this->ipServerAddress)) < 0)
 	{
 		throw std::runtime_error("Socket binding failed: " + std::string(strerror(errno)));
@@ -230,4 +251,15 @@ int ConnectionHandler::handleNewClients(void)
 		}
 	}
 	return (0);
+}
+
+
+int &ConnectionHandler::getMasterSocketFd(void)
+{
+	return (this->masterSocketFd);
+}
+
+int ConnectionHandler::closeServerFd(void)
+{
+	close(this->masterSocketFd);
 }
