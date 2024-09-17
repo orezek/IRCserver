@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 22:08:05 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/17 22:20:32 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/17 22:59:53 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,18 +82,18 @@ ClientRequest::~ClientRequest()
 }
 
 // Getter for clientFd
-int ClientRequest::getClientFd(void)
+int ClientRequest::getClientFd(void) const
 {
 	return (this->clientFd);
 }
 
 // Getter for clientData
-char *ClientRequest::getClientData(void)
+char *ClientRequest::getClientData(void) const
 {
 	return (this->data);
 }
 
-int ClientRequest::getBytesReceived(void)
+int ClientRequest::getBytesReceived(void) const
 {
 	return (this->bytesReceived);
 }
