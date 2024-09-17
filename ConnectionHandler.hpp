@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/17 21:29:47 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/17 22:08:44 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@
 // Exceptions
 #include <stdexcept>
 // custom classes
-#include "ClientRequest.hpp"
-#include "ServerResponse.hpp"
-#include "ProcessData.hpp"
+//#include "ClientRequest.hpp"
+//#include "ServerResponse.hpp"
+//#include "ProcessData.hpp"
 
 
 class ConnectionHandler
@@ -62,7 +62,6 @@ class ConnectionHandler
 
 		int &getMasterSocketFd(void);
 		int closeServerFd(void);
-
 		//void setSrvPortNumber(int srvPortNumber);
 		//void setIrcPassword(std::string password);
 

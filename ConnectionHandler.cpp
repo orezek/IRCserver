@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/17 21:28:36 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/17 22:08:44 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -262,4 +262,5 @@ int &ConnectionHandler::getMasterSocketFd(void)
 int ConnectionHandler::closeServerFd(void)
 {
 	close(this->masterSocketFd);
+	return (0);
 }
