@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 22:08:05 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/17 22:59:53 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/17 23:15:15 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ ClientRequest::ClientRequest()
 }
 
 // Parameterized constructor
-ClientRequest::ClientRequest(int &clientFd, int &bytesReceived, char *data)
+ClientRequest::ClientRequest(int &clientFd, ssize_t &bytesReceived, char *data)
 {
 	this->clientFd = clientFd;
 	this->bytesReceived = bytesReceived;

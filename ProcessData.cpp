@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/17 23:07:58 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/17 23:42:23 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@
 	Note that this Class is just prototype and the response std::string is for testing.
 	The output from this class will be ServerResponse object it will have at least these member {client_fd, action, data}
 	The action var is for internal use only e.g user send QUIT request etc. - As we discussed.
+
+	This is your playground, you can import anything to this class and do any magic you like.
+	The output is should be ServerResponse object - yet to be implemented! Enjoy - objects are beautiful like naked asses.
 */
 
 // Default constructor
@@ -61,6 +64,14 @@ ProcessData &ProcessData::operator=(const ProcessData &obj)
 
 std::string ProcessData::sendResponse(void)
 {
-	this->response.append("-Response processed by ProcessData class!");
+	// Test implementation
+	// Remove any trailing newline or carriage return
+	// if (!this->response.empty() && (this->response.back() == '\n' || this->response.back() == '\r'))
+	// {
+	// 	this->response.pop_back();  // Remove the last character if it's a newline or carriage return
+	// }
+	std::string str = "Response processed by ProcessData class! -: ";
+	str.append(response);
+	this->response = str;
 	return (this->response);
 }

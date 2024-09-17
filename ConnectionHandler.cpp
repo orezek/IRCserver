@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/17 22:08:44 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/17 23:29:47 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,16 +234,24 @@ int ConnectionHandler::handleNewClients(void)
 			}
 			else
 			{
-				buff[bytesReceived] = '\0';
+				//====TESTING=====//
+				/*
+				send() might not send all the data at once (this can happen over network connections).
+				You should check how many bytes were actually sent and potentially loop until all data has been sent.
+				*/
+
+				//buff[bytesReceived] = '\0';
 				// processing data // implement
-				//ClientRequest request(clientSocketFd, bytesReceived, buff);
+				ClientRequest request(clientSocketFd, bytesReceived, buff);
+				ProcessData processData = ProcessData(request);
+				const std::string &serverResponse = processData.sendResponse();
 				//ServerResponse response = ProcessData(request);
 				//responseData = &response.getData();
 				// print to stdout
-				std::cout << buff;
-				std::cout << bytesReceived << std::endl;
+				std::cout << serverResponse << std::endl;
+				//std::cout << bytesReceived << std::endl;
 				// Send the response back to the client
-				if ((bytesSent = send(clientSocketFd, &buff, bytesReceived, 0)) == -1)
+				if ((bytesSent = send(clientSocketFd, serverResponse.c_str(), serverResponse.size(), 0)) == -1)
 				{
 					throw std::runtime_error("Send failed: " + std::string(strerror(errno)));
 				}
