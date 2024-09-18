@@ -1,0 +1,7 @@
+BasedOnStyle: Google       # Use Google style as a base
+UseTab: ForContinuationAndIndentation
+IndentWidth: 4
+TabWidth: 4
+IndentAccessModifiers: true
+BreakBeforeBraces: Allman
+ColumnLimit: 0  # Remove any hard limit for line length
