@@ -6,13 +6,13 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:02:47 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/17 21:43:41 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/19 21:08:51 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IrcServer.hpp"
 
-int	main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
 	if (argc == 3)
 	{
