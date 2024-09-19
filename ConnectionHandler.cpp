@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/17 23:29:47 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/19 21:58:12 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,45 +175,64 @@ void ConnectionHandler::runSelect(void)
 	}
 }
 
-// Improve later
+/**
+ * @brief Checks for new client connections on the master socket and handles them.
+ *
+ * This function checks whether a new client connection is waiting to be accepted
+ * on the master socket. If a new client is found, the connection is accepted,
+ * the client's IP and port are logged, and the client socket is added to the
+ * `clientSockets` array. The function handles up to `MAX_CLIENTS` clients and
+ * disconnects any additional clients if the limit is exceeded.
+ *
+ * @return
+ * - `1` if a new client was successfully added to the `clientSockets` array.
+ * - `-1` if the connection was rejected due to exceeding the max number of clients.
+ * - `0` if no new clients are waiting to be accepted.
+ *
+ * @throws std::runtime_error if `accept()` fails.
+ */
 int ConnectionHandler::checkForNewClients(void)
 {
 	int clientSocketFd;
-	socklen_t ipAddressLenClient;
-	ipAddressLenClient = sizeof(this->ipClientAddress);
-	if(FD_ISSET(this->masterSocketFd, &this->readFds))
+	socklen_t ipClientAddressLen = sizeof(this->ipClientAddress);
+	if (FD_ISSET(this->masterSocketFd, &this->readFds))
 	{
-		// accept - creates a new file descriptor for the client and the communcation can start
-		if ((clientSocketFd = accept(masterSocketFd, (struct sockaddr *)&ipClientAddress, &ipAddressLenClient)) == -1)
+		clientSocketFd = accept(this->masterSocketFd, (struct sockaddr *)&ipClientAddress, &ipClientAddressLen);
+		if (clientSocketFd == -1)
 		{
 			throw std::runtime_error("Accept failed: " + std::string(strerror(errno)));
 		}
-		else
-		{
-			// log the client, stdout or logfile
-			std::cout << "Client IP: " << inet_ntoa(ipClientAddress.sin_addr) << " and Port: " << ntohs(ipClientAddress.sin_port) << std::endl;
-		}
-		// add new client to the client_socket array
+		std::cout << "Client IP: " << inet_ntoa(ipClientAddress.sin_addr)
+				  << " and Port: "
+				  << ntohs(ipClientAddress.sin_port)
+				  << std::endl;
 		for (int i = 0; i < MAX_CLIENTS; i++)
 		{
-			if(clientSockets[i] == -1)
+			if (clientSockets[i] == -1)
 			{
 				this->enableNonBlockingFd(clientSocketFd);
 				clientSockets[i] = clientSocketFd;
-				break;
+				return 1;
 			}
 		}
+		std::cout << "Client IP: " << inet_ntoa(ipClientAddress.sin_addr) << " : "
+				  << ntohs(ipClientAddress.sin_port)
+				  << " was disconnected due to max limit of connected clients." << std::endl;
+		close(clientSocketFd);
+		return -1;
 	}
-	return (0);
+
+	return 0;  // No new client to process
 }
+
 
 int ConnectionHandler::handleNewClients(void)
 {
-	int clientSocketFd;
-	char buff[MAX_BUFF_SIZE];
-	ssize_t bytesReceived = 0;
-	ssize_t bytesSent = 0;
-	const std::string responseData;
+	int					clientSocketFd;
+	char				buff[MAX_BUFF_SIZE];
+	ssize_t				bytesReceived = 0;
+	ssize_t				bytesSent = 0;
+	const std::string	responseData;
 	for(int i = 0; i < MAX_CLIENTS; i++)
 	{
 		clientSocketFd = clientSockets[i];
