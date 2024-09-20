@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/20 11:28:20 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/20 13:40:34 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -315,7 +315,7 @@ ssize_t ConnectionHandler::sendAll(int socketFd, const char* buffer, size_t buff
 	ssize_t totalBytesSent = 0;
 	ssize_t bytesSent = 0;
 
-	while (totalBytesSent <= (ssize_t)bufferSize)
+	while (totalBytesSent < (ssize_t)bufferSize)
 	{
 		bytesSent = send(socketFd, buffer + totalBytesSent, bufferSize - totalBytesSent, 0);
 
