@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/20 13:40:34 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/20 13:48:39 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,14 +263,11 @@ int ConnectionHandler::handleNewClients(void)
 			{
 				//====TESTING=====//
 				ClientRequest request(clientSocketFd, bytesReceived, buff);
-				ProcessData processData = ProcessData(request);
-				const std::string &serverResponse = processData.sendResponse();
-				//ServerResponse response = ProcessData(request);
-				//responseData = &response.getData();
-				// print to stdout
-				std::cout << serverResponse << std::endl;
-				// Send the response back to the client
-				if ((bytesSent = sendAll(clientSocketFd, serverResponse.c_str(), serverResponse.size())) == -1)
+				ProcessData processData(request);
+				ServerResponse serverResponse;
+				serverResponse.setResponse(processData.sendResponse());
+
+				if ((bytesSent = sendAll(clientSocketFd, serverResponse.getResponse().c_str(), serverResponse.getResponse().size())) == -1)
 				{
 					throw std::runtime_error("Send failed: " + std::string(strerror(errno)));
 				}

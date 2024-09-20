@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 23:09:35 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/20 12:15:28 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/20 12:25:58 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ class ServerResponse
 		ServerResponse(const ServerResponse &obj);
 		ServerResponse &operator=(const ServerResponse &boj);
 		~ServerResponse(void);
-		std::string &getResponse(void);
-		void setResponse(std::string &response);
+		const std::string &getResponse(void);
+		void setResponse(const std::string &response);
 		int getClientFd(void);
 		void setClientFd(int clientFd);
 		int getAction(void);
