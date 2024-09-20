@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/19 21:58:12 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/20 11:28:20 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,14 +212,14 @@ int ConnectionHandler::checkForNewClients(void)
 			{
 				this->enableNonBlockingFd(clientSocketFd);
 				clientSockets[i] = clientSocketFd;
-				return 1;
+				return (1);
 			}
 		}
 		std::cout << "Client IP: " << inet_ntoa(ipClientAddress.sin_addr) << " : "
 				  << ntohs(ipClientAddress.sin_port)
 				  << " was disconnected due to max limit of connected clients." << std::endl;
 		close(clientSocketFd);
-		return -1;
+		return (-1);
 	}
 
 	return 0;  // No new client to process
@@ -236,31 +236,32 @@ int ConnectionHandler::handleNewClients(void)
 	for(int i = 0; i < MAX_CLIENTS; i++)
 	{
 		clientSocketFd = clientSockets[i];
+		if (clientSocketFd == -1)
+			continue;
 
 		if (FD_ISSET(clientSocketFd, &readFds))
 		{
 			// receiving data
-			if ((bytesReceived = recv(clientSocketFd, &buff, (sizeof(buff)), 0)) == -1)
+			bytesReceived = recvAll(clientSocketFd, buff, MAX_BUFF_SIZE);
+			if (bytesReceived == -1)
 			{
-				clientSockets[i] = 0;
-				throw std::runtime_error("Recv failed: " + std::string(strerror(errno)));
+				close(clientSockets[i]);
+				clientSockets[i] = -1;
+				std::cout << "Recv failed " << clientSocketFd
+						  << ": " << strerror(errno) << std::endl;
+				continue;
 			}
 			else if (bytesReceived == 0)
 			{
 				// send quit message to DataProcess object
+				std::cout << "Client " << clientSocketFd << " disconnected." << std::endl;
 				close(clientSocketFd);
-				clientSockets[i] = 0;
+				clientSockets[i] = -1;
+				continue;
 			}
 			else
 			{
 				//====TESTING=====//
-				/*
-				send() might not send all the data at once (this can happen over network connections).
-				You should check how many bytes were actually sent and potentially loop until all data has been sent.
-				*/
-
-				//buff[bytesReceived] = '\0';
-				// processing data // implement
 				ClientRequest request(clientSocketFd, bytesReceived, buff);
 				ProcessData processData = ProcessData(request);
 				const std::string &serverResponse = processData.sendResponse();
@@ -268,9 +269,8 @@ int ConnectionHandler::handleNewClients(void)
 				//responseData = &response.getData();
 				// print to stdout
 				std::cout << serverResponse << std::endl;
-				//std::cout << bytesReceived << std::endl;
 				// Send the response back to the client
-				if ((bytesSent = send(clientSocketFd, serverResponse.c_str(), serverResponse.size(), 0)) == -1)
+				if ((bytesSent = sendAll(clientSocketFd, serverResponse.c_str(), serverResponse.size())) == -1)
 				{
 					throw std::runtime_error("Send failed: " + std::string(strerror(errno)));
 				}
@@ -280,6 +280,56 @@ int ConnectionHandler::handleNewClients(void)
 	return (0);
 }
 
+ssize_t ConnectionHandler::recvAll(int socketFd, char *buffer, size_t bufferSize)
+{
+	ssize_t bytesReceived = recv(socketFd, buffer, bufferSize, MSG_DONTWAIT);
+
+	if (bytesReceived > 0)
+	{
+		// Data received successfully
+		return bytesReceived;
+	}
+	else if (bytesReceived == 0)
+	{
+		// Connection was closed by the peer
+		return (0);
+	}
+	else
+	{
+		// Handle non-blocking error cases
+		if (errno == EAGAIN || errno == EWOULDBLOCK)
+		{
+			// No data available right now
+			return (-1);
+		}
+		else
+		{
+			// A some other error
+			return (-1);
+		}
+	}
+}
+
+ssize_t ConnectionHandler::sendAll(int socketFd, const char* buffer, size_t bufferSize)
+{
+	ssize_t totalBytesSent = 0;
+	ssize_t bytesSent = 0;
+
+	while (totalBytesSent <= (ssize_t)bufferSize)
+	{
+		bytesSent = send(socketFd, buffer + totalBytesSent, bufferSize - totalBytesSent, 0);
+
+		if (bytesSent == -1)
+		{
+			if (errno == EAGAIN || errno == EWOULDBLOCK)
+				continue;
+			else
+				return -1;
+		}
+		totalBytesSent += bytesSent;
+	}
+	return totalBytesSent;
+}
 
 int &ConnectionHandler::getMasterSocketFd(void)
 {

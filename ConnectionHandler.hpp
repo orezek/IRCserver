@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/17 23:12:06 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/19 23:07:50 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,9 @@ class ConnectionHandler
 		void runSelect(void);
 		int	checkForNewClients(void);
 		int handleNewClients(void);
+		// recv and send system calls in loops
+		ssize_t recvAll(int socketFd, char *buffer, size_t bufferSize);
+		ssize_t sendAll(int socketFd, const char *buffer, size_t bufferSize);
 
 		// Getters and Setters extend as per need
 
