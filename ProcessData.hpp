@@ -6,13 +6,14 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:33 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/17 22:51:31 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/20 21:28:01 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #include "ClientRequest.hpp"
 #include <string>
+#include <iostream>
 
 /*
 	Class that handles IRC protocol, either it can handle the ligic itself

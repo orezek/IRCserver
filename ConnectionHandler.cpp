@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/20 13:48:39 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/20 21:37:56 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,10 +242,13 @@ int ConnectionHandler::handleNewClients(void)
 		if (FD_ISSET(clientSocketFd, &readFds))
 		{
 			// receiving data
-			bytesReceived = recvAll(clientSocketFd, buff, MAX_BUFF_SIZE);
-			if (bytesReceived == -1)
+			// can be partial read until \r\n
+			// can be multiple messages in one stream both having \r\n
+			// need to pass user fd to track user sessions
+			//bytesReceived = recvAll(clientSocketFd, buff, MAX_BUFF_SIZE);
+			if ((bytesReceived = recvAll(clientSocketFd, buff, MAX_BUFF_SIZE)) == -1)
 			{
-				close(clientSockets[i]);
+				close(clientSocketFd);
 				clientSockets[i] = -1;
 				std::cout << "Recv failed " << clientSocketFd
 						  << ": " << strerror(errno) << std::endl;
@@ -262,8 +265,9 @@ int ConnectionHandler::handleNewClients(void)
 			else
 			{
 				//====TESTING=====//
-				ClientRequest request(clientSocketFd, bytesReceived, buff);
-				ProcessData processData(request);
+				ClientRequest clientRequest(clientSocketFd, bytesReceived, buff);
+				std::cout << clientRequest.getClientData() << std::endl;
+				ProcessData processData(clientRequest);
 				ServerResponse serverResponse;
 				serverResponse.setResponse(processData.sendResponse());
 

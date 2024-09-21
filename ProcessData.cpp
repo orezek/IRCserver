@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/17 23:42:23 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/21 13:20:52 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,11 @@ ProcessData::ProcessData()
 ProcessData::ProcessData(const ClientRequest &request)
 {
 	// Convert char array to std::string
-	if (request.getClientData() != 0) {
+	if (request.getClientData() != 0)
+	{
 		this->response = std::string(request.getClientData());  // Create a std::string from the C-string
-	} else {
+	} else
+	{
 		this->response = "No data received";  // Handle the case where data is null
 	}
 }
@@ -64,14 +66,30 @@ ProcessData &ProcessData::operator=(const ProcessData &obj)
 
 std::string ProcessData::sendResponse(void)
 {
-	// Test implementation
-	// Remove any trailing newline or carriage return
-	// if (!this->response.empty() && (this->response.back() == '\n' || this->response.back() == '\r'))
-	// {
-	// 	this->response.pop_back();  // Remove the last character if it's a newline or carriage return
-	// }
-	std::string str = "Response processed by ProcessData class! -: ";
-	str.append(response);
-	this->response = str;
+
+	// harcoding test IRC messages
+	// CAP
+	std::string CAP = "CAP LS 302\r\n";
+	std::string CAP_RES = "CAP * LS :\r\n";
+	std::string NIC = "NICK aldo\r\n"; // no response
+	std::string USER = "USER aldo 0 * :aldo\r\n";
+	std::string USER_RES = ":<server> 001 user123 :Welcome to the Internet Relay Network user123!username@hostname";
+	std::cout << "Inside SendResponse "<< response << std::endl;
+	if (response == CAP)
+		return (CAP_RES);
+	else if (response == NIC+USER)
+	{
+		//return (""); // no response
+		return (USER_RES);
+	}
+	else
+	{
+		std::string str = "Response processed by ProcessData class! -: ";
+		str.append(response);
+		this->response = str;
+	}
 	return (this->response);
 }
+
+
+	//std::string NIC = "NICK aldo\r\nUSER aldo 0 * :aldo\r\n";
