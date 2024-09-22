@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/22 22:18:36 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/22 22:48:21 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -269,7 +269,6 @@ int ConnectionHandler::handleNewClients(void)
 			}
 			else
 			{
-				// Testing serverData persistent memory
 				//====Process/Send=====//
 				ClientRequest clientRequest(clientSocketFd, bytesReceived, buff);
 				std::cout << clientRequest.getClientData() << std::endl;
@@ -279,6 +278,8 @@ int ConnectionHandler::handleNewClients(void)
 				ServerResponse serverResponse;
 				//serverResponse.setClientFd(clientSocketFd);
 				serverResponse.setResponse(processData.sendResponse());
+				// Testing serverData persistent memory
+				// just direct access to vector to object serverData that will hold runtime memory of a irc server instance
 				for(size_t j = 0; j < serverData->fileDsDb.size(); j++)
 				{
 					serverResponse.setClientsToSend(serverData->fileDsDb[j]);

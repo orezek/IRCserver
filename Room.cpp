@@ -6,7 +6,13 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:51:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/22 19:51:46 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/22 23:27:59 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "Room.hpp"
+
+Room::Room() {};
+Room::~Room() {};
+Room::Room(const Room &obj) {};
+Room &Room::operator=(const Room &obj) {};
