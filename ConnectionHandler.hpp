@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/22 21:52:41 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/22 23:42:13 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@
 #include "ClientRequest.hpp"
 #include "ProcessData.hpp"
 #include "ServerResponse.hpp"
-#include "IrcServer.hpp"
+//#include "IrcServer.hpp"
+#include "ServerData.hpp"
 
 class ConnectionHandler
 {
