@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/22 18:40:08 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/22 21:54:31 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,10 @@ ConnectionHandler::ConnectionHandler()
 	this->ipClientAddress.sin_addr.s_addr = INADDR_ANY;
 	this->ipClientAddress.sin_family = AF_INET;
 	this->ipServerAddress.sin_port = htons(this->serverPortNumber);
+	this->serverData = NULL;
 }
 
-ConnectionHandler::ConnectionHandler(int serverPortNumber, std::string ircPassword)
+ConnectionHandler::ConnectionHandler(int serverPortNumber, std::string ircPassword, ServerData *serverData)
 {
 	this->serverPortNumber = serverPortNumber;
 	this->ircPassword = ircPassword;
@@ -51,6 +52,7 @@ ConnectionHandler::ConnectionHandler(int serverPortNumber, std::string ircPasswo
 	this->ipClientAddress.sin_addr.s_addr = INADDR_ANY;
 	this->ipClientAddress.sin_family = AF_INET;
 	this->ipServerAddress.sin_port = htons(this->serverPortNumber);
+	this->serverData = serverData;
 }
 
 // Copy constructor implementation
@@ -62,7 +64,8 @@ ConnectionHandler::ConnectionHandler(const ConnectionHandler &other)
 	maxFd(other.maxFd),
 	ipAddressLenSrv(other.ipAddressLenSrv),
 	// std::vector handles deep copy automatically
-	clientSockets(other.clientSockets)
+	clientSockets(other.clientSockets),
+	serverData(other.serverData)
 {
 	// Copy the fd_set using memcpy
 	memcpy(&this->readFds, &other.readFds, sizeof(fd_set));
@@ -82,6 +85,7 @@ ConnectionHandler& ConnectionHandler::operator=(const ConnectionHandler &other)
 		this->maxFd = other.maxFd;
 		this->ipAddressLenSrv = other.ipAddressLenSrv;
 		this->clientSockets = other.clientSockets;  // std::vector handles deep copy automatically
+		this->serverData = other.serverData;
 
 		// Copy the fd_set using memcpy
 		memcpy(&this->readFds, &other.readFds, sizeof(fd_set));

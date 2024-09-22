@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/22 18:22:24 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/22 21:52:41 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,13 @@
 #include "ClientRequest.hpp"
 #include "ProcessData.hpp"
 #include "ServerResponse.hpp"
+#include "IrcServer.hpp"
 
 class ConnectionHandler
 {
 	public:
 		ConnectionHandler();
-		ConnectionHandler(int serverPortNumber, std::string ircPassword);
+		ConnectionHandler(int serverPortNumber, std::string ircPassword, ServerData *serverData);
 		ConnectionHandler(const ConnectionHandler &obj);
 		~ConnectionHandler();
 		ConnectionHandler &operator=(const ConnectionHandler &obj);
@@ -83,4 +84,5 @@ class ConnectionHandler
 		fd_set readFds;
 		struct sockaddr_in ipServerAddress;
 		struct sockaddr_in ipClientAddress;
+		ServerData *serverData;
 };
