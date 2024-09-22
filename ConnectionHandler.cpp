@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/22 18:40:08 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/22 22:18:36 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,10 @@ ConnectionHandler::ConnectionHandler()
 	this->ipClientAddress.sin_addr.s_addr = INADDR_ANY;
 	this->ipClientAddress.sin_family = AF_INET;
 	this->ipServerAddress.sin_port = htons(this->serverPortNumber);
+	this->serverData = NULL;
 }
 
-ConnectionHandler::ConnectionHandler(int serverPortNumber, std::string ircPassword)
+ConnectionHandler::ConnectionHandler(int serverPortNumber, std::string ircPassword, ServerData *serverData)
 {
 	this->serverPortNumber = serverPortNumber;
 	this->ircPassword = ircPassword;
@@ -51,6 +52,7 @@ ConnectionHandler::ConnectionHandler(int serverPortNumber, std::string ircPasswo
 	this->ipClientAddress.sin_addr.s_addr = INADDR_ANY;
 	this->ipClientAddress.sin_family = AF_INET;
 	this->ipServerAddress.sin_port = htons(this->serverPortNumber);
+	this->serverData = serverData;
 }
 
 // Copy constructor implementation
@@ -62,7 +64,8 @@ ConnectionHandler::ConnectionHandler(const ConnectionHandler &other)
 	maxFd(other.maxFd),
 	ipAddressLenSrv(other.ipAddressLenSrv),
 	// std::vector handles deep copy automatically
-	clientSockets(other.clientSockets)
+	clientSockets(other.clientSockets),
+	serverData(other.serverData)
 {
 	// Copy the fd_set using memcpy
 	memcpy(&this->readFds, &other.readFds, sizeof(fd_set));
@@ -82,6 +85,7 @@ ConnectionHandler& ConnectionHandler::operator=(const ConnectionHandler &other)
 		this->maxFd = other.maxFd;
 		this->ipAddressLenSrv = other.ipAddressLenSrv;
 		this->clientSockets = other.clientSockets;  // std::vector handles deep copy automatically
+		this->serverData = other.serverData;
 
 		// Copy the fd_set using memcpy
 		memcpy(&this->readFds, &other.readFds, sizeof(fd_set));
@@ -212,6 +216,7 @@ int ConnectionHandler::checkForNewClients(void)
 			{
 				this->enableNonBlockingFd(clientSocketFd);
 				clientSockets[i] = clientSocketFd;
+				serverData->fileDsDb.push_back(clientSocketFd);
 				return (1);
 			}
 		}
@@ -264,6 +269,7 @@ int ConnectionHandler::handleNewClients(void)
 			}
 			else
 			{
+				// Testing serverData persistent memory
 				//====Process/Send=====//
 				ClientRequest clientRequest(clientSocketFd, bytesReceived, buff);
 				std::cout << clientRequest.getClientData() << std::endl;
@@ -271,8 +277,13 @@ int ConnectionHandler::handleNewClients(void)
 
 				// Server response obj setup
 				ServerResponse serverResponse;
-				serverResponse.setClientFd(clientSocketFd);
+				//serverResponse.setClientFd(clientSocketFd);
 				serverResponse.setResponse(processData.sendResponse());
+				for(size_t j = 0; j < serverData->fileDsDb.size(); j++)
+				{
+					serverResponse.setClientsToSend(serverData->fileDsDb[j]);
+					std::cout << serverData->fileDsDb[j] << std::endl;
+				}
 				// sendServerResponse function takes serverResponse obj instance
 				if ((bytesSent = sendServerResponse(serverResponse)) == -1)
 				{
@@ -319,9 +330,9 @@ ssize_t ConnectionHandler::sendServerResponse(ServerResponse &srvResponse)
 {
 	std::string buff = srvResponse.getResponse();
 	int	size = buff.size();
-	int fd_to_send = srvResponse.getClientFd();
+	//int fd_to_send = srvResponse.getClientFd();
 	// manually add client to the array - will be done before
-	srvResponse.setClientsToSend(fd_to_send);
+	//srvResponse.setClientsToSend(fd_to_send);
 	ssize_t totalBytesSent;
 
 	for (int i = 0; i < (int)srvResponse.getClientsToSend().size(); i++)

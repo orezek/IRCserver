@@ -6,11 +6,12 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:40:08 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/22 00:18:08 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/22 21:48:59 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
+#include "ServerData.hpp"
 #include "ConnectionHandler.hpp"
 
 class IrcServer
@@ -26,6 +27,7 @@ class IrcServer
 	// these are client data
 		int serverPortNumber;
 		std::string ircPassword;
+		ServerData serverData;
 	// here have to be server data
 	// serverName
 	// serverDomain
