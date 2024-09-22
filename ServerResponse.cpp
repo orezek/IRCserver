@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 23:09:38 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/20 12:25:33 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/22 18:03:13 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,13 @@
 
 // to be implemented
 //{client_fd, action, data}
-ServerResponse::ServerResponse() : action(0), clientFd(0), data("default") {};
+ServerResponse::ServerResponse() : action(0), clientFd(0), data("default"), clientsToSend() {};
 ServerResponse::ServerResponse(const ServerResponse &obj)
 {
 	this->action = obj.action;
 	this->clientFd = obj.clientFd;
 	this->data = obj.data;
+	this->clientsToSend = obj.clientsToSend;
 }
 ServerResponse &ServerResponse::operator=(const ServerResponse &obj)
 {
@@ -28,6 +29,7 @@ ServerResponse &ServerResponse::operator=(const ServerResponse &obj)
 		this->action = obj.action;
 		this->clientFd = obj.clientFd;
 		this->data = obj.data;
+		this->clientsToSend = obj.clientsToSend;
 	}
 	return (*this);
 }
@@ -62,4 +64,14 @@ int ServerResponse::getAction(void)
 void ServerResponse::setAction(int action)
 {
 	this->action = action;
+}
+
+const std::vector<int> &ServerResponse::getClientsToSend(void)
+{
+	return(this->clientsToSend);
+}
+
+void ServerResponse::setClientsToSend(int &clientFd)
+{
+	this->clientsToSend.push_back(clientFd);
 }
