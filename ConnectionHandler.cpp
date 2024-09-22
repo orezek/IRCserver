@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/22 21:54:31 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/22 22:18:36 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,6 +216,7 @@ int ConnectionHandler::checkForNewClients(void)
 			{
 				this->enableNonBlockingFd(clientSocketFd);
 				clientSockets[i] = clientSocketFd;
+				serverData->fileDsDb.push_back(clientSocketFd);
 				return (1);
 			}
 		}
@@ -268,6 +269,7 @@ int ConnectionHandler::handleNewClients(void)
 			}
 			else
 			{
+				// Testing serverData persistent memory
 				//====Process/Send=====//
 				ClientRequest clientRequest(clientSocketFd, bytesReceived, buff);
 				std::cout << clientRequest.getClientData() << std::endl;
@@ -275,8 +277,13 @@ int ConnectionHandler::handleNewClients(void)
 
 				// Server response obj setup
 				ServerResponse serverResponse;
-				serverResponse.setClientFd(clientSocketFd);
+				//serverResponse.setClientFd(clientSocketFd);
 				serverResponse.setResponse(processData.sendResponse());
+				for(size_t j = 0; j < serverData->fileDsDb.size(); j++)
+				{
+					serverResponse.setClientsToSend(serverData->fileDsDb[j]);
+					std::cout << serverData->fileDsDb[j] << std::endl;
+				}
 				// sendServerResponse function takes serverResponse obj instance
 				if ((bytesSent = sendServerResponse(serverResponse)) == -1)
 				{
@@ -323,9 +330,9 @@ ssize_t ConnectionHandler::sendServerResponse(ServerResponse &srvResponse)
 {
 	std::string buff = srvResponse.getResponse();
 	int	size = buff.size();
-	int fd_to_send = srvResponse.getClientFd();
+	//int fd_to_send = srvResponse.getClientFd();
 	// manually add client to the array - will be done before
-	srvResponse.setClientsToSend(fd_to_send);
+	//srvResponse.setClientsToSend(fd_to_send);
 	ssize_t totalBytesSent;
 
 	for (int i = 0; i < (int)srvResponse.getClientsToSend().size(); i++)
