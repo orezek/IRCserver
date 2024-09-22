@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/22 18:23:14 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/22 18:40:08 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -330,7 +330,7 @@ ssize_t ConnectionHandler::sendServerResponse(ServerResponse &srvResponse)
 		ssize_t bytesSent = 0;
 		while (totalBytesSent < (ssize_t)size)
 		{
-			bytesSent = send(fd_to_send, buff.c_str() + totalBytesSent, size - totalBytesSent, 0);
+			bytesSent = send(srvResponse.getClientsToSend()[i], buff.c_str() + totalBytesSent, size - totalBytesSent, 0);
 
 			if (bytesSent == -1)
 			{
