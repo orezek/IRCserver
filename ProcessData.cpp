@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/21 13:20:52 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/22 18:14:58 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ std::string ProcessData::sendResponse(void)
 	std::string NIC = "NICK aldo\r\n"; // no response
 	std::string USER = "USER aldo 0 * :aldo\r\n";
 	std::string USER_RES = ":<server> 001 user123 :Welcome to the Internet Relay Network user123!username@hostname";
-	std::cout << "Inside SendResponse "<< response << std::endl;
+	//std::cout << "Inside SendResponse "<< response << std::endl;
 	if (response == CAP)
 		return (CAP_RES);
 	else if (response == NIC+USER)

@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/20 21:37:56 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/22 18:23:14 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,14 +264,17 @@ int ConnectionHandler::handleNewClients(void)
 			}
 			else
 			{
-				//====TESTING=====//
+				//====Process/Send=====//
 				ClientRequest clientRequest(clientSocketFd, bytesReceived, buff);
 				std::cout << clientRequest.getClientData() << std::endl;
 				ProcessData processData(clientRequest);
-				ServerResponse serverResponse;
-				serverResponse.setResponse(processData.sendResponse());
 
-				if ((bytesSent = sendAll(clientSocketFd, serverResponse.getResponse().c_str(), serverResponse.getResponse().size())) == -1)
+				// Server response obj setup
+				ServerResponse serverResponse;
+				serverResponse.setClientFd(clientSocketFd);
+				serverResponse.setResponse(processData.sendResponse());
+				// sendServerResponse function takes serverResponse obj instance
+				if ((bytesSent = sendServerResponse(serverResponse)) == -1)
 				{
 					throw std::runtime_error("Send failed: " + std::string(strerror(errno)));
 				}
@@ -311,26 +314,37 @@ ssize_t ConnectionHandler::recvAll(int socketFd, char *buffer, size_t bufferSize
 	}
 }
 
-ssize_t ConnectionHandler::sendAll(int socketFd, const char* buffer, size_t bufferSize)
+
+ssize_t ConnectionHandler::sendServerResponse(ServerResponse &srvResponse)
 {
-	ssize_t totalBytesSent = 0;
-	ssize_t bytesSent = 0;
+	std::string buff = srvResponse.getResponse();
+	int	size = buff.size();
+	int fd_to_send = srvResponse.getClientFd();
+	// manually add client to the array - will be done before
+	srvResponse.setClientsToSend(fd_to_send);
+	ssize_t totalBytesSent;
 
-	while (totalBytesSent < (ssize_t)bufferSize)
+	for (int i = 0; i < (int)srvResponse.getClientsToSend().size(); i++)
 	{
-		bytesSent = send(socketFd, buffer + totalBytesSent, bufferSize - totalBytesSent, 0);
-
-		if (bytesSent == -1)
+		totalBytesSent = 0;
+		ssize_t bytesSent = 0;
+		while (totalBytesSent < (ssize_t)size)
 		{
-			if (errno == EAGAIN || errno == EWOULDBLOCK)
-				continue;
-			else
-				return -1;
+			bytesSent = send(fd_to_send, buff.c_str() + totalBytesSent, size - totalBytesSent, 0);
+
+			if (bytesSent == -1)
+			{
+				if (errno == EAGAIN || errno == EWOULDBLOCK)
+					continue;
+				else
+					return -1;
+			}
+			totalBytesSent += bytesSent;
 		}
-		totalBytesSent += bytesSent;
 	}
 	return totalBytesSent;
 }
+
 
 int &ConnectionHandler::getMasterSocketFd(void)
 {
