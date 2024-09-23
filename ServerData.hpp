@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerData.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:57:16 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/22 23:28:06 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/23 18:26:43 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ class ServerData
 		ServerData();
 		~ServerData();
 		std::vector<int> fileDsDb;
+		std::vector<Room> rooms;
+		std::vector<User> users;
 
 	private:
 };
