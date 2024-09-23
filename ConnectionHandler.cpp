@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/22 22:48:21 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/23 13:25:59 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,7 +216,7 @@ int ConnectionHandler::checkForNewClients(void)
 			{
 				this->enableNonBlockingFd(clientSocketFd);
 				clientSockets[i] = clientSocketFd;
-				serverData->fileDsDb.push_back(clientSocketFd);
+				this->serverData->fileDsDb.push_back(clientSocketFd); // temp! Test: adding clients directly to server data vector - vector is public
 				return (1);
 			}
 		}
@@ -271,8 +271,8 @@ int ConnectionHandler::handleNewClients(void)
 			{
 				//====Process/Send=====//
 				ClientRequest clientRequest(clientSocketFd, bytesReceived, buff);
-				std::cout << clientRequest.getClientData() << std::endl;
-				ProcessData processData(clientRequest);
+				//std::cout << clientRequest.getClientData() << std::endl;
+				ProcessData processData(clientRequest, serverData);
 
 				// Server response obj setup
 				ServerResponse serverResponse;
@@ -280,11 +280,15 @@ int ConnectionHandler::handleNewClients(void)
 				serverResponse.setResponse(processData.sendResponse());
 				// Testing serverData persistent memory
 				// just direct access to vector to object serverData that will hold runtime memory of a irc server instance
+				std::cout << "User: " << clientSocketFd << " is seding message to FD: ";
 				for(size_t j = 0; j < serverData->fileDsDb.size(); j++)
 				{
 					serverResponse.setClientsToSend(serverData->fileDsDb[j]);
-					std::cout << serverData->fileDsDb[j] << std::endl;
+					std::cout << serverData->fileDsDb[j];
+					if (j != serverData->fileDsDb.size() - 1)
+						std::cout << ",";
 				}
+				std::cout << "." << std::endl;
 				// sendServerResponse function takes serverResponse obj instance
 				if ((bytesSent = sendServerResponse(serverResponse)) == -1)
 				{
@@ -331,9 +335,6 @@ ssize_t ConnectionHandler::sendServerResponse(ServerResponse &srvResponse)
 {
 	std::string buff = srvResponse.getResponse();
 	int	size = buff.size();
-	//int fd_to_send = srvResponse.getClientFd();
-	// manually add client to the array - will be done before
-	//srvResponse.setClientsToSend(fd_to_send);
 	ssize_t totalBytesSent;
 
 	for (int i = 0; i < (int)srvResponse.getClientsToSend().size(); i++)

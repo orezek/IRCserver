@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/22 18:14:58 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/23 13:03:43 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,10 @@
 */
 
 // Default constructor
-ProcessData::ProcessData()
-{
-	this->response = "Default Response";
-}
+ProcessData::ProcessData() : response("default"), serverData(NULL) {}
 
 // Constructor with ClientRequest parameter
-ProcessData::ProcessData(const ClientRequest &request)
+ProcessData::ProcessData(const ClientRequest &request, ServerData *serverData) : serverData(serverData)
 {
 	// Convert char array to std::string
 	if (request.getClientData() != 0)
@@ -51,6 +48,7 @@ ProcessData::ProcessData(const ClientRequest &request)
 // Copy constructor
 ProcessData::ProcessData(const ProcessData &obj)
 {
+	this->serverData = obj.serverData;
 	this->response = obj.response;
 }
 
@@ -60,6 +58,7 @@ ProcessData &ProcessData::operator=(const ProcessData &obj)
 	if (this != &obj)
 	{
 		this->response = obj.response;
+		this->serverData = obj.serverData;
 	}
 	return *this;
 }
