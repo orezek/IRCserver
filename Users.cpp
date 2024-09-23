@@ -1,30 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ServerData.hpp                                     :+:      :+:    :+:   */
+/*   Users.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/22 19:57:16 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/23 22:09:28 by mbartos          ###   ########.fr       */
+/*   Created: 2024/09/23 21:51:16 by mbartos           #+#    #+#             */
+/*   Updated: 2024/09/23 21:52:28 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
-#include <vector>
-
-#include "Rooms.hpp"
 #include "Users.hpp"
 
-class ServerData
-{
-	public:
-		ServerData();
-		~ServerData();
-		std::vector<int> fileDsDb; // will be deleted!
-		Rooms* rooms;
-		Users* waitingUsers;
-		Users* users;
+Users::Users() {};
 
-	private:
+Users::~Users() {};
+
+Users::Users(const Users &obj) : userList(obj.userList) {};
+
+Users &Users::operator=(const Users &obj)
+{
+	if (this != &obj)
+	{
+		this->userList = obj.userList;
+	}
+	return (*this);
 };

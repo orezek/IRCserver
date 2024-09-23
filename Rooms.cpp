@@ -1,30 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ServerData.hpp                                     :+:      :+:    :+:   */
+/*   Rooms.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/22 19:57:16 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/23 22:09:28 by mbartos          ###   ########.fr       */
+/*   Created: 2024/09/23 21:34:33 by mbartos           #+#    #+#             */
+/*   Updated: 2024/09/23 21:48:04 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
-#include <vector>
-
 #include "Rooms.hpp"
-#include "Users.hpp"
 
-class ServerData
+Rooms::Rooms() {}
+Rooms::~Rooms() {}
+Rooms::Rooms(const Rooms &obj) : roomList(obj.roomList) {}
+Rooms &Rooms::operator=(const Rooms &obj)
 {
-	public:
-		ServerData();
-		~ServerData();
-		std::vector<int> fileDsDb; // will be deleted!
-		Rooms* rooms;
-		Users* waitingUsers;
-		Users* users;
-
-	private:
-};
+	if (this != &obj)
+	{
+		this->roomList = obj.roomList;
+	}
+	return (*this);
+}

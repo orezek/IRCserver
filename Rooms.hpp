@@ -1,30 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ServerData.hpp                                     :+:      :+:    :+:   */
+/*   Rooms.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/22 19:57:16 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/23 22:09:28 by mbartos          ###   ########.fr       */
+/*   Created: 2024/09/23 21:34:46 by mbartos           #+#    #+#             */
+/*   Updated: 2024/09/23 21:49:30 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
+#include <string>
 #include <vector>
 
-#include "Rooms.hpp"
-#include "Users.hpp"
+#include "Room.hpp"
 
-class ServerData
+class Rooms
 {
 	public:
-		ServerData();
-		~ServerData();
-		std::vector<int> fileDsDb; // will be deleted!
-		Rooms* rooms;
-		Users* waitingUsers;
-		Users* users;
+		Rooms();
+		~Rooms();
+		Rooms(const Rooms &obj);
+		Rooms &operator=(const Rooms &obj);
+		// findRoom()
+		// addRoom()
+		// deleteRoom()
 
 	private:
+		std::vector<Room> roomList;
+		// validateRoomName()
 };
