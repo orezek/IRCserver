@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/23 13:25:59 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/24 22:49:49 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -272,7 +272,7 @@ int ConnectionHandler::handleNewClients(void)
 				//====Process/Send=====//
 				ClientRequest clientRequest(clientSocketFd, bytesReceived, buff);
 				//std::cout << clientRequest.getClientData() << std::endl;
-				ProcessData processData(clientRequest, serverData);
+				ProcessData processData(&clientRequest, serverData);
 
 				// Server response obj setup
 				ServerResponse serverResponse;

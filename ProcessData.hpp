@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ProcessData.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:33 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/23 13:00:20 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/24 22:52:21 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,12 @@ class ProcessData
 {
 	public:
 		ProcessData();
-		ProcessData(const ClientRequest &request, ServerData *serverData);
+		ProcessData(ClientRequest *clientRequest, ServerData *serverData);
 		ProcessData(const ProcessData &obj);
 		ProcessData &operator=(const ProcessData &obj);
 		std::string sendResponse(void);
 	private:
-		std::string response;
 		ServerData *serverData;
+		ClientRequest *clientRequest;
+		std::string response;
 };
