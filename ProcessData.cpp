@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/23 13:03:43 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/24 11:28:32 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,17 +33,7 @@
 ProcessData::ProcessData() : response("default"), serverData(NULL) {}
 
 // Constructor with ClientRequest parameter
-ProcessData::ProcessData(const ClientRequest &request, ServerData *serverData) : serverData(serverData)
-{
-	// Convert char array to std::string
-	if (request.getClientData() != 0)
-	{
-		this->response = std::string(request.getClientData());  // Create a std::string from the C-string
-	} else
-	{
-		this->response = "No data received";  // Handle the case where data is null
-	}
-}
+ProcessData::ProcessData(ClientRequest &request, ServerData *serverData) : response(request.getClientData()), serverData(serverData) {}
 
 // Copy constructor
 ProcessData::ProcessData(const ProcessData &obj)

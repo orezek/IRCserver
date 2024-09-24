@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/22 23:42:13 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/24 18:53:05 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <cstring>
 #include <iostream>
 #include <vector>
+#include <map>
 // Socket programing related libs.
 #include <arpa/inet.h>   // inet_ntoa()
 #include <fcntl.h>       // socket non-blocking mode
@@ -30,7 +31,7 @@
 #include "ClientRequest.hpp"
 #include "ProcessData.hpp"
 #include "ServerResponse.hpp"
-//#include "IrcServer.hpp"
+// #include "IrcServer.hpp"
 #include "ServerData.hpp"
 
 class ConnectionHandler
@@ -61,6 +62,8 @@ class ConnectionHandler
 		// recv and send system calls in loops
 		ssize_t recvAll(int socketFd, char *buffer, size_t bufferSize);
 		ssize_t sendServerResponse(ServerResponse &serverResponse);
+		// check partiality of a message
+		bool isMessageValid(int clientSocketFd, char *buff, ssize_t bytesReceived);
 
 		// Getters and Setters extend as per need
 
@@ -71,17 +74,18 @@ class ConnectionHandler
 
 		const static int MAX_CLIENTS = 1024;
 		const static int MAX_BUFF_SIZE = 1024;
+		const static int MESSAGE_SIZE = 512;
+		const std::string ERR_INPUTTOOLONG;
 
 	private:
 		int serverPortNumber;
 		std::string ircPassword;
 		int masterSocketFd;
-		// int					clientSocketFd; // maybe not needed as class variable
 		int selectResponse;
 		int maxFd;
 		socklen_t ipAddressLenSrv;
-		// socklen_t			ipAddressLenClient; // maybe not needed as above
 		std::vector<int> clientSockets;
+		std::map<int, std::string> clientBuffers;
 		fd_set readFds;
 		struct sockaddr_in ipServerAddress;
 		struct sockaddr_in ipClientAddress;
