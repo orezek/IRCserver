@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/24 22:38:15 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/24 23:54:06 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -286,7 +286,7 @@ int ConnectionHandler::handleNewClients(void)
 				clientBuffers[clientSocketFd].append(recvBuff, bytesReceived);
 				clientBuffSize = clientBuffers[clientSocketFd].size();
 				// partial message received
-				if (!(clientBuffers[clientSocketFd].back() == '\n'))
+				if (!(*(clientBuffers[clientSocketFd].end() - 1) == '\n'))
 				{
 					if (clientBuffSize > MESSAGE_SIZE)
 					{
