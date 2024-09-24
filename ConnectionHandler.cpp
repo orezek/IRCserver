@@ -11,6 +11,9 @@
 /* ************************************************************************** */
 
 #include "ConnectionHandler.hpp"
+
+const std::string ERR_INPUTTOOLONG = "ERR_INPUTTOOLONG: The message is too long.\r\n";
+
 ConnectionHandler::ConnectionHandler()
 {
 	this->serverPortNumber = 0;
@@ -58,14 +61,14 @@ ConnectionHandler::ConnectionHandler(int serverPortNumber, std::string ircPasswo
 // Copy constructor implementation
 ConnectionHandler::ConnectionHandler(const ConnectionHandler &other)
 	: serverPortNumber(other.serverPortNumber),
-	ircPassword(other.ircPassword),
-	masterSocketFd(other.masterSocketFd),
-	selectResponse(other.selectResponse),
-	maxFd(other.maxFd),
-	ipAddressLenSrv(other.ipAddressLenSrv),
-	// std::vector handles deep copy automatically
-	clientSockets(other.clientSockets),
-	serverData(other.serverData)
+	  ircPassword(other.ircPassword),
+	  masterSocketFd(other.masterSocketFd),
+	  selectResponse(other.selectResponse),
+	  maxFd(other.maxFd),
+	  ipAddressLenSrv(other.ipAddressLenSrv),
+	  // std::vector handles deep copy automatically
+	  clientSockets(other.clientSockets),
+	  serverData(other.serverData)
 {
 	// Copy the fd_set using memcpy
 	memcpy(&this->readFds, &other.readFds, sizeof(fd_set));
@@ -75,9 +78,10 @@ ConnectionHandler::ConnectionHandler(const ConnectionHandler &other)
 }
 
 // Copy assignment operator implementation
-ConnectionHandler& ConnectionHandler::operator=(const ConnectionHandler &other)
+ConnectionHandler &ConnectionHandler::operator=(const ConnectionHandler &other)
 {
-	if (this != &other) {
+	if (this != &other)
+	{
 		this->serverPortNumber = other.serverPortNumber;
 		this->ircPassword = other.ircPassword;
 		this->masterSocketFd = other.masterSocketFd;
@@ -103,7 +107,7 @@ ConnectionHandler::~ConnectionHandler()
 	// std::vector and std::string handle their own cleanup automatically
 }
 
-int	ConnectionHandler::enableSocket(void)
+int ConnectionHandler::enableSocket(void)
 {
 	if ((this->masterSocketFd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1)
 	{
@@ -112,7 +116,7 @@ int	ConnectionHandler::enableSocket(void)
 	return (0);
 }
 
-int	ConnectionHandler::enableNonBlockingFd(int &fd)
+int ConnectionHandler::enableNonBlockingFd(int &fd)
 {
 	if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1)
 	{
@@ -121,7 +125,7 @@ int	ConnectionHandler::enableNonBlockingFd(int &fd)
 	return (0);
 }
 
-int	ConnectionHandler::enableSocketReus(void)
+int ConnectionHandler::enableSocketReus(void)
 {
 	int opt = 1;
 	if (setsockopt(this->masterSocketFd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
@@ -133,10 +137,10 @@ int	ConnectionHandler::enableSocketReus(void)
 
 int ConnectionHandler::enableSocketBinding(void)
 {
-	this->ipServerAddress.sin_addr.s_addr = INADDR_ANY; // all interfaces on the srv machine
-	this->ipServerAddress.sin_family = AF_INET; // IPv4
+	this->ipServerAddress.sin_addr.s_addr = INADDR_ANY;  // all interfaces on the srv machine
+	this->ipServerAddress.sin_family = AF_INET;          // IPv4
 	this->ipServerAddress.sin_port = htons(this->serverPortNumber);
-	if(bind(this->masterSocketFd, (struct sockaddr *)&this->ipServerAddress, sizeof(this->ipServerAddress)) < 0)
+	if (bind(this->masterSocketFd, (struct sockaddr *)&this->ipServerAddress, sizeof(this->ipServerAddress)) < 0)
 	{
 		throw std::runtime_error("Socket binding failed: " + std::string(strerror(errno)));
 	}
@@ -156,12 +160,12 @@ int ConnectionHandler::enablePortListenning(void)
 
 void ConnectionHandler::prepareFdSetForSelect(void)
 {
-	FD_ZERO(&this->readFds); // clear the content of the fd_set set
-	FD_SET(this->masterSocketFd, &this->readFds); // add the master fd to the read_fds set
-	this->maxFd =this-> masterSocketFd;
+	FD_ZERO(&this->readFds);                       // clear the content of the fd_set set
+	FD_SET(this->masterSocketFd, &this->readFds);  // add the master fd to the read_fds set
+	this->maxFd = this->masterSocketFd;
 
 	// it re-inserts fds to fd_set because the fd_set has been removed of non-active clients - see select() what it does with fd_set
-	for(int i = 0; i < MAX_CLIENTS; i++)
+	for (int i = 0; i < MAX_CLIENTS; i++)
 	{
 		int clientSocketFd = this->clientSockets[i];
 		if (clientSocketFd > -1)
@@ -215,8 +219,9 @@ int ConnectionHandler::checkForNewClients(void)
 			if (clientSockets[i] == -1)
 			{
 				this->enableNonBlockingFd(clientSocketFd);
-				clientSockets[i] = clientSocketFd;
-				this->serverData->fileDsDb.push_back(clientSocketFd); // temp! Test: adding clients directly to server data vector - vector is public
+				clientSockets[i] = clientSocketFd;                     // add client to list for monitoring
+				clientBuffers[i] = "";                                 // map to map client to its buffer
+				this->serverData->fileDsDb.push_back(clientSocketFd);  // temp! Test: adding clients directly to server data vector - vector is public
 				return (1);
 			}
 		}
@@ -230,58 +235,77 @@ int ConnectionHandler::checkForNewClients(void)
 	return 0;  // No new client to process
 }
 
-
 int ConnectionHandler::handleNewClients(void)
 {
-	int					clientSocketFd;
-	char				buff[MAX_BUFF_SIZE];
-	ssize_t				bytesReceived = 0;
-	ssize_t				bytesSent = 0;
-	const std::string	responseData;
-	for(int i = 0; i < MAX_CLIENTS; i++)
+	int clientSocketFd;
+	char recvBuff[MAX_BUFF_SIZE];
+	int clientBuffSize;
+	ssize_t bytesReceived = 0;
+	ssize_t bytesSent = 0;
+	std::string userBuffer;
+	const std::string responseData;
+	for (int i = 0; i < MAX_CLIENTS; i++)
 	{
 		clientSocketFd = clientSockets[i];
 		if (clientSocketFd == -1)
 			continue;
-
 		if (FD_ISSET(clientSocketFd, &readFds))
 		{
-			// receiving data
-			// can be partial read until \r\n
-			// can be multiple messages in one stream both having \r\n
-			// need to pass user fd to track user sessions
-			//bytesReceived = recvAll(clientSocketFd, buff, MAX_BUFF_SIZE);
-			if ((bytesReceived = recvAll(clientSocketFd, buff, MAX_BUFF_SIZE)) == -1)
+			// read error - kernel side
+			if ((bytesReceived = recvAll(clientSocketFd, recvBuff, MAX_BUFF_SIZE)) == -1)
 			{
+				// notify ProcessData
 				close(clientSocketFd);
 				clientSockets[i] = -1;
-				std::cout << "Recv failed " << clientSocketFd
-						  << ": " << strerror(errno) << std::endl;
+				clientBuffers[i].erase();
+				std::cout << "Recv failed " << clientSocketFd << ": " << strerror(errno) << std::endl;
 				continue;
 			}
+			// client close connection
 			else if (bytesReceived == 0)
 			{
-				// send quit message to DataProcess object
-				std::cout << "Client " << clientSocketFd << " disconnected." << std::endl;
+				// notify ProcessData
 				close(clientSocketFd);
 				clientSockets[i] = -1;
+				clientBuffers[i].erase();
+				std::cout << "Client " << clientSocketFd << " quit." << std::endl;
+				continue;
+			}
+			// hard message limit
+			else if (bytesReceived > MESSAGE_SIZE)
+			{
+				// notify ProcessData
+				close(clientSocketFd);
+				clientSockets[i] = -1;
+				clientBuffers[i].erase();
+				std::cout << "Client " << clientSocketFd << " disconnected due to a message limit." << std::endl;
 				continue;
 			}
 			else
 			{
-				//====Process/Send=====//
-				ClientRequest clientRequest(clientSocketFd, bytesReceived, buff);
-				//std::cout << clientRequest.getClientData() << std::endl;
+				clientBuffers[clientSocketFd].append(recvBuff, bytesReceived);
+				clientBuffSize = clientBuffers[clientSocketFd].size();
+				// partial message received
+				if (!(clientBuffers[clientSocketFd].back() == '\n'))
+				{
+					if (clientBuffSize > MESSAGE_SIZE)
+					{
+						close(clientSocketFd);
+						clientSockets[i] = -1;
+						clientBuffers[clientSocketFd] = "";
+						std::cout << "Client " << clientSocketFd << " disconnected due to a message limit in partial read." << std::endl;
+						continue;
+					}
+					continue;
+				}
+				ClientRequest clientRequest(clientSocketFd, bytesReceived, clientBuffers[clientSocketFd]);
 				ProcessData processData(&clientRequest, serverData);
-
-				// Server response obj setup
 				ServerResponse serverResponse;
-				//serverResponse.setClientFd(clientSocketFd);
 				serverResponse.setResponse(processData.sendResponse());
 				// Testing serverData persistent memory
 				// just direct access to vector to object serverData that will hold runtime memory of a irc server instance
 				std::cout << "User: " << clientSocketFd << " is seding message to FD: ";
-				for(size_t j = 0; j < serverData->fileDsDb.size(); j++)
+				for (size_t j = 0; j < serverData->fileDsDb.size(); j++)
 				{
 					serverResponse.setClientsToSend(serverData->fileDsDb[j]);
 					std::cout << serverData->fileDsDb[j];
@@ -294,6 +318,7 @@ int ConnectionHandler::handleNewClients(void)
 				{
 					throw std::runtime_error("Send failed: " + std::string(strerror(errno)));
 				}
+				clientBuffers[clientSocketFd].erase();  // clear buffer - valid message acquired and processed hence buffer no needed
 			}
 		}
 	}
@@ -330,11 +355,10 @@ ssize_t ConnectionHandler::recvAll(int socketFd, char *buffer, size_t bufferSize
 	}
 }
 
-
 ssize_t ConnectionHandler::sendServerResponse(ServerResponse &srvResponse)
 {
 	std::string buff = srvResponse.getResponse();
-	int	size = buff.size();
+	int size = buff.size();
 	ssize_t totalBytesSent;
 
 	for (int i = 0; i < (int)srvResponse.getClientsToSend().size(); i++)
@@ -357,7 +381,6 @@ ssize_t ConnectionHandler::sendServerResponse(ServerResponse &srvResponse)
 	}
 	return totalBytesSent;
 }
-
 
 int &ConnectionHandler::getMasterSocketFd(void)
 {

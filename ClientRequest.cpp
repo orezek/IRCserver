@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 22:08:05 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/17 23:15:15 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/24 11:15:31 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,15 @@ ClientRequest::ClientRequest()
 {
 	this->clientFd = 0;
 	this->bytesReceived = 0;
-	this->data = 0;
+	this->data = "";
 }
 
 // Parameterized constructor
-ClientRequest::ClientRequest(int &clientFd, ssize_t &bytesReceived, char *data)
+ClientRequest::ClientRequest(int &clientFd, ssize_t &bytesReceived, std::string data)
 {
 	this->clientFd = clientFd;
 	this->bytesReceived = bytesReceived;
-
-	// Allocate memory for data and copy the input data
-	this->data = new char[this->bytesReceived + 1];
-	memcpy(this->data, data, this->bytesReceived);
-	this->data[this->bytesReceived] = '\0';
+	this->data = data;
 }
 
 // Copy constructor (deep copy)
@@ -37,49 +33,23 @@ ClientRequest::ClientRequest(const ClientRequest &obj)
 {
 	this->clientFd = obj.clientFd;
 	this->bytesReceived = obj.bytesReceived;
-
-	// Allocate new memory for the data and copy the contents
-	if (obj.data) {
-		this->data = new char[this->bytesReceived + 1];
-		memcpy(this->data, obj.data, this->bytesReceived);
-		this->data[this->bytesReceived] = '\0';
-	} else {
-		this->data = 0;
-	}
+	this->data = obj.data;
 }
 
 // Assignment operator (deep copy)
 ClientRequest &ClientRequest::operator=(const ClientRequest &obj)
 {
-	if (this != &obj) {
-		// Free existing memory
-		if (this->data) {
-			delete[] this->data;
-		}
-
+	if (this != &obj)
+	{
 		this->clientFd = obj.clientFd;
 		this->bytesReceived = obj.bytesReceived;
-
-		if (obj.data) {
-			this->data = new char[this->bytesReceived + 1];
-			memcpy(this->data, obj.data, this->bytesReceived);
-			this->data[this->bytesReceived] = '\0';
-		} else {
-			this->data = 0;
-		}
+		this->data = obj.data;
 	}
 	return (*this);
 }
 
 // Destructor
-ClientRequest::~ClientRequest()
-{
-	// Free allocated memory
-	if (this->data)
-	{
-		delete[] this->data;
-	}
-}
+ClientRequest::~ClientRequest(){}
 
 // Getter for clientFd
 int ClientRequest::getClientFd(void) const
@@ -88,7 +58,7 @@ int ClientRequest::getClientFd(void) const
 }
 
 // Getter for clientData
-char *ClientRequest::getClientData(void) const
+std::string &ClientRequest::getClientData(void)
 {
 	return (this->data);
 }
