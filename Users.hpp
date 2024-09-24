@@ -1,36 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   User.hpp                                           :+:      :+:    :+:   */
+/*   Users.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/22 19:49:48 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/23 19:20:38 by mbartos          ###   ########.fr       */
+/*   Created: 2024/09/23 21:49:45 by mbartos           #+#    #+#             */
+/*   Updated: 2024/09/23 22:16:26 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
+
 #include <string>
 #include <vector>
 
-#include "Room.hpp"
+#include "User.hpp"
 
-class User
+class Users
 {
 	public:
-		User();
-		~User();
-		User(const User &obj);
-		User &operator=(const User &obj);
+		Users();
+		~Users();
+		Users(const Users &obj);
+		Users &operator=(const Users &obj);
+		// findUser(int fd)
+		// findUser(std::string nickname)
+		// addUser (int fd)
+		// updateUser(std::string nickname, std::string hostname, std::string servername, std::string realname)
+		// deleteUser(std::string nickname)
+		// setUserNickname(std::string nickname)
+
 
 	private:
-		int userFd;
-		std::string nickname;
-		std::string hostname;
-		std::string servername;
-		std::string realname;
-		bool isOperator;    // is this user an operator?
-		std::vector<Room> rooms;
+		std::vector<User> userList;
 		// to do //
 };

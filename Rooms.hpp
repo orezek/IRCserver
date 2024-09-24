@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   User.hpp                                           :+:      :+:    :+:   */
+/*   Rooms.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/22 19:49:48 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/23 19:20:38 by mbartos          ###   ########.fr       */
+/*   Created: 2024/09/23 21:34:46 by mbartos           #+#    #+#             */
+/*   Updated: 2024/09/23 21:49:30 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,18 @@
 
 #include "Room.hpp"
 
-class User
+class Rooms
 {
 	public:
-		User();
-		~User();
-		User(const User &obj);
-		User &operator=(const User &obj);
+		Rooms();
+		~Rooms();
+		Rooms(const Rooms &obj);
+		Rooms &operator=(const Rooms &obj);
+		// findRoom()
+		// addRoom()
+		// deleteRoom()
 
 	private:
-		int userFd;
-		std::string nickname;
-		std::string hostname;
-		std::string servername;
-		std::string realname;
-		bool isOperator;    // is this user an operator?
-		std::vector<Room> rooms;
-		// to do //
+		std::vector<Room> roomList;
+		// validateRoomName()
 };
