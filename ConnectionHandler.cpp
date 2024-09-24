@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/24 21:18:30 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/24 22:38:15 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -271,8 +271,8 @@ int ConnectionHandler::handleNewClients(void)
 				std::cout << "Client " << clientSocketFd << " quit." << std::endl;
 				continue;
 			}
-			//hard message limit
-			else if(bytesReceived > MESSAGE_SIZE)
+			// hard message limit
+			else if (bytesReceived > MESSAGE_SIZE)
 			{
 				// notify ProcessData
 				close(clientSocketFd);
@@ -285,7 +285,6 @@ int ConnectionHandler::handleNewClients(void)
 			{
 				clientBuffers[clientSocketFd].append(recvBuff, bytesReceived);
 				clientBuffSize = clientBuffers[clientSocketFd].size();
-				std::cout << "Size of buff: " << clientBuffSize << std::endl;
 				// partial message received
 				if (!(clientBuffers[clientSocketFd].back() == '\n'))
 				{
