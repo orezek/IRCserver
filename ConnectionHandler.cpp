@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
 /*   Updated: 2024/09/24 23:54:06 by orezek           ###   ########.fr       */
@@ -299,7 +299,7 @@ int ConnectionHandler::handleNewClients(void)
 					continue;
 				}
 				ClientRequest clientRequest(clientSocketFd, bytesReceived, clientBuffers[clientSocketFd]);
-				ProcessData processData(clientRequest, serverData);
+				ProcessData processData(&clientRequest, serverData);
 				ServerResponse serverResponse;
 				serverResponse.setResponse(processData.sendResponse());
 				// Testing serverData persistent memory
