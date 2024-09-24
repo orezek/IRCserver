@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ProcessData.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/23 13:03:43 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/24 17:49:58 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,18 @@ std::string ProcessData::sendResponse(void)
 
 	// harcoding test IRC messages
 	// CAP
+
+
+	// *** AUTHENTICATION PROCESS ***
+	// check if fd is in valid users
+	// parse message - if it is not PASS, NICK or USER - do not answer to this message
+	// if it is PASS -> check it if OK add user to waitingUsers - what if I do not have server with PASSWORD?
+	// if it is NICK -> check if the fd is in waitingUsers and then assign nickname (what if I do not have server with PASSWORD?)
+	// if it is USER -> check if NICK is already present in User, fill the other vars and move it from waitingUsers to Users
+
+
+
+	
 	std::string CAP = "CAP LS 302\r\n";
 	std::string CAP_RES = "CAP * LS :\r\n";
 	std::string NIC = "NICK aldo\r\n"; // no response
