@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerResponse.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 23:09:38 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/22 18:03:13 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/24 22:25:25 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 // to be implemented
 //{client_fd, action, data}
-ServerResponse::ServerResponse() : action(0), clientFd(0), data("default"), clientsToSend() {};
+ServerResponse::ServerResponse() : action(NOSEND), clientFd(0), data("default"), clientsToSend() {};
 ServerResponse::ServerResponse(const ServerResponse &obj)
 {
 	this->action = obj.action;
@@ -56,12 +56,12 @@ void ServerResponse::setClientFd(int clientFd)
 	this->clientFd = clientFd;
 }
 
-int ServerResponse::getAction(void)
+ServerResponse::Action ServerResponse::getAction(void) const
 {
 	return (this->action);
 }
 
-void ServerResponse::setAction(int action)
+void ServerResponse::setAction(Action action)
 {
 	this->action = action;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerResponse.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 23:09:35 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/22 18:03:22 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/24 22:25:58 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,20 +18,28 @@
 class ServerResponse
 {
 	public:
+		enum Action
+		{
+			SEND = 0,
+			NOSEND
+		};
+
 		ServerResponse(void);
 		ServerResponse(const ServerResponse &obj);
 		ServerResponse &operator=(const ServerResponse &boj);
 		~ServerResponse(void);
+
 		const std::string &getResponse(void);
 		void setResponse(const std::string &response);
 		int getClientFd(void);
 		void setClientFd(int clientFd);
-		int getAction(void);
-		void setAction(int action);
+		Action getAction(void) const;
+		void setAction(Action action);
 		const std::vector<int> &getClientsToSend(void);
 		void setClientsToSend(int &clientFd);
+
 	private:
-		int action;
+		Action action;
 		int clientFd;
 		std::string data;
 		std::vector<int> clientsToSend;

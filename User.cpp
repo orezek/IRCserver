@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 23:12:55 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/23 19:20:45 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/09/24 17:05:20 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,3 +31,13 @@ User &User::operator=(const User &obj)
 	}
 	return (*this);
 };
+
+int User::getUserFd()
+{
+	return (this->userFd);
+}
+
+std::string User::getUserNickname()
+{
+	return (this->nickname);
+}
