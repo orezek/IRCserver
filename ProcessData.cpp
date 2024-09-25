@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/24 23:12:48 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/09/25 12:05:14 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,14 @@ ProcessData::ProcessData() : serverData(NULL), clientRequest(NULL), response("de
 // Constructor with ClientRequest parameter
 ProcessData::ProcessData(ClientRequest *clientRequest, ServerData *serverData) : serverData(serverData), clientRequest(clientRequest)
 {
-	// Convert char array to std::string
-	// if (request->getClientData() != 0)
-	// {
-	// 	this->response = std::string(request->getClientData());  // Create a std::string from the C-string
-	// } else
-	// {
-	// 	this->response = "No data received";  // Handle the case where data is null
-	// }
+	if (!clientRequest->getClientData().empty())
+	{
+		this->response = std::string(clientRequest->getClientData());  // Create a std::string from the C-string
+	}
+	else
+	{
+		this->response = "No data received";  // Handle the case where data is null
+	}
 }
 
 // Copy constructor
@@ -71,11 +71,11 @@ std::string ProcessData::sendResponse(void)
 	// if it is PASS -> check it if OK add user to waitingUsers - what if I do not have server with PASSWORD?
 	// if it is NICK -> check if the fd is in waitingUsers and then assign nickname (what if I do not have server with PASSWORD?)
 	// if it is USER -> check if NICK is already present in User, fill the other vars and move it from waitingUsers to Users
-	if (serverData->users->findUser(clientRequest->getClientFd()) == NULL)
+	if (serverData->users.findUser(clientRequest->getClientFd()) == NULL)
 	{
-		if (serverData->waitingUsers->findUser(clientRequest->getClientFd()) == NULL)
+		if (serverData->waitingUsers.findUser(clientRequest->getClientFd()) == NULL)
 		{
-			//add new user
+			// add new user
 		}
 		else
 		{
@@ -89,24 +89,8 @@ std::string ProcessData::sendResponse(void)
 		// is user, can take all CMDS
 	}
 
-	std::string CAP = "CAP LS 302\r\n";
-	std::string CAP_RES = "CAP * LS :\r\n";
-	std::string NIC = "NICK aldo\r\n"; // no response
-	std::string USER = "USER aldo 0 * :aldo\r\n";
-	std::string USER_RES = ":<server> 001 user123 :Welcome to the Internet Relay Network user123!username@hostname";
-	//std::cout << "Inside SendResponse "<< response << std::endl;
-	if (response == CAP)
-		return (CAP_RES);
-	else if (response == NIC+USER)
-	{
-		//return (""); // no response
-		return (USER_RES);
-	}
-	else
-	{
-		std::string str = "Response processed by ProcessData class! -: ";
-		str.append(response);
-		this->response = str;
-	}
+	std::string str = "Response processed by ProcessData class! -: ";
+	str.append(response);
+	this->response = str;
 	return (this->response);
 }

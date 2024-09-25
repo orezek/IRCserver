@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ServerData.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 20:01:51 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/24 21:28:33 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/25 12:02:26 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "ServerData.hpp"
 
-ServerData::ServerData() : fileDsDb(), rooms(), users() {};
+ServerData::ServerData() : rooms(), waitingUsers(), users() {};
 
 ServerData::~ServerData() {};
