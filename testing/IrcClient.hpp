@@ -1,19 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   clint.cpp                                          :+:      :+:    :+:   */
+/*   IrcClient.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/04 20:39:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/04 20:59:48 by orezek           ###   ########.fr       */
+/*   Created: 2024/09/25 21:06:25 by orezek            #+#    #+#             */
+/*   Updated: 2024/09/25 21:06:35 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// Testing implementation of TCP client
+#ifndef IRC_CLIENT_HPP
+#define IRC_CLIENT_HPP
 
-// connection initiation request - client (connect()) server (accept())
-// service request messages - new fd crated by accept then respons to client requests
-// communication file descriptor - new fd
-// client identity - ip adress and port
-// multiplexing - 
+#include <string>
+
+class IRCClient
+{
+	public:
+		bool connect_to_server(const std::string& server_ip, int port);
+		bool send_message(const std::string& msg);
+		std::string receive_message();
+		void close_connection();
+
+	private:
+		int sockfd;
+};
+
+#endif // IRC_CLIENT_HPP
