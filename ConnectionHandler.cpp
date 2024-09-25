@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/25 00:53:43 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/25 11:53:49 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -299,11 +299,11 @@ int ConnectionHandler::handleNewClients(void)
 					continue;
 				}
 				ClientRequest clientRequest(clientSocketFd, bytesReceived, clientBuffers[clientSocketFd]);
-				//ProcessData processData(&clientRequest, serverData); // removing process data
+				ProcessData processData(&clientRequest, serverData);  // removing process data
 				ServerResponse serverResponse;
 				// testing echo to all clients
-				std::string echo = "echo message: ";
-				serverResponse.setResponse(echo.append(clientBuffers[clientSocketFd]));
+				// std::string echo = "echo message: ";
+				serverResponse.setResponse(processData.sendResponse());
 				// Testing serverData persistent memory
 				// just direct access to vector to object serverData that will hold runtime memory of a irc server instance
 				std::cout << "User: " << clientSocketFd << " is seding message to FD: ";
