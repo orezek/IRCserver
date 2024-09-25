@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/25 11:55:30 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/09/25 12:05:14 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,9 @@ std::string ProcessData::sendResponse(void)
 	// if it is PASS -> check it if OK add user to waitingUsers - what if I do not have server with PASSWORD?
 	// if it is NICK -> check if the fd is in waitingUsers and then assign nickname (what if I do not have server with PASSWORD?)
 	// if it is USER -> check if NICK is already present in User, fill the other vars and move it from waitingUsers to Users
-	if (serverData->users != NULL && serverData->users->findUser(clientRequest->getClientFd()) == NULL)
+	if (serverData->users.findUser(clientRequest->getClientFd()) == NULL)
 	{
-		if (serverData->waitingUsers != NULL && serverData->waitingUsers->findUser(clientRequest->getClientFd()) == NULL)
+		if (serverData->waitingUsers.findUser(clientRequest->getClientFd()) == NULL)
 		{
 			// add new user
 		}
