@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/25 11:53:49 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/09/25 20:18:01 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,7 +221,6 @@ int ConnectionHandler::checkForNewClients(void)
 				this->enableNonBlockingFd(clientSocketFd);
 				clientSockets[i] = clientSocketFd;                     // add client to list for monitoring
 				clientBuffers[i] = "";                                 // map to map client to its buffer
-				this->serverData->fileDsDb.push_back(clientSocketFd);  // temp! Test: adding clients directly to server data vector - vector is public
 				return (1);
 			}
 		}
@@ -299,23 +298,8 @@ int ConnectionHandler::handleNewClients(void)
 					continue;
 				}
 				ClientRequest clientRequest(clientSocketFd, bytesReceived, clientBuffers[clientSocketFd]);
-				ProcessData processData(&clientRequest, serverData);  // removing process data
-				ServerResponse serverResponse;
-				// testing echo to all clients
-				// std::string echo = "echo message: ";
-				serverResponse.setResponse(processData.sendResponse());
-				// Testing serverData persistent memory
-				// just direct access to vector to object serverData that will hold runtime memory of a irc server instance
-				std::cout << "User: " << clientSocketFd << " is seding message to FD: ";
-				for (size_t j = 0; j < serverData->fileDsDb.size(); j++)
-				{
-					serverResponse.setClientsToSend(serverData->fileDsDb[j]);
-					std::cout << serverData->fileDsDb[j];
-					if (j != serverData->fileDsDb.size() - 1)
-						std::cout << ",";
-				}
-				std::cout << "." << std::endl;
-				// sendServerResponse function takes serverResponse obj instance
+				ProcessData processData(&clientRequest, serverData);
+				ServerResponse serverResponse = processData.sendResponse();
 				if ((bytesSent = sendServerResponse(serverResponse)) == -1)
 				{
 					throw std::runtime_error("Send failed: " + std::string(strerror(errno)));
