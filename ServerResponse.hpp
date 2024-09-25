@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 23:09:35 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/24 22:25:58 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/09/25 19:59:42 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,22 +25,23 @@ class ServerResponse
 		};
 
 		ServerResponse(void);
+		// ServerResponse(int clientFd);
 		ServerResponse(const ServerResponse &obj);
 		ServerResponse &operator=(const ServerResponse &boj);
 		~ServerResponse(void);
 
 		const std::string &getResponse(void);
 		void setResponse(const std::string &response);
-		int getClientFd(void);
-		void setClientFd(int clientFd);
+		// int getClientFd(void);
+		// void setClientFd(int clientFd);
 		Action getAction(void) const;
 		void setAction(Action action);
 		const std::vector<int> &getClientsToSend(void);
-		void setClientsToSend(int &clientFd);
+		void setClientsToSend(int clientFd);
 
 	private:
 		Action action;
-		int clientFd;
-		std::string data;
 		std::vector<int> clientsToSend;
+		// int clientFd;
+		std::string data;
 };
