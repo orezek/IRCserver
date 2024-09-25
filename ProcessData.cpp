@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/25 12:05:14 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/09/25 19:58:22 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,34 +63,86 @@ ProcessData &ProcessData::operator=(const ProcessData &obj)
 	return *this;
 }
 
-std::string ProcessData::sendResponse(void)
+ServerResponse ProcessData::sendResponse(void)
 {
+	// TESTING purpose only //
+	int userFd = clientRequest->getClientFd();
+	if (serverData->users.findUser(userFd) == NULL)
+	{
+		serverData->users.addUser(userFd);
+	}
+	ServerResponse serverResponse;
+	serverResponse.setAction(ServerResponse::SEND);
+	
+	// set recipients of the message => allUsers
+	std::vector<int> allUsersFds = serverData->users.getAllUserFds();
+	for (std::vector<int>::iterator it = allUsersFds.begin(); it != allUsersFds.end(); ++it)
+	{
+		serverResponse.setClientsToSend(*it);
+	}
+
+	// set response string
+	std::string response = "Client FD=";
+	std::ostringstream oss;
+	oss << userFd;
+	response.append(oss.str());
+	response.append(" sent: ");
+	response.append(clientRequest->getClientData());
+	
+	serverResponse.setResponse(response);
+
+	return (serverResponse);
+	// TESTING purpose only //
+
+	/*
 	// *** AUTHENTICATION PROCESS ***
 	// check if fd is in valid users
 	// parse message - if it is not PASS, NICK or USER - do not answer to this message
 	// if it is PASS -> check it if OK add user to waitingUsers - what if I do not have server with PASSWORD?
 	// if it is NICK -> check if the fd is in waitingUsers and then assign nickname (what if I do not have server with PASSWORD?)
 	// if it is USER -> check if NICK is already present in User, fill the other vars and move it from waitingUsers to Users
-	if (serverData->users.findUser(clientRequest->getClientFd()) == NULL)
+	ClientMessage clientMessage(userFd, clientRequest->getClientData());
+
+	if (serverData->users.findUser(userFd) == NULL)
 	{
-		if (serverData->waitingUsers.findUser(clientRequest->getClientFd()) == NULL)
+		if (serverData->waitingUsers.findUser(userFd) == NULL)
 		{
-			// add new user
+			// ADD - check PASS if server has pass
+			// If pass is ok, add new user
+			serverData->waitingUsers.addUser(userFd);
 		}
-		else
+		// is waitingUser
+		User *waitingUser = serverData->waitingUsers.findUser(userFd);
+
+		// could be only NICK or USER
+		if (clientMessage.getCommandString() == "NICK")
 		{
-			// is waitingUser
-			// could be only NICK or USER
+			NickCommand nickCommand(*(this->serverData), clientMessage);
+			ServerResponse serverResponse = nickCommand.getServerResponse();
+			// serverResponse.setAction(ServerResponse::NOSEND); // ONLY IF THE NICKNAME WAS ASSIGNED - MEANING CMD IS NICK - MEABY IT IS NECESSARY
+			return (""); // should do nothing
 		}
-		// check PASS
+		if (clientMessage.getCommandString() == "USER")
+		{
+			waitingUser->setHostname("hostname1");
+			waitingUser->setRealname("realname1");
+			waitingUser->setServername("servername1");
+			return (":irc.local 001 " + waitingUser->getNickname() + " :Welcome to the Localnet IRC Network mbartos!mbartos@127.0.0.1\r\n");
+		}
 	}
 	else
 	{
-		// is user, can take all CMDS
+		// whole command logic will be there
+		std::string str = "Validated user - Response processed by ProcessData class! -: ";
+		str.append(response);
+		this->response = str;
+		return (this->response);
 	}
 
 	std::string str = "Response processed by ProcessData class! -: ";
 	str.append(response);
 	this->response = str;
-	return (this->response);
+	// return (this->response);
+	return ("/r/n");
+	*/
 }

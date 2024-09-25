@@ -4,9 +4,9 @@
 /*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
+/*                                                +w#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:49:48 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/24 17:04:59 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/09/25 15:29:05 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,20 @@ class User
 {
 	public:
 		User();
+		User(int userFd);
 		~User();
 		User(const User &obj);
 		User &operator=(const User &obj);
 
 		int getUserFd();
-		std::string getUserNickname();
+		std::string getNickname();
 
-	private:
+		void setNickname(std::string nickname);
+		void setHostname(std::string hostname);
+		void setRealname(std::string realname);
+		void setServername(std::string servername);
+
+	private: 
 		int userFd;
 		std::string nickname;
 		std::string hostname;
