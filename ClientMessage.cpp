@@ -6,30 +6,21 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:21 by mbartos           #+#    #+#             */
-/*   Updated: 2024/09/26 12:56:23 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/09/26 19:37:32 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ClientMessage.hpp"
 
-ClientMessage::ClientMessage() : userFd(-1), inputData(""), command(NOT_ASSIGNED), prefixString(""), commandString(""), parametersString("") {}
+ClientMessage::ClientMessage() : fromUserFd(-1), command(NOT_ASSIGNED), prefixString(""), commandString("") {}
 
-ClientMessage::ClientMessage(int userFd, std::string data) : userFd(userFd), inputData(data), command(NOT_ASSIGNED), prefixString(""), commandString(""), parametersString(inputData)
+ClientMessage::ClientMessage(int userFd, std::string prefixString, std::string commandString, std::vector<std::string> parameters) : fromUserFd(userFd), command(NOT_ASSIGNED), prefixString(prefixString), commandString(commandString), parameters(parameters)
 {
-	// check if inputData are empty - throw exception - Maybe this will never happen because Connection handler will send only messages with "/n" at least
-	// if (inputData.empty())
-
-	// check if data are valid - how? Maybe it is not necessary
-	this->setPrefixString();
-	this->setCommandString();
-	// set command var;
-	// parsing of parametersString to parameters will be done in command classes
-	this->printClientMessage(); // to show how the message was parsed
 }
 
-ClientMessage::~ClientMessage() {}
+// ClientMessage::~ClientMessage() {}
 
-ClientMessage::ClientMessage(ClientMessage const &refObj) : userFd(refObj.userFd), inputData(refObj.inputData), command(refObj.command), prefixString(refObj.prefixString), commandString(refObj.commandString), parametersString(refObj.parametersString), parameters(refObj.parameters)
+ClientMessage::ClientMessage(ClientMessage const &refObj) : fromUserFd(refObj.fromUserFd), command(refObj.command), prefixString(refObj.prefixString), commandString(refObj.commandString), parameters(refObj.parameters)
 {
 }
 
@@ -37,15 +28,23 @@ ClientMessage &ClientMessage::operator=(ClientMessage const &refObj)
 {
 	if (this != &refObj)
 	{
-		this->userFd = refObj.userFd;
-		this->inputData = refObj.inputData;
+		this->fromUserFd = refObj.fromUserFd;
 		this->command = refObj.command;
 		this->prefixString = refObj.prefixString;
 		this->commandString = refObj.commandString;
 		this->parameters = refObj.parameters;
-		this->parametersString = refObj.parametersString;
 	}
 	return (*this);
+}
+
+std::string ClientMessage::getPrefixString()
+{
+	return (this->prefixString);
+}
+
+void ClientMessage::setPrefixString(std::string newPrefixString)
+{
+	this->prefixString = newPrefixString;
 }
 
 std::string ClientMessage::getCommandString()
@@ -53,43 +52,36 @@ std::string ClientMessage::getCommandString()
 	return (this->commandString);
 }
 
-int ClientMessage::getUserFd()
+void ClientMessage::setCommandString(std::string newCommandString)
 {
-	return (this->userFd);
+	this->commandString = newCommandString;
 }
 
-// --- PRIVATE ---
-
-void ClientMessage::setPrefixString()
+int ClientMessage::getFromUserFd()
 {
-	// if first character is ':' -> there is an prefix
-	if (parametersString[0] == ':')
-	{
-		int prefixStart = 0;
-		int prefixEnd = parametersString.find_first_of(" \n");
-
-		this->prefixString = parametersString.substr(prefixStart, prefixEnd);
-		this->parametersString = parametersString.substr(prefixEnd + 1, parametersString.size() - prefixEnd);
-	}
+	return (this->fromUserFd);
 }
 
-void ClientMessage::setCommandString()
+void ClientMessage::setFromUserFd(int newUserFd)
 {
-	int cmdStart = parametersString.find_first_not_of(" \n");
-	int cmdEnd = parametersString.find_first_of(" \n", cmdStart);
+	this->fromUserFd = newUserFd;
+}
 
-	this->commandString = parametersString.substr(cmdStart, cmdEnd - cmdStart);
-	this->parametersString = parametersString.substr(cmdEnd + 1, parametersString.size() - cmdEnd);
-	// TODO - make to upper function on string
+void ClientMessage::setParameters(std::vector<std::string> newParameters)
+{
+	this->parameters = newParameters;
+}
+
+void ClientMessage::addToParameters(std::string newParameter)
+{
+	parameters.push_back(newParameter);
 }
 
 void ClientMessage::printClientMessage()
 {
 	std::cout << "---- ClientMessage ----" << std::endl;
-	std::cout << "InputData: |" << inputData << "|" << std::endl;
 	std::cout << "Prefix: |" << prefixString << "|" << std::endl;
 	std::cout << "Command: |" << commandString << "|" << std::endl;
-	std::cout << "Parameters string: |" << parametersString << "|" << std::endl;
 	std::cout << "Parameters vector: ";
 	for (std::vector<std::string>::const_iterator it = parameters.begin(); it != parameters.end(); ++it)
 	{
@@ -100,3 +92,15 @@ void ClientMessage::printClientMessage()
 	std::cout << std::endl;
 	std::cout << "-----------------------" << std::endl;
 }
+
+std::string ClientMessage::getFirstParameter()
+{
+	std::string firstParameter;
+	if (parameters.begin() == parameters.end())
+		firstParameter = "";
+	else
+		firstParameter = *parameters.begin();
+	return (firstParameter);
+}
+
+// --- PRIVATE ---
