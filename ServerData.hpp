@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:57:16 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/26 22:09:28 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/26 22:41:08 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,6 @@ class ServerData
 		static const std::string &getServerPassword(void);
 	private:
 		static std::string SERVER_PASSWORD;
+		static std::string SERVER_NAME;
+
 };
