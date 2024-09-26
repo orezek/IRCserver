@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:18 by mbartos           #+#    #+#             */
-/*   Updated: 2024/09/25 17:28:41 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/09/26 12:38:24 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ class ClientMessage
 		cmdTypes command;
 		std::string prefixString;
 		std::string commandString;
+		std::string parametersString;
 		std::vector<std::string> parameters;
 
 		void setPrefixString();
