@@ -6,18 +6,15 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/25 20:18:01 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/26 22:35:58 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ConnectionHandler.hpp"
 
-const std::string ERR_INPUTTOOLONG = "ERR_INPUTTOOLONG: The message is too long.\r\n";
-
 ConnectionHandler::ConnectionHandler()
 {
 	this->serverPortNumber = 0;
-	this->ircPassword = "default";
 	this->masterSocketFd = 0;
 	this->selectResponse = 0;
 	this->maxFd = 0;
@@ -36,10 +33,9 @@ ConnectionHandler::ConnectionHandler()
 	this->serverData = NULL;
 }
 
-ConnectionHandler::ConnectionHandler(int serverPortNumber, std::string ircPassword, ServerData *serverData)
+ConnectionHandler::ConnectionHandler(int serverPortNumber, ServerData *serverData)
 {
 	this->serverPortNumber = serverPortNumber;
-	this->ircPassword = ircPassword;
 	this->masterSocketFd = 0;
 	this->selectResponse = 0;
 	this->maxFd = 0;
@@ -61,7 +57,6 @@ ConnectionHandler::ConnectionHandler(int serverPortNumber, std::string ircPasswo
 // Copy constructor implementation
 ConnectionHandler::ConnectionHandler(const ConnectionHandler &other)
 	: serverPortNumber(other.serverPortNumber),
-	  ircPassword(other.ircPassword),
 	  masterSocketFd(other.masterSocketFd),
 	  selectResponse(other.selectResponse),
 	  maxFd(other.maxFd),
@@ -83,7 +78,6 @@ ConnectionHandler &ConnectionHandler::operator=(const ConnectionHandler &other)
 	if (this != &other)
 	{
 		this->serverPortNumber = other.serverPortNumber;
-		this->ircPassword = other.ircPassword;
 		this->masterSocketFd = other.masterSocketFd;
 		this->selectResponse = other.selectResponse;
 		this->maxFd = other.maxFd;

@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/24 18:53:05 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/26 21:25:48 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ class ConnectionHandler
 {
 	public:
 		ConnectionHandler();
-		ConnectionHandler(int serverPortNumber, std::string ircPassword, ServerData *serverData);
+		ConnectionHandler(int serverPortNumber, ServerData *serverData);
 		ConnectionHandler(const ConnectionHandler &obj);
 		~ConnectionHandler();
 		ConnectionHandler &operator=(const ConnectionHandler &obj);
@@ -79,7 +79,6 @@ class ConnectionHandler
 
 	private:
 		int serverPortNumber;
-		std::string ircPassword;
 		int masterSocketFd;
 		int selectResponse;
 		int maxFd;
