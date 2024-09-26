@@ -47,3 +47,6 @@ INSPIREIRCD flow:
 :oldrichrezek.com NOTICE Auth :*** Looking up your hostname...
 
 :oldrichrezek.com NOTICE Auth :*** Could not resolve your hostname: Domain name not found; using your IP address (10.211.55.2) instead.
+
+
+ERROR :Closing link: (Aldo@10.211.55.2) [Access denied by configuration]
