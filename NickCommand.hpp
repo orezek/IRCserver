@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:20:19 by mbartos           #+#    #+#             */
-/*   Updated: 2024/09/25 17:34:27 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/09/26 19:23:24 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,18 @@
 class NickCommand
 {
 	public:
-		NickCommand();
-		NickCommand(ServerData serverData, ClientMessage clientMessage);
+		NickCommand(ServerData& serverData, ClientMessage& clientMessage);
 		~NickCommand();
-		NickCommand(NickCommand const &refObj);
-		NickCommand &operator=(NickCommand const &refObj);
+		NickCommand(NickCommand const& refObj);
+		NickCommand& operator=(NickCommand const& refObj);
 
 		ServerResponse getServerResponse();
 
 	private:
-		ServerData serverData;
-		ClientMessage clientMessage;
+		ServerData& serverData;
+		ClientMessage& clientMessage;
 		ServerResponse serverResponse;
+
+		// void parseClientMessage();
+		std::string getNewNickname();
 };
