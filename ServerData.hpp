@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerData.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:57:16 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/26 22:41:08 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/27 16:41:29 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ class ServerData
 		Users users;
 		static void setServerPassword(const std::string &serverPassword);
 		static const std::string &getServerPassword(void);
+		static const std::string &getServerName(void);
+
 	private:
 		static std::string SERVER_PASSWORD;
 		static std::string SERVER_NAME;
