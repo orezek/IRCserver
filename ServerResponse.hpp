@@ -3,16 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   ServerResponse.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 23:09:35 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/27 16:16:16 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/09/27 19:55:48 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #include <string>
 #include <vector>
+#include <sys/socket.h>
+#include <iostream>
+#include <unistd.h>
+
 // To be implemented
 // {client_fd, action, data}
 class ServerResponse
@@ -39,6 +43,7 @@ class ServerResponse
 		void setAction(Action action);
 		const std::vector<int> &getClientsToSend(void);
 		void setClientsToSend(int clientFd);
+		ssize_t sendServerResponse(void);
 
 	private:
 		Action action;

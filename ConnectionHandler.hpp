@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/26 21:25:48 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/27 19:31:20 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 #include <fcntl.h>       // socket non-blocking mode
 #include <netinet/in.h>  // sockaddr_in struct
 #include <sys/select.h>  // select call
-#include <sys/socket.h>  // socket(), bind(), listen(), accept()
+#include <sys/socket.h>  // socket(), bind(), listen(), accept() send()
 // Exceptions
 #include <stdexcept>
 // custom classes

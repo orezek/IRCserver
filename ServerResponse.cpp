@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerResponse.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 23:09:38 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/27 12:05:33 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/09/27 19:57:19 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,4 +70,54 @@ const std::vector<int> &ServerResponse::getClientsToSend(void)
 void ServerResponse::setClientsToSend(int clientFd)
 {
 	this->clientsToSend.push_back(clientFd);
+}
+
+ssize_t ServerResponse::sendServerResponse(void)
+{
+	// Total bytes sent to all clients. This may seem odd. Think of better return value or change the logic.
+	ssize_t overallBytesSent = 0;
+	if (this->action == this->SEND)
+	{
+		std::cout << "SEND" << std::endl;
+		std::string buff = this->data;
+		int size = buff.size();
+
+		for (int i = 0; i < (int)this->getClientsToSend().size(); i++)
+		{
+			ssize_t totalBytesSentToClient = 0;
+			ssize_t bytesSent = 0;
+
+			while (totalBytesSentToClient < (ssize_t)size)
+			{
+				bytesSent = send(this->getClientsToSend()[i], buff.c_str() + totalBytesSentToClient, size - totalBytesSentToClient, 0);
+
+				if (bytesSent == -1)
+				{
+					if (errno == EAGAIN || errno == EWOULDBLOCK)
+					{
+						 continue;  // Retry if the socket is non-blocking and would block i.e socket can be busy
+					}
+					else
+					{
+						// Write logger class
+						// Log the error (you might want to log the client ID too)
+						perror("send error");
+						return -1;  // Terminate on hard errors
+					}
+				}
+				totalBytesSentToClient += bytesSent;
+			}
+
+			overallBytesSent += totalBytesSentToClient;
+		}
+	}
+	else if (this->action == this->NOSEND)
+		std::cout << "NOSEND" << std::endl;
+	else if (this->action == this->QUIT)
+	{
+		// Assuming there is only one client to terminated. Am I right?
+		std::cout << "QUIT" << std::endl;
+		close(this->getClientsToSend()[0]);
+	}
+	return (overallBytesSent);
 }
