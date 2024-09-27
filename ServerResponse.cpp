@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 23:09:38 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/25 19:59:26 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/09/27 12:05:33 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,8 @@
 //{client_fd, action, data}
 ServerResponse::ServerResponse() : action(NOSEND), /*clientFd(0),*/ clientsToSend(), data("") {}
 // ServerResponse::ServerResponse(int clientFd) : action(NOSEND), clientFd(clientFd), data(""), clientsToSend() {}
-ServerResponse::ServerResponse(const ServerResponse &obj)
-{
-	this->action = obj.action;
-	// this->clientFd = obj.clientFd;
-	this->data = obj.data;
-	this->clientsToSend = obj.clientsToSend;
-}
+ServerResponse::ServerResponse(const ServerResponse &obj) : action(obj.action), clientsToSend(obj.clientsToSend), data(obj.data) {}
+
 ServerResponse &ServerResponse::operator=(const ServerResponse &obj)
 {
 	if (this != &obj)
@@ -36,7 +31,6 @@ ServerResponse &ServerResponse::operator=(const ServerResponse &obj)
 }
 
 ServerResponse::~ServerResponse() {}
-
 
 const std::string &ServerResponse::getResponse(void)
 {

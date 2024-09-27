@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:33 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/26 19:08:16 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/09/27 11:59:26 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,7 @@ class ProcessData
 	private:
 		ServerData *serverData;
 		ClientRequest *clientRequest;
-		std::string response;
+		ServerResponse serverResponse;
+
+		std::string response;  // testing purpose only
 };
