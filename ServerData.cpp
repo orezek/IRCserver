@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerData.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 20:01:51 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/26 22:43:51 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/27 16:42:07 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,9 @@ void ServerData::setServerPassword(const std::string &serverPassword)
 const std::string &ServerData::getServerPassword(void)
 {
 	return (ServerData::SERVER_PASSWORD);
+}
+
+const std::string &ServerData::getServerName(void)
+{
+	return (ServerData::SERVER_NAME);
 }
