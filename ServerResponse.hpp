@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 23:09:35 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/25 19:59:42 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/09/27 16:16:16 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ class ServerResponse
 		enum Action
 		{
 			SEND = 0,
-			NOSEND
+			NOSEND,
+			QUIT
 		};
 
 		ServerResponse(void);
