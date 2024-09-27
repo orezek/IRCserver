@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/26 22:35:58 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/27 18:21:03 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -291,7 +291,7 @@ int ConnectionHandler::handleNewClients(void)
 					}
 					continue;
 				}
-				ClientRequest clientRequest(clientSocketFd, bytesReceived, clientBuffers[clientSocketFd]);
+				ClientRequest clientRequest(clientSocketFd, bytesReceived, clientBuffers[clientSocketFd], this->ipClientAddress);
 				ProcessData processData(&clientRequest, serverData);
 				ServerResponse serverResponse = processData.sendResponse();
 				if ((bytesSent = sendServerResponse(serverResponse)) == -1)
