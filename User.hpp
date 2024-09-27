@@ -33,9 +33,10 @@ class User
 		void setRealname(std::string realname);
 		void setServername(std::string servername);
 
-	private: 
+	private:
 		int userFd;
 		std::string nickname;
+		std::string username;
 		std::string hostname;
 		std::string servername;
 		std::string realname;
