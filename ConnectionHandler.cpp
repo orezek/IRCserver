@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/27 18:21:03 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/27 18:32:35 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ ConnectionHandler::ConnectionHandler()
 	this->ipAddressLenSrv = 0;
 	this->clientSockets = std::vector<int>(MAX_CLIENTS, -1);
 	FD_ZERO(&this->readFds);
+	this->serverData = NULL;
 
 	memset(&this->ipServerAddress, 0, sizeof(this->ipServerAddress));
 	this->ipServerAddress.sin_addr.s_addr = INADDR_ANY;
@@ -29,8 +30,7 @@ ConnectionHandler::ConnectionHandler()
 	memset(&this->ipClientAddress, 0, sizeof(this->ipClientAddress));
 	this->ipClientAddress.sin_addr.s_addr = INADDR_ANY;
 	this->ipClientAddress.sin_family = AF_INET;
-	this->ipServerAddress.sin_port = htons(this->serverPortNumber);
-	this->serverData = NULL;
+	this->ipClientAddress.sin_port = htons(0);
 }
 
 ConnectionHandler::ConnectionHandler(int serverPortNumber, ServerData *serverData)
@@ -42,6 +42,7 @@ ConnectionHandler::ConnectionHandler(int serverPortNumber, ServerData *serverDat
 	this->ipAddressLenSrv = 0;
 	this->clientSockets = std::vector<int>(MAX_CLIENTS, -1);
 	FD_ZERO(&this->readFds);
+	this->serverData = serverData;
 
 	memset(&this->ipServerAddress, 0, sizeof(this->ipServerAddress));
 	this->ipServerAddress.sin_addr.s_addr = INADDR_ANY;
@@ -50,8 +51,7 @@ ConnectionHandler::ConnectionHandler(int serverPortNumber, ServerData *serverDat
 	memset(&this->ipClientAddress, 0, sizeof(this->ipClientAddress));
 	this->ipClientAddress.sin_addr.s_addr = INADDR_ANY;
 	this->ipClientAddress.sin_family = AF_INET;
-	this->ipServerAddress.sin_port = htons(this->serverPortNumber);
-	this->serverData = serverData;
+	this->ipClientAddress.sin_port = htons(-1);
 }
 
 // Copy constructor implementation

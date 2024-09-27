@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 22:08:05 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/27 18:20:38 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/27 18:32:29 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,10 @@ ClientRequest::ClientRequest()
 	this->clientFd = 0;
 	this->bytesReceived = 0;
 	this->data = "";
+	memset(&this->ipClientAddress, 0, sizeof(this->ipClientAddress));
+	this->ipClientAddress.sin_addr.s_addr = INADDR_ANY;
+	this->ipClientAddress.sin_family = AF_INET;
+	this->ipClientAddress.sin_port = htons(0);
 }
 
 // Parameterized constructor
