@@ -27,6 +27,8 @@ class User
 
 		int getUserFd();
 		std::string getNickname();
+		std::string getUsername();
+		std::string getHostname();
 
 		void setNickname(std::string nickname);
 		void setHostname(std::string hostname);
