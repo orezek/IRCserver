@@ -27,15 +27,18 @@ class User
 
 		int getUserFd();
 		std::string getNickname();
+		std::string getUsername();
+		std::string getHostname();
 
 		void setNickname(std::string nickname);
 		void setHostname(std::string hostname);
 		void setRealname(std::string realname);
 		void setServername(std::string servername);
 
-	private: 
+	private:
 		int userFd;
 		std::string nickname;
+		std::string username;
 		std::string hostname;
 		std::string servername;
 		std::string realname;

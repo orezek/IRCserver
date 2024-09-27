@@ -6,15 +6,15 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 23:12:55 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/25 15:30:49 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/09/27 14:37:39 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "User.hpp"
 
-User::User() : userFd(-1), nickname(""), hostname(""), servername(""), realname(""), isOperator(false) {};
+User::User() : userFd(-1), nickname(""), username(""), hostname(""), servername(""), realname(""), isOperator(false) {};
 
-User::User(int userFd) : userFd(userFd), nickname(""), hostname(""), servername(""), realname(""), isOperator(false) {};
+User::User(int userFd) : userFd(userFd), nickname(""), username(""), hostname(""), servername(""), realname(""), isOperator(false) {};
 
 User::~User() {};
 
@@ -42,6 +42,16 @@ int User::getUserFd()
 std::string User::getNickname()
 {
 	return (this->nickname);
+}
+
+std::string User::getUsername()
+{
+	return (this->username);
+}
+
+std::string User::getHostname()
+{
+	return (this->hostname);
 }
 
 void User::setNickname(std::string nickname)

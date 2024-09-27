@@ -6,13 +6,13 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:42:28 by mbartos           #+#    #+#             */
-/*   Updated: 2024/09/26 19:38:59 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/09/27 14:38:50 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "NickCommand.hpp"
 
-NickCommand::NickCommand(ServerData& serverData, ClientMessage& clientMessage) : serverData(serverData), clientMessage(clientMessage)
+NickCommand::NickCommand(ServerData& serverData, ClientMessage& clientMessage) : serverData(serverData), clientMessage(clientMessage), oldNick(""), newNick("")
 {
 	User* user = serverData.users.findUser(clientMessage.getFromUserFd());
 	if (user == NULL)
@@ -20,45 +20,75 @@ NickCommand::NickCommand(ServerData& serverData, ClientMessage& clientMessage) :
 		user = serverData.waitingUsers.findUser(clientMessage.getFromUserFd());
 	}
 
-	std::string oldNickname = user->getNickname();
-	if (oldNickname == "")
-		oldNickname = "*";
+	oldNick = user->getNickname();
+	if (oldNick == "")
+		oldNick = "*";
 
 	// parse clientMessage.parametersString by space
 	// this->parseClientMessage();
-	std::string newNickname = clientMessage.getFirstParameter();
+	newNick = clientMessage.getFirstParameter();
+
 	// check if there is enough parameters for nick change (at least 1)
 	// if not - send error message, not enough parameters - 431 ERR_NONICKNAMEGIVEN
 	// check if the nickname is valid - if not 432 ERR_ERRONEUSNICKNAME
 	// check if the nickname is not same as the previous one - if so - 433 ERR_NICKNAMEINUSE
 	// check if the nickname is not already in use - if it is - 436 ERR_NICKCOLLISION
 	// change the nickname if everything is ok
-	if (newNickname == "")
+	if (newNick.empty() || newNick == "")
 	{
-		std::string response = "431 Not enough parameters for NICK cmd\r\n";  // not official message!
+		std::string response = "431 :No nickname given\r\n";
 		serverResponse.setAction(ServerResponse::SEND);
 		serverResponse.setResponse(response);
 		serverResponse.setClientsToSend(user->getUserFd());
+		std::cout << serverResponse.getResponse() << std::endl;
+		return;
 	}
-	else
+	if (!isValidNick(newNick))
 	{
-		// this->clientMessage.printClientMessage();
-
-		user->setNickname(newNickname);
-
+		// add servername prefix
+		std::string response = "432 ";
+		response.append(oldNick);
+		response.append(" ");
+		response.append(newNick);
+		response.append(" :Erroneus Nickname\r\n");
 		serverResponse.setAction(ServerResponse::SEND);
-		serverResponse.setClientsToSend(user->getUserFd());
-		// TODO - also send to other user, that someone changed the nickname
-
-		// Message to client = serverResponse.data
-		std::string response = ":";
-		response.append(oldNickname);
-		response.append("!mbartos@127.0.0.1 NICK :");
-		response.append(newNickname);
-		response.append("\r\n");
 		serverResponse.setResponse(response);
-		// std::cout << serverResponse.getResponse() << std::endl;
+		serverResponse.setClientsToSend(user->getUserFd());
+		return;
 	}
+	if (!isAlreadyUsedNick(newNick))
+	{
+		// add servername prefix
+		std::string response = "433 ";
+		response.append(oldNick);
+		response.append(" ");
+		response.append(newNick);
+		response.append(" :Nickname is already in use\r\n");
+		serverResponse.setAction(ServerResponse::SEND);
+		serverResponse.setResponse(response);
+		serverResponse.setClientsToSend(user->getUserFd());
+		return;
+	}
+
+	user->setNickname(newNick);
+	serverResponse.setAction(ServerResponse::SEND);
+	serverResponse.setClientsToSend(user->getUserFd());
+	// TODO - also send to other user, that someone changed the nickname
+
+	// Message to client = serverResponse.data
+	std::string response = ":";
+	response.append(oldNick);
+	response.append("!");
+	response.append(user->getUsername());
+	response.append("@");
+	response.append(user->getHostname());
+	response.append(" NICK :");
+	response.append(newNick);
+	response.append("\r\n");
+	if (user->getUsername() == "" || user->getHostname() == "")
+		serverResponse.setAction(ServerResponse::NOSEND);
+	serverResponse.setResponse(response);
+	std::cout << serverResponse.getResponse() << std::endl;
 }
 
 NickCommand::~NickCommand() {}
@@ -103,4 +133,48 @@ ServerResponse NickCommand::getServerResponse()
 std::string NickCommand::getNewNickname()
 {
 	return (clientMessage.getFirstParameter());
+}
+
+bool NickCommand::isValidNick(std::string& nick)
+{
+	std::string allowedChars = "`|^_-{}[]";
+
+	if (nick.size() > 9)
+		return (false);
+
+	for (std::string::const_iterator it = nick.begin(); it != nick.end(); ++it)
+	{
+		char character = *it;
+
+		// Check first character - cannot be digit or hyphen
+		if (it == nick.begin())
+		{
+			if (std::isdigit(character) || character == '-')
+				return (false);
+		}
+		// Check if character is alphanumeric
+		if (!std::isalnum(character))
+		{
+			// If it's not alphanumeric, check if it's in the allowed characters string
+			if (allowedChars.find(character) == std::string::npos)
+			{
+				// Character is not alphanumeric and not in the allowed set
+				return (false);
+			}
+		}
+	}
+	return (true);
+}
+
+bool NickCommand::isAlreadyUsedNick(std::string& nick)
+{
+	User* user = serverData.users.findUser(nick);
+	if (user == NULL)
+	{
+		user = serverData.waitingUsers.findUser(nick);
+	}
+
+	if (user == NULL)
+		return (true);
+	return (false);
 }
