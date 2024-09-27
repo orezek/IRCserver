@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:20:19 by mbartos           #+#    #+#             */
-/*   Updated: 2024/09/27 14:22:36 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/09/27 16:07:52 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,9 @@ class NickCommand
 		std::string getNewNickname();
 		bool isValidNick(std::string& nick);
 		bool isAlreadyUsedNick(std::string& nick);
+
+		void setServerResponse431();
+		void setServerResponse432();
+		void setServerResponse433();
+
 };

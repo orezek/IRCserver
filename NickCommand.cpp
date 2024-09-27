@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:42:28 by mbartos           #+#    #+#             */
-/*   Updated: 2024/09/27 15:58:44 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/09/27 16:07:33 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,44 +28,23 @@ NickCommand::NickCommand(ServerData& serverData, ClientMessage& clientMessage) :
 
 	if (newNick.empty() || newNick == "")
 	{
-		// add servername prefix
-		std::string response = "431 :No nickname given\r\n";
-		serverResponse.setAction(ServerResponse::SEND);
-		serverResponse.setResponse(response);
-		serverResponse.setClientsToSend(user->getUserFd());
+		setServerResponse431();
 		return;
 	}
 	if (!isValidNick(newNick))
 	{
-		// add servername prefix
-		std::string response = "432 ";
-		response.append(oldNick);
-		response.append(" ");
-		response.append(newNick);
-		response.append(" :Erroneus Nickname\r\n");
-		serverResponse.setAction(ServerResponse::SEND);
-		serverResponse.setResponse(response);
-		serverResponse.setClientsToSend(user->getUserFd());
+		setServerResponse432();
 		return;
 	}
 	if (!isAlreadyUsedNick(newNick))
 	{
-		// add servername prefix
-		std::string response = "433 ";
-		response.append(oldNick);
-		response.append(" ");
-		response.append(newNick);
-		response.append(" :Nickname is already in use\r\n");
-		serverResponse.setAction(ServerResponse::SEND);
-		serverResponse.setResponse(response);
-		serverResponse.setClientsToSend(user->getUserFd());
+		setServerResponse433();
 		return;
 	}
 
 	user->setNickname(newNick);
 
-	// TODO - also send to other user, that someone changed the nickname? in rooms?
-
+	// TODO - also send to other user, that someone has changed the nickname? in rooms?
 	std::string response = ":";
 	response.append(oldNick);
 	response.append("!");
@@ -152,4 +131,39 @@ bool NickCommand::isAlreadyUsedNick(std::string& nick)
 		return (true);
 
 	return (false);
+}
+
+void NickCommand::setServerResponse431()
+{
+	// add servername prefix
+	std::string response = "431 :No nickname given\r\n";
+	serverResponse.setAction(ServerResponse::SEND);
+	serverResponse.setResponse(response);
+	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
+}
+
+void NickCommand::setServerResponse432()
+{
+	// add servername prefix
+	std::string response = "432 ";
+	response.append(oldNick);
+	response.append(" ");
+	response.append(newNick);
+	response.append(" :Erroneus Nickname\r\n");
+	serverResponse.setAction(ServerResponse::SEND);
+	serverResponse.setResponse(response);
+	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
+}
+
+void NickCommand::setServerResponse433()
+{
+	// add servername prefix
+	std::string response = "433 ";
+	response.append(oldNick);
+	response.append(" ");
+	response.append(newNick);
+	response.append(" :Nickname is already in use\r\n");
+	serverResponse.setAction(ServerResponse::SEND);
+	serverResponse.setResponse(response);
+	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
 }
