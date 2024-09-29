@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:45:52 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/26 21:57:53 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/29 10:14:27 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 IrcServer::IrcServer()
 {
-	this->serverPortNumber = 0;
+	this->serverPortNumber = -1;
 	this->ircPassword = "default";
 	this->serverData = ServerData();
 }
@@ -22,6 +22,7 @@ IrcServer::IrcServer()
 IrcServer::IrcServer(int serverPortNumber, std::string ircPassword) : serverPortNumber(serverPortNumber), ircPassword(ircPassword), serverData()
 {
 	serverData.setServerPassword(this->ircPassword);
+	serverData.setServerPortNumber(this->serverPortNumber);
 };
 
 IrcServer::IrcServer(const IrcServer &obj)
