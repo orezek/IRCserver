@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/09/30 10:34:12 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/09/30 13:27:59 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,16 @@ void ClientRequestParser::parseParameters()
 {
 	if (StringUtils::toUpperCase(commandString) == "NICK")
 	{
-		parseNickParameters();
+		parseParametersByNewline();
+	}
+	else if (StringUtils::toUpperCase(commandString) == "PASS")
+	{
+		parseParametersByNewline();
 	}
 	// add functionality for other commands
 }
 
-void ClientRequestParser::parseNickParameters()
+void ClientRequestParser::parseParametersByNewline()
 {
 	std::string delimiters = " \r\n";
 	int pos = 0;
