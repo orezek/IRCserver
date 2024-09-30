@@ -3,19 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   ServerResponse.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 23:09:35 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/27 19:55:48 by orezek           ###   ########.fr       */
+/*   Updated: 2024/09/30 11:17:18 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
+#include <stdio.h>
+#include <sys/socket.h>
+#include <unistd.h>
+
+#include <cerrno>
+#include <iostream>
 #include <string>
 #include <vector>
-#include <sys/socket.h>
-#include <iostream>
-#include <unistd.h>
+
 
 // To be implemented
 // {client_fd, action, data}
