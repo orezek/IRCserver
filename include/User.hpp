@@ -39,7 +39,7 @@ class User
 		void setServername(std::string servername);
 		void setValidPass(bool passValue);
 		void setValidNick(bool nickValue);
-		void setValidUser(bool userValue)
+		void setValidUser(bool userValue);
 
 	private:
 		int userFd;
