@@ -6,7 +6,7 @@
 #    By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/21 10:59:06 by mbartos           #+#    #+#              #
-#    Updated: 2024/09/30 11:44:28 by mbartos          ###   ########.fr        #
+#    Updated: 2024/09/30 12:21:34 by mbartos          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,49 +16,47 @@ RED =	\033[31m
 BCYAN =	\033[96m
 NC =	\033[0m
 
-#name
+# Name of the executable
 NAME =		ircserv
 
-#compiler
+# Compiler and flags
 CCP =		c++
-# CFLAGS =	-Wall -Wextra -Werror
-CFLAGS =	-g -Wall -Wextra -Werror -std=c++98
+CFLAGS =	-g -Wall -Wextra -Werror -std=c++98 \
+			-I./include/
 
-#sources
-SRC_PATH = *
-SRC =	$(wildcard $(SRC_PATH)*.cpp)
+# Source and object paths
+SRC_PATH = ./src/
+SRC =		$(wildcard $(SRC_PATH)*.cpp)
 
-#objects
+# Objects and dependencies
 OBJ_PATH =	obj/
-OBJ =		$(SRC:.cpp=.o)
-OBJS =		$(addprefix $(OBJ_PATH), $(OBJ))
+OBJ =		$(SRC:$(SRC_PATH)%.cpp=$(OBJ_PATH)%.o)  # Ensures correct object file paths
+DEPS =		$(OBJ:.o=.d)
 
-# binary directory
+# Binary directory
 BIN_PATH = bin/
-
-# dependency files
-DEPS =      $(OBJ:.o=.d)
-DEP_PATH =  $(OBJ_PATH)
 
 all: $(BIN_PATH)$(NAME)
 
-$(OBJ_PATH)%.o : %.cpp | $(OBJ_PATH)
+# Rule to compile .cpp files to .o files
+$(OBJ_PATH)%.o: $(SRC_PATH)%.cpp | $(OBJ_PATH)
 	$(CCP) $(CFLAGS) -MMD -MP -c $< -o $@
 
 # Include dependency files
--include $(OBJS:.o=.d)
+-include $(DEPS)
 
-# $(OBJS): | $(OBJ_PATH)
-
+# Create object directory if it doesn't exist
 $(OBJ_PATH):
 	@mkdir -p $(OBJ_PATH)
 
+# Create binary directory if it doesn't exist
 $(BIN_PATH):
 	@mkdir -p $(BIN_PATH)
 
-$(BIN_PATH)$(NAME): $(OBJS) | $(BIN_PATH)
+# Link object files to create the final executable
+$(BIN_PATH)$(NAME): $(OBJ) | $(BIN_PATH)
 	@echo "$(BOLD)$(BCYAN)[ Compiling $(NAME)... ]$(NC)"
-	$(CCP) $(CFLAGS) $(OBJS) -o $(BIN_PATH)$(NAME)
+	$(CCP) $(CFLAGS) $(OBJ) -o $@
 	@echo "$(BOLD)$(GREEN)[ Program $(NAME) ready in bin/ folder! ]$(NC)"
 
 clean:
@@ -71,4 +69,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all, re, clean, fclean
+.PHONY: all re clean fclean
