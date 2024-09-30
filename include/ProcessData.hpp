@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:33 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/30 13:49:11 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/09/30 14:34:39 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #include "ServerData.hpp"
 #include "ServerResponse.hpp"
 #include "StringUtils.hpp"
+#include "UserCommand.hpp"
 
 /*
 	Class that handles IRC protocol, either it can handle the ligic itself
