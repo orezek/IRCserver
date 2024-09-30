@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/27 12:03:26 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/09/30 13:47:27 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,15 @@ ProcessData::ProcessData(ClientRequest *clientRequest, ServerData *serverData) :
 	{
 		if (serverData->waitingUsers.findUser(userFd) == NULL)
 		{
-			// ADD - check PASS if server has pass
-			// If pass is ok, add new user
 			serverData->waitingUsers.addUser(userFd);
 		}
-
+		if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "PASS")
+		{
+			PassCommand passCommand(*(this->serverData), clientMessage);
+			serverResponse = passCommand.getServerResponse();
+			// serverResponse.setAction(ServerResponse::NOSEND); // ONLY IF THE NICKNAME WAS ASSIGNED - MEANING CMD IS NICK - MAEBY IT IS NOT NECESSARY
+			return ;  // should do nothing?
+		}
 		// could be only NICK or USER
 		if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "NICK")
 		{
