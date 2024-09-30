@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/09/26 19:44:28 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/09/30 10:34:12 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,11 @@ void ClientRequestParser::parseCommandString()
 {
 	int cmdStart = tempInputData.find_first_not_of(" \n");
 	int cmdEnd = tempInputData.find_first_of(" \n", cmdStart);
-
-	this->commandString = tempInputData.substr(cmdStart, cmdEnd - cmdStart);
-	this->tempInputData = tempInputData.substr(cmdEnd + 1, tempInputData.size() - cmdEnd);
+	if (cmdStart < cmdEnd)
+	{
+		this->commandString = tempInputData.substr(cmdStart, cmdEnd - cmdStart);
+		this->tempInputData = tempInputData.substr(cmdEnd + 1, tempInputData.size() - cmdEnd);
+	}
 }
 
 void ClientRequestParser::parseParameters()
