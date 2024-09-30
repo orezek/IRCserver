@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/09/30 13:27:59 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/09/30 14:18:20 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,10 @@ void ClientRequestParser::parseParameters()
 		parseParametersByNewline();
 	}
 	else if (StringUtils::toUpperCase(commandString) == "PASS")
+	{
+		parseParametersByNewline();
+	}
+	else if (StringUtils::toUpperCase(commandString) == "USER")
 	{
 		parseParametersByNewline();
 	}
