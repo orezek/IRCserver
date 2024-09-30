@@ -29,11 +29,19 @@ class User
 		std::string getNickname();
 		std::string getUsername();
 		std::string getHostname();
+		bool getPassSent();
+		bool getPassValid();
+		bool getNickValid();
+		bool getUserValid();
 
 		void setNickname(std::string nickname);
 		void setHostname(std::string hostname);
 		void setRealname(std::string realname);
 		void setServername(std::string servername);
+		void setPassSent(bool passSentValue);
+		void setPassValid(bool passValue);
+		void setNickValid(bool nickValue);
+		void setUserValid(bool userValue);
 
 	private:
 		int userFd;
@@ -44,5 +52,10 @@ class User
 		std::string realname;
 		bool isOperator;  // is this user an operator?
 		std::vector<Room> rooms;
+
+		bool passSent;
+		bool passValid;
+		bool nickValid;
+		bool userValid;
 		// to do //
 };

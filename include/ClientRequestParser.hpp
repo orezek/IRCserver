@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:09:39 by mbartos           #+#    #+#             */
-/*   Updated: 2024/09/26 19:12:45 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/09/30 13:27:44 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,5 @@ class ClientRequestParser
 		void parseCommandString();
 		void parseParameters();
 
-		void parseNickParameters();
+		void parseParametersByNewline();
 };
