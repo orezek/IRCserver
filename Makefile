@@ -1,49 +1,74 @@
-# Compiler and flags
-CXX         = c++
-#CXXFLAGS    = -Wall -Wextra -Werror -std=c++98
-INCLUDES    = -I.
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2023/11/21 10:59:06 by mbartos           #+#    #+#              #
+#    Updated: 2024/09/30 11:44:28 by mbartos          ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
-# Directories
-SRCDIR      = .
-OBJDIR      = ./obj
-BINDIR      = ./bin
+BOLD =	\033[1m
+GREEN =	\033[32m
+RED =	\033[31m
+BCYAN =	\033[96m
+NC =	\033[0m
 
-# Target executable
-TARGET      = $(BINDIR)/ircserv
+#name
+NAME =		ircserv
 
-# Automatically detect source files
-SOURCES     = $(wildcard $(SRCDIR)/*.cpp)
-OBJECTS     = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SOURCES))
+#compiler
+CCP =		c++
+# CFLAGS =	-Wall -Wextra -Werror
+CFLAGS =	-g -Wall -Wextra -Werror -std=c++98
 
-# Default target
-all: $(BINDIR) $(OBJDIR) $(TARGET)
+#sources
+SRC_PATH = *
+SRC =	$(wildcard $(SRC_PATH)*.cpp)
 
-# Rule to build the target
-$(TARGET): $(OBJECTS)
-	$(CXX) $(CXXFLAGS) $(OBJECTS) -o $(TARGET)
+#objects
+OBJ_PATH =	obj/
+OBJ =		$(SRC:.cpp=.o)
+OBJS =		$(addprefix $(OBJ_PATH), $(OBJ))
 
-# Rule to build object files
-$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+# binary directory
+BIN_PATH = bin/
 
-# Ensure bin directory exists
-$(BINDIR):
-	mkdir -p $(BINDIR)
+# dependency files
+DEPS =      $(OBJ:.o=.d)
+DEP_PATH =  $(OBJ_PATH)
 
-# Ensure obj directory exists
-$(OBJDIR):
-	mkdir -p $(OBJDIR)
+all: $(BIN_PATH)$(NAME)
 
-# Clean object files
+$(OBJ_PATH)%.o : %.cpp | $(OBJ_PATH)
+	$(CCP) $(CFLAGS) -MMD -MP -c $< -o $@
+
+# Include dependency files
+-include $(OBJS:.o=.d)
+
+# $(OBJS): | $(OBJ_PATH)
+
+$(OBJ_PATH):
+	@mkdir -p $(OBJ_PATH)
+
+$(BIN_PATH):
+	@mkdir -p $(BIN_PATH)
+
+$(BIN_PATH)$(NAME): $(OBJS) | $(BIN_PATH)
+	@echo "$(BOLD)$(BCYAN)[ Compiling $(NAME)... ]$(NC)"
+	$(CCP) $(CFLAGS) $(OBJS) -o $(BIN_PATH)$(NAME)
+	@echo "$(BOLD)$(GREEN)[ Program $(NAME) ready in bin/ folder! ]$(NC)"
+
 clean:
-	rm -rf $(OBJDIR)
+	@rm -Rf $(OBJ_PATH)
+	@echo "$(BOLD)$(RED)[ Obj files deleted ]$(NC)"
 
-# Clean object files and executable
 fclean: clean
-	rm -rf $(BINDIR)
+	@rm -f $(BIN_PATH)$(NAME)
+	@echo "$(BOLD)$(RED)[ Program deleted ]$(NC)"
 
-# Rebuild the project
 re: fclean all
 
-# Phony targets
-.PHONY: all clean fclean re
+.PHONY: all, re, clean, fclean
