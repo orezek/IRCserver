@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 23:09:35 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/30 11:17:18 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/01 19:35:44 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
+#include <algorithm>
 #include <cerrno>
 #include <iostream>
 #include <string>
 #include <vector>
-
 
 // To be implemented
 // {client_fd, action, data}
@@ -41,6 +41,7 @@ class ServerResponse
 
 		const std::string &getResponse(void);
 		void setResponse(const std::string &response);
+		void appendResponse(const std::string &response);
 		// int getClientFd(void);
 		// void setClientFd(int clientFd);
 		Action getAction(void) const;
