@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/30 15:21:22 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/01 19:21:14 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ ProcessData::ProcessData(ClientRequest *clientRequest, ServerData *serverData) :
 			{
 				serverResponse.setResponse("Validated\r\n");
 				// move user from waitingUsers to Users
+				serverData->validateWaitingUser(userFd);
 			}
 			else
 			{
