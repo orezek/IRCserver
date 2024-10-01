@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerData.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 20:01:51 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/29 10:17:03 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/01 19:05:38 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,15 @@ const int &ServerData::getServerPortNumber(void)
 	return (ServerData::SERVER_PORT_NUMBER);
 }
 
-
 void ServerData::setServerPortNumber(const int &serverPortNumber)
 {
 	ServerData::SERVER_PORT_NUMBER = serverPortNumber;
+}
+
+void ServerData::validateWaitingUser(int userFd)
+{
+	User *waitingUser = waitingUsers.findUser(userFd);
+
+	users.addUser(waitingUser);
+	waitingUsers.deleteUser(waitingUser);
 }
