@@ -24,6 +24,7 @@ class User
 		~User();
 		User(const User &obj);
 		User &operator=(const User &obj);
+		bool operator==(const User& other) const;
 
 		int getUserFd();
 		std::string getNickname();
@@ -35,6 +36,7 @@ class User
 		bool getUserValid();
 
 		void setNickname(std::string nickname);
+		void setUsername(std::string username);
 		void setHostname(std::string hostname);
 		void setRealname(std::string realname);
 		void setServername(std::string servername);
@@ -50,6 +52,9 @@ class User
 		std::string hostname;
 		std::string servername;
 		std::string realname;
+
+		std::string fullUsername;  // @ip
+
 		bool isOperator;  // is this user an operator?
 		std::vector<Room> rooms;
 

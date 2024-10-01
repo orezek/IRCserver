@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerResponse.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 23:09:38 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/27 19:57:19 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/01 19:36:46 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,11 @@ void ServerResponse::setResponse(const std::string &response)
 	this->data = response;
 }
 
+void ServerResponse::appendResponse(const std::string &response)
+{
+	this->data.append(response);
+}
+
 // int ServerResponse::getClientFd(void)
 // {
 // 	return (this->clientFd);
@@ -69,7 +74,12 @@ const std::vector<int> &ServerResponse::getClientsToSend(void)
 
 void ServerResponse::setClientsToSend(int clientFd)
 {
-	this->clientsToSend.push_back(clientFd);
+	std::vector<int>::iterator it = std::find(clientsToSend.begin(), clientsToSend.end(), clientFd);
+
+	if (it == clientsToSend.end())
+	{
+		this->clientsToSend.push_back(clientFd);
+	}
 }
 
 ssize_t ServerResponse::sendServerResponse(void)
@@ -95,7 +105,7 @@ ssize_t ServerResponse::sendServerResponse(void)
 				{
 					if (errno == EAGAIN || errno == EWOULDBLOCK)
 					{
-						 continue;  // Retry if the socket is non-blocking and would block i.e socket can be busy
+						continue;  // Retry if the socket is non-blocking and would block i.e socket can be busy
 					}
 					else
 					{

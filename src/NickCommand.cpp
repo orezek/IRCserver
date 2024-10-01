@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:42:28 by mbartos           #+#    #+#             */
-/*   Updated: 2024/09/27 16:58:35 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/09/30 14:33:48 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ NickCommand::NickCommand(ServerData& serverData, ClientMessage& clientMessage) :
 	}
 
 	user->setNickname(newNick);
+	user->setNickValid(true);
 	setServerResponseValid(user);
 }
 

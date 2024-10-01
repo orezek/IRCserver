@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:18 by mbartos           #+#    #+#             */
-/*   Updated: 2024/09/26 19:33:44 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/09/30 14:37:58 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ class ClientMessage
 		void addToParameters(std::string newParameter);
 		void printClientMessage();
 		std::string getFirstParameter();
+		std::string getParameterAtPosition(size_t position);
 
 	private:
 		int fromUserFd;

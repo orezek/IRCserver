@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/30 13:47:27 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/01 20:26:42 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,34 +58,77 @@ ProcessData::ProcessData(ClientRequest *clientRequest, ServerData *serverData) :
 			PassCommand passCommand(*(this->serverData), clientMessage);
 			serverResponse = passCommand.getServerResponse();
 			// serverResponse.setAction(ServerResponse::NOSEND); // ONLY IF THE NICKNAME WAS ASSIGNED - MEANING CMD IS NICK - MAEBY IT IS NOT NECESSARY
-			return ;  // should do nothing?
+			// return;  // should do nothing?
 		}
-		// could be only NICK or USER
-		if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "NICK")
+		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "NICK")
 		{
 			NickCommand nickCommand(*(this->serverData), clientMessage);
 			serverResponse = nickCommand.getServerResponse();
-			// serverResponse.setAction(ServerResponse::NOSEND); // ONLY IF THE NICKNAME WAS ASSIGNED - MEANING CMD IS NICK - MAEBY IT IS NOT NECESSARY
-			return ;  // should do nothing?
+			// return;
 		}
-		// if (clientMessage.getCommandString() == "USER")
-		// {
-		// 	waitingUser->setHostname("hostname1");
-		// 	waitingUser->setRealname("realname1");
-		// 	waitingUser->setServername("servername1");
-		// 	return (":irc.local 001 " + waitingUser->getNickname() + " :Welcome to the Localnet IRC Network mbartos!mbartos@127.0.0.1\r\n");
-		// }
+		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "USER")
+		{
+			UserCommand userCommand(*(this->serverData), clientMessage);
+			serverResponse = userCommand.getServerResponse();
+			// return;
+		}
+		User *user = serverData->waitingUsers.findUser(userFd);
+		if (user->getUserValid() && user->getNickValid() && user->getPassSent())
+		{
+			serverResponse.setAction(ServerResponse::SEND);
+			serverResponse.setClientsToSend(userFd);
+			if (user->getPassValid())
+			{
+				serverResponse.setResponse("Validated\r\n");
+				// move user from waitingUsers to Users
+				serverData->validateWaitingUser(userFd);
+			}
+			else
+			{
+				serverResponse.setResponse("Not validated - wrong password\r\n");
+				// kick user?
+			}
+		}
+		return;
 	}
 	else
 	{
 		// whole command logic will be there
-		serverResponse.setAction(ServerResponse::SEND);
-		serverResponse.setClientsToSend(userFd);
-		std::string str = "Validated user - Response processed by ProcessData class! -: ";
-		str.append(response);
-		serverResponse.setResponse(str);
+		if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "PASS")
+		{
+			PassCommand passCommand(*(this->serverData), clientMessage);
+			serverResponse = passCommand.getServerResponse();
+			// serverResponse.setAction(ServerResponse::NOSEND); // ONLY IF THE NICKNAME WAS ASSIGNED - MEANING CMD IS NICK - MAEBY IT IS NOT NECESSARY
+			// return;  // should do nothing?
+		}
+		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "NICK")
+		{
+			NickCommand nickCommand(*(this->serverData), clientMessage);
+			serverResponse = nickCommand.getServerResponse();
+			// return;
+		}
+		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "USER")
+		{
+			UserCommand userCommand(*(this->serverData), clientMessage);
+			serverResponse = userCommand.getServerResponse();
+			// return;
+		}
+		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "QUIT")
+		{
+			QuitCommand quitCommand(*(this->serverData), clientMessage);
+			serverResponse = quitCommand.getServerResponse();
+			// return;
+		}
+		else
+		{
+			serverResponse.setAction(ServerResponse::SEND);
+			serverResponse.setClientsToSend(userFd);
+			std::string str = "Validated user - Response processed by ProcessData class! -: ";
+			str.append(response);
+			serverResponse.setResponse(str);
+		}
 
-		return ;
+		return;
 	}
 
 	serverResponse.setAction(ServerResponse::SEND);
@@ -94,7 +137,7 @@ ProcessData::ProcessData(ClientRequest *clientRequest, ServerData *serverData) :
 	str.append(response);
 	serverResponse.setResponse(str);
 
-	return ;
+	return;
 }
 
 // Copy constructor

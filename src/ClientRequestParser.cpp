@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/09/30 13:27:59 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/01 20:20:17 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,23 @@ void ClientRequestParser::parseCommandString()
 
 void ClientRequestParser::parseParameters()
 {
-	if (StringUtils::toUpperCase(commandString) == "NICK")
+	std::string command = StringUtils::toUpperCase(commandString);
+
+	if (command == "NICK")
 	{
 		parseParametersByNewline();
 	}
-	else if (StringUtils::toUpperCase(commandString) == "PASS")
+	else if (command == "PASS")
 	{
 		parseParametersByNewline();
+	}
+	else if (command == "USER")
+	{
+		parseParametersByNewline();
+	}
+	else if (command == "QUIT")
+	{
+		parseParametersAsOneText();
 	}
 	// add functionality for other commands
 }
@@ -89,4 +99,24 @@ void ClientRequestParser::parseParametersByNewline()
 		tempInputData = tempInputData.erase(0, pos + 1);
 	}
 	// clientMessage.addToParameters(tempInputData);
+}
+
+void ClientRequestParser::parseParametersAsOneText()
+{
+	std::string delimiters = "\r\n";
+	std::string parameter;
+
+	std::size_t cmdStart;
+	if (tempInputData[0] == ':')
+		cmdStart = 1;
+	else
+		cmdStart = 0;
+	std::size_t cmdEnd = tempInputData.find_first_of(delimiters, cmdStart);
+
+	if (cmdEnd != std::string::npos && cmdStart < cmdEnd)
+	{
+		parameter = tempInputData.substr(cmdStart, cmdEnd - cmdStart);
+		parameters.push_back(parameter);
+		tempInputData = tempInputData.erase(0, cmdEnd + 1);
+	}
 }

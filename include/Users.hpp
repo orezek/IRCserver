@@ -6,12 +6,13 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:49:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/09/25 19:32:32 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/01 19:05:49 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
+#include <algorithm>
 #include <string>
 #include <vector>
 
@@ -28,6 +29,8 @@ class Users
 		User *findUser(int userFd);
 		User *findUser(std::string nickname);
 		void addUser(int userFd);
+		void addUser(User *user);
+		void deleteUser(User *user);
 		// updateUser(std::string nickname, std::string hostname, std::string servername, std::string realname)
 		// deleteUser(std::string nickname)
 		// setUserNickname(std::string nickname)

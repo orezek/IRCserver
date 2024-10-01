@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:21 by mbartos           #+#    #+#             */
-/*   Updated: 2024/09/26 19:37:32 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/09/30 14:45:05 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,14 @@ std::string ClientMessage::getFirstParameter()
 	else
 		firstParameter = *parameters.begin();
 	return (firstParameter);
+}
+
+std::string ClientMessage::getParameterAtPosition(size_t position)
+{
+	if (position >= parameters.size())
+		return ("");
+
+	return parameters[position];
 }
 
 // --- PRIVATE ---
