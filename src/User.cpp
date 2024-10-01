@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 23:12:55 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/01 19:09:16 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/01 20:21:57 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ User::User(int userFd) : userFd(userFd), nickname(""), username(""), hostname(""
 
 User::~User() {};
 
-User::User(const User &obj) : userFd(obj.userFd), nickname(obj.nickname), hostname(obj.hostname), servername(obj.servername), realname(obj.realname), fullUsername(obj.fullUsername), isOperator(obj.isOperator), passSent(obj.passSent), passValid(obj.passValid), nickValid(obj.nickValid), userValid(obj.userValid) {};
+User::User(const User &obj) : userFd(obj.userFd), nickname(obj.nickname), username(obj.username), hostname(obj.hostname), servername(obj.servername), realname(obj.realname), fullUsername(obj.fullUsername), isOperator(obj.isOperator), passSent(obj.passSent), passValid(obj.passValid), nickValid(obj.nickValid), userValid(obj.userValid) {};
 
 User &User::operator=(const User &obj)
 {
