@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:51:16 by mbartos           #+#    #+#             */
-/*   Updated: 2024/09/25 19:36:16 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/01 19:05:07 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,20 @@ void Users::addUser(int userFd)
 {
 	User tempUser = User(userFd);
 	userList.push_back(tempUser);
+}
+
+void Users::addUser(User* user)
+{
+	userList.push_back(*user);
+}
+
+void Users::deleteUser(User* user)
+{
+	std::vector<User>::iterator it = std::find(userList.begin(), userList.end(), *user);
+
+	if (it != userList.end()) {
+		userList.erase(it);
+	}
 }
 
 std::vector<int> Users::getAllUserFds()
