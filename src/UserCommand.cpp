@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 14:13:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/09/30 15:13:31 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/01 19:30:59 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,6 @@ UserCommand::UserCommand(ServerData& serverData, ClientMessage& clientMessage) :
 	std::string hostname = clientMessage.getParameterAtPosition(1);
 	std::string servername = clientMessage.getParameterAtPosition(2);
 	std::string realname = clientMessage.getParameterAtPosition(3);
-
-	// std::cout << "Username: |" << username << "|" << std::endl;
-	// std::cout << "Hostname: |" << hostname << "|" << std::endl;
-	// std::cout << "Servername: |" << servername << "|" << std::endl;
-	// std::cout << "Realname: |" << realname << "|" << std::endl;
 
 	if (realname.empty() || servername.empty() || hostname.empty() || username.empty())
 	{
@@ -77,23 +72,19 @@ ServerResponse UserCommand::getServerResponse()
 
 void UserCommand::setServerResponse461()
 {
-	std::cout << "461 start" << std::endl;
 	std::string nickname = user->getNickname();
 	if (nickname.empty())
 	{
 		nickname = "*";
 	}
-	std::cout << "461 after nickname" << std::endl;
 	std::string response = ":";
 	response.append(serverData.getServerName());
 	response.append(" 461 ");
 	response.append(nickname);
 	response.append(" NICK :Not enough parameters.\r\n");
-	std::cout << "461 after appends" << std::endl;
 	serverResponse.setAction(ServerResponse::SEND);
 	serverResponse.setResponse(response);
 	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
-	std::cout << "461 before return" << std::endl;
 }
 
 void UserCommand::setServerResponse462()
