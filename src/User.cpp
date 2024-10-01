@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 23:12:55 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/30 15:23:38 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/01 19:09:16 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,12 @@ User &User::operator=(const User &obj)
 	}
 	return (*this);
 };
+
+bool User::operator==(const User &other) const
+{
+	// The objects are same if the FDs match
+	return (this->userFd == other.userFd);
+}
 
 int User::getUserFd()
 {

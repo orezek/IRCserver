@@ -24,6 +24,7 @@ class User
 		~User();
 		User(const User &obj);
 		User &operator=(const User &obj);
+		bool operator==(const User& other) const;
 
 		int getUserFd();
 		std::string getNickname();
