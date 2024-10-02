@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ClientRequest.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 22:08:05 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/27 18:32:29 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/02 11:44:54 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 // Default constructor
 ClientRequest::ClientRequest()
 {
+	this->onlyOneMessage = false;
 	this->clientFd = 0;
 	this->bytesReceived = 0;
 	this->data = "";
@@ -27,6 +28,7 @@ ClientRequest::ClientRequest()
 // Parameterized constructor
 ClientRequest::ClientRequest(const int &clientFd, const ssize_t &bytesReceived, const std::string &data, struct sockaddr_in ipClientAddress)
 {
+	this->onlyOneMessage = false;
 	this->clientFd = clientFd;
 	this->bytesReceived = bytesReceived;
 	this->data = data;
@@ -36,6 +38,7 @@ ClientRequest::ClientRequest(const int &clientFd, const ssize_t &bytesReceived, 
 // Copy constructor (deep copy)
 ClientRequest::ClientRequest(const ClientRequest &obj)
 {
+	this->onlyOneMessage = obj.onlyOneMessage;
 	this->clientFd = obj.clientFd;
 	this->bytesReceived = obj.bytesReceived;
 	this->data = obj.data;
@@ -47,6 +50,7 @@ ClientRequest &ClientRequest::operator=(const ClientRequest &obj)
 {
 	if (this != &obj)
 	{
+		this->onlyOneMessage = obj.onlyOneMessage;
 		this->clientFd = obj.clientFd;
 		this->bytesReceived = obj.bytesReceived;
 		this->data = obj.data;
@@ -73,4 +77,14 @@ std::string &ClientRequest::getClientData(void)
 int ClientRequest::getBytesReceived(void) const
 {
 	return (this->bytesReceived);
+}
+
+bool ClientRequest::isOnlyOneMessage()
+{
+	return (this->onlyOneMessage);
+}
+
+void ClientRequest::setOnlyOneMessage(bool value)
+{
+	this->onlyOneMessage = value;
 }

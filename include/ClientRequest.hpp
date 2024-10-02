@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ClientRequest.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:25:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/27 18:23:37 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/02 11:42:51 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,12 @@ class ClientRequest
 		int getClientFd(void) const;
 		std::string &getClientData(void);
 		int getBytesReceived(void) const;
+		
+		bool isOnlyOneMessage(void);
+		void setOnlyOneMessage(bool);
 
 	private:
+		bool onlyOneMessage;
 		std::string data;
 		int clientFd;
 		int bytesReceived;
