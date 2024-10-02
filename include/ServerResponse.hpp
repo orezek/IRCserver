@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 23:09:35 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/01 19:35:44 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/02 17:51:04 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ class ServerResponse
 		const std::vector<int> &getClientsToSend(void);
 		void setClientsToSend(int clientFd);
 		ssize_t sendServerResponse(void);
+		void printServerResponse(void);
 
 	private:
 		Action action;
