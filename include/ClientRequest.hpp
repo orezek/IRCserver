@@ -6,13 +6,14 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:25:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/02 11:42:51 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/02 13:58:17 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
-#include <unistd.h>
 #include <netinet/in.h>
+#include <unistd.h>
+
 #include <cstddef>
 #include <cstring>
 #include <string>
@@ -28,9 +29,11 @@ class ClientRequest
 		int getClientFd(void) const;
 		std::string &getClientData(void);
 		int getBytesReceived(void) const;
-		
+
 		bool isOnlyOneMessage(void);
 		void setOnlyOneMessage(bool);
+
+		void setData(std::string &data);
 
 	private:
 		bool onlyOneMessage;

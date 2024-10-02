@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 22:08:05 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/02 11:44:54 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/02 13:58:18 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ ClientRequest &ClientRequest::operator=(const ClientRequest &obj)
 }
 
 // Destructor
-ClientRequest::~ClientRequest(){}
+ClientRequest::~ClientRequest() {}
 
 // Getter for clientFd
 int ClientRequest::getClientFd(void) const
@@ -87,4 +87,9 @@ bool ClientRequest::isOnlyOneMessage()
 void ClientRequest::setOnlyOneMessage(bool value)
 {
 	this->onlyOneMessage = value;
+}
+
+void ClientRequest::setData(std::string &data)
+{
+	this->data = data;
 }
