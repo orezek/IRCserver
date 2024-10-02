@@ -6,13 +6,14 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:57:16 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/01 18:57:59 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/02 13:48:09 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #include <vector>
 
+#include "ClientRequestQueue.hpp"
 #include "Rooms.hpp"
 #include "Users.hpp"
 
@@ -24,6 +25,7 @@ class ServerData
 		Rooms rooms;
 		Users waitingUsers;
 		Users users;
+		ClientRequestQueue splittedClientRequests;
 		std::vector<int> fileDsDb;  // will be deleted!
 		static void setServerPassword(const std::string &serverPassword);
 		static const std::string &getServerPassword(void);
@@ -37,4 +39,3 @@ class ServerData
 		static std::string SERVER_NAME;
 		static int SERVER_PORT_NUMBER;
 };
-
