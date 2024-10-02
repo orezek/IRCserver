@@ -6,28 +6,53 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 11:29:53 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/02 14:16:17 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/02 18:18:19 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ClientRequestQueue.hpp"
 
 ClientRequestQueue::ClientRequestQueue() {}
-// ClientRequestQueue::ClientRequestQueue(const ClientRequestQueue& refObj) {}
 
-// ClientRequestQueue& ClientRequestQueue::operator=(const ClientRequestQueue& refObj)
-// {
-// 	if (&refObj != this)
-// 	{
-// 	}
-// 	return (*this);
-// }
+ClientRequestQueue::ClientRequestQueue(const ClientRequestQueue& refObj)
+{
+	this->requestsList = refObj.requestsList;
+}
+
+ClientRequestQueue& ClientRequestQueue::operator=(const ClientRequestQueue& refObj)
+{
+	if (this != &refObj)
+	{
+		this->requestsList = refObj.requestsList;
+	}
+	return (*this);
+}
 
 ClientRequestQueue::~ClientRequestQueue() {}
 
 void ClientRequestQueue::push_back(ClientRequest& clientRequest)
 {
 	requestsList.push_back(clientRequest);
+}
+
+ClientRequest* ClientRequestQueue::getFirst()
+{
+	if (!requestsList.empty())
+	{
+		return (&requestsList.front());
+	}
+	else
+	{
+		return (NULL);
+	}
+}
+
+void ClientRequestQueue::deleteFirst()
+{
+	if (!requestsList.empty())
+	{
+		requestsList.erase(requestsList.begin());
+	}
 }
 
 void ClientRequestQueue::printQueue()
