@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 23:09:38 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/02 11:39:33 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/02 11:45:21 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,6 @@ ssize_t ServerResponse::sendServerResponse(void)
 	else if (this->action == this->QUIT)
 	{
 		// Assuming there is only one client to terminated. Am I right?
-		close(this->getClientsToSend()[0]);
 		std::cout << "QUIT" << std::endl;
 		std::string buff = this->data;
 		int size = buff.size();
@@ -159,6 +158,7 @@ ssize_t ServerResponse::sendServerResponse(void)
 
 			overallBytesSent += totalBytesSentToClient;
 		}
+		close(this->getClientsToSend()[0]);
 	}
 	return (overallBytesSent);
 }
