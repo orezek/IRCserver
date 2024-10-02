@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerResponse.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 23:09:38 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/01 19:36:46 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/02 11:39:33 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,8 +126,39 @@ ssize_t ServerResponse::sendServerResponse(void)
 	else if (this->action == this->QUIT)
 	{
 		// Assuming there is only one client to terminated. Am I right?
-		std::cout << "QUIT" << std::endl;
 		close(this->getClientsToSend()[0]);
+		std::cout << "QUIT" << std::endl;
+		std::string buff = this->data;
+		int size = buff.size();
+
+		for (int i = 0; i < (int)this->getClientsToSend().size(); i++)
+		{
+			ssize_t totalBytesSentToClient = 0;
+			ssize_t bytesSent = 0;
+
+			while (totalBytesSentToClient < (ssize_t)size)
+			{
+				bytesSent = send(this->getClientsToSend()[i], buff.c_str() + totalBytesSentToClient, size - totalBytesSentToClient, 0);
+
+				if (bytesSent == -1)
+				{
+					if (errno == EAGAIN || errno == EWOULDBLOCK)
+					{
+						continue;  // Retry if the socket is non-blocking and would block i.e socket can be busy
+					}
+					else
+					{
+						// Write logger class
+						// Log the error (you might want to log the client ID too)
+						perror("send error");
+						return -1;  // Terminate on hard errors
+					}
+				}
+				totalBytesSentToClient += bytesSent;
+			}
+
+			overallBytesSent += totalBytesSentToClient;
+		}
 	}
 	return (overallBytesSent);
 }
