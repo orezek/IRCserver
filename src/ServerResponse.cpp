@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 23:09:38 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/02 18:08:48 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/03 20:13:38 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,11 +122,44 @@ ssize_t ServerResponse::sendServerResponse(void)
 		}
 	}
 	else if (this->action == this->NOSEND)
+	{
 		std::cout << "NOSEND" << std::endl;
+	}
 	else if (this->action == this->QUIT)
 	{
-		// Assuming there is only one client to terminated. Am I right?
+		// Assuming there is only one client to be terminated. Am I right?
 		std::cout << "QUIT" << std::endl;
+		std::string buff = this->data;
+		int size = buff.size();
+
+		for (int i = 0; i < (int)this->getClientsToSend().size(); i++)
+		{
+			ssize_t totalBytesSentToClient = 0;
+			ssize_t bytesSent = 0;
+
+			while (totalBytesSentToClient < (ssize_t)size)
+			{
+				bytesSent = send(this->getClientsToSend()[i], buff.c_str() + totalBytesSentToClient, size - totalBytesSentToClient, 0);
+
+				if (bytesSent == -1)
+				{
+					if (errno == EAGAIN || errno == EWOULDBLOCK)
+					{
+						continue;  // Retry if the socket is non-blocking and would block i.e socket can be busy
+					}
+					else
+					{
+						// Write logger class
+						// Log the error (you might want to log the client ID too)
+						perror("send error");
+						return -1;  // Terminate on hard errors
+					}
+				}
+				totalBytesSentToClient += bytesSent;
+			}
+
+			overallBytesSent += totalBytesSentToClient;
+		}
 		close(this->getClientsToSend()[0]);
 	}
 	return (overallBytesSent);

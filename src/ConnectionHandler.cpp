@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/27 19:45:47 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/03 16:57:17 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ ConnectionHandler::ConnectionHandler()
 	this->ipAddressLenSrv = 0;
 	this->clientSockets = std::vector<int>(MAX_CLIENTS, -1);
 	FD_ZERO(&this->readFds);
+	FD_ZERO(&this->writeFds);
 	this->serverData = NULL;
 
 	memset(&this->ipServerAddress, 0, sizeof(this->ipServerAddress));
@@ -42,6 +43,7 @@ ConnectionHandler::ConnectionHandler(int serverPortNumber, ServerData *serverDat
 	this->ipAddressLenSrv = 0;
 	this->clientSockets = std::vector<int>(MAX_CLIENTS, -1);
 	FD_ZERO(&this->readFds);
+	FD_ZERO(&this->writeFds);
 	this->serverData = serverData;
 
 	memset(&this->ipServerAddress, 0, sizeof(this->ipServerAddress));
@@ -67,6 +69,7 @@ ConnectionHandler::ConnectionHandler(const ConnectionHandler &other)
 {
 	// Copy the fd_set using memcpy
 	memcpy(&this->readFds, &other.readFds, sizeof(fd_set));
+	memcpy(&this->writeFds, &other.writeFds, sizeof(fd_set));
 	// Copy the sockaddr_in structures using memcpy
 	memcpy(&this->ipServerAddress, &other.ipServerAddress, sizeof(struct sockaddr_in));
 	memcpy(&this->ipClientAddress, &other.ipClientAddress, sizeof(struct sockaddr_in));
@@ -87,6 +90,7 @@ ConnectionHandler &ConnectionHandler::operator=(const ConnectionHandler &other)
 
 		// Copy the fd_set using memcpy
 		memcpy(&this->readFds, &other.readFds, sizeof(fd_set));
+		memcpy(&this->writeFds, &other.writeFds, sizeof(fd_set));
 
 		// Copy the sockaddr_in structures using memcpy
 		memcpy(&this->ipServerAddress, &other.ipServerAddress, sizeof(struct sockaddr_in));
@@ -155,6 +159,7 @@ int ConnectionHandler::enablePortListenning(void)
 void ConnectionHandler::prepareFdSetForSelect(void)
 {
 	FD_ZERO(&this->readFds);                       // clear the content of the fd_set set
+	FD_ZERO(&this->writeFds);                      // clear the content of the fd_set set
 	FD_SET(this->masterSocketFd, &this->readFds);  // add the master fd to the read_fds set
 	this->maxFd = this->masterSocketFd;
 
@@ -163,7 +168,10 @@ void ConnectionHandler::prepareFdSetForSelect(void)
 	{
 		int clientSocketFd = this->clientSockets[i];
 		if (clientSocketFd > -1)
+		{
 			FD_SET(clientSocketFd, &this->readFds);
+			FD_SET(clientSocketFd, &this->writeFds);
+		}
 		if (clientSocketFd > this->maxFd)
 			this->maxFd = clientSocketFd;
 	}
@@ -171,7 +179,7 @@ void ConnectionHandler::prepareFdSetForSelect(void)
 
 void ConnectionHandler::runSelect(void)
 {
-	if (select(this->maxFd + 1, &this->readFds, NULL, NULL, NULL) == -1)
+	if (select(this->maxFd + 1, &this->readFds, &this->writeFds, NULL, NULL) == -1)
 	{
 		throw std::runtime_error("Select failed: " + std::string(strerror(errno)));
 	}
@@ -213,8 +221,8 @@ int ConnectionHandler::checkForNewClients(void)
 			if (clientSockets[i] == -1)
 			{
 				this->enableNonBlockingFd(clientSocketFd);
-				clientSockets[i] = clientSocketFd;                     // add client to list for monitoring
-				clientBuffers[i] = "";                                 // map to map client to its buffer
+				clientSockets[i] = clientSocketFd;  // add client to list for monitoring
+				clientBuffers[i] = "";              // map to map client to its buffer
 				return (1);
 			}
 		}
@@ -293,12 +301,26 @@ int ConnectionHandler::handleNewClients(void)
 				}
 				ClientRequest clientRequest(clientSocketFd, bytesReceived, clientBuffers[clientSocketFd], this->ipClientAddress);
 				ProcessData processData(&clientRequest, serverData);
-				ServerResponse serverResponse = processData.sendResponse();
+				serverResponseBuffer[clientSocketFd] = processData.sendResponse();
+				clientBuffers[clientSocketFd].erase();  // clear buffer - valid message acquired and processed hence buffer no needed
+			}
+		}
+		// write events
+		if (FD_ISSET(clientSocketFd, &writeFds))
+		{
+			std::map<int, ServerResponse>::iterator it = serverResponseBuffer.find(clientSocketFd);
+			if (it != serverResponseBuffer.end())
+			{
+				ServerResponse serverResponse = it->second;  // Key exists, retrieve the value
 				if ((bytesSent = serverResponse.sendServerResponse()) == -1)
 				{
 					throw std::runtime_error("Send failed: " + std::string(strerror(errno)));
 				}
-				clientBuffers[clientSocketFd].erase();  // clear buffer - valid message acquired and processed hence buffer no needed
+				serverResponseBuffer.erase(clientSocketFd);
+			}
+			else
+			{
+				// Handle the case where the key does not exis
 			}
 		}
 	}

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+         #
+#    By: orezek <orezek@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/21 10:59:06 by mbartos           #+#    #+#              #
-#    Updated: 2024/09/30 12:21:34 by mbartos          ###   ########.fr        #
+#    Updated: 2024/09/30 21:07:41 by orezek           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ NAME =		ircserv
 
 # Compiler and flags
 CCP =		c++
-CFLAGS =	-g -Wall -Wextra -Werror -std=c++98 \
+CFLAGS =	-g -std=c++98 \
 			-I./include/
 
 # Source and object paths
