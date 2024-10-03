@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerResponse.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 23:09:38 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/03 16:57:31 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/03 20:13:38 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,4 +163,19 @@ ssize_t ServerResponse::sendServerResponse(void)
 		close(this->getClientsToSend()[0]);
 	}
 	return (overallBytesSent);
+}
+
+void ServerResponse::printServerResponse()
+{
+	std::cout << "action = " << this->action;
+	std::cout << ", clientsToSend = ";
+	for (std::vector<int>::iterator it = clientsToSend.begin(); it != clientsToSend.end(); ++it)
+	{
+		std::cout << *it;
+		if (it + 1 != clientsToSend.end())
+		{
+			std::cout << ", ";
+		}
+	}
+	std::cout << ", data = |" << this->data << "|" << std::endl;
 }
