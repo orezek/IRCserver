@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/03 16:33:20 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/03 16:57:17 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -305,15 +305,23 @@ int ConnectionHandler::handleNewClients(void)
 				clientBuffers[clientSocketFd].erase();  // clear buffer - valid message acquired and processed hence buffer no needed
 			}
 		}
-			// write events
+		// write events
 		if (FD_ISSET(clientSocketFd, &writeFds))
 		{
-			ServerResponse serverResponse = serverResponseBuffer[clientSocketFd];
-			if ((bytesSent = serverResponse.sendServerResponse()) == -1)
+			std::map<int, ServerResponse>::iterator it = serverResponseBuffer.find(clientSocketFd);
+			if (it != serverResponseBuffer.end())
 			{
-				throw std::runtime_error("Send failed: " + std::string(strerror(errno)));
+				ServerResponse serverResponse = it->second;  // Key exists, retrieve the value
+				if ((bytesSent = serverResponse.sendServerResponse()) == -1)
+				{
+					throw std::runtime_error("Send failed: " + std::string(strerror(errno)));
+				}
+				serverResponseBuffer.erase(clientSocketFd);
 			}
-			serverResponseBuffer.erase(clientSocketFd);
+			else
+			{
+				// Handle the case where the key does not exis
+			}
 		}
 	}
 	return (0);
