@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 23:09:38 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/02 11:45:21 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/03 16:38:07 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,10 +122,12 @@ ssize_t ServerResponse::sendServerResponse(void)
 		}
 	}
 	else if (this->action == this->NOSEND)
-		std::cout << "NOSEND" << std::endl;
+	{
+		//std::cout << "NOSEND" << std::endl;
+	}
 	else if (this->action == this->QUIT)
 	{
-		// Assuming there is only one client to terminated. Am I right?
+		// Assuming there is only one client to be terminated. Am I right?
 		std::cout << "QUIT" << std::endl;
 		std::string buff = this->data;
 		int size = buff.size();

@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/27 19:31:20 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/03 16:19:10 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,11 @@ class ConnectionHandler
 		// set socket to listenning mode
 		int enablePortListenning(void);
 		// resets fd_set, adds master socket to FD_SET and re-inserts fds to clientSockets vector
-		void prepareFdSetForSelect();
+		void prepareFdSetForSelect(void);
 		// run select
 		void runSelect(void);
 		int checkForNewClients(void);
+		// this is the read event -- needs to be renamed
 		int handleNewClients(void);
 		// recv and send system calls in loops
 		ssize_t recvAll(int socketFd, char *buffer, size_t bufferSize);
@@ -85,7 +86,9 @@ class ConnectionHandler
 		socklen_t ipAddressLenSrv;
 		std::vector<int> clientSockets;
 		std::map<int, std::string> clientBuffers;
+		std::map<int, ServerResponse> serverResponseBuffer;
 		fd_set readFds;
+		fd_set writeFds;
 		struct sockaddr_in ipServerAddress;
 		struct sockaddr_in ipClientAddress;
 		ServerData *serverData;
