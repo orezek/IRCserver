@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.cpp                                         :+:      :+:    :+:   */
+/*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 11:54:31 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/02 14:25:24 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/04 16:46:20 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,12 +72,15 @@ void Server::runServer()
 	int maxFd = 0;
 	while (true)
 	{
+		std::cout << "---- LOOP - START ----" << std::endl;
 		////////////////////////////
 		struct timeval tv;
 		tv.tv_sec = 5;
 		tv.tv_usec = 0;
 		// clear fd sets
-		FD_ZERO(&readFds), FD_ZERO(&writeFds), FD_ZERO(&errFds);
+		FD_ZERO(&readFds);
+		FD_ZERO(&writeFds);
+		FD_ZERO(&errFds);
 		// ?? makes select to check for sockets in fd sets ?? this will be wrong for now
 		FD_SET(masterFd, &readFds);  // add the master fd to the read_fds set for checking a new client connection
 		maxFd = masterFd;
@@ -106,6 +109,27 @@ void Server::runServer()
 			std::cout << "Select failed:" << std::endl;
 			exit(1);
 		}
+		// Print all Fds in readFds
+		std::cout << "Read FDs: ";
+		for (int fd = 0; fd <= maxFd; ++fd)
+		{
+			if (FD_ISSET(fd, &readFds))
+			{
+				std::cout << fd << " ";
+			}
+		}
+		std::cout << std::endl;
+		// Print all Fds in writeFds
+		std::cout << "Write FDs: ";
+		for (int fd = 0; fd <= maxFd; ++fd)
+		{
+			if (FD_ISSET(fd, &writeFds))
+			{
+				std::cout << fd << " ";
+			}
+		}
+
+		std::cout << std::endl;
 		if (selectState > 0)
 		{
 			////////////////////////////
@@ -120,7 +144,7 @@ void Server::runServer()
 				{
 					if (errno != EAGAIN && errno != EWOULDBLOCK)
 					{
-						std::cout << "Accept failed: " << strerror(errno) << std::endl;
+						// std::cout << "Accept failed: " << strerror(errno) << std::endl;
 						exit(1);  // Exit only on critical errors
 					}
 					continue;  // Recoverable error, skip to the next iteration
@@ -169,17 +193,20 @@ void Server::runServer()
 				{
 					// read events;
 					// onRead();
-					std::cout << "Read event detected." << std::endl;
+					std::cout << "FD = " << clientSocketFd << " - Read event detected." << std::endl;
+					char buffer[1];
+					recv(clientSocketFd, buffer, 1, MSG_DONTWAIT);
+					std::cout << "FD = " << clientSocketFd << " - received char = " << buffer << std::endl;
 				}
-				else if (FD_ISSET(clientSocketFd, &writeFds))
+				if (FD_ISSET(clientSocketFd, &writeFds))
 				{
 					// write events;
 					// onWrie();
-					std::cout << "Write event detected." << std::endl;
-					std::string buff = "Welcome to our IRC server!";
+					std::cout << "FD = " << clientSocketFd << " - Write event detected." << std::endl;
+					std::string buff = "Send!";
 					send(clientSocketFd, buff.c_str(), buff.size(), 0);
 				}
-				else if (FD_ISSET(clientSocketFd, &errFds))
+				if (FD_ISSET(clientSocketFd, &errFds))
 				{
 					// error events;
 					// onError();
@@ -193,5 +220,7 @@ void Server::runServer()
 		{
 			std::cout << "No event in given interval of: 5 seconds." << std::endl;
 		}
+		std::cout << "---- LOOP - END ----" << std::endl;
+		sleep(5);
 	}
 }
