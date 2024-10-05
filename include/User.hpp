@@ -33,6 +33,8 @@ class User
 		bool getNickValid();
 		bool getUserValid();
 
+		bool isValidServerUser();
+
 		void setNickname(std::string nickname);
 		void setUsername(std::string username);
 		void setHostname(std::string hostname);
@@ -42,6 +44,7 @@ class User
 		void setPassValid(bool passValue);
 		void setNickValid(bool nickValue);
 		void setUserValid(bool userValue);
+
 
 	private:
 		int clientFd;

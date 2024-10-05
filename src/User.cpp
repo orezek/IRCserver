@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 23:12:55 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/05 12:06:41 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/05 12:38:30 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,18 @@ bool User::getNickValid()
 bool User::getUserValid()
 {
 	return (this->userValid);
+}
+
+bool User::isValidServerUser()
+{
+	if (passValid && nickValid && userValid)
+	{
+		return (true);
+	}
+	else
+	{
+		return (false);
+	}
 }
 
 void User::setPassSent(bool passSentValue)
