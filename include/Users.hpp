@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:49:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/01 19:05:49 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/05 12:04:45 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ class Users
 		Users(const Users &obj);
 		Users &operator=(const Users &obj);
 
-		User *findUser(int userFd);
+		User *findUser(int clientFd);
 		User *findUser(std::string nickname);
-		void addUser(int userFd);
+		void addUser(int clientFd);
 		void addUser(User *user);
 		void deleteUser(User *user);
 		// updateUser(std::string nickname, std::string hostname, std::string servername, std::string realname)

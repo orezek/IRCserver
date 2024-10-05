@@ -14,17 +14,15 @@
 #include <string>
 #include <vector>
 
-#include "Room.hpp"
-
 class User
 {
 	public:
 		User();
-		User(int userFd);
+		User(int clientFd);
 		~User();
 		User(const User &obj);
 		User &operator=(const User &obj);
-		bool operator==(const User& other) const;
+		bool operator==(const User &other) const;
 
 		int getUserFd();
 		std::string getNickname();
@@ -46,7 +44,7 @@ class User
 		void setUserValid(bool userValue);
 
 	private:
-		int userFd;
+		int clientFd;
 		std::string nickname;
 		std::string username;
 		std::string hostname;
@@ -55,8 +53,8 @@ class User
 
 		std::string fullUsername;  // @ip
 
-		bool isOperator;  // is this user an operator?
-		std::vector<Room> rooms;
+		std::vector<int> operatorRoomIds;
+		std::vector<int> roomIds;
 
 		bool passSent;
 		bool passValid;

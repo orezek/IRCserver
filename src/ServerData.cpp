@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 20:01:51 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/01 19:05:38 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/05 12:04:45 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,9 @@ void ServerData::setServerPortNumber(const int &serverPortNumber)
 	ServerData::SERVER_PORT_NUMBER = serverPortNumber;
 }
 
-void ServerData::validateWaitingUser(int userFd)
+void ServerData::validateWaitingUser(int clientFd)
 {
-	User *waitingUser = waitingUsers.findUser(userFd);
+	User *waitingUser = waitingUsers.findUser(clientFd);
 
 	users.addUser(waitingUser);
 	waitingUsers.deleteUser(waitingUser);
