@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/01 20:26:42 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/05 12:04:45 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,14 @@ ProcessData::ProcessData(ClientRequest *clientRequest, ServerData *serverData) :
 		this->response = "No data received";  // Handle the case where data is null
 	}
 
-	int userFd = clientRequest->getClientFd();
+	int clientFd = clientRequest->getClientFd();
 	ClientRequestParser parser(*clientRequest);
 	ClientMessage clientMessage = parser.getClientMessage();
-	if (serverData->users.findUser(userFd) == NULL)
+	if (serverData->users.findUser(clientFd) == NULL)
 	{
-		if (serverData->waitingUsers.findUser(userFd) == NULL)
+		if (serverData->waitingUsers.findUser(clientFd) == NULL)
 		{
-			serverData->waitingUsers.addUser(userFd);
+			serverData->waitingUsers.addUser(clientFd);
 		}
 		if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "PASS")
 		{
@@ -72,16 +72,16 @@ ProcessData::ProcessData(ClientRequest *clientRequest, ServerData *serverData) :
 			serverResponse = userCommand.getServerResponse();
 			// return;
 		}
-		User *user = serverData->waitingUsers.findUser(userFd);
+		User *user = serverData->waitingUsers.findUser(clientFd);
 		if (user->getUserValid() && user->getNickValid() && user->getPassSent())
 		{
 			serverResponse.setAction(ServerResponse::SEND);
-			serverResponse.setClientsToSend(userFd);
+			serverResponse.setClientsToSend(clientFd);
 			if (user->getPassValid())
 			{
 				serverResponse.setResponse("Validated\r\n");
 				// move user from waitingUsers to Users
-				serverData->validateWaitingUser(userFd);
+				serverData->validateWaitingUser(clientFd);
 			}
 			else
 			{
@@ -122,7 +122,7 @@ ProcessData::ProcessData(ClientRequest *clientRequest, ServerData *serverData) :
 		else
 		{
 			serverResponse.setAction(ServerResponse::SEND);
-			serverResponse.setClientsToSend(userFd);
+			serverResponse.setClientsToSend(clientFd);
 			std::string str = "Validated user - Response processed by ProcessData class! -: ";
 			str.append(response);
 			serverResponse.setResponse(str);
@@ -132,7 +132,7 @@ ProcessData::ProcessData(ClientRequest *clientRequest, ServerData *serverData) :
 	}
 
 	serverResponse.setAction(ServerResponse::SEND);
-	serverResponse.setClientsToSend(userFd);
+	serverResponse.setClientsToSend(clientFd);
 	std::string str = "Not a valid user - Response processed by ProcessData class! -: ";
 	str.append(response);
 	serverResponse.setResponse(str);

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:21 by mbartos           #+#    #+#             */
-/*   Updated: 2024/09/30 14:45:05 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/05 12:04:45 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 ClientMessage::ClientMessage() : fromUserFd(-1), command(NOT_ASSIGNED), prefixString(""), commandString("") {}
 
-ClientMessage::ClientMessage(int userFd, std::string prefixString, std::string commandString, std::vector<std::string> parameters) : fromUserFd(userFd), command(NOT_ASSIGNED), prefixString(prefixString), commandString(commandString), parameters(parameters)
+ClientMessage::ClientMessage(int clientFd, std::string prefixString, std::string commandString, std::vector<std::string> parameters) : fromUserFd(clientFd), command(NOT_ASSIGNED), prefixString(prefixString), commandString(commandString), parameters(parameters)
 {
 }
 

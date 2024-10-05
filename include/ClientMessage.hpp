@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:18 by mbartos           #+#    #+#             */
-/*   Updated: 2024/09/30 14:37:58 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/05 12:04:45 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ class ClientMessage
 
 	public:
 		ClientMessage();
-		ClientMessage(int userFd, std::string prefixString, std::string commandString, std::vector<std::string> parameters);
+		ClientMessage(int clientFd, std::string prefixString, std::string commandString, std::vector<std::string> parameters);
 		// ~ClientMessage();
 		ClientMessage(ClientMessage const &refObj);
 		ClientMessage &operator=(ClientMessage const &refObj);

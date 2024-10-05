@@ -1,33 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Rooms.hpp                                          :+:      :+:    :+:   */
+/*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/23 21:34:46 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/05 11:37:10 by mbartos          ###   ########.fr       */
+/*   Created: 2024/10/05 10:16:53 by mbartos           #+#    #+#             */
+/*   Updated: 2024/10/05 12:01:39 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
-#include <string>
-#include <vector>
 
-#include "Room.hpp"
+#include "ClientRequestQueue.hpp"
+#include "ServerResponseQueue.hpp"
+#include "User.hpp"
 
-class Rooms
+class Client
 {
 	public:
-		Rooms();
-		~Rooms();
-		Rooms(const Rooms &obj);
-		Rooms &operator=(const Rooms &obj);
-		// findRoom()
-		// addRoom()
-		// deleteRoom()
+		// Client();
+		Client(int clientFd);
+		Client(const Client& refClient);
+		// Client& operator=(const Client& refClient);
+
+		ClientRequestQueue rawClientRequests;
+		ClientRequestQueue clientRequests;
+		ServerResponseQueue serverResponses;
+		User user;
 
 	private:
-		std::vector<Room> roomList;
-		// validateRoomName()
+		const int clientFd;
 };
