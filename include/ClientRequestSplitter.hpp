@@ -12,11 +12,11 @@
 
 #pragma once
 
+#include <iostream>
+#include <string>
+
 #include "ClientRequest.hpp"
 #include "ServerData.hpp"
-
-#include <string>
-#include <iostream>
 
 class ClientRequestSplitter
 {
@@ -24,6 +24,7 @@ class ClientRequestSplitter
 		ClientRequestSplitter();
 		ClientRequestSplitter(ServerData* serverData, ClientRequest* clientRequest);
 		ClientRequestSplitter(const ClientRequestSplitter& refObj);
+		ClientRequestSplitter(Client* client);
 
 		ClientRequestSplitter& operator=(const ClientRequestSplitter& refObj);
 		~ClientRequestSplitter();
@@ -31,6 +32,7 @@ class ClientRequestSplitter
 		void parseInput();
 
 	private:
-		ClientRequest* input;
-		ServerData* serverData;
+		Client* client;
+		ClientRequest* rawClientRequest;
+		ServerData* serverData;  // will be deleted
 };
