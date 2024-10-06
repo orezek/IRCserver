@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:33 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/01 20:05:07 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/06 19:07:54 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,17 @@ class ProcessData
 	public:
 		ProcessData();
 		ProcessData(ClientRequest *clientRequest, ServerData *serverData);
+		ProcessData(Client *client, ClientRequest *clientRequest, ServerData *serverData);
 		ProcessData(const ProcessData &obj);
 		ProcessData &operator=(const ProcessData &obj);
 		ServerResponse sendResponse(void);
 
 	private:
+		Client *client;
 		ServerData *serverData;
 		ClientRequest *clientRequest;
-		ServerResponse serverResponse;
+
+		ServerResponse serverResponse;  // no need? will be deleted
 
 		std::string response;  // testing purpose only
 };

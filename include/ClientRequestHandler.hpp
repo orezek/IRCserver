@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:12:33 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/02 15:30:50 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/06 17:40:24 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ class ClientRequestHandler
 {
 	public:
 		ClientRequestHandler(ServerData *serverData);
+		ClientRequestHandler(ServerData *serverData, Client* client);
 	private:
 		ServerData* serverData;
-
+		Client* client;
 };
