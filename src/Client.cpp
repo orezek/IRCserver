@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 10:24:05 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/05 11:55:07 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/06 17:54:49 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 // Client::Client() {};
 
 Client::Client(int clientFd) : clientFd(clientFd)
-{}
+{
+}
 
 Client::Client(const Client& refClient) : clientFd(refClient.clientFd)
 {
@@ -36,3 +37,8 @@ Client::Client(const Client& refClient) : clientFd(refClient.clientFd)
 // 	}
 // 	return (*this);
 // }
+
+int Client::getClientFd()
+{
+	return (this->clientFd);
+}

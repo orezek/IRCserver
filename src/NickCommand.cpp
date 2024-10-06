@@ -6,12 +6,13 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:42:28 by mbartos           #+#    #+#             */
-/*   Updated: 2024/09/30 14:33:48 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/06 19:19:06 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "NickCommand.hpp"
 
+// will be deleted
 NickCommand::NickCommand(ServerData& serverData, ClientMessage& clientMessage) : serverData(serverData), clientMessage(clientMessage), oldNick(""), newNick("")
 {
 	// Implament this as seperate member function of Users class - findInAllUsers()
@@ -48,14 +49,55 @@ NickCommand::NickCommand(ServerData& serverData, ClientMessage& clientMessage) :
 	setServerResponseValid(user);
 }
 
+NickCommand::NickCommand(Client* client, ServerData& serverData, ClientMessage& clientMessage) : client(client), serverData(serverData), clientMessage(clientMessage), oldNick(""), newNick("")
+{
+	// Implament this as seperate member function of Users class - findInAllUsers()
+	// User* user = serverData.users.findUser(clientMessage.getFromUserFd());
+	// if (user == NULL)
+	// {
+	// 	user = serverData.waitingUsers.findUser(clientMessage.getFromUserFd());
+	// }
+
+	oldNick = client->user.getNickname();
+	if (oldNick == "")
+		oldNick = "*";
+
+	newNick = clientMessage.getFirstParameter();
+
+	if (newNick.empty())
+	{
+		setServerResponse431();
+		addServerResponseToClient();
+		return;
+	}
+	if (!isValidNick(newNick))
+	{
+		setServerResponse432();
+		addServerResponseToClient();
+		return;
+	}
+	if (!isAlreadyUsedNick(newNick))
+	{
+		setServerResponse433();
+		addServerResponseToClient();
+		return;
+	}
+
+	client->user.setNickname(newNick);
+	client->user.setNickValid(true);
+	setServerResponseValid(&(client->user));
+	addServerResponseToClient();
+}
+
 NickCommand::~NickCommand() {}
 
-NickCommand::NickCommand(NickCommand const& refObj) : serverData(refObj.serverData), clientMessage(refObj.clientMessage) {}
+NickCommand::NickCommand(NickCommand const& refObj) : client(refObj.client), serverData(refObj.serverData), clientMessage(refObj.clientMessage) {}
 
 NickCommand& NickCommand::operator=(NickCommand const& refObj)
 {
 	if (this != &refObj)
 	{
+		this->client = refObj.client;
 		this->clientMessage = refObj.clientMessage;
 		this->serverData = refObj.serverData;
 	}
@@ -68,6 +110,10 @@ ServerResponse NickCommand::getServerResponse()
 }
 
 // ---- PRIVATE ----- //
+void NickCommand::addServerResponseToClient()
+{
+	client->serverResponses.push_back(serverResponse);
+}
 
 std::string NickCommand::getNewNickname()
 {

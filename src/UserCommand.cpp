@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 14:13:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/01 19:30:59 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/06 19:19:36 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,45 @@ UserCommand::UserCommand(ServerData& serverData, ClientMessage& clientMessage) :
 	user->setUserValid(true);
 }
 
+UserCommand::UserCommand(Client* client, ServerData& serverData, ClientMessage& clientMessage) : client(client), serverData(serverData), clientMessage(clientMessage), user(NULL)
+{
+	if (client->user.isValidServerUser() == true)
+	{
+		this->setServerResponse462();  // user already validated
+		this->addServerResponseToClient();
+		return;
+	}
+
+	std::string username = clientMessage.getParameterAtPosition(0);
+	std::string hostname = clientMessage.getParameterAtPosition(1);
+	std::string servername = clientMessage.getParameterAtPosition(2);
+	std::string realname = clientMessage.getParameterAtPosition(3);
+
+	if (realname.empty() || servername.empty() || hostname.empty() || username.empty())
+	{
+		this->setServerResponse461();
+		this->addServerResponseToClient();
+		return;
+	}
+
+	// check parameters, if they are valid
+
+	client->user.setUsername(username);
+	client->user.setHostname(hostname);
+	client->user.setServername(servername);
+	client->user.setRealname(realname);
+	client->user.setUserValid(true);
+}
+
 UserCommand::~UserCommand() {}
 
-UserCommand::UserCommand(UserCommand const& refObj) : serverData(refObj.serverData), clientMessage(refObj.clientMessage), serverResponse(refObj.serverResponse), user(refObj.user) {}
+UserCommand::UserCommand(UserCommand const& refObj) : client(refObj.client), serverData(refObj.serverData), clientMessage(refObj.clientMessage), serverResponse(refObj.serverResponse), user(refObj.user) {}
 
 UserCommand& UserCommand::operator=(UserCommand const& refObj)
 {
 	if (this != &refObj)
 	{
+		this->client = refObj.client;
 		this->clientMessage = refObj.clientMessage;
 		this->serverData = refObj.serverData;
 		this->serverResponse = refObj.serverResponse;
@@ -69,6 +100,11 @@ ServerResponse UserCommand::getServerResponse()
 }
 
 // ---- PRIVATE ----
+
+void UserCommand::addServerResponseToClient()
+{
+	client->serverResponses.push_back(serverResponse);
+}
 
 void UserCommand::setServerResponse461()
 {

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:20:19 by mbartos           #+#    #+#             */
-/*   Updated: 2024/09/27 16:38:01 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/06 18:37:04 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ class NickCommand
 {
 	public:
 		NickCommand(ServerData& serverData, ClientMessage& clientMessage);
+		NickCommand(Client* client, ServerData& serverData, ClientMessage& clientMessage);
 		~NickCommand();
 		NickCommand(NickCommand const& refObj);
 		NickCommand& operator=(NickCommand const& refObj);
@@ -27,6 +28,7 @@ class NickCommand
 		ServerResponse getServerResponse();
 
 	private:
+		Client* client;
 		ServerData& serverData;
 		ClientMessage& clientMessage;
 		ServerResponse serverResponse;
@@ -43,4 +45,5 @@ class NickCommand
 		void setServerResponse432();
 		void setServerResponse433();
 		void setServerResponseValid(User* user);
+		void addServerResponseToClient();
 };
