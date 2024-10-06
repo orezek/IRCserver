@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:25:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/02 13:58:17 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/06 12:20:56 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ class ClientRequest
 	private:
 		bool onlyOneMessage;
 		std::string data;
-		int clientFd;
-		int bytesReceived;
-		struct sockaddr_in ipClientAddress;
+		int clientFd; // not needed
+		int bytesReceived; // not needed
+		struct sockaddr_in ipClientAddress; // move to client class?
 };
