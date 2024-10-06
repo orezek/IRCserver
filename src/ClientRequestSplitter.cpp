@@ -6,13 +6,13 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:18:14 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/06 12:23:41 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/06 12:31:51 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ClientRequestSplitter.hpp"
 
-ClientRequestSplitter::ClientRequestSplitter() : rawClientRequest(NULL) {}
+ClientRequestSplitter::ClientRequestSplitter() : client(NULL), rawClientRequest(NULL) {}
 
 // old version - will be deleted:
 ClientRequestSplitter::ClientRequestSplitter(ServerData* serverData, ClientRequest* inputClientRequest)
@@ -20,7 +20,7 @@ ClientRequestSplitter::ClientRequestSplitter(ServerData* serverData, ClientReque
 	this->serverData = serverData;
 	this->rawClientRequest = inputClientRequest;
 
-	parseInput();
+	parseRawClientRequest();
 	std::cout << "Splitted Requests:" << std::endl;
 	serverData->splittedClientRequests.printQueue();
 }
@@ -31,7 +31,7 @@ ClientRequestSplitter::ClientRequestSplitter(Client* inputClient)
 
 	while ((rawClientRequest = client->rawClientRequests.getFirst()) != NULL)
 	{
-		parseInput();
+		parseRawClientRequest();
 		client->rawClientRequests.deleteFirst();
 		std::cout << "Splitted Requests:" << std::endl;   // debugging purpose only
 		serverData->splittedClientRequests.printQueue();  // debugging purpose only
@@ -40,6 +40,7 @@ ClientRequestSplitter::ClientRequestSplitter(Client* inputClient)
 
 ClientRequestSplitter::ClientRequestSplitter(const ClientRequestSplitter& refObj)
 {
+	this->client = refObj.client;
 	this->rawClientRequest = refObj.rawClientRequest;
 }
 
@@ -47,6 +48,7 @@ ClientRequestSplitter& ClientRequestSplitter::operator=(const ClientRequestSplit
 {
 	if (this != &refObj)
 	{
+		this->client = refObj.client;
 		this->rawClientRequest = refObj.rawClientRequest;
 	}
 	return (*this);
@@ -54,12 +56,17 @@ ClientRequestSplitter& ClientRequestSplitter::operator=(const ClientRequestSplit
 
 ClientRequestSplitter::~ClientRequestSplitter() {}
 
-void ClientRequestSplitter::parseInput()
+void ClientRequestSplitter::parseRawClientRequest()
 {
 	std::string delimiters = "\n";
 	int pos = 0;
 	std::string parameter;
 	std::string tempInputData;
+
+	if (client == NULL || rawClientRequest == NULL)
+	{
+		return;
+	}
 
 	tempInputData = rawClientRequest->getClientData();
 

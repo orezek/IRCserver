@@ -29,7 +29,7 @@ class ClientRequestSplitter
 		ClientRequestSplitter& operator=(const ClientRequestSplitter& refObj);
 		~ClientRequestSplitter();
 
-		void parseInput();
+		void parseRawClientRequest();
 
 	private:
 		Client* client;
