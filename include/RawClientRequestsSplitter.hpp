@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ClientRequestSplitter.hpp                         :+:      :+:    :+:   */
+/*   RawClientRequestsSplitter.hpp                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/02 13:18:10 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/02 13:28:32 by mbartos          ###   ########.fr       */
+/*   Created: 2024/10/06 12:40:45 by mbartos           #+#    #+#             */
+/*   Updated: 2024/10/06 12:40:56 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,16 @@
 #include "ClientRequest.hpp"
 #include "ServerData.hpp"
 
-class ClientRequestSplitter
+class RawClientRequestsSplitter
 {
 	public:
-		ClientRequestSplitter();
-		ClientRequestSplitter(ServerData* serverData, ClientRequest* clientRequest);
-		ClientRequestSplitter(const ClientRequestSplitter& refObj);
-		ClientRequestSplitter(Client* client);
+		RawClientRequestsSplitter();
+		RawClientRequestsSplitter(ServerData* serverData, ClientRequest* clientRequest);
+		RawClientRequestsSplitter(const RawClientRequestsSplitter& refObj);
+		RawClientRequestsSplitter(Client* client);
 
-		ClientRequestSplitter& operator=(const ClientRequestSplitter& refObj);
-		~ClientRequestSplitter();
+		RawClientRequestsSplitter& operator=(const RawClientRequestsSplitter& refObj);
+		~RawClientRequestsSplitter();
 
 		void parseRawClientRequest();
 

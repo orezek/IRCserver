@@ -1,21 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ClientRequestSplitter.cpp                          :+:      :+:    :+:   */
+/*   RawClientRequestsSplitter.cpp                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:18:14 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/06 12:31:51 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/06 12:41:43 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ClientRequestSplitter.hpp"
+#include "RawClientRequestsSplitter.hpp"
 
-ClientRequestSplitter::ClientRequestSplitter() : client(NULL), rawClientRequest(NULL) {}
+RawClientRequestsSplitter::RawClientRequestsSplitter() : client(NULL), rawClientRequest(NULL) {}
 
 // old version - will be deleted:
-ClientRequestSplitter::ClientRequestSplitter(ServerData* serverData, ClientRequest* inputClientRequest)
+RawClientRequestsSplitter::RawClientRequestsSplitter(ServerData* serverData, ClientRequest* inputClientRequest)
 {
 	this->serverData = serverData;
 	this->rawClientRequest = inputClientRequest;
@@ -25,7 +25,7 @@ ClientRequestSplitter::ClientRequestSplitter(ServerData* serverData, ClientReque
 	serverData->splittedClientRequests.printQueue();
 }
 
-ClientRequestSplitter::ClientRequestSplitter(Client* inputClient)
+RawClientRequestsSplitter::RawClientRequestsSplitter(Client* inputClient)
 {
 	this->client = client;
 
@@ -38,13 +38,13 @@ ClientRequestSplitter::ClientRequestSplitter(Client* inputClient)
 	}
 }
 
-ClientRequestSplitter::ClientRequestSplitter(const ClientRequestSplitter& refObj)
+RawClientRequestsSplitter::RawClientRequestsSplitter(const RawClientRequestsSplitter& refObj)
 {
 	this->client = refObj.client;
 	this->rawClientRequest = refObj.rawClientRequest;
 }
 
-ClientRequestSplitter& ClientRequestSplitter::operator=(const ClientRequestSplitter& refObj)
+RawClientRequestsSplitter& RawClientRequestsSplitter::operator=(const RawClientRequestsSplitter& refObj)
 {
 	if (this != &refObj)
 	{
@@ -54,9 +54,9 @@ ClientRequestSplitter& ClientRequestSplitter::operator=(const ClientRequestSplit
 	return (*this);
 }
 
-ClientRequestSplitter::~ClientRequestSplitter() {}
+RawClientRequestsSplitter::~RawClientRequestsSplitter() {}
 
-void ClientRequestSplitter::parseRawClientRequest()
+void RawClientRequestsSplitter::parseRawClientRequest()
 {
 	std::string delimiters = "\n";
 	int pos = 0;
