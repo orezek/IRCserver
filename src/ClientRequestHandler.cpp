@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:12:39 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/06 18:57:15 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/06 20:32:58 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ ClientRequestHandler::ClientRequestHandler(ServerData* serverData, Client* clien
 	while ((clientRequest = client->clientRequests.getFirst()) != NULL)
 	{
 		ProcessData processData(this->client, clientRequest, serverData);
-		ServerResponse serverResponse = processData.sendResponse();
-		client->serverResponses.push_back(serverResponse);
+		// ServerResponse serverResponse = processData.sendResponse();
+		// client->serverResponses.push_back(serverResponse);
 		client->clientRequests.deleteFirst();
 	}
 	client->serverResponses.printQueue();  // debuging purpose only
