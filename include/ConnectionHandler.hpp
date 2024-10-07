@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/03 16:19:10 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/07 12:42:50 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 #include "ServerResponse.hpp"
 // #include "IrcServer.hpp"
 #include "ServerData.hpp"
+#include "Client.hpp"
 
 class ConnectionHandler
 {
@@ -84,11 +85,12 @@ class ConnectionHandler
 		int selectResponse;
 		int maxFd;
 		socklen_t ipAddressLenSrv;
-		std::vector<int> clientSockets;
+		//std::vector<int> clientSockets;
 		std::map<int, std::string> clientBuffers;
-		std::map<int, ServerResponse> serverResponseBuffer;
+		//std::map<int, ServerResponse> serverResponseBuffer;
 		fd_set readFds;
 		fd_set writeFds;
+		fd_set errorFds;
 		struct sockaddr_in ipServerAddress;
 		struct sockaddr_in ipClientAddress;
 		ServerData *serverData;
