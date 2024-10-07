@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/01 20:20:17 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/07 11:44:51 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,36 +68,82 @@ void ClientRequestParser::parseParameters()
 
 	if (command == "NICK")
 	{
-		parseParametersByNewline();
+		parseParametersBySpace();
 	}
 	else if (command == "PASS")
 	{
-		parseParametersByNewline();
+		parseParametersBySpace();
 	}
 	else if (command == "USER")
 	{
-		parseParametersByNewline();
+		parseParametersAsUser();
 	}
 	else if (command == "QUIT")
 	{
 		parseParametersAsOneText();
 	}
+	this->clientMessage.printClientMessage();
 	// add functionality for other commands
 }
 
-void ClientRequestParser::parseParametersByNewline()
+void ClientRequestParser::parseParametersBySpace()
 {
 	std::string delimiters = " \r\n";
 	int pos = 0;
 	std::string parameter;
 
-	while (tempInputData.find_first_of(delimiters) != std::string::npos)
+	while ((pos = tempInputData.find_first_of(delimiters)) != std::string::npos)
 	{
-		pos = tempInputData.find_first_of(delimiters);
-		parameter = tempInputData.substr(0, pos);
-		parameters.push_back(parameter);
+		if (pos > 0)
+		{
+			parameter = tempInputData.substr(0, pos);
+			parameters.push_back(parameter);
+		}
 		tempInputData = tempInputData.erase(0, pos + 1);
 	}
+	// clientMessage.addToParameters(tempInputData);
+}
+
+void ClientRequestParser::parseParametersAsUser()
+{
+	std::string delimiters = " \r\n";
+	int pos = 0;
+	std::string parameter;
+
+	while ((pos = tempInputData.find_first_of(delimiters)) != std::string::npos && parameters.size() < 3)
+	{
+		if (pos > 0)
+		{
+			parameter = tempInputData.substr(0, pos);
+			parameters.push_back(parameter);
+		}
+		tempInputData = tempInputData.erase(0, pos + 1);
+	}
+	// seperating the last (4.) parameter - REALNAME
+	std::string endOfMessageDelimiters = "\r\n";
+	if (!tempInputData.empty())
+	{
+		tempInputData.erase(0, tempInputData.find_first_not_of(" "));  // trim leading spaces
+
+		int start = 0;
+		if (tempInputData[0] == ':')
+		{
+			start = 1;
+		}
+
+		// Find the position of any end delimiters (like \r or \n)
+		pos = tempInputData.find_first_of(endOfMessageDelimiters);
+		if (pos == std::string::npos)
+		{
+			pos = tempInputData.length();  // Take the rest of the string if no delimiter
+		}
+
+		parameter = tempInputData.substr(start, pos - start);
+		parameters.push_back(parameter);
+
+		tempInputData = tempInputData.erase(0, pos + 1);
+	}
+
 	// clientMessage.addToParameters(tempInputData);
 }
 
@@ -106,11 +152,11 @@ void ClientRequestParser::parseParametersAsOneText()
 	std::string delimiters = "\r\n";
 	std::string parameter;
 
-	std::size_t cmdStart;
+	tempInputData.erase(0, tempInputData.find_first_not_of(" "));
+
+	std::size_t cmdStart = 0;
 	if (tempInputData[0] == ':')
 		cmdStart = 1;
-	else
-		cmdStart = 0;
 	std::size_t cmdEnd = tempInputData.find_first_of(delimiters, cmdStart);
 
 	if (cmdEnd != std::string::npos && cmdStart < cmdEnd)
