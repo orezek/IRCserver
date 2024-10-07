@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:31:58 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/02 18:15:01 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/07 19:34:39 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,7 @@
 
 ServerResponseQueue::ServerResponseQueue() {};
 
-ServerResponseQueue::ServerResponseQueue(const ServerResponseQueue& refObj)
-{
-	this->responseList = refObj.responseList;
-}
+ServerResponseQueue::ServerResponseQueue(const ServerResponseQueue& refObj) : responseList(refObj.responseList) {}
 
 ServerResponseQueue& ServerResponseQueue::operator=(const ServerResponseQueue& refObj)
 {
@@ -60,4 +57,5 @@ void ServerResponseQueue::sendAll()
 			throw std::runtime_error("Send failed: " + std::string(strerror(errno)));
 		}
 	}
+	responseList.clear();
 }

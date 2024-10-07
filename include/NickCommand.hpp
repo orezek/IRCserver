@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:20:19 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/06 18:37:04 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/07 19:35:45 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 class NickCommand
 {
 	public:
-		NickCommand(ServerData& serverData, ClientMessage& clientMessage);
 		NickCommand(Client* client, ServerData& serverData, ClientMessage& clientMessage);
 		~NickCommand();
 		NickCommand(NickCommand const& refObj);
@@ -36,7 +35,6 @@ class NickCommand
 		std::string oldNick;
 		std::string newNick;
 
-		// void parseClientMessage();
 		std::string getNewNickname();
 		bool isValidNick(std::string& nick);
 		bool isAlreadyUsedNick(std::string& nick);

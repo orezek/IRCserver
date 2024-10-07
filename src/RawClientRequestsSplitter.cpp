@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:18:14 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/06 12:41:43 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/07 15:35:26 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,22 +19,20 @@ RawClientRequestsSplitter::RawClientRequestsSplitter(ServerData* serverData, Cli
 {
 	this->serverData = serverData;
 	this->rawClientRequest = inputClientRequest;
-
 	parseRawClientRequest();
 	std::cout << "Splitted Requests:" << std::endl;
 	serverData->splittedClientRequests.printQueue();
 }
 
-RawClientRequestsSplitter::RawClientRequestsSplitter(Client* inputClient)
+RawClientRequestsSplitter::RawClientRequestsSplitter(Client* inputClient) : client(inputClient)
 {
-	this->client = client;
-
 	while ((rawClientRequest = client->rawClientRequests.getFirst()) != NULL)
 	{
 		parseRawClientRequest();
+		std::cout << rawClientRequest->getClientData() << std::endl;
 		client->rawClientRequests.deleteFirst();
-		std::cout << "Splitted Requests:" << std::endl;   // debugging purpose only
-		serverData->splittedClientRequests.printQueue();  // debugging purpose only
+		std::cout << "Splitted Requests:" << std::endl;  // debugging purpose only
+		client->clientRequests.printQueue();             // debugging purpose only
 	}
 }
 
@@ -80,7 +78,7 @@ void RawClientRequestsSplitter::parseRawClientRequest()
 
 		tempClientRequest.setOnlyOneMessage(true);
 
-		serverData->splittedClientRequests.push_back(tempClientRequest);  // will be deleted
+		// serverData->splittedClientRequests.push_back(tempClientRequest);  // will be deleted
 		client->clientRequests.push_back(tempClientRequest);
 		tempInputData = tempInputData.erase(0, pos + 1);
 	}

@@ -6,58 +6,14 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:42:28 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/06 19:19:06 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/07 19:36:06 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "NickCommand.hpp"
 
-// will be deleted
-NickCommand::NickCommand(ServerData& serverData, ClientMessage& clientMessage) : serverData(serverData), clientMessage(clientMessage), oldNick(""), newNick("")
-{
-	// Implament this as seperate member function of Users class - findInAllUsers()
-	User* user = serverData.users.findUser(clientMessage.getFromUserFd());
-	if (user == NULL)
-	{
-		user = serverData.waitingUsers.findUser(clientMessage.getFromUserFd());
-	}
-
-	oldNick = user->getNickname();
-	if (oldNick == "")
-		oldNick = "*";
-
-	newNick = clientMessage.getFirstParameter();
-
-	if (newNick.empty())
-	{
-		setServerResponse431();
-		return;
-	}
-	if (!isValidNick(newNick))
-	{
-		setServerResponse432();
-		return;
-	}
-	if (!isAlreadyUsedNick(newNick))
-	{
-		setServerResponse433();
-		return;
-	}
-
-	user->setNickname(newNick);
-	user->setNickValid(true);
-	setServerResponseValid(user);
-}
-
 NickCommand::NickCommand(Client* client, ServerData& serverData, ClientMessage& clientMessage) : client(client), serverData(serverData), clientMessage(clientMessage), oldNick(""), newNick("")
 {
-	// Implament this as seperate member function of Users class - findInAllUsers()
-	// User* user = serverData.users.findUser(clientMessage.getFromUserFd());
-	// if (user == NULL)
-	// {
-	// 	user = serverData.waitingUsers.findUser(clientMessage.getFromUserFd());
-	// }
-
 	oldNick = client->user.getNickname();
 	if (oldNick == "")
 		oldNick = "*";
@@ -76,7 +32,7 @@ NickCommand::NickCommand(Client* client, ServerData& serverData, ClientMessage& 
 		addServerResponseToClient();
 		return;
 	}
-	if (!isAlreadyUsedNick(newNick))
+	if (isAlreadyUsedNick(newNick))
 	{
 		setServerResponse433();
 		addServerResponseToClient();
@@ -153,12 +109,14 @@ bool NickCommand::isValidNick(std::string& nick)
 
 bool NickCommand::isAlreadyUsedNick(std::string& nick)
 {
-	User* user = serverData.users.findUser(nick);
-	if (user == NULL)
-		user = serverData.waitingUsers.findUser(nick);
-
-	if (user == NULL)
-		return (true);
+	for (std::map<int, Client>::iterator it = serverData.clients.begin(); it != serverData.clients.end(); ++it)
+	{
+		std::string oldNick = it->second.user.getNickname();
+		if (nick == oldNick)
+		{
+			return (true);
+		}
+	}
 	return (false);
 }
 
@@ -220,5 +178,5 @@ void NickCommand::setServerResponseValid(User* user)
 		serverResponse.setAction(ServerResponse::SEND);
 
 	serverResponse.setResponse(response);
-	serverResponse.setClientsToSend(user->getUserFd());
+	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
 }

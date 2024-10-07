@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:21 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/05 12:04:45 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/07 15:42:51 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ void ClientMessage::addToParameters(std::string newParameter)
 void ClientMessage::printClientMessage()
 {
 	std::cout << "---- ClientMessage ----" << std::endl;
+	std::cout << "FromClientFd: |" << this->fromUserFd << std::endl;
 	std::cout << "Prefix: |" << prefixString << "|" << std::endl;
 	std::cout << "Command: |" << commandString << "|" << std::endl;
 	std::cout << "Parameters vector: ";

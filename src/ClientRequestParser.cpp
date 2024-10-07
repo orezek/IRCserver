@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/07 11:44:51 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/07 19:38:31 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ ClientRequestParser::ClientRequestParser(ClientRequest& clientRequest) : clientR
 	// check if data are valid - how? Maybe it is not necessary
 	this->parsePrefixString();
 	this->parseCommandString();
-	// set command var;
 	this->parseParameters();
 
 	clientMessage.setFromUserFd(this->clientRequest.getClientFd());
@@ -38,8 +37,7 @@ ClientMessage ClientRequestParser::getClientMessage()
 
 void ClientRequestParser::parsePrefixString()
 {
-	// if first character is ':' -> there is an prefix
-	// std::cout << "TempInputData before prefix: " << tempInputData << std::endl;
+	// trim leading spaces?
 	if (tempInputData[0] == ':')
 	{
 		int prefixStart = 0;
@@ -48,7 +46,6 @@ void ClientRequestParser::parsePrefixString()
 		this->prefixString = tempInputData.substr(prefixStart, prefixEnd);
 		this->tempInputData = tempInputData.substr(prefixEnd + 1, tempInputData.size() - prefixEnd);
 	}
-	// std::cout << "PrefixString: " << this->prefixString << std::endl;
 }
 
 void ClientRequestParser::parseCommandString()
@@ -82,8 +79,8 @@ void ClientRequestParser::parseParameters()
 	{
 		parseParametersAsOneText();
 	}
-	this->clientMessage.printClientMessage();
 	// add functionality for other commands
+	// this->clientMessage.printClientMessage();
 }
 
 void ClientRequestParser::parseParametersBySpace()
@@ -101,7 +98,6 @@ void ClientRequestParser::parseParametersBySpace()
 		}
 		tempInputData = tempInputData.erase(0, pos + 1);
 	}
-	// clientMessage.addToParameters(tempInputData);
 }
 
 void ClientRequestParser::parseParametersAsUser()
@@ -143,8 +139,6 @@ void ClientRequestParser::parseParametersAsUser()
 
 		tempInputData = tempInputData.erase(0, pos + 1);
 	}
-
-	// clientMessage.addToParameters(tempInputData);
 }
 
 void ClientRequestParser::parseParametersAsOneText()

@@ -6,40 +6,20 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 19:48:17 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/06 20:05:02 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/07 19:31:25 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <QuitCommand.hpp>
 
-QuitCommand::QuitCommand(ServerData& serverData, ClientMessage& clientMessage) : client(NULL), serverData(serverData), clientMessage(clientMessage), user(NULL)
-{
-	user = serverData.users.findUser(clientMessage.getFromUserFd());
-	if (user == NULL)
-	{
-		user = serverData.waitingUsers.findUser(clientMessage.getFromUserFd());
-		if (user == NULL)
-		{
-			throw std::runtime_error("User cannot be found in users and waitingUsers of the server.");
-		}
-	}
-
-	this->setServerResponseValid();
-	serverData.users.deleteUser(user);
-	serverData.waitingUsers.deleteUser(user);
-}
-
-QuitCommand::QuitCommand(Client* client, ServerData& serverData, ClientMessage& clientMessage) : client(client), serverData(serverData), clientMessage(clientMessage), user(NULL)
+QuitCommand::QuitCommand(Client* client, ServerData& serverData, ClientMessage& clientMessage) : client(client), serverData(serverData), clientMessage(clientMessage)
 {
 	this->setServerResponseValid();
 	client->serverResponses.push_back(this->serverResponse);
-	// serverData.users.deleteUser(user);
-	// serverData.waitingUsers.deleteUser(user);
 }
 
-QuitCommand::~QuitCommand() {}
 
-QuitCommand::QuitCommand(QuitCommand const& refObj) : client(refObj.client), serverData(refObj.serverData), clientMessage(refObj.clientMessage), serverResponse(refObj.serverResponse), user(refObj.user) {}
+QuitCommand::QuitCommand(QuitCommand const& refObj) : client(refObj.client), serverData(refObj.serverData), clientMessage(refObj.clientMessage), serverResponse(refObj.serverResponse) {}
 
 QuitCommand& QuitCommand::operator=(QuitCommand const& refObj)
 {
@@ -49,22 +29,25 @@ QuitCommand& QuitCommand::operator=(QuitCommand const& refObj)
 		this->clientMessage = refObj.clientMessage;
 		this->serverData = refObj.serverData;
 		this->serverResponse = refObj.serverResponse;
-		this->user = refObj.user;
 	}
 	return (*this);
 }
+
+QuitCommand::~QuitCommand() {}
 
 ServerResponse QuitCommand::getServerResponse()
 {
 	return (this->serverResponse);
 }
 
+// PRIVATE
+
 void QuitCommand::setServerResponseValid()
 {
 	std::string response = "ERROR :Closing link: (";
-	response.append(user->getUsername());
+	response.append(client->user.getUsername());
 	response.append("@");
-	response.append(user->getHostname());
+	response.append(client->user.getHostname());
 	response.append(") [Quit: ");
 	response.append(clientMessage.getFirstParameter());  // put message there
 	response.append("]");
@@ -76,7 +59,6 @@ void QuitCommand::setServerResponseValid()
 	// else
 	// has to be changed to QUIT when it is implemented in ConnectionHandler
 	serverResponse.setAction(ServerResponse::QUIT);
-
 	serverResponse.setResponse(response);
-	serverResponse.setClientsToSend(user->getUserFd());
+	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
 }

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 13:05:19 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/06 18:29:23 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/07 19:35:18 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,6 @@ class PassCommand
 		ServerData& serverData;
 		ClientMessage& clientMessage;
 		ServerResponse serverResponse;
-
-		User* user;  // not necesary?
 
 		void setServerResponse461();
 		void setServerResponse462();

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:32:11 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/06 19:52:51 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/07 19:33:54 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 #include <string>
 
 #include "ServerResponse.hpp"
-// class ServerResponse;
 class ServerResponseQueue
 {
 	public:
