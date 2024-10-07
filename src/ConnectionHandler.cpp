@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/07 13:59:40 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/07 19:23:46 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,7 +240,6 @@ int ConnectionHandler::handleNewClients(void)
 	std::string userBuffer;
 	const std::string responseData;
 
-
 	for (std::map<int, Client>::iterator it = serverData->clients.begin(); it != serverData->clients.end(); ++it)
 	{
 		// get fd
@@ -252,7 +251,7 @@ int ConnectionHandler::handleNewClients(void)
 			// implement logging
 			close(clientSocketFd);
 			clientBuffers[clientSocketFd].erase();
-			it = serverData->clients.erase(it);
+			serverData->clients.erase(it); // m-bartos: changed from it = serverData->clients.erase(it); - it did not compile
 			std::cout << "Client " << clientSocketFd << " on error event." << std::endl;
 			continue;
 		}
@@ -264,7 +263,7 @@ int ConnectionHandler::handleNewClients(void)
 				// notify ProcessData
 				close(clientSocketFd);
 				clientBuffers[clientSocketFd].erase();
-				it = serverData->clients.erase(it);
+				serverData->clients.erase(it); // m-bartos: changed from it = serverData->clients.erase(it); - it did not compile
 				std::cout << "Recv failed " << clientSocketFd << ": " << strerror(errno) << std::endl;
 				continue;
 			}
@@ -274,7 +273,7 @@ int ConnectionHandler::handleNewClients(void)
 				// notify ProcessData
 				close(clientSocketFd);
 				clientBuffers[clientSocketFd].erase();
-				it = serverData->clients.erase(it);
+				serverData->clients.erase(it); // m-bartos: changed from it = serverData->clients.erase(it); - it did not compile
 				std::cout << "Client " << clientSocketFd << " quit." << std::endl;
 				continue;
 			}
@@ -284,7 +283,7 @@ int ConnectionHandler::handleNewClients(void)
 				// notify ProcessData
 				close(clientSocketFd);
 				clientBuffers[clientSocketFd].erase();
-				it = serverData->clients.erase(it);
+				serverData->clients.erase(it); // m-bartos: changed from it = serverData->clients.erase(it); - it did not compile
 				std::cout << "Client " << clientSocketFd << " disconnected due to a message limit." << std::endl;
 				continue;
 			}
@@ -299,7 +298,7 @@ int ConnectionHandler::handleNewClients(void)
 					{
 						close(clientSocketFd);
 						clientBuffers[clientSocketFd] = "";
-						it = serverData->clients.erase(it);
+						serverData->clients.erase(it); // m-bartos: changed from it = serverData->clients.erase(it); - it did not compile
 						std::cout << "Client " << clientSocketFd << " disconnected due to a message limit in partial read." << std::endl;
 						continue;
 					}
@@ -308,14 +307,14 @@ int ConnectionHandler::handleNewClients(void)
 				// Create a ClientReqeust
 				ClientRequest clientRequest(clientSocketFd, bytesReceived, clientBuffers[clientSocketFd], this->ipClientAddress);
 				// Add ClientReqeust obj
-				std::map<int, Client>::iterator it = serverData->clients.find(clientSocketFd);
+				// std::map<int, Client>::iterator it = serverData->clients.find(clientSocketFd); // m-bartos: not needed - you have iterator to client from for loop above
 				if (it != serverData->clients.end())
 				{
 					// add a new client as reqeusted
 					it->second.rawClientRequests.push_back(clientRequest);
 					// tests - will be deleted
-					std::cout << "Testing read event -  line 317 for FD: " << it->first << std::endl;
-					std::cout << "Client Wrote: " << clientBuffers[it->first] << std::endl;
+					// std::cout << "Testing read event -  line 317 for FD: " << it->first << std::endl;
+					// std::cout << "Client Wrote: " << clientBuffers[it->first] << std::endl;
 				}
 				else
 				{
@@ -323,14 +322,19 @@ int ConnectionHandler::handleNewClients(void)
 				}
 				// clear buffer - valid message acquired and processed hence buffer no needed
 				clientBuffers[clientSocketFd].erase();
+				// m-bartos: added Splitter and ClientRequestHandler:
+				Client *client = &(it->second);
+				RawClientRequestsSplitter rawClientRequestSplitter(client);
+				ClientRequestHandler clientRequestHandler(this->serverData, &(it->second));
 			}
 		}
-			// write events
+		// write events
 		if (FD_ISSET(clientSocketFd, &writeFds))
 		{
 			// implement error handling, logging etc
-			std::map<int, Client>::iterator it = serverData->clients.find(clientSocketFd);
-			it->second.serverResponses.sendAll();
+			// std::map<int, Client>::iterator it = serverData->clients.find(clientSocketFd); // m-bartos: not needed - you have iterator to client from for loop above
+			Client *client = &(it->second);
+			client->serverResponses.sendAll();
 		}
 	}
 	return (0);

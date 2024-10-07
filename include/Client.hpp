@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 10:16:53 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/06 19:51:40 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/07 15:24:53 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ class Client
 		// Client();
 		Client(int clientFd);
 		Client(const Client& refClient);
-		// Client& operator=(const Client& refClient);
+		Client& operator=(const Client& refClient);
 		int getClientFd();
 
 

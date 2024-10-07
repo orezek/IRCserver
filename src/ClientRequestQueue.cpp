@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 11:29:53 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/02 18:18:19 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/07 15:44:24 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,8 @@
 
 ClientRequestQueue::ClientRequestQueue() {}
 
-ClientRequestQueue::ClientRequestQueue(const ClientRequestQueue& refObj)
+ClientRequestQueue::ClientRequestQueue(const ClientRequestQueue& refObj) : requestsList(refObj.requestsList)
 {
-	this->requestsList = refObj.requestsList;
 }
 
 ClientRequestQueue& ClientRequestQueue::operator=(const ClientRequestQueue& refObj)

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 23:09:35 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/06 20:07:14 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/07 19:33:31 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,5 @@ class ServerResponse
 	private:
 		Action action;
 		std::vector<int> clientsToSend;
-		// int clientFd;
 		std::string data;
 };

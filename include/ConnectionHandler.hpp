@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.hpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/07 12:42:50 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/07 15:01:14 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
-#include <vector>
 #include <map>
+#include <vector>
 // Socket programing related libs.
 #include <arpa/inet.h>   // inet_ntoa()
 #include <fcntl.h>       // socket non-blocking mode
@@ -32,8 +32,10 @@
 #include "ProcessData.hpp"
 #include "ServerResponse.hpp"
 // #include "IrcServer.hpp"
-#include "ServerData.hpp"
 #include "Client.hpp"
+#include "ClientRequestHandler.hpp"
+#include "RawClientRequestsSplitter.hpp"
+#include "ServerData.hpp"
 
 class ConnectionHandler
 {
@@ -85,9 +87,9 @@ class ConnectionHandler
 		int selectResponse;
 		int maxFd;
 		socklen_t ipAddressLenSrv;
-		//std::vector<int> clientSockets;
+		// std::vector<int> clientSockets;
 		std::map<int, std::string> clientBuffers;
-		//std::map<int, ServerResponse> serverResponseBuffer;
+		// std::map<int, ServerResponse> serverResponseBuffer;
 		fd_set readFds;
 		fd_set writeFds;
 		fd_set errorFds;
