@@ -6,21 +6,19 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:21 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/07 15:42:51 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/09 12:13:05 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ClientMessage.hpp"
 
-ClientMessage::ClientMessage() : fromUserFd(-1), command(NOT_ASSIGNED), prefixString(""), commandString("") {}
+ClientMessage::ClientMessage() : fromClientFd(-1), command(NOT_ASSIGNED), prefixString(""), commandString("") {}
 
-ClientMessage::ClientMessage(int clientFd, std::string prefixString, std::string commandString, std::vector<std::string> parameters) : fromUserFd(clientFd), command(NOT_ASSIGNED), prefixString(prefixString), commandString(commandString), parameters(parameters)
+ClientMessage::ClientMessage(int clientFd, std::string prefixString, std::string commandString, std::vector<std::string> parameters) : fromClientFd(clientFd), command(NOT_ASSIGNED), prefixString(prefixString), commandString(commandString), parameters(parameters)
 {
 }
 
-// ClientMessage::~ClientMessage() {}
-
-ClientMessage::ClientMessage(ClientMessage const &refObj) : fromUserFd(refObj.fromUserFd), command(refObj.command), prefixString(refObj.prefixString), commandString(refObj.commandString), parameters(refObj.parameters)
+ClientMessage::ClientMessage(ClientMessage const &refObj) : fromClientFd(refObj.fromClientFd), command(refObj.command), prefixString(refObj.prefixString), commandString(refObj.commandString), parameters(refObj.parameters)
 {
 }
 
@@ -28,7 +26,7 @@ ClientMessage &ClientMessage::operator=(ClientMessage const &refObj)
 {
 	if (this != &refObj)
 	{
-		this->fromUserFd = refObj.fromUserFd;
+		this->fromClientFd = refObj.fromClientFd;
 		this->command = refObj.command;
 		this->prefixString = refObj.prefixString;
 		this->commandString = refObj.commandString;
@@ -36,6 +34,8 @@ ClientMessage &ClientMessage::operator=(ClientMessage const &refObj)
 	}
 	return (*this);
 }
+
+ClientMessage::~ClientMessage() {}
 
 std::string ClientMessage::getPrefixString()
 {
@@ -59,12 +59,12 @@ void ClientMessage::setCommandString(std::string newCommandString)
 
 int ClientMessage::getFromUserFd()
 {
-	return (this->fromUserFd);
+	return (this->fromClientFd);
 }
 
 void ClientMessage::setFromUserFd(int newUserFd)
 {
-	this->fromUserFd = newUserFd;
+	this->fromClientFd = newUserFd;
 }
 
 void ClientMessage::setParameters(std::vector<std::string> newParameters)
@@ -80,7 +80,7 @@ void ClientMessage::addToParameters(std::string newParameter)
 void ClientMessage::printClientMessage()
 {
 	std::cout << "---- ClientMessage ----" << std::endl;
-	std::cout << "FromClientFd: |" << this->fromUserFd << std::endl;
+	std::cout << "FromClientFd: |" << this->fromClientFd << std::endl;
 	std::cout << "Prefix: |" << prefixString << "|" << std::endl;
 	std::cout << "Command: |" << commandString << "|" << std::endl;
 	std::cout << "Parameters vector: ";
