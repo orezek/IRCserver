@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:25:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/06 12:20:56 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/09 14:39:08 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,11 @@ class ClientRequest
 		ClientRequest(const ClientRequest &obj);
 		ClientRequest &operator=(const ClientRequest &obj);
 		~ClientRequest();
-		int getClientFd(void) const;
-		std::string &getClientData(void);
+		const int getClientFd(void) const;
+		const std::string &getClientData(void) const;
 		int getBytesReceived(void) const;
 
-		bool isOnlyOneMessage(void);
+		const bool isOnlyOneMessage(void) const;
 		void setOnlyOneMessage(bool);
 
 		void setData(std::string &data);

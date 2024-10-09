@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 11:29:53 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/07 15:44:24 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/09 14:37:03 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,22 +54,32 @@ void ClientRequestQueue::deleteFirst()
 	}
 }
 
-void ClientRequestQueue::printQueue()
+std::string ClientRequestQueue::getQueueAsString() const
 {
+	std::stringstream output;
+
 	int i = 1;
-	std::cout << "-----------------------" << std::endl;
-	std::cout << "Printing ClientRequestQueue: " << std::endl;
-	for (std::deque<ClientRequest>::iterator it = requestsList.begin(); it != requestsList.end(); ++it)
+	output << "-----------------------" << std::endl;
+	output << "Printing ClientRequestQueue: " << std::endl;
+	for (std::deque<ClientRequest>::const_iterator it = requestsList.begin(); it != requestsList.end(); ++it)
 	{
-		std::cout << i;
-		std::cout << ". - ClientFd = " << it->getClientFd();
-		std::cout << ", isOnlyOneMessage = " << it->isOnlyOneMessage();
-		std::cout << ", data = |" << it->getClientData();
-		std::cout << "|";
+		output << i;
+		output << ". - ClientFd = " << it->getClientFd();
+		output << ", isOnlyOneMessage = " << it->isOnlyOneMessage();
+		output << ", data = |" << it->getClientData();
+		output << "|";
 		if (it + 1 != requestsList.end())
-			std::cout << "," << std::endl;
+			output << "," << std::endl;
 		i++;
 	}
-	std::cout << std::endl;
-	std::cout << "-----------------------" << std::endl;
+	output << std::endl;
+	output << "-----------------------";
+	return (output.str());
+}
+
+// --- OUTSIDE OF THE CLASS ---
+std::ostream& operator<<(std::ostream& output, ClientRequestQueue const& instance)
+{
+	output << instance.getQueueAsString();
+	return (output);
 }
