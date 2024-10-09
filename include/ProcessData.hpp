@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:33 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/09 11:55:25 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/09 12:05:58 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,27 +27,16 @@
 #include "StringUtils.hpp"
 #include "UserCommand.hpp"
 
-/*
-	Class that handles IRC protocol, either it can handle the ligic itself
-	or other IRC protocol classes can be imported into this class
-*/
-
 class ProcessData
 {
 	public:
-		ProcessData();
 		ProcessData(ClientRequest *clientRequest, ServerData *serverData);
 		ProcessData(Client *client, ClientRequest *clientRequest, ServerData *serverData);
-		ProcessData(const ProcessData &obj);
-		ProcessData &operator=(const ProcessData &obj);
-		ServerResponse sendResponse(void);
+		ProcessData(const ProcessData &refObj);
+		ProcessData &operator=(const ProcessData &refObj);
 
 	private:
 		Client *client;
 		ServerData *serverData;
 		ClientRequest *clientRequest;
-
-		ServerResponse serverResponse;  // no need? will be deleted
-
-		std::string response;  // testing purpose only
 };

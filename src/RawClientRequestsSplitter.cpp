@@ -6,23 +6,13 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:18:14 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/07 15:35:26 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/09 12:09:12 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "RawClientRequestsSplitter.hpp"
 
 RawClientRequestsSplitter::RawClientRequestsSplitter() : client(NULL), rawClientRequest(NULL) {}
-
-// old version - will be deleted:
-RawClientRequestsSplitter::RawClientRequestsSplitter(ServerData* serverData, ClientRequest* inputClientRequest)
-{
-	this->serverData = serverData;
-	this->rawClientRequest = inputClientRequest;
-	parseRawClientRequest();
-	std::cout << "Splitted Requests:" << std::endl;
-	serverData->splittedClientRequests.printQueue();
-}
 
 RawClientRequestsSplitter::RawClientRequestsSplitter(Client* inputClient) : client(inputClient)
 {
@@ -36,11 +26,7 @@ RawClientRequestsSplitter::RawClientRequestsSplitter(Client* inputClient) : clie
 	}
 }
 
-RawClientRequestsSplitter::RawClientRequestsSplitter(const RawClientRequestsSplitter& refObj)
-{
-	this->client = refObj.client;
-	this->rawClientRequest = refObj.rawClientRequest;
-}
+RawClientRequestsSplitter::RawClientRequestsSplitter(const RawClientRequestsSplitter& refObj) : client(refObj.client), rawClientRequest(refObj.rawClientRequest) {}
 
 RawClientRequestsSplitter& RawClientRequestsSplitter::operator=(const RawClientRequestsSplitter& refObj)
 {
@@ -78,7 +64,6 @@ void RawClientRequestsSplitter::parseRawClientRequest()
 
 		tempClientRequest.setOnlyOneMessage(true);
 
-		// serverData->splittedClientRequests.push_back(tempClientRequest);  // will be deleted
 		client->clientRequests.push_back(tempClientRequest);
 		tempInputData = tempInputData.erase(0, pos + 1);
 	}
