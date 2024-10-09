@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:18:14 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/09 14:40:00 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/09 15:12:16 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ RawClientRequestsSplitter::RawClientRequestsSplitter(Client* inputClient) : clie
 		parseRawClientRequest();
 		std::cout << rawClientRequest->getClientData() << std::endl;
 		client->rawClientRequests.deleteFirst();
-		std::cout << "Splitted Requests:" << client->clientRequests << std::endl;  // debugging purpose only
+		std::cout << "Splitted Requests:" << std::endl
+				  << client->clientRequests << std::endl;  // debugging purpose only
 	}
 }
 

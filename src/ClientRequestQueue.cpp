@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 11:29:53 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/09 14:37:03 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/09 15:14:18 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,19 +57,19 @@ void ClientRequestQueue::deleteFirst()
 std::string ClientRequestQueue::getQueueAsString() const
 {
 	std::stringstream output;
-
 	int i = 1;
+
 	output << "-----------------------" << std::endl;
 	output << "Printing ClientRequestQueue: " << std::endl;
 	for (std::deque<ClientRequest>::const_iterator it = requestsList.begin(); it != requestsList.end(); ++it)
 	{
 		output << i;
-		output << ". - ClientFd = " << it->getClientFd();
-		output << ", isOnlyOneMessage = " << it->isOnlyOneMessage();
-		output << ", data = |" << it->getClientData();
-		output << "|";
+		output << ". ClientRequest: ";
+		output << *it;
 		if (it + 1 != requestsList.end())
-			output << "," << std::endl;
+		{
+			output << std::endl;
+		}
 		i++;
 	}
 	output << std::endl;
