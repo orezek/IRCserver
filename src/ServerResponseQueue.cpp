@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:31:58 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/09 15:00:07 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/09 15:04:34 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ std::string ServerResponseQueue::getServerResponseQueueAsString() const
 	for (std::deque<ServerResponse>::const_iterator it = responseList.begin(); it != responseList.end(); ++it)
 	{
 		output << i;
-		output << ". ClientRequest: " + it->getServerResponseAsString();
+		output << ". ServerResponse: " + it->getServerResponseAsString();
 		i++;
 		if ((it + 1) != responseList.end())
 		{
