@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/09 11:56:32 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/09 14:24:50 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ ClientRequestParser::ClientRequestParser(ClientRequest& clientRequest) : clientR
 	clientMessage.setCommandString(this->commandString);
 	clientMessage.setPrefixString(this->prefixString);
 	clientMessage.setParameters(this->parameters);
-	clientMessage.printClientMessage();  // to show how the message was parsed
+	std::cout << clientMessage << std::endl;
+	// clientMessage.printClientMessage();  // to show how the message was parsed
 }
 
 ClientMessage ClientRequestParser::getClientMessage()
@@ -76,7 +77,6 @@ void ClientRequestParser::parseParameters()
 		parseParametersAsOneText();
 	}
 	// add functionality for other commands
-	// this->clientMessage.printClientMessage();
 }
 
 void ClientRequestParser::parseParametersBySpace()
