@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/07 17:03:10 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/09 11:26:19 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,16 @@ ProcessData::ProcessData(Client *client, ClientRequest *clientRequest, ServerDat
 		// {
 		// 	serverData->waitingUsers.addUser(clientFd);
 		// }
-		if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "PASS")
+		if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "CAP")
+		{
+			ServerResponse serverResponse;
+			serverResponse.setAction(ServerResponse::NOSEND);
+			serverResponse.setClientsToSend(clientFd);
+			std::string str = "\n";
+			serverResponse.setResponse(str);
+			client->serverResponses.push_back(serverResponse);
+		}
+		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "PASS")
 		{
 			PassCommand passCommand(client, *(this->serverData), clientMessage);
 			// serverResponse = passCommand.getServerResponse();
@@ -192,8 +201,9 @@ ProcessData::ProcessData(Client *client, ClientRequest *clientRequest, ServerDat
 			ServerResponse serverResponse;
 			serverResponse.setAction(ServerResponse::SEND);
 			serverResponse.setClientsToSend(clientFd);
-			std::string str = "Not known command - Response processed by ProcessData class! -: ";
-			str.append(response);
+			std::string str = ":" + serverData->getServerName() + " 451 * " + clientMessage.getCommandString() + " :You have not registered.\n";
+			// std::string str = "Not known command - Response processed by ProcessData class! -: ";
+			// str.append(response);
 			serverResponse.setResponse(str);
 			client->serverResponses.push_back(serverResponse);
 		}
@@ -207,7 +217,12 @@ ProcessData::ProcessData(Client *client, ClientRequest *clientRequest, ServerDat
 			serverResponse.setClientsToSend(clientFd);
 			if (user->isValidServerUser())
 			{
-				serverResponse.setResponse("Validated\r\n");
+				std::string response = ":" + serverData->getServerName() + " 001 " + user->getNickname() + " :Welcome to the IRC network, " + user->getNickname() + "!" + user->getUsername() + "@" + user->getHostname() + "\n";
+				response.append(":" + serverData->getServerName() + " 002 " + user->getNickname() + " :Your host is " + serverData->getServerName() + ", running version XXXX\n");
+				response.append(":" + serverData->getServerName() + " 003 " + user->getNickname() + " :This server was created XXXXXXXXXXXXXX" + "\n");
+				response.append(":" + serverData->getServerName() + " 004 " + user->getNickname() + " " + serverData->getServerName() + " \n");
+				serverResponse.setResponse(response);
+				// serverResponse.setResponse("Validated\r\n");
 				// move user from waitingUsers to Users
 				// serverData->validateWaitingUser(clientFd);
 			}
