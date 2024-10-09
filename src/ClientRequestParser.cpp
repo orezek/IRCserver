@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/07 19:38:31 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/09 11:56:32 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,11 +63,7 @@ void ClientRequestParser::parseParameters()
 {
 	std::string command = StringUtils::toUpperCase(commandString);
 
-	if (command == "NICK")
-	{
-		parseParametersBySpace();
-	}
-	else if (command == "PASS")
+	if (command == "NICK" || command == "PASS")
 	{
 		parseParametersBySpace();
 	}
@@ -75,7 +71,7 @@ void ClientRequestParser::parseParameters()
 	{
 		parseParametersAsUser();
 	}
-	else if (command == "QUIT")
+	else if (command == "QUIT" || command == "PING")
 	{
 		parseParametersAsOneText();
 	}

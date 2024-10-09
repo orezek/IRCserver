@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/09 11:26:19 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/09 11:55:14 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,7 +238,14 @@ ProcessData::ProcessData(Client *client, ClientRequest *clientRequest, ServerDat
 	else
 	{
 		// whole command logic will be there
-		if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "PASS")
+		if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "PING")
+		{
+			PingCommand pingCommand(client, *(this->serverData), clientMessage);
+			// serverResponse = passCommand.getServerResponse();
+			// serverResponse.setAction(ServerResponse::NOSEND); // ONLY IF THE NICKNAME WAS ASSIGNED - MEANING CMD IS NICK - MAEBY IT IS NOT NECESSARY
+			// return;  // should do nothing?
+		}
+		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "PASS")
 		{
 			PassCommand passCommand(client, *(this->serverData), clientMessage);
 			// serverResponse = passCommand.getServerResponse();
