@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/09 12:06:06 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/09 12:18:05 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ ProcessData::ProcessData(Client *client, ClientRequest *clientRequest, ServerDat
 			serverResponse.setAction(ServerResponse::SEND);
 			serverResponse.setClientsToSend(clientFd);
 			std::string str = "Validated user - Response processed by ProcessData class! -: ";
-			str.append(str);
+			str.append(clientRequest->getClientData());
 			serverResponse.setResponse(str);
 			client->serverResponses.push_back(serverResponse);
 		}
