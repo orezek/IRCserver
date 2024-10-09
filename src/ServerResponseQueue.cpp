@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:31:58 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/07 19:34:39 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/09 15:00:07 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,20 +32,26 @@ void ServerResponseQueue::push_back(ServerResponse& serverResponse)
 	responseList.push_back(serverResponse);
 }
 
-void ServerResponseQueue::printQueue()
+std::string ServerResponseQueue::getServerResponseQueueAsString() const
 {
+	std::stringstream output;
 	int i = 1;
-	std::cout << "-----------------------" << std::endl;
-	std::cout << "Printing ServerResponseQueue: " << std::endl;
-	for (std::deque<ServerResponse>::iterator it = responseList.begin(); it != responseList.end(); ++it)
+
+	output << "-----------------------" << std::endl;
+	output << "Printing ServerResponseQueue: " << std::endl;
+	for (std::deque<ServerResponse>::const_iterator it = responseList.begin(); it != responseList.end(); ++it)
 	{
-		std::cout << i;
-		std::cout << ". - ";
-		it->printServerResponse();
+		output << i;
+		output << ". ClientRequest: " + it->getServerResponseAsString();
 		i++;
+		if ((it + 1) != responseList.end())
+		{
+			output << std::endl;
+		}
 	}
-	std::cout << std::endl;
-	std::cout << "-----------------------" << std::endl;
+	output << std::endl;
+	output << "-----------------------";
+	return (output.str());
 }
 
 void ServerResponseQueue::sendAll()
@@ -58,4 +64,11 @@ void ServerResponseQueue::sendAll()
 		}
 	}
 	responseList.clear();
+}
+
+// --- OUTSIDE OF THE CLASS ---
+std::ostream& operator<<(std::ostream& output, ServerResponseQueue const& instance)
+{
+	output << instance.getServerResponseQueueAsString();
+	return (output);
 }

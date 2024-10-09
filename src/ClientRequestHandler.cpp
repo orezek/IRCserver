@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:12:39 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/07 19:38:05 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/09 14:54:42 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,5 +21,5 @@ ClientRequestHandler::ClientRequestHandler(ServerData* serverData, Client* clien
 		ProcessData processData(this->client, clientRequest, serverData);
 		client->clientRequests.deleteFirst();
 	}
-	client->serverResponses.printQueue();  // debuging purpose only
+	std::cout << client->serverResponses << std::endl;  // debuging purpose only
 }

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:32:11 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/07 19:33:54 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/09 14:53:22 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <deque>
 #include <iomanip>
 #include <iostream>
+#include <sstream>
 #include <string>
 
 #include "ServerResponse.hpp"
@@ -29,9 +30,11 @@ class ServerResponseQueue
 		~ServerResponseQueue();
 
 		void push_back(ServerResponse& serverResponse);
-		void printQueue();
+		std::string getServerResponseQueueAsString() const;
 		void sendAll();
 
 	private:
 		std::deque<ServerResponse> responseList;
 };
+
+std::ostream& operator<<(std::ostream& o, ServerResponseQueue const& instance);
