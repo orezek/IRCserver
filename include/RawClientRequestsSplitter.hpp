@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 12:40:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/06 12:40:56 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/09 12:09:14 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,8 @@ class RawClientRequestsSplitter
 {
 	public:
 		RawClientRequestsSplitter();
-		RawClientRequestsSplitter(ServerData* serverData, ClientRequest* clientRequest);
-		RawClientRequestsSplitter(const RawClientRequestsSplitter& refObj);
 		RawClientRequestsSplitter(Client* client);
-
+		RawClientRequestsSplitter(const RawClientRequestsSplitter& refObj);
 		RawClientRequestsSplitter& operator=(const RawClientRequestsSplitter& refObj);
 		~RawClientRequestsSplitter();
 
@@ -34,5 +32,4 @@ class RawClientRequestsSplitter
 	private:
 		Client* client;
 		ClientRequest* rawClientRequest;
-		ServerData* serverData;  // will be deleted
 };
