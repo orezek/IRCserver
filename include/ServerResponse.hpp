@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 23:09:35 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/07 19:33:31 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/09 14:50:01 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <algorithm>
 #include <cerrno>
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -49,10 +50,12 @@ class ServerResponse
 		const std::vector<int> &getClientsToSend(void);
 		void setClientsToSend(int clientFd);
 		ssize_t sendServerResponse(void);
-		void printServerResponse(void);
+		const std::string getServerResponseAsString(void) const;
 
 	private:
 		Action action;
 		std::vector<int> clientsToSend;
 		std::string data;
 };
+
+std::ostream& operator<<(std::ostream& o, ServerResponse const& instance);

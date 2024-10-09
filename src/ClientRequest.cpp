@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 22:08:05 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/02 13:58:18 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/09 15:10:25 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,13 +63,13 @@ ClientRequest &ClientRequest::operator=(const ClientRequest &obj)
 ClientRequest::~ClientRequest() {}
 
 // Getter for clientFd
-int ClientRequest::getClientFd(void) const
+const int ClientRequest::getClientFd(void) const
 {
 	return (this->clientFd);
 }
 
 // Getter for clientData
-std::string &ClientRequest::getClientData(void)
+const std::string &ClientRequest::getClientData(void) const
 {
 	return (this->data);
 }
@@ -79,7 +79,7 @@ int ClientRequest::getBytesReceived(void) const
 	return (this->bytesReceived);
 }
 
-bool ClientRequest::isOnlyOneMessage()
+const bool ClientRequest::isOnlyOneMessage() const
 {
 	return (this->onlyOneMessage);
 }
@@ -92,4 +92,23 @@ void ClientRequest::setOnlyOneMessage(bool value)
 void ClientRequest::setData(std::string &data)
 {
 	this->data = data;
+}
+
+std::string ClientRequest::getClientRequestAsString() const
+{
+	std::stringstream output;
+
+	output << "clientFd = " << this->getClientFd();
+	output << ", isOnlyOneMessage = " << this->isOnlyOneMessage();
+	output << ", data = |" << this->getClientData();
+	output << "|";
+
+	return (output.str());
+}
+
+// --- OUTSIDE OF THE CLASS ---
+std::ostream &operator<<(std::ostream &output, ClientRequest const &instance)
+{
+	output << instance.getClientRequestAsString();
+	return (output);
 }

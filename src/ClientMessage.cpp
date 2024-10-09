@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:21 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/09 12:13:05 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/09 14:25:59 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,19 @@ void ClientMessage::setCommandString(std::string newCommandString)
 	this->commandString = newCommandString;
 }
 
-int ClientMessage::getFromUserFd()
+int ClientMessage::getFromUserFd() const
 {
 	return (this->fromClientFd);
+}
+
+std::string ClientMessage::getPrefixString() const
+{
+	return (this->prefixString);
+}
+
+std::string ClientMessage::getCommandString() const
+{
+	return (this->commandString);
 }
 
 void ClientMessage::setFromUserFd(int newUserFd)
@@ -75,23 +85,6 @@ void ClientMessage::setParameters(std::vector<std::string> newParameters)
 void ClientMessage::addToParameters(std::string newParameter)
 {
 	parameters.push_back(newParameter);
-}
-
-void ClientMessage::printClientMessage()
-{
-	std::cout << "---- ClientMessage ----" << std::endl;
-	std::cout << "FromClientFd: |" << this->fromClientFd << std::endl;
-	std::cout << "Prefix: |" << prefixString << "|" << std::endl;
-	std::cout << "Command: |" << commandString << "|" << std::endl;
-	std::cout << "Parameters vector: ";
-	for (std::vector<std::string>::const_iterator it = parameters.begin(); it != parameters.end(); ++it)
-	{
-		std::cout << *it;
-		if (it + 1 != parameters.end())
-			std::cout << ", ";
-	}
-	std::cout << std::endl;
-	std::cout << "-----------------------" << std::endl;
 }
 
 std::string ClientMessage::getFirstParameter()
@@ -112,4 +105,29 @@ std::string ClientMessage::getParameterAtPosition(size_t position)
 	return parameters[position];
 }
 
+std::string ClientMessage::getAllParameters() const
+{
+	std::stringstream output;
+
+	for (std::vector<std::string>::const_iterator it = this->parameters.begin(); it != this->parameters.end(); ++it)
+	{
+		output << *it;
+		if (it + 1 != this->parameters.end())
+			output << ", ";
+	}
+	return (output.str());
+}
+
 // --- PRIVATE ---
+
+// --- OUTSIDE OF THE CLASS ---
+std::ostream &operator<<(std::ostream &output, ClientMessage const &instance)
+{
+	output << "---- ClientMessage ----" << std::endl;
+	output << "FromClientFd: |" << instance.getFromUserFd() << std::endl;
+	output << "Prefix: |" << instance.getPrefixString() << "|" << std::endl;
+	output << "Command: |" << instance.getCommandString() << "|" << std::endl;
+	output << "Parameters vector: " << instance.getAllParameters() << std::endl;
+	output << "-----------------------";
+	return (output);
+}

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 23:09:38 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/07 19:33:38 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/09 14:50:38 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,17 +152,27 @@ ssize_t ServerResponse::sendServerResponse(void)
 	return (overallBytesSent);
 }
 
-void ServerResponse::printServerResponse()
+const std::string ServerResponse::getServerResponseAsString() const
 {
-	std::cout << "action = " << this->action;
-	std::cout << ", clientsToSend = ";
-	for (std::vector<int>::iterator it = clientsToSend.begin(); it != clientsToSend.end(); ++it)
+	std::stringstream output;
+
+	output << "action = " << this->action;
+	output << ", clientsToSend = ";
+	for (std::vector<int>::const_iterator it = clientsToSend.begin(); it != clientsToSend.end(); ++it)
 	{
-		std::cout << *it;
+		output << *it;
 		if (it + 1 != clientsToSend.end())
 		{
-			std::cout << ", ";
+			output << ", ";
 		}
 	}
-	std::cout << ", data = |" << this->data << "|" << std::endl;
+	output << ", data = |" << this->data << "|";
+	return (output.str());
+}
+
+// --- OUTSIDE OF THE CLASS ---
+std::ostream &operator<<(std::ostream &output, ServerResponse const &instance)
+{
+	output << instance.getServerResponseAsString();
+	return (output);
 }
