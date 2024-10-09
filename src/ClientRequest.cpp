@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 22:08:05 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/09 14:39:00 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/09 15:10:25 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,4 +92,23 @@ void ClientRequest::setOnlyOneMessage(bool value)
 void ClientRequest::setData(std::string &data)
 {
 	this->data = data;
+}
+
+std::string ClientRequest::getClientRequestAsString() const
+{
+	std::stringstream output;
+
+	output << "clientFd = " << this->getClientFd();
+	output << ", isOnlyOneMessage = " << this->isOnlyOneMessage();
+	output << ", data = |" << this->getClientData();
+	output << "|";
+
+	return (output.str());
+}
+
+// --- OUTSIDE OF THE CLASS ---
+std::ostream &operator<<(std::ostream &output, ClientRequest const &instance)
+{
+	output << instance.getClientRequestAsString();
+	return (output);
 }
