@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/07 19:23:46 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/10 12:02:23 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,7 @@ void ConnectionHandler::prepareFdSetForSelect(void)
 
 void ConnectionHandler::runSelect(void)
 {
-	if (select(this->maxFd + 1, &this->readFds, &this->writeFds, &this->errorFds, NULL) == -1)
+	if (select(this->maxFd + 1, &this->readFds, &this->writeFds, &this->errorFds, &tv) == -1)
 	{
 		throw std::runtime_error("Select failed: " + std::string(strerror(errno)));
 	}
@@ -251,7 +251,7 @@ int ConnectionHandler::handleNewClients(void)
 			// implement logging
 			close(clientSocketFd);
 			clientBuffers[clientSocketFd].erase();
-			serverData->clients.erase(it); // m-bartos: changed from it = serverData->clients.erase(it); - it did not compile
+			serverData->clients.erase(it);
 			std::cout << "Client " << clientSocketFd << " on error event." << std::endl;
 			continue;
 		}
@@ -283,7 +283,7 @@ int ConnectionHandler::handleNewClients(void)
 				// notify ProcessData
 				close(clientSocketFd);
 				clientBuffers[clientSocketFd].erase();
-				serverData->clients.erase(it); // m-bartos: changed from it = serverData->clients.erase(it); - it did not compile
+				serverData->clients.erase(it);
 				std::cout << "Client " << clientSocketFd << " disconnected due to a message limit." << std::endl;
 				continue;
 			}
@@ -306,15 +306,10 @@ int ConnectionHandler::handleNewClients(void)
 				}
 				// Create a ClientReqeust
 				ClientRequest clientRequest(clientSocketFd, bytesReceived, clientBuffers[clientSocketFd], this->ipClientAddress);
-				// Add ClientReqeust obj
-				// std::map<int, Client>::iterator it = serverData->clients.find(clientSocketFd); // m-bartos: not needed - you have iterator to client from for loop above
 				if (it != serverData->clients.end())
 				{
 					// add a new client as reqeusted
 					it->second.rawClientRequests.push_back(clientRequest);
-					// tests - will be deleted
-					// std::cout << "Testing read event -  line 317 for FD: " << it->first << std::endl;
-					// std::cout << "Client Wrote: " << clientBuffers[it->first] << std::endl;
 				}
 				else
 				{
@@ -331,8 +326,6 @@ int ConnectionHandler::handleNewClients(void)
 		// write events
 		if (FD_ISSET(clientSocketFd, &writeFds))
 		{
-			// implement error handling, logging etc
-			// std::map<int, Client>::iterator it = serverData->clients.find(clientSocketFd); // m-bartos: not needed - you have iterator to client from for loop above
 			Client *client = &(it->second);
 			client->serverResponses.sendAll();
 		}
@@ -369,33 +362,6 @@ ssize_t ConnectionHandler::recvAll(int socketFd, char *buffer, size_t bufferSize
 		}
 	}
 }
-
-// ssize_t ConnectionHandler::sendServerResponse(ServerResponse &srvResponse)
-// {
-// 	std::string buff = srvResponse.getResponse();
-// 	int size = buff.size();
-// 	ssize_t totalBytesSent;
-
-// 	for (int i = 0; i < (int)srvResponse.getClientsToSend().size(); i++)
-// 	{
-// 		totalBytesSent = 0;
-// 		ssize_t bytesSent = 0;
-// 		while (totalBytesSent < (ssize_t)size)
-// 		{
-// 			bytesSent = send(srvResponse.getClientsToSend()[i], buff.c_str() + totalBytesSent, size - totalBytesSent, 0);
-
-// 			if (bytesSent == -1)
-// 			{
-// 				if (errno == EAGAIN || errno == EWOULDBLOCK)
-// 					continue;
-// 				else
-// 					return -1;
-// 			}
-// 			totalBytesSent += bytesSent;
-// 		}
-// 	}
-// 	return totalBytesSent;
-// }
 
 int &ConnectionHandler::getMasterSocketFd(void)
 {
