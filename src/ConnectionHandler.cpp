@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/10 12:02:23 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/10 15:42:43 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,7 @@ void ConnectionHandler::prepareFdSetForSelect(void)
 
 void ConnectionHandler::runSelect(void)
 {
-	if (select(this->maxFd + 1, &this->readFds, &this->writeFds, &this->errorFds, &tv) == -1)
+	if (select(this->maxFd + 1, &this->readFds, &this->writeFds, &this->errorFds, NULL) == -1)
 	{
 		throw std::runtime_error("Select failed: " + std::string(strerror(errno)));
 	}
@@ -240,7 +240,8 @@ int ConnectionHandler::handleNewClients(void)
 	std::string userBuffer;
 	const std::string responseData;
 
-	for (std::map<int, Client>::iterator it = serverData->clients.begin(); it != serverData->clients.end(); ++it)
+	std::map<int, Client>::iterator it = serverData->clients.begin();
+	while (it != serverData->clients.end())
 	{
 		// get fd
 		clientSocketFd = it->first;
@@ -250,8 +251,12 @@ int ConnectionHandler::handleNewClients(void)
 			// report to onError() to Martin's objects;
 			// implement logging
 			close(clientSocketFd);
-			clientBuffers[clientSocketFd].erase();
-			serverData->clients.erase(it);
+			// clientBuffers[clientSocketFd].erase();
+			clientBuffers.erase(clientSocketFd);
+			std::map<int, Client>::iterator itToErase = it;
+			++it;
+			serverData->clients.erase(itToErase);
+			//serverData->clients.erase(it);
 			std::cout << "Client " << clientSocketFd << " on error event." << std::endl;
 			continue;
 		}
@@ -262,8 +267,12 @@ int ConnectionHandler::handleNewClients(void)
 			{
 				// notify ProcessData
 				close(clientSocketFd);
-				clientBuffers[clientSocketFd].erase();
-				serverData->clients.erase(it); // m-bartos: changed from it = serverData->clients.erase(it); - it did not compile
+				//clientBuffers[clientSocketFd].erase();
+				clientBuffers.erase(clientSocketFd);
+				std::map<int, Client>::iterator itToErase = it;
+				++it;
+				serverData->clients.erase(itToErase);
+				//serverData->clients.erase(it); // m-bartos: changed from it = serverData->clients.erase(it); - it did not compile
 				std::cout << "Recv failed " << clientSocketFd << ": " << strerror(errno) << std::endl;
 				continue;
 			}
@@ -272,8 +281,12 @@ int ConnectionHandler::handleNewClients(void)
 			{
 				// notify ProcessData
 				close(clientSocketFd);
-				clientBuffers[clientSocketFd].erase();
-				serverData->clients.erase(it); // m-bartos: changed from it = serverData->clients.erase(it); - it did not compile
+				//clientBuffers[clientSocketFd].erase();
+				clientBuffers.erase(clientSocketFd);
+				std::map<int, Client>::iterator itToErase = it;
+				++it;
+				serverData->clients.erase(itToErase);
+				//serverData->clients.erase(it); // m-bartos: changed from it = serverData->clients.erase(it); - it did not compile
 				std::cout << "Client " << clientSocketFd << " quit." << std::endl;
 				continue;
 			}
@@ -282,8 +295,12 @@ int ConnectionHandler::handleNewClients(void)
 			{
 				// notify ProcessData
 				close(clientSocketFd);
-				clientBuffers[clientSocketFd].erase();
-				serverData->clients.erase(it);
+				//clientBuffers[clientSocketFd].erase();
+				clientBuffers.erase(clientSocketFd);
+				//serverData->clients.erase(it);
+				std::map<int, Client>::iterator itToErase = it;
+				++it;
+				serverData->clients.erase(itToErase);
 				std::cout << "Client " << clientSocketFd << " disconnected due to a message limit." << std::endl;
 				continue;
 			}
@@ -298,10 +315,15 @@ int ConnectionHandler::handleNewClients(void)
 					{
 						close(clientSocketFd);
 						clientBuffers[clientSocketFd] = "";
-						serverData->clients.erase(it); // m-bartos: changed from it = serverData->clients.erase(it); - it did not compile
+						//serverData->clients.erase(it); // m-bartos: changed from it = serverData->clients.erase(it); - it did not compile
+						std::map<int, Client>::iterator itToErase = it;
+						++it;
+						serverData->clients.erase(itToErase);
+						clientBuffers.erase(clientSocketFd);
 						std::cout << "Client " << clientSocketFd << " disconnected due to a message limit in partial read." << std::endl;
 						continue;
 					}
+					++it;
 					continue;
 				}
 				// Create a ClientReqeust
@@ -316,11 +338,14 @@ int ConnectionHandler::handleNewClients(void)
 					throw std::runtime_error("Client not found when trying to add a new request.");
 				}
 				// clear buffer - valid message acquired and processed hence buffer no needed
-				clientBuffers[clientSocketFd].erase();
+				//clientBuffers[clientSocketFd].erase();
+				clientBuffers.erase(clientSocketFd);
 				// m-bartos: added Splitter and ClientRequestHandler:
 				Client *client = &(it->second);
 				RawClientRequestsSplitter rawClientRequestSplitter(client);
 				ClientRequestHandler clientRequestHandler(this->serverData, &(it->second));
+				++it;
+				continue;
 			}
 		}
 		// write events
@@ -329,6 +354,7 @@ int ConnectionHandler::handleNewClients(void)
 			Client *client = &(it->second);
 			client->serverResponses.sendAll();
 		}
+		++it;
 	}
 	return (0);
 }
