@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/10 16:24:49 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/11 16:28:44 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,9 +166,13 @@ void ConnectionHandler::prepareFdSetForSelect(void)
 	// map implementation
 	for (std::map<int, Client>::iterator it = serverData->clients.begin(); it != serverData->clients.end(); ++it)
 	{
+		Client &client = it->second;
 		int clientSocketFd = it->first;
 		FD_SET(clientSocketFd, &this->readFds);
-		FD_SET(clientSocketFd, &this->writeFds);
+		if (!client.serverResponses.isEmpty())
+		{
+			FD_SET(clientSocketFd, &this->writeFds);
+		}
 		FD_SET(clientSocketFd, &this->errorFds);
 		if (clientSocketFd > this->maxFd)
 			this->maxFd = clientSocketFd;
