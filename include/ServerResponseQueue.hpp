@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:32:11 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/09 14:53:22 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/11 10:07:55 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ class ServerResponseQueue
 		void push_back(ServerResponse& serverResponse);
 		std::string getServerResponseQueueAsString() const;
 		void sendAll();
+		bool isEmpty();
 
 	private:
 		std::deque<ServerResponse> responseList;

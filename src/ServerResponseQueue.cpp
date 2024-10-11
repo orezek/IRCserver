@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:31:58 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/09 15:14:19 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/11 10:07:54 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,11 @@ void ServerResponseQueue::sendAll()
 		}
 	}
 	responseList.clear();
+}
+
+bool ServerResponseQueue::isEmpty()
+{
+	return (responseList.empty());
 }
 
 // --- OUTSIDE OF THE CLASS ---
