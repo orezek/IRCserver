@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.hpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/07 15:01:14 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/12 21:39:24 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ class ConnectionHandler
 		int closeServerFd(void);
 		// void setSrvPortNumber(int srvPortNumber);
 		// void setIrcPassword(std::string password);
+		// utility functions for connection handler
+		void deleteClient(std::map<int, Client>::iterator &it);
 
 		const static int MAX_CLIENTS = 1024;
 		const static int MAX_BUFF_SIZE = 1024;
