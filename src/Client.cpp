@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 10:24:05 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/07 15:25:01 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/13 23:25:42 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 // Client::Client() {};
 
-Client::Client(int clientFd) : clientFd(clientFd)
+Client::Client(int clientFd) : clientFd(clientFd), markedForDeletion(false)
 {
 }
 
@@ -24,6 +24,7 @@ Client::Client(const Client& refClient) : clientFd(refClient.clientFd)
 	this->clientRequests = refClient.clientRequests;
 	this->serverResponses = refClient.serverResponses;
 	this->user = refClient.user;
+	this->markedForDeletion = false;
 }
 
 Client& Client::operator=(const Client& refClient)
@@ -34,6 +35,7 @@ Client& Client::operator=(const Client& refClient)
 		this->clientRequests = refClient.clientRequests;
 		this->serverResponses = refClient.serverResponses;
 		this->user = refClient.user;
+		this->markedForDeletion = refClient.markedForDeletion;
 	}
 	return (*this);
 }

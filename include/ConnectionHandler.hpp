@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/12 21:39:24 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/13 22:35:53 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,9 @@ class ConnectionHandler
 		// void setIrcPassword(std::string password);
 		// utility functions for connection handler
 		void deleteClient(std::map<int, Client>::iterator &it);
+		void cleanClientData(int &clientSocketFd, std::map<int, Client>::iterator &it);
+		void onError(int &clientSocketFd, std::map<int, Client>::iterator &it);
+		void onWrite(std::map<int, Client>::iterator &it);
 
 		const static int MAX_CLIENTS = 1024;
 		const static int MAX_BUFF_SIZE = 1024;
