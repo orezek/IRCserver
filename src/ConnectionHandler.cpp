@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/11 16:28:44 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/14 00:06:03 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -237,6 +237,34 @@ int ConnectionHandler::checkForNewClients(void)
 	return 0;  // No new client to process
 }
 
+void ConnectionHandler::deleteClient(std::map<int, Client>::iterator &it)
+{
+	std::map<int, Client>::iterator itToErase = it;
+	++it;
+	this->serverData->clients.erase(itToErase);
+}
+
+void ConnectionHandler::cleanClientData(int &clientSocketFd, std::map<int, Client>::iterator &it)
+{
+	close(clientSocketFd);
+	clientBuffers.erase(clientSocketFd);
+	deleteClient(it);
+}
+
+void ConnectionHandler::onError(int &clientSocketFd, std::map<int, Client>::iterator &it)
+{
+	//it->second.markedForDeletion = true;
+	cleanClientData(clientSocketFd, it);
+	// impelement logging
+	std::cout << "Client " << clientSocketFd << " on error event." << std::endl;
+}
+
+void ConnectionHandler::onWrite(std::map<int, Client>::iterator &it)
+{
+	Client &client = it->second;
+	client.serverResponses.sendAll();
+}
+
 int ConnectionHandler::handleNewClients(void)
 {
 	int clientSocketFd;
@@ -252,21 +280,12 @@ int ConnectionHandler::handleNewClients(void)
 		std::map<int, Client>::iterator it = serverData->clients.begin();
 		while (it != serverData->clients.end())
 		{
-			// get fd
 			clientSocketFd = it->first;
 			if (FD_ISSET(clientSocketFd, &errorFds))
 			{
-				// to do
-				// report to onError() to Martin's objects;
-				// implement logging
-				close(clientSocketFd);
-				// clientBuffers[clientSocketFd].erase();
-				clientBuffers.erase(clientSocketFd);
-				std::map<int, Client>::iterator itToErase = it;
-				++it;
-				serverData->clients.erase(itToErase);
-				//serverData->clients.erase(it);
-				std::cout << "Client " << clientSocketFd << " on error event." << std::endl;
+				// delete the client and move to next - maybe it should not delete - what does error mean in this context?
+				// study and discuss
+				onError(clientSocketFd, it);
 				continue;
 			}
 			if (FD_ISSET(clientSocketFd, &readFds))
@@ -274,44 +293,25 @@ int ConnectionHandler::handleNewClients(void)
 				// read error - kernel side
 				if ((bytesReceived = recvAll(clientSocketFd, recvBuff, MAX_BUFF_SIZE)) == -1)
 				{
-					// notify ProcessData
-					close(clientSocketFd);
-					//clientBuffers[clientSocketFd].erase();
-					clientBuffers.erase(clientSocketFd);
-					std::map<int, Client>::iterator itToErase = it;
-					++it;
-					serverData->clients.erase(itToErase);
-					//serverData->clients.erase(it); // m-bartos: changed from it = serverData->clients.erase(it); - it did not compile
+					// notify ProcessData - really is it needed, discuss with Martin
+					it->second.markedForDeletion = true; // is this enough as notification for ProcessData?
 					std::cout << "Recv failed " << clientSocketFd << ": " << strerror(errno) << std::endl;
-					continue;
 				}
-				// client close connection
+				// client closed connection
 				else if (bytesReceived == 0)
 				{
-					// notify ProcessData
-					close(clientSocketFd);
-					//clientBuffers[clientSocketFd].erase();
-					clientBuffers.erase(clientSocketFd);
-					std::map<int, Client>::iterator itToErase = it;
-					++it;
-					serverData->clients.erase(itToErase);
-					//serverData->clients.erase(it); // m-bartos: changed from it = serverData->clients.erase(it); - it did not compile
+					// notify ProcessData - message has to be sent to all rooms where the user has been present
+					// notify ProcessData - really is it needed, discuss with Martin
+					it->second.markedForDeletion = true; // is this enough as notification for ProcessData?
 					std::cout << "Client " << clientSocketFd << " quit." << std::endl;
-					continue;
 				}
 				// hard message limit
 				else if (bytesReceived > MESSAGE_SIZE)
 				{
+					// notify ProcessData - really is it needed, discuss with Martin
 					// notify ProcessData
-					close(clientSocketFd);
-					//clientBuffers[clientSocketFd].erase();
-					clientBuffers.erase(clientSocketFd);
-					//serverData->clients.erase(it);
-					std::map<int, Client>::iterator itToErase = it;
-					++it;
-					serverData->clients.erase(itToErase);
+					it->second.markedForDeletion = true; // is this enough as notification for ProcessData?
 					std::cout << "Client " << clientSocketFd << " disconnected due to a message limit." << std::endl;
-					continue;
 				}
 				else
 				{
@@ -320,50 +320,53 @@ int ConnectionHandler::handleNewClients(void)
 					// partial message received
 					if ((*(clientBuffers[clientSocketFd].end() - 1) != '\n'))
 					{
+						// partial message limit reached - mark client for deletion and go to write buffer
 						if (clientBuffSize > MESSAGE_SIZE)
 						{
-							close(clientSocketFd);
-							clientBuffers[clientSocketFd] = "";
-							//serverData->clients.erase(it); // m-bartos: changed from it = serverData->clients.erase(it); - it did not compile
-							std::map<int, Client>::iterator itToErase = it;
-							++it;
-							serverData->clients.erase(itToErase);
-							clientBuffers.erase(clientSocketFd);
+							it->second.markedForDeletion = true;
 							std::cout << "Client " << clientSocketFd << " disconnected due to a message limit in partial read." << std::endl;
-							continue;
 						}
-						++it;
-						continue;
-					}
-					// Create a ClientReqeust
-					ClientRequest clientRequest(clientSocketFd, bytesReceived, clientBuffers[clientSocketFd], this->ipClientAddress);
-					if (it != serverData->clients.end())
-					{
-						// add a new client as reqeusted
-						it->second.rawClientRequests.push_back(clientRequest);
 					}
 					else
 					{
-						throw std::runtime_error("Client not found when trying to add a new request.");
+						// Server ready to process data and create a response
+						// Create a ClientReqeust
+						ClientRequest clientRequest(clientSocketFd, bytesReceived, clientBuffers[clientSocketFd], this->ipClientAddress);
+						if (it != serverData->clients.end())
+						{
+							// add a new client as reqeusted
+							it->second.rawClientRequests.push_back(clientRequest);
+						}
+						else
+						{
+							throw std::runtime_error("Client not found when trying to add a new request.");
+						}
+						// clear input buffer - valid message acquired and processed hence buffer no needed
+						clientBuffers.erase(clientSocketFd);
+						// m-bartos: added Splitter and ClientRequestHandler:
+						Client *client = &(it->second);
+						RawClientRequestsSplitter rawClientRequestSplitter(client);
+						ClientRequestHandler clientRequestHandler(this->serverData, &(it->second));
 					}
-					// clear buffer - valid message acquired and processed hence buffer no needed
-					//clientBuffers[clientSocketFd].erase();
-					clientBuffers.erase(clientSocketFd);
-					// m-bartos: added Splitter and ClientRequestHandler:
-					Client *client = &(it->second);
-					RawClientRequestsSplitter rawClientRequestSplitter(client);
-					ClientRequestHandler clientRequestHandler(this->serverData, &(it->second));
-					++it;
-					continue;
 				}
 			}
 			// write events
 			if (FD_ISSET(clientSocketFd, &writeFds))
 			{
-				Client *client = &(it->second);
-				client->serverResponses.sendAll();
+				onWrite(it);
 			}
-			++it;
+			// clients should be deleted at on place only after clearing write buffer
+			// here delete the client the deletation does ++it
+			if (it->second.markedForDeletion == true)
+			{
+				cleanClientData(clientSocketFd, it);
+				std::cout << "Client " << clientSocketFd << " deleted properly." << std::endl;
+			}
+			// go to next client - the current was processed (read, write in one iteration) and is still connected
+			else
+			{
+				++it;
+			}
 		}
 	}
 	else if (selectResponse == 0)
