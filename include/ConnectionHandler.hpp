@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/13 22:35:53 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/15 17:11:34 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@
 #include "ClientRequestHandler.hpp"
 #include "RawClientRequestsSplitter.hpp"
 #include "ServerData.hpp"
+#include "Clients.hpp"
 
 class ConnectionHandler
 {
