@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Clients.hpp                                        :+:      :+:    :+:   */
+/*   ClientManager.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:28 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/15 17:19:39 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/15 23:09:18 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,16 @@
 
 #include "Client.hpp"
 
-class Clients
+class ClientManager
 {
 	public:
-		static Clients &getInstance();
+		static ClientManager &getInstance();
 		void addClient(int clientSocketFd);
 		std::map<int, Client> ClientsMap;
 
 	private:
-		Clients();
-		~Clients();
-		Clients(const Clients &obj);
-		Clients &operator=(const Clients &obj);
+		ClientManager();
+		~ClientManager();
+		ClientManager(const ClientManager &obj);
+		ClientManager &operator=(const ClientManager &obj);
 };

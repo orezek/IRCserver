@@ -1,29 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Clients.cpp                                        :+:      :+:    :+:   */
+/*   ClientManager.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:24 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/15 19:42:27 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/15 23:10:13 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Clients.hpp"
+#include "ClientManager.hpp"
 
-Clients::Clients(){};
-Clients::~Clients(){};
+ClientManager::ClientManager(){};
+ClientManager::~ClientManager(){};
 
-// assignment operator and copy constructor should not be implemented (not defined) only declared
+// assignment operator and copy constructor should not be implemented (not defined) only declared (in hpp file)
 
-Clients &Clients::getInstance()
+ClientManager &ClientManager::getInstance()
 {
-	static Clients instance;
+	static ClientManager instance;
 	return (instance);
 }
 
-void Clients::addClient(int clientSocketFd)
+void ClientManager::addClient(int clientSocketFd)
 {
 	this->ClientsMap.insert(std::make_pair(clientSocketFd, Client(clientSocketFd)));
 }
+
