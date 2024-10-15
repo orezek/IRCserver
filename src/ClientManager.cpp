@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:24 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/15 23:10:13 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/16 00:23:03 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,6 @@ ClientManager &ClientManager::getInstance()
 
 void ClientManager::addClient(int clientSocketFd)
 {
-	this->ClientsMap.insert(std::make_pair(clientSocketFd, Client(clientSocketFd)));
+	this->ClientMap.insert(std::make_pair(clientSocketFd, Client(clientSocketFd)));
 }
 
