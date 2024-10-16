@@ -3,19 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 10:24:05 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/15 23:03:51 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/16 15:36:55 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 
-// Client::Client() {};
-
-Client::Client(int clientFd) : clientFd(clientFd), markedForDeletion(false)
-{}
+Client::Client(int clientFd) : clientFd(clientFd), markedForDeletion(false) {}
 
 Client::Client(const Client& refClient) : clientFd(refClient.clientFd)
 {
@@ -42,4 +39,9 @@ Client& Client::operator=(const Client& refClient)
 int Client::getClientFd()
 {
 	return (this->clientFd);
+}
+
+void Client::insertRawClientRequest(ClientRequest& clientRequest)
+{
+	this->rawClientRequests.push_back(clientRequest);
 }
