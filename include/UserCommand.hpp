@@ -6,20 +6,20 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 14:13:47 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/07 19:25:07 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 10:15:04 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include "ClientMessage.hpp"
-#include "ServerData.hpp"
+#include "ServerDataManager.hpp"
 #include "ServerResponse.hpp"
 
 class UserCommand
 {
 	public:
-		UserCommand(Client* client, ServerData& serverData, ClientMessage& clientMessage);
+		UserCommand(Client* client, ServerDataManager& serverData, ClientMessage& clientMessage);
 		UserCommand(UserCommand const& refObj);
 		UserCommand& operator=(UserCommand const& refObj);
 		~UserCommand();
@@ -28,7 +28,7 @@ class UserCommand
 
 	private:
 		Client* client;
-		ServerData& serverData;
+		ServerDataManager& serverData;
 		ClientMessage& clientMessage;
 		ServerResponse serverResponse;
 

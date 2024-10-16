@@ -6,13 +6,13 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:42:28 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/07 19:36:06 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 10:14:27 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "NickCommand.hpp"
 
-NickCommand::NickCommand(Client* client, ServerData& serverData, ClientMessage& clientMessage) : client(client), serverData(serverData), clientMessage(clientMessage), oldNick(""), newNick("")
+NickCommand::NickCommand(Client* client, ServerDataManager& serverData, ClientMessage& clientMessage) : client(client), serverData(serverData), clientMessage(clientMessage), oldNick(""), newNick("")
 {
 	oldNick = client->user.getNickname();
 	if (oldNick == "")

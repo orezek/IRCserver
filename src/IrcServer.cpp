@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IrcServer.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:45:52 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/29 10:14:27 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/16 10:14:27 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ IrcServer::IrcServer()
 {
 	this->serverPortNumber = -1;
 	this->ircPassword = "default";
-	this->serverData = ServerData();
+	this->serverData = ServerDataManager();
 }
 
 IrcServer::IrcServer(int serverPortNumber, std::string ircPassword) : serverPortNumber(serverPortNumber), ircPassword(ircPassword), serverData()
@@ -45,7 +45,6 @@ IrcServer &IrcServer::operator=(const IrcServer &obj)
 
 IrcServer::~IrcServer() {};
 
-
 void IrcServer::runIrcServer(void)
 {
 	ConnectionHandler connHandler = ConnectionHandler(this->serverPortNumber, &this->serverData);
@@ -54,17 +53,17 @@ void IrcServer::runIrcServer(void)
 	connHandler.enableSocketReus();
 	connHandler.enableSocketBinding();
 	connHandler.enablePortListenning();
-	while(true)
+	while (true)
 	{
-		//std::cout << "Prepare FD SET" << std::endl;
+		// std::cout << "Prepare FD SET" << std::endl;
 		connHandler.prepareFdSetForSelect();
-		//std::cout << "RUN Select" << std::endl;
+		// std::cout << "RUN Select" << std::endl;
 		connHandler.runSelect();
-		//std::cout << "Check for new clients" << std::endl;
+		// std::cout << "Check for new clients" << std::endl;
 		connHandler.checkForNewClients();
-		//std::cout << "Handle new clients" << std::endl;
+		// std::cout << "Handle new clients" << std::endl;
 		connHandler.handleNewClients();
-		//std::cout << "END of while" << std::endl;
+		// std::cout << "END of while" << std::endl;
 	}
 	connHandler.closeServerFd();
 }

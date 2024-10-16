@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 00:27:56 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/16 10:14:27 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ ConnectionHandler::ConnectionHandler()
 	this->ipClientAddress.sin_port = htons(0);
 }
 
-ConnectionHandler::ConnectionHandler(int serverPortNumber, ServerData *serverData)
+ConnectionHandler::ConnectionHandler(int serverPortNumber, ServerDataManager *serverData)
 {
 	this->serverPortNumber = serverPortNumber;
 	this->masterSocketFd = 0;
@@ -242,7 +242,7 @@ void ConnectionHandler::deleteClient(std::map<int, Client>::iterator &it)
 {
 	std::map<int, Client>::iterator itToErase = it;
 	++it;
-	//this->serverData->clients.erase(itToErase);
+	// this->serverData->clients.erase(itToErase);
 	ClientManager::getInstance().clientMap.erase(itToErase);
 }
 

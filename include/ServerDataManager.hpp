@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ServerData.hpp                                     :+:      :+:    :+:   */
+/*   ServerDataManager.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:57:16 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 10:13:22 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 10:14:27 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@
 #include "RoomManager.hpp"
 #include "ServerResponseQueue.hpp"
 #include "Users.hpp"
-class ServerData
+class ServerDataManager
 {
 	public:
-		ServerData();
-		~ServerData();
+		ServerDataManager();
+		~ServerDataManager();
 
 		std::map<int, Client> clients;
 		// Rooms rooms;

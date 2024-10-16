@@ -6,18 +6,17 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 19:48:17 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/07 19:31:25 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 10:14:27 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <QuitCommand.hpp>
 
-QuitCommand::QuitCommand(Client* client, ServerData& serverData, ClientMessage& clientMessage) : client(client), serverData(serverData), clientMessage(clientMessage)
+QuitCommand::QuitCommand(Client* client, ServerDataManager& serverData, ClientMessage& clientMessage) : client(client), serverData(serverData), clientMessage(clientMessage)
 {
 	this->setServerResponseValid();
 	client->serverResponses.push_back(this->serverResponse);
 }
-
 
 QuitCommand::QuitCommand(QuitCommand const& refObj) : client(refObj.client), serverData(refObj.serverData), clientMessage(refObj.clientMessage), serverResponse(refObj.serverResponse) {}
 

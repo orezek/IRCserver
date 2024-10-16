@@ -6,13 +6,13 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 13:05:16 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/07 19:35:34 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 10:14:27 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PassCommand.hpp"
 
-PassCommand::PassCommand(Client* client, ServerData& serverData, ClientMessage& clientMessage) : client(client), serverData(serverData), clientMessage(clientMessage)
+PassCommand::PassCommand(Client* client, ServerDataManager& serverData, ClientMessage& clientMessage) : client(client), serverData(serverData), clientMessage(clientMessage)
 {
 	if (client->user.isValidServerUser() == true)
 	{

@@ -6,13 +6,13 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/09 12:18:05 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 10:14:27 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ProcessData.hpp"
 
-ProcessData::ProcessData(Client *client, ClientRequest *clientRequest, ServerData *serverData) : client(client), serverData(serverData), clientRequest(clientRequest)
+ProcessData::ProcessData(Client *client, ClientRequest *clientRequest, ServerDataManager *serverData) : client(client), serverData(serverData), clientRequest(clientRequest)
 {
 	int clientFd = client->getClientFd();
 	ClientRequestParser parser(*clientRequest);
