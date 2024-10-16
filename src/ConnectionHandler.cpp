@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 15:46:09 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 15:47:29 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -330,6 +330,8 @@ int ConnectionHandler::serverEventLoop(void)
 		while (clientIter != ClientManager::getInstance().getLastClient())
 		{
 			clientSocketFd = clientIter->first;
+			Client client = clientIter->second;
+
 			if (FD_ISSET(clientSocketFd, &errorFds))
 			{
 				onError(clientIter);
@@ -343,7 +345,7 @@ int ConnectionHandler::serverEventLoop(void)
 			{
 				onWrite(clientIter);
 			}
-			if (clientIter->second.markedForDeletion == true)
+			if (client.markedForDeletion == true)
 			{
 				terminateClientSession(clientIter);
 				std::cout << "Client " << clientSocketFd << " deleted properly." << std::endl;
