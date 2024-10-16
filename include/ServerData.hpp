@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:57:16 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/14 21:09:05 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 10:13:22 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 #include "Client.hpp"
 #include "ClientRequestQueue.hpp"
-#include "Rooms.hpp"
+#include "RoomManager.hpp"
 #include "ServerResponseQueue.hpp"
 #include "Users.hpp"
 class ServerData
