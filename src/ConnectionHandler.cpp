@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 13:09:47 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 14:06:10 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -320,7 +320,7 @@ void ConnectionHandler::onRead(std::map<int, Client>::iterator &it)
 			// m-bartos: added Splitter and ClientRequestHandler:
 			Client *client = &(it->second);
 			RawClientRequestsSplitter rawClientRequestSplitter(client);
-			ClientRequestHandler clientRequestHandler(this->serverData, &(it->second));
+			ClientRequestHandler clientRequestHandler(&(it->second));
 		}
 	}
 }
