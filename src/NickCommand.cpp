@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:42:28 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/16 12:42:36 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 14:06:36 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ bool NickCommand::isAlreadyUsedNick(std::string& nick)
 {
 	ClientManager& clients = ClientManager::getInstance();
 
-	for (std::map<int, Client>::iterator it = clients.clientMap.begin(); it != clients.clientMap.end(); ++it)
+	for (std::map<int, Client>::iterator it = clients.clients.begin(); it != clients.clients.end(); ++it)
 	{
 		std::string oldNick = it->second.user.getNickname();
 		if (nick == oldNick)
