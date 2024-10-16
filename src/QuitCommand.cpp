@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 19:48:17 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/16 12:55:25 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 14:34:42 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ ServerResponse QuitCommand::getServerResponse()
 
 void QuitCommand::setServerResponseValid()
 {
+	client->markedForDeletion = true;
+
 	std::string response = "ERROR :Closing link: (";
 	response.append(client->user.getUsername());
 	response.append("@");

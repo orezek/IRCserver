@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 13:05:16 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/16 12:54:37 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 15:00:26 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ PassCommand::PassCommand(Client* client, ClientMessage& clientMessage) : client(
 	if (client->user.isValidServerUser() == true)
 	{
 		this->setServerResponse462();  // user already validated
-		this->addServerResponseToClient();
 		return;
 	}
 
@@ -28,14 +27,12 @@ PassCommand::PassCommand(Client* client, ClientMessage& clientMessage) : client(
 	if (passedPassword.empty())
 	{
 		this->setServerResponse461();
-		this->addServerResponseToClient();
 		return;
 	}
 	if (passedPassword == serverPassword)
 	{
 		client->user.setPassValid(true);
 		this->setServerResponseValid();
-		this->addServerResponseToClient();
 	}
 	// else if
 	// {
@@ -87,6 +84,7 @@ void PassCommand::setServerResponse461()
 	serverResponse.setAction(ServerResponse::SEND);
 	serverResponse.setResponse(response);
 	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
+	this->addServerResponseToClient();
 }
 
 void PassCommand::setServerResponse462()
@@ -105,13 +103,14 @@ void PassCommand::setServerResponse462()
 	serverResponse.setAction(ServerResponse::SEND);
 	serverResponse.setResponse(response);
 	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
+	this->addServerResponseToClient();
 }
 
 void PassCommand::setServerResponseValid()
 {
-	std::string response = "";
+	// std::string response = "";
 
-	serverResponse.setAction(ServerResponse::NOSEND);
-	serverResponse.setResponse(response);
-	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
+	// serverResponse.setAction(ServerResponse::NOSEND);
+	// serverResponse.setResponse(response);
+	// serverResponse.setClientsToSend(clientMessage.getFromUserFd());
 }
