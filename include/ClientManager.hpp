@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ClientManager.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:28 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 12:58:41 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 19:40:04 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ class ClientManager
 		void addClient(int clientSocketFd);
 		std::map<int, Client>::iterator getFirstClient(void);
 		std::map<int, Client>::iterator getLastClient(void);
+		int	getHighestKey(int masterSocketFd) const;
 		std::map<int, Client> clients;
 
 	private:

@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 15:56:44 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/16 19:44:30 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,12 +157,11 @@ int ConnectionHandler::enablePortListenning(void)
 
 void ConnectionHandler::prepareFdSetForSelect(void)
 {
-	FD_ZERO(&this->readFds);   // clear the content of the fd_set set
-	FD_ZERO(&this->writeFds);  // clear the content of the fd_set set
+	FD_ZERO(&this->readFds);
+	FD_ZERO(&this->writeFds);
 	FD_ZERO(&this->errorFds);
 	FD_SET(this->masterSocketFd, &this->readFds);  // add the master fd to the read_fds set
-	this->maxFd = this->masterSocketFd;
-	// map implementation
+	this->maxFd = ClientManager::getInstance().getHighestKey(this->masterSocketFd);
 	for (std::map<int, Client>::iterator it = ClientManager::getInstance().clients.begin(); it != ClientManager::getInstance().clients.end(); ++it)
 	{
 		Client &client = it->second;
@@ -173,8 +172,6 @@ void ConnectionHandler::prepareFdSetForSelect(void)
 			FD_SET(clientSocketFd, &this->writeFds);
 		}
 		FD_SET(clientSocketFd, &this->errorFds);
-		if (clientSocketFd > this->maxFd)
-			this->maxFd = clientSocketFd;
 	}
 }
 

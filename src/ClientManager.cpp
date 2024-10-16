@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:24 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 12:27:19 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/16 19:43:51 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,18 @@ std::map<int, Client>::iterator ClientManager::getFirstClient(void)
 std::map<int, Client>::iterator ClientManager::getLastClient(void)
 {
 	return (this->clients.end());
+}
+
+int ClientManager::getHighestKey(int masterSocketFd) const
+{
+	if (!clients.empty())
+	{
+		if (masterSocketFd < this->clients.rbegin()->first)
+		{
+			return (this->clients.rbegin()->first);
+		}
+		else
+			return (masterSocketFd);
+	}
+	return (masterSocketFd);
 }
