@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 15:11:26 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/16 15:46:09 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -305,23 +305,12 @@ void ConnectionHandler::onRead(std::map<int, Client>::iterator &it)
 		else
 		{
 			// Server ready to process data and create a response
-			// Create a ClientReqeust
+			// Create a ClientRequest
 			ClientRequest clientRequest(clientSocketFd, bytesReceived, clientBuffers[clientSocketFd], this->ipClientAddress);
-			if (it != ClientManager::getInstance().clients.end())
-			{
-				// add a new client as reqeusted
-				client.rawClientRequests.push_back(clientRequest);
-			}
-			else
-			{
-				throw std::runtime_error("Client not found when trying to add a new request.");
-			}
-			// clear input buffer - valid message acquired and processed hence buffer no needed
+			client.insertRawClientRequest(clientRequest);
+			RawClientRequestsSplitter rawClientRequestSplitter(&client);
+			ClientRequestHandler clientRequestHandler(&client);
 			clientBuffers.erase(clientSocketFd);
-			// m-bartos: added Splitter and ClientRequestHandler:
-			Client *client = &(it->second);
-			RawClientRequestsSplitter rawClientRequestSplitter(client);
-			ClientRequestHandler clientRequestHandler(&(it->second));
 		}
 	}
 }
