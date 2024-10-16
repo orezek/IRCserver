@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 14:06:10 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 15:11:26 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,11 +264,12 @@ void ConnectionHandler::onRead(std::map<int, Client>::iterator &it)
 	char recvBuff[MAX_BUFF_SIZE];
 	int clientBuffSize;
 	int clientSocketFd = it->first;
+	Client &client = it->second;
 
 	if ((bytesReceived = recvAll(clientSocketFd, recvBuff, MAX_BUFF_SIZE)) == -1)
 	{
 		// notify ProcessData - really is it needed, discuss with Martin
-		it->second.markedForDeletion = true;  // is this enough as notification for ProcessData?
+		client.markedForDeletion = true;  // is this enough as notification for ProcessData?
 		std::cout << "Recv failed " << clientSocketFd << ": " << strerror(errno) << std::endl;
 	}
 	// client closed connection
@@ -276,7 +277,7 @@ void ConnectionHandler::onRead(std::map<int, Client>::iterator &it)
 	{
 		// notify ProcessData - message has to be sent to all rooms where the user has been present
 		// notify ProcessData - really is it needed, discuss with Martin
-		it->second.markedForDeletion = true;  // is this enough as notification for ProcessData?
+		client.markedForDeletion = true;  // is this enough as notification for ProcessData?
 		std::cout << "Client " << clientSocketFd << " quit." << std::endl;
 	}
 	// hard message limit
@@ -284,7 +285,7 @@ void ConnectionHandler::onRead(std::map<int, Client>::iterator &it)
 	{
 		// notify ProcessData - really is it needed, discuss with Martin
 		// notify ProcessData
-		it->second.markedForDeletion = true;  // is this enough as notification for ProcessData?
+		client.markedForDeletion = true;  // is this enough as notification for ProcessData?
 		std::cout << "Client " << clientSocketFd << " disconnected due to a message limit." << std::endl;
 	}
 	else
@@ -297,7 +298,7 @@ void ConnectionHandler::onRead(std::map<int, Client>::iterator &it)
 			// partial message limit reached - mark client for deletion and go to write buffer
 			if (clientBuffSize > MESSAGE_SIZE)
 			{
-				it->second.markedForDeletion = true;
+				client.markedForDeletion = true;
 				std::cout << "Client " << clientSocketFd << " disconnected due to a message limit in partial read." << std::endl;
 			}
 		}
@@ -309,7 +310,7 @@ void ConnectionHandler::onRead(std::map<int, Client>::iterator &it)
 			if (it != ClientManager::getInstance().clients.end())
 			{
 				// add a new client as reqeusted
-				it->second.rawClientRequests.push_back(clientRequest);
+				client.rawClientRequests.push_back(clientRequest);
 			}
 			else
 			{
@@ -336,31 +337,31 @@ int ConnectionHandler::serverEventLoop(void)
 	int clientSocketFd;
 	if (selectResponse > 0)
 	{
-		std::map<int, Client>::iterator client = ClientManager::getInstance().getFirstClient();
-		while (client != ClientManager::getInstance().getLastClient())
+		std::map<int, Client>::iterator clientIter = ClientManager::getInstance().getFirstClient();
+		while (clientIter != ClientManager::getInstance().getLastClient())
 		{
-			clientSocketFd = client->first;
+			clientSocketFd = clientIter->first;
 			if (FD_ISSET(clientSocketFd, &errorFds))
 			{
-				onError(client);
+				onError(clientIter);
 				continue;
 			}
 			if (FD_ISSET(clientSocketFd, &readFds))
 			{
-				onRead(client);
+				onRead(clientIter);
 			}
 			if (FD_ISSET(clientSocketFd, &writeFds))
 			{
-				onWrite(client);
+				onWrite(clientIter);
 			}
-			if (client->second.markedForDeletion == true)
+			if (clientIter->second.markedForDeletion == true)
 			{
-				terminateClientSession(client);
+				terminateClientSession(clientIter);
 				std::cout << "Client " << clientSocketFd << " deleted properly." << std::endl;
 			}
 			else
 			{
-				++client;
+				++clientIter;
 			}
 		}
 	}
