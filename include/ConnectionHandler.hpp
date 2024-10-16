@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.hpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 13:09:49 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/16 13:10:23 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,20 +29,20 @@
 #include <stdexcept>
 // custom classes
 #include "ClientRequest.hpp"
-#include "ProcessData.hpp"
+// #include "ProcessData.hpp"
 #include "ServerResponse.hpp"
 // #include "IrcServer.hpp"
-#include "Client.hpp"
+// #include "Client.hpp"
 #include "ClientManager.hpp"
 #include "ClientRequestHandler.hpp"
 #include "RawClientRequestsSplitter.hpp"
-#include "ServerData.hpp"
+#include "ServerDataManager.hpp"
 
 class ConnectionHandler
 {
 	public:
-		ConnectionHandler();
-		ConnectionHandler(int serverPortNumber, ServerData *serverData);
+		// ConnectionHandler();
+		ConnectionHandler(int serverPortNumber);
 		ConnectionHandler(const ConnectionHandler &obj);
 		~ConnectionHandler();
 		ConnectionHandler &operator=(const ConnectionHandler &obj);
@@ -102,5 +102,5 @@ class ConnectionHandler
 		fd_set errorFds;
 		struct sockaddr_in ipServerAddress;
 		struct sockaddr_in ipClientAddress;
-		ServerData *serverData;
+		ServerDataManager &serverData;
 };

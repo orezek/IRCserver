@@ -6,13 +6,13 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/09 12:18:05 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 13:00:29 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ProcessData.hpp"
 
-ProcessData::ProcessData(Client *client, ClientRequest *clientRequest, ServerData *serverData) : client(client), serverData(serverData), clientRequest(clientRequest)
+ProcessData::ProcessData(Client *client, ClientRequest *clientRequest) : client(client), serverData(ServerDataManager::getInstance()), clientRequest(clientRequest)
 {
 	int clientFd = client->getClientFd();
 	ClientRequestParser parser(*clientRequest);
@@ -31,26 +31,26 @@ ProcessData::ProcessData(Client *client, ClientRequest *clientRequest, ServerDat
 		}
 		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "PASS")
 		{
-			PassCommand passCommand(client, *(this->serverData), clientMessage);
+			PassCommand passCommand(client, clientMessage);
 		}
 		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "NICK")
 		{
-			NickCommand nickCommand(client, *(this->serverData), clientMessage);
+			NickCommand nickCommand(client, clientMessage);
 		}
 		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "USER")
 		{
-			UserCommand userCommand(client, *(this->serverData), clientMessage);
+			UserCommand userCommand(client, clientMessage);
 		}
 		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "QUIT")
 		{
-			QuitCommand quitCommand(client, *(this->serverData), clientMessage);
+			QuitCommand quitCommand(client, clientMessage);
 		}
 		else
 		{
 			ServerResponse serverResponse;
 			serverResponse.setAction(ServerResponse::SEND);
 			serverResponse.setClientsToSend(clientFd);
-			std::string str = ":" + serverData->getServerName() + " 451 * " + clientMessage.getCommandString() + " :You have not registered.\n";
+			std::string str = ":" + serverData.getServerName() + " 451 * " + clientMessage.getCommandString() + " :You have not registered.\n";
 			serverResponse.setResponse(str);
 			client->serverResponses.push_back(serverResponse);
 		}
@@ -64,10 +64,10 @@ ProcessData::ProcessData(Client *client, ClientRequest *clientRequest, ServerDat
 			serverResponse.setClientsToSend(clientFd);
 			if (user->isValidServerUser())
 			{
-				std::string response = ":" + serverData->getServerName() + " 001 " + user->getNickname() + " :Welcome to the IRC network, " + user->getNickname() + "!" + user->getUsername() + "@" + user->getHostname() + "\n";
-				response.append(":" + serverData->getServerName() + " 002 " + user->getNickname() + " :Your host is " + serverData->getServerName() + ", running version XXXX\n");
-				response.append(":" + serverData->getServerName() + " 003 " + user->getNickname() + " :This server was created XXXXXXXXXXXXXX" + "\n");
-				response.append(":" + serverData->getServerName() + " 004 " + user->getNickname() + " " + serverData->getServerName() + " \n");
+				std::string response = ":" + serverData.getServerName() + " 001 " + user->getNickname() + " :Welcome to the IRC network, " + user->getNickname() + "!" + user->getUsername() + "@" + user->getHostname() + "\n";
+				response.append(":" + serverData.getServerName() + " 002 " + user->getNickname() + " :Your host is " + serverData.getServerName() + ", running version XXXX\n");
+				response.append(":" + serverData.getServerName() + " 003 " + user->getNickname() + " :This server was created XXXXXXXXXXXXXX" + "\n");
+				response.append(":" + serverData.getServerName() + " 004 " + user->getNickname() + " " + serverData.getServerName() + " \n");
 				serverResponse.setResponse(response);
 			}
 			else
@@ -84,23 +84,23 @@ ProcessData::ProcessData(Client *client, ClientRequest *clientRequest, ServerDat
 		// whole command logic will be there
 		if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "PING")
 		{
-			PingCommand pingCommand(client, *(this->serverData), clientMessage);
+			PingCommand pingCommand(client, clientMessage);
 		}
 		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "PASS")
 		{
-			PassCommand passCommand(client, *(this->serverData), clientMessage);
+			PassCommand passCommand(client, clientMessage);
 		}
 		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "NICK")
 		{
-			NickCommand nickCommand(client, *(this->serverData), clientMessage);
+			NickCommand nickCommand(client, clientMessage);
 		}
 		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "USER")
 		{
-			UserCommand userCommand(client, *(this->serverData), clientMessage);
+			UserCommand userCommand(client, clientMessage);
 		}
 		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "QUIT")
 		{
-			QuitCommand quitCommand(client, *(this->serverData), clientMessage);
+			QuitCommand quitCommand(client, clientMessage);
 		}
 		else
 		{
@@ -117,7 +117,7 @@ ProcessData::ProcessData(Client *client, ClientRequest *clientRequest, ServerDat
 }
 
 // Copy constructor
-ProcessData::ProcessData(const ProcessData &refObj) : client(refObj.client), serverData(refObj.serverData) {}
+ProcessData::ProcessData(const ProcessData &refObj) : client(refObj.client), serverData(refObj.serverData), clientRequest(refObj.clientRequest) {}
 
 // Copy assignment operator
 ProcessData &ProcessData::operator=(const ProcessData &refObj)
@@ -125,7 +125,7 @@ ProcessData &ProcessData::operator=(const ProcessData &refObj)
 	if (this != &refObj)
 	{
 		this->client = refObj.client;
-		this->serverData = refObj.serverData;
+		this->clientRequest = refObj.clientRequest;
 	}
 	return (*this);
 }

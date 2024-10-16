@@ -6,13 +6,13 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 14:13:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/07 19:25:03 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 12:56:18 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "UserCommand.hpp"
 
-UserCommand::UserCommand(Client* client, ServerData& serverData, ClientMessage& clientMessage) : client(client), serverData(serverData), clientMessage(clientMessage)/*, user(NULL)*/
+UserCommand::UserCommand(Client* client, ClientMessage& clientMessage) : client(client), serverData(ServerDataManager::getInstance()), clientMessage(clientMessage) /*, user(NULL)*/
 {
 	if (client->user.isValidServerUser() == true)
 	{
@@ -42,7 +42,6 @@ UserCommand::UserCommand(Client* client, ServerData& serverData, ClientMessage& 
 	client->user.setUserValid(true);
 }
 
-
 UserCommand::UserCommand(UserCommand const& refObj) : client(refObj.client), serverData(refObj.serverData), clientMessage(refObj.clientMessage), serverResponse(refObj.serverResponse) /*, user(refObj.user)*/ {}
 
 UserCommand& UserCommand::operator=(UserCommand const& refObj)
@@ -51,7 +50,7 @@ UserCommand& UserCommand::operator=(UserCommand const& refObj)
 	{
 		this->client = refObj.client;
 		this->clientMessage = refObj.clientMessage;
-		this->serverData = refObj.serverData;
+		// this->serverData = refObj.serverData;
 		this->serverResponse = refObj.serverResponse;
 		// this->user = refObj.user;
 	}

@@ -1,41 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Rooms.cpp                                          :+:      :+:    :+:   */
+/*   RoomManager.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:34:33 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/14 22:43:16 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 10:13:06 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Rooms.hpp"
+#include "RoomManager.hpp"
 
-Rooms &Rooms::getInstance()
+RoomManager &RoomManager::getInstance()
 {
-	static Rooms instance;
+	static RoomManager instance;
 	return (instance);
 }
 
-void Rooms::addRoom(RoomName roomName)
+void RoomManager::addRoom(RoomName roomName)
 {
 	roomList.insert(std::make_pair(roomName, Room(roomName)));
 }
 
-void Rooms::removeRoom(RoomName roomName)
+void RoomManager::removeRoom(RoomName roomName)
 {
 	roomList.erase(roomName);
 }
 
-Room *Rooms::getRoom(RoomName roomName)
+Room *RoomManager::getRoom(RoomName roomName)
 {
 	std::map<RoomName, Room>::iterator it = roomList.find(roomName);
 	Room *room = &(it->second);
 	return (room);
 }
 
-std::string Rooms::getRoomsAsString() const
+std::string RoomManager::getRoomsAsString() const
 {
 	std::stringstream output;
 	int i = 1;
@@ -57,10 +57,10 @@ std::string Rooms::getRoomsAsString() const
 }
 
 // PRIVATE
-Rooms::Rooms() {}
-Rooms::~Rooms() {}
-Rooms::Rooms(const Rooms &obj) : roomList(obj.roomList) {}
-Rooms &Rooms::operator=(const Rooms &obj)
+RoomManager::RoomManager() {}
+RoomManager::~RoomManager() {}
+RoomManager::RoomManager(const RoomManager &obj) : roomList(obj.roomList) {}
+RoomManager &RoomManager::operator=(const RoomManager &obj)
 {
 	if (this != &obj)
 	{
@@ -70,7 +70,7 @@ Rooms &Rooms::operator=(const Rooms &obj)
 }
 
 // --- OUTSIDE OF THE CLASS ---
-std::ostream &operator<<(std::ostream &output, Rooms const &instance)
+std::ostream &operator<<(std::ostream &output, RoomManager const &instance)
 {
 	output << instance.getRoomsAsString();
 	return (output);

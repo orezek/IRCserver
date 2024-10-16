@@ -6,13 +6,13 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 13:05:16 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/09 11:54:44 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 12:54:14 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PingCommand.hpp"
 
-PingCommand::PingCommand(Client* client, ServerData& serverData, ClientMessage& clientMessage) : client(client), serverData(serverData), clientMessage(clientMessage)
+PingCommand::PingCommand(Client* client, ClientMessage& clientMessage) : client(client), serverData(ServerDataManager::getInstance()), clientMessage(clientMessage)
 {
 	if (clientMessage.getFirstParameter() == serverData.getServerName())
 	{
@@ -30,7 +30,6 @@ PingCommand& PingCommand::operator=(PingCommand const& refObj)
 	if (this != &refObj)
 	{
 		this->client = refObj.client;
-		this->serverData = refObj.serverData;
 		this->clientMessage = refObj.clientMessage;
 		this->serverResponse = refObj.serverResponse;
 	}

@@ -6,13 +6,13 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:42:28 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/07 19:36:06 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 14:06:36 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "NickCommand.hpp"
 
-NickCommand::NickCommand(Client* client, ServerData& serverData, ClientMessage& clientMessage) : client(client), serverData(serverData), clientMessage(clientMessage), oldNick(""), newNick("")
+NickCommand::NickCommand(Client* client, ClientMessage& clientMessage) : client(client), serverData(ServerDataManager::getInstance()), clientMessage(clientMessage), oldNick(""), newNick("")
 {
 	oldNick = client->user.getNickname();
 	if (oldNick == "")
@@ -55,7 +55,8 @@ NickCommand& NickCommand::operator=(NickCommand const& refObj)
 	{
 		this->client = refObj.client;
 		this->clientMessage = refObj.clientMessage;
-		this->serverData = refObj.serverData;
+		//serverData cannot be coppied
+		// this->serverData = refObj.serverData;
 	}
 	return (*this);
 }
@@ -109,7 +110,9 @@ bool NickCommand::isValidNick(std::string& nick)
 
 bool NickCommand::isAlreadyUsedNick(std::string& nick)
 {
-	for (std::map<int, Client>::iterator it = serverData.clients.begin(); it != serverData.clients.end(); ++it)
+	ClientManager& clients = ClientManager::getInstance();
+
+	for (std::map<int, Client>::iterator it = clients.clients.begin(); it != clients.clients.end(); ++it)
 	{
 		std::string oldNick = it->second.user.getNickname();
 		if (nick == oldNick)
@@ -172,11 +175,14 @@ void NickCommand::setServerResponseValid(User* user)
 	response.append(newNick);
 	response.append("\r\n");
 
+	serverResponse.setResponse(response);
+
 	if (user->getUsername() == "" || user->getHostname() == "")
 		serverResponse.setAction(ServerResponse::NOSEND);
 	else
+	{
 		serverResponse.setAction(ServerResponse::SEND);
+		serverResponse.setClientsToSend(clientMessage.getFromUserFd());
+	}
 
-	serverResponse.setResponse(response);
-	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
 }

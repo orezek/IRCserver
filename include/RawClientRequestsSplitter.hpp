@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 12:40:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/09 12:09:14 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 10:15:04 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <string>
 
 #include "ClientRequest.hpp"
-#include "ServerData.hpp"
+#include "ServerDataManager.hpp"
 
 class RawClientRequestsSplitter
 {
