@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:57:16 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/05 12:39:13 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/14 21:09:05 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <map>
 #include <vector>
 
+#include "Client.hpp"
 #include "ClientRequestQueue.hpp"
 #include "Rooms.hpp"
 #include "ServerResponseQueue.hpp"
@@ -25,7 +26,7 @@ class ServerData
 		~ServerData();
 
 		std::map<int, Client> clients;
-		Rooms rooms;
+		// Rooms rooms;
 
 		// DO NOT USE ANYMORE:
 		Users waitingUsers;                         // will be deleted

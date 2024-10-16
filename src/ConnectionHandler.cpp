@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/14 00:06:03 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/16 00:27:56 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,7 @@ void ConnectionHandler::prepareFdSetForSelect(void)
 	FD_SET(this->masterSocketFd, &this->readFds);  // add the master fd to the read_fds set
 	this->maxFd = this->masterSocketFd;
 	// map implementation
-	for (std::map<int, Client>::iterator it = serverData->clients.begin(); it != serverData->clients.end(); ++it)
+	for (std::map<int, Client>::iterator it = ClientManager::getInstance().clientMap.begin(); it != ClientManager::getInstance().clientMap.end(); ++it)
 	{
 		Client &client = it->second;
 		int clientSocketFd = it->first;
@@ -222,12 +222,13 @@ int ConnectionHandler::checkForNewClients(void)
 				  << ntohs(ipClientAddress.sin_port)
 				  << std::endl;
 		// map implementation
-		serverData->clients.insert(std::make_pair(clientSocketFd, Client(clientSocketFd)));
+		// serverData->clients.insert(std::make_pair(clientSocketFd, Client(clientSocketFd)));
+		ClientManager::getInstance().addClient(clientSocketFd);
 		this->enableNonBlockingFd(clientSocketFd);
 		clientBuffers[clientSocketFd] = "";  // map to map client to its buffer
 		// testing
 		std::cout << "Testing connected clients after Accept line 222" << std::endl;
-		for (std::map<int, Client>::iterator it = serverData->clients.begin(); it != serverData->clients.end(); ++it)
+		for (std::map<int, Client>::iterator it = ClientManager::getInstance().clientMap.begin(); it != ClientManager::getInstance().clientMap.end(); ++it)
 		{
 			std::cout << "Connected client fd: " << it->first << std::endl;
 		}
@@ -241,7 +242,8 @@ void ConnectionHandler::deleteClient(std::map<int, Client>::iterator &it)
 {
 	std::map<int, Client>::iterator itToErase = it;
 	++it;
-	this->serverData->clients.erase(itToErase);
+	//this->serverData->clients.erase(itToErase);
+	ClientManager::getInstance().clientMap.erase(itToErase);
 }
 
 void ConnectionHandler::cleanClientData(int &clientSocketFd, std::map<int, Client>::iterator &it)
@@ -253,7 +255,7 @@ void ConnectionHandler::cleanClientData(int &clientSocketFd, std::map<int, Clien
 
 void ConnectionHandler::onError(int &clientSocketFd, std::map<int, Client>::iterator &it)
 {
-	//it->second.markedForDeletion = true;
+	// it->second.markedForDeletion = true;
 	cleanClientData(clientSocketFd, it);
 	// impelement logging
 	std::cout << "Client " << clientSocketFd << " on error event." << std::endl;
@@ -277,8 +279,8 @@ int ConnectionHandler::handleNewClients(void)
 
 	if (selectResponse > 0)
 	{
-		std::map<int, Client>::iterator it = serverData->clients.begin();
-		while (it != serverData->clients.end())
+		std::map<int, Client>::iterator it = ClientManager::getInstance().clientMap.begin();
+		while (it != ClientManager::getInstance().clientMap.end())
 		{
 			clientSocketFd = it->first;
 			if (FD_ISSET(clientSocketFd, &errorFds))
@@ -294,7 +296,7 @@ int ConnectionHandler::handleNewClients(void)
 				if ((bytesReceived = recvAll(clientSocketFd, recvBuff, MAX_BUFF_SIZE)) == -1)
 				{
 					// notify ProcessData - really is it needed, discuss with Martin
-					it->second.markedForDeletion = true; // is this enough as notification for ProcessData?
+					it->second.markedForDeletion = true;  // is this enough as notification for ProcessData?
 					std::cout << "Recv failed " << clientSocketFd << ": " << strerror(errno) << std::endl;
 				}
 				// client closed connection
@@ -302,7 +304,7 @@ int ConnectionHandler::handleNewClients(void)
 				{
 					// notify ProcessData - message has to be sent to all rooms where the user has been present
 					// notify ProcessData - really is it needed, discuss with Martin
-					it->second.markedForDeletion = true; // is this enough as notification for ProcessData?
+					it->second.markedForDeletion = true;  // is this enough as notification for ProcessData?
 					std::cout << "Client " << clientSocketFd << " quit." << std::endl;
 				}
 				// hard message limit
@@ -310,7 +312,7 @@ int ConnectionHandler::handleNewClients(void)
 				{
 					// notify ProcessData - really is it needed, discuss with Martin
 					// notify ProcessData
-					it->second.markedForDeletion = true; // is this enough as notification for ProcessData?
+					it->second.markedForDeletion = true;  // is this enough as notification for ProcessData?
 					std::cout << "Client " << clientSocketFd << " disconnected due to a message limit." << std::endl;
 				}
 				else
@@ -332,7 +334,7 @@ int ConnectionHandler::handleNewClients(void)
 						// Server ready to process data and create a response
 						// Create a ClientReqeust
 						ClientRequest clientRequest(clientSocketFd, bytesReceived, clientBuffers[clientSocketFd], this->ipClientAddress);
-						if (it != serverData->clients.end())
+						if (it != ClientManager::getInstance().clientMap.end())
 						{
 							// add a new client as reqeusted
 							it->second.rawClientRequests.push_back(clientRequest);

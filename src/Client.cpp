@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 10:24:05 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/13 23:25:42 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/15 23:03:51 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,7 @@
 // Client::Client() {};
 
 Client::Client(int clientFd) : clientFd(clientFd), markedForDeletion(false)
-{
-}
+{}
 
 Client::Client(const Client& refClient) : clientFd(refClient.clientFd)
 {
