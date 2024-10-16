@@ -6,32 +6,27 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 20:01:51 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 13:06:35 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 16:31:17 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ServerDataManager.hpp"
 
-bool ServerDataManager::initialized = false;
-
 ServerDataManager &ServerDataManager::getInstance(const std::string &password, int portNumber)
 {
-	if (!ServerDataManager::initialized)
+	static bool initialized = false;
+
+	if (!initialized)
 	{
 		if (!ServerDataManager::isPasswordValid(password) || !ServerDataManager::isPortValid(portNumber))
 		{
 			throw std::runtime_error("ServerDataManager must be initialized with valid parameters.");
 		}
+		initialized = true;
 	}
 
 	static ServerDataManager instance(password, portNumber);
-
-	if (!ServerDataManager::initialized)
-	{
-		ServerDataManager::initialized = true;  // Mark the instance as initialized
-	}
-
-	return instance;
+	return (instance);
 }
 
 bool ServerDataManager::isPasswordValid(const std::string &password)

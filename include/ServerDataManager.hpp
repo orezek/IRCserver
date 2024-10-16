@@ -44,8 +44,6 @@ class ServerDataManager
 		std::string serverPassword;
 		std::string serverName;
 		int serverPortNumber;
-		// Static flag to ensure the singleton is initialized correctly
-		static bool initialized;
 
 		ServerDataManager(const std::string &password, int portNumber);
 		~ServerDataManager();
