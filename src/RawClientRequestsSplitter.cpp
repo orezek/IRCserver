@@ -6,13 +6,11 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:18:14 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/09 15:12:16 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 15:35:46 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "RawClientRequestsSplitter.hpp"
-
-RawClientRequestsSplitter::RawClientRequestsSplitter() : client(NULL), rawClientRequest(NULL) {}
 
 RawClientRequestsSplitter::RawClientRequestsSplitter(Client* inputClient) : client(inputClient)
 {
