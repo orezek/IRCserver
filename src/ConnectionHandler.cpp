@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 00:27:56 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/16 12:24:18 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,7 @@ void ConnectionHandler::prepareFdSetForSelect(void)
 	FD_SET(this->masterSocketFd, &this->readFds);  // add the master fd to the read_fds set
 	this->maxFd = this->masterSocketFd;
 	// map implementation
-	for (std::map<int, Client>::iterator it = ClientManager::getInstance().clientMap.begin(); it != ClientManager::getInstance().clientMap.end(); ++it)
+	for (std::map<int, Client>::iterator it = ClientManager::getInstance().clients.begin(); it != ClientManager::getInstance().clients.end(); ++it)
 	{
 		Client &client = it->second;
 		int clientSocketFd = it->first;
@@ -228,7 +228,7 @@ int ConnectionHandler::checkForNewClients(void)
 		clientBuffers[clientSocketFd] = "";  // map to map client to its buffer
 		// testing
 		std::cout << "Testing connected clients after Accept line 222" << std::endl;
-		for (std::map<int, Client>::iterator it = ClientManager::getInstance().clientMap.begin(); it != ClientManager::getInstance().clientMap.end(); ++it)
+		for (std::map<int, Client>::iterator it = ClientManager::getInstance().clients.begin(); it != ClientManager::getInstance().clients.end(); ++it)
 		{
 			std::cout << "Connected client fd: " << it->first << std::endl;
 		}
@@ -242,8 +242,8 @@ void ConnectionHandler::deleteClient(std::map<int, Client>::iterator &it)
 {
 	std::map<int, Client>::iterator itToErase = it;
 	++it;
-	//this->serverData->clients.erase(itToErase);
-	ClientManager::getInstance().clientMap.erase(itToErase);
+	// this->serverData->clients.erase(itToErase);
+	ClientManager::getInstance().clients.erase(itToErase);
 }
 
 void ConnectionHandler::cleanClientData(int &clientSocketFd, std::map<int, Client>::iterator &it)
@@ -279,8 +279,8 @@ int ConnectionHandler::handleNewClients(void)
 
 	if (selectResponse > 0)
 	{
-		std::map<int, Client>::iterator it = ClientManager::getInstance().clientMap.begin();
-		while (it != ClientManager::getInstance().clientMap.end())
+		std::map<int, Client>::iterator it = ClientManager::getInstance().clients.begin();
+		while (it != ClientManager::getInstance().clients.end())
 		{
 			clientSocketFd = it->first;
 			if (FD_ISSET(clientSocketFd, &errorFds))
@@ -334,7 +334,7 @@ int ConnectionHandler::handleNewClients(void)
 						// Server ready to process data and create a response
 						// Create a ClientReqeust
 						ClientRequest clientRequest(clientSocketFd, bytesReceived, clientBuffers[clientSocketFd], this->ipClientAddress);
-						if (it != ClientManager::getInstance().clientMap.end())
+						if (it != ClientManager::getInstance().clients.end())
 						{
 							// add a new client as reqeusted
 							it->second.rawClientRequests.push_back(clientRequest);
