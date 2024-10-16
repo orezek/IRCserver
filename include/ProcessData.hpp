@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:33 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 10:15:04 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 12:50:14 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,13 @@
 class ProcessData
 {
 	public:
-		ProcessData(ClientRequest *clientRequest, ServerDataManager *serverData);
-		ProcessData(Client *client, ClientRequest *clientRequest, ServerDataManager *serverData);
+		// ProcessData(ClientRequest *clientRequest, ServerDataManager *serverData);
+		ProcessData(Client *client, ClientRequest *clientRequest);
 		ProcessData(const ProcessData &refObj);
 		ProcessData &operator=(const ProcessData &refObj);
 
 	private:
 		Client *client;
-		ServerDataManager *serverData;
+		ServerDataManager& serverData;
 		ClientRequest *clientRequest;
 };

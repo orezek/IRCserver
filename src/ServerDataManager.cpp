@@ -1,54 +1,89 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ServerData.cpp                                     :+:      :+:    :+:   */
+/*   ServerDataManager.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 20:01:51 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 10:15:04 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 13:06:35 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ServerDataManager.hpp"
 
-ServerDataManager::ServerDataManager() : waitingUsers(), users() {};
+bool ServerDataManager::initialized = false;
+
+ServerDataManager &ServerDataManager::getInstance(const std::string &password, int portNumber)
+{
+	if (!ServerDataManager::initialized)
+	{
+		if (!ServerDataManager::isPasswordValid(password) || !ServerDataManager::isPortValid(portNumber))
+		{
+			throw std::runtime_error("ServerDataManager must be initialized with valid parameters.");
+		}
+	}
+
+	static ServerDataManager instance(password, portNumber);
+
+	if (!ServerDataManager::initialized)
+	{
+		ServerDataManager::initialized = true;  // Mark the instance as initialized
+	}
+
+	return instance;
+}
+
+bool ServerDataManager::isPasswordValid(const std::string &password)
+{
+	if (password.empty())
+		return (false);
+	return (true);
+}
+
+bool ServerDataManager::isPortValid(int port)
+{
+	if (port >= 3 && port <= 65535)
+		return (true);
+	return (false);
+}
+
+ServerDataManager::ServerDataManager(const std::string &password, int portNumber) : serverPassword(password), serverPortNumber(portNumber)
+{
+	serverName = "irc.brdevstudio.com";
+}
 
 ServerDataManager::~ServerDataManager() {};
 
-std::string ServerDataManager::SERVER_PASSWORD = "";
-std::string ServerDataManager::SERVER_NAME = "irc.brdevstudio.com";
-int ServerDataManager::SERVER_PORT_NUMBER = -1;
-
-void ServerDataManager::setServerPassword(const std::string &serverPassword)
-{
-	ServerDataManager::SERVER_PASSWORD = serverPassword;
-}
+// void ServerDataManager::setServerPassword(const std::string &serverPassword)
+// {
+// 	this->serverPassword = serverPassword;
+// }
 
 const std::string &ServerDataManager::getServerPassword(void)
 {
-	return (ServerDataManager::SERVER_PASSWORD);
+	return (serverPassword);
 }
 
 const std::string &ServerDataManager::getServerName(void)
 {
-	return (ServerDataManager::SERVER_NAME);
+	return (serverName);
 }
 
 const int &ServerDataManager::getServerPortNumber(void)
 {
-	return (ServerDataManager::SERVER_PORT_NUMBER);
+	return (serverPortNumber);
 }
 
-void ServerDataManager::setServerPortNumber(const int &serverPortNumber)
-{
-	ServerDataManager::SERVER_PORT_NUMBER = serverPortNumber;
-}
+// void ServerDataManager::setServerPortNumber(const int &serverPortNumber)
+// {
+// 	this->serverPortNumber = serverPortNumber;
+// }
 
-void ServerDataManager::validateWaitingUser(int clientFd)
-{
-	User *waitingUser = waitingUsers.findUser(clientFd);
+// void ServerDataManager::validateWaitingUser(int clientFd)
+// {
+// 	User *waitingUser = waitingUsers.findUser(clientFd);
 
-	users.addUser(waitingUser);
-	waitingUsers.deleteUser(waitingUser);
-}
+// 	users.addUser(waitingUser);
+// 	waitingUsers.deleteUser(waitingUser);
+// }

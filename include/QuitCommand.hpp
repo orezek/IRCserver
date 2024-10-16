@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 19:48:00 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/16 10:15:04 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 12:55:01 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 class QuitCommand
 {
 	public:
-		QuitCommand(Client* client, ServerDataManager& serverData, ClientMessage& clientMessage);
+		QuitCommand(Client* client, ClientMessage& clientMessage);
 		QuitCommand(QuitCommand const& refObj);
 		QuitCommand& operator=(QuitCommand const& refObj);
 		~QuitCommand();

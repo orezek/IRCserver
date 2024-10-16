@@ -22,28 +22,34 @@
 class ServerDataManager
 {
 	public:
-		ServerDataManager();
-		~ServerDataManager();
-
-		std::map<int, Client> clients;
+		static ServerDataManager &getInstance(const std::string &password = "", int portNumber = 0);
+		// std::map<int, Client> clients;  // will be deleted
 		// Rooms rooms;
 
 		// DO NOT USE ANYMORE:
-		Users waitingUsers;                         // will be deleted
-		Users users;                                // will be deleted
-		ClientRequestQueue splittedClientRequests;  // will be deleted
-		ServerResponseQueue serverResponses;        // will be deleted
-		std::vector<int> fileDsDb;                  // will be deleted
-		void validateWaitingUser(int clientFd);     // this functionality is moved to User class as "bool User::isValidServerUser()"
+		// Users waitingUsers;                         // will be deleted
+		// Users users;                                // will be deleted
+		// ClientRequestQueue splittedClientRequests;  // will be deleted
+		// ServerResponseQueue serverResponses;        // will be deleted
+		// std::vector<int> fileDsDb;                  // will be deleted
+		// void validateWaitingUser(int clientFd);     // this functionality is moved to User class as "bool User::isValidServerUser()"
 
-		static void setServerPassword(const std::string &serverPassword);  // delete if const?
-		static const std::string &getServerPassword(void);
-		static const std::string &getServerName(void);
-		static const int &getServerPortNumber(void);
-		static void setServerPortNumber(const int &setServerPortNumber);  // delete if const?
+		// void setServerPassword(const std::string &serverPassword);  // delete if const?
+		const std::string &getServerPassword(void);
+		const std::string &getServerName(void);
+		const int &getServerPortNumber(void);
+		// void setServerPortNumber(const int &setServerPortNumber);  // delete if const?
 
 	private:
-		static std::string SERVER_PASSWORD;  // should be const?
-		static std::string SERVER_NAME;      // should be const?
-		static int SERVER_PORT_NUMBER;       // should be const?
+		std::string serverPassword;
+		std::string serverName;
+		int serverPortNumber;
+		// Static flag to ensure the singleton is initialized correctly
+		static bool initialized;
+
+		ServerDataManager(const std::string &password, int portNumber);
+		~ServerDataManager();
+
+		static bool isPasswordValid(const std::string &password);
+		static bool isPortValid(int port);
 };

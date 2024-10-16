@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 14:13:47 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/16 10:15:04 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 12:55:53 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 class UserCommand
 {
 	public:
-		UserCommand(Client* client, ServerDataManager& serverData, ClientMessage& clientMessage);
+		UserCommand(Client* client, ClientMessage& clientMessage);
 		UserCommand(UserCommand const& refObj);
 		UserCommand& operator=(UserCommand const& refObj);
 		~UserCommand();

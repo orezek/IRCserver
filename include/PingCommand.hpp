@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 11:21:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/16 10:15:04 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 12:53:39 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 class PingCommand
 {
 	public:
-		PingCommand(Client* client, ServerDataManager& serverData, ClientMessage& clientMessage);
+		PingCommand(Client* client, ClientMessage& clientMessage);
 		~PingCommand();
 		PingCommand(PingCommand const& refObj);
 		PingCommand& operator=(PingCommand const& refObj);

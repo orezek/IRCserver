@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:40:08 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 10:15:04 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 13:13:03 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 class IrcServer
 {
 	public:
-		IrcServer();
+		// IrcServer();
 		IrcServer(int portNumber, std::string password);
 		IrcServer(const IrcServer &obj);
 		IrcServer &operator=(const IrcServer &obj);
@@ -28,7 +28,8 @@ class IrcServer
 		// these are client data
 		int serverPortNumber;
 		std::string ircPassword;
-		ServerDataManager serverData;
+		// ServerDataManager& serverData;
+
 		// here have to be server data
 		// serverName
 		// serverDomain

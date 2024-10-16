@@ -6,13 +6,13 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 19:48:17 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/16 10:14:27 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 12:55:25 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <QuitCommand.hpp>
 
-QuitCommand::QuitCommand(Client* client, ServerDataManager& serverData, ClientMessage& clientMessage) : client(client), serverData(serverData), clientMessage(clientMessage)
+QuitCommand::QuitCommand(Client* client, ClientMessage& clientMessage) : client(client), serverData(ServerDataManager::getInstance()), clientMessage(clientMessage)
 {
 	this->setServerResponseValid();
 	client->serverResponses.push_back(this->serverResponse);
@@ -26,7 +26,7 @@ QuitCommand& QuitCommand::operator=(QuitCommand const& refObj)
 	{
 		this->client = refObj.client;
 		this->clientMessage = refObj.clientMessage;
-		this->serverData = refObj.serverData;
+		// this->serverData = refObj.serverData;
 		this->serverResponse = refObj.serverResponse;
 	}
 	return (*this);

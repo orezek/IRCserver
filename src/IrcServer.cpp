@@ -6,30 +6,26 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:45:52 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 10:14:27 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 13:15:09 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IrcServer.hpp"
 
-IrcServer::IrcServer()
-{
-	this->serverPortNumber = -1;
-	this->ircPassword = "default";
-	this->serverData = ServerDataManager();
-}
+// IrcServer::IrcServer()
+// {
+// 	this->serverPortNumber = -1;
+// 	this->ircPassword = "default";
+// }
 
-IrcServer::IrcServer(int serverPortNumber, std::string ircPassword) : serverPortNumber(serverPortNumber), ircPassword(ircPassword), serverData()
-{
-	serverData.setServerPassword(this->ircPassword);
-	serverData.setServerPortNumber(this->serverPortNumber);
+IrcServer::IrcServer(int serverPortNumber, std::string ircPassword) : serverPortNumber(serverPortNumber), ircPassword(ircPassword) {
+	ServerDataManager& serverData = ServerDataManager::getInstance(ircPassword, serverPortNumber);
 };
 
 IrcServer::IrcServer(const IrcServer &obj)
 {
 	this->serverPortNumber = obj.serverPortNumber;
 	this->ircPassword = obj.ircPassword;
-	this->serverData = obj.serverData;
 }
 
 IrcServer &IrcServer::operator=(const IrcServer &obj)
@@ -38,7 +34,7 @@ IrcServer &IrcServer::operator=(const IrcServer &obj)
 	{
 		this->serverPortNumber = obj.serverPortNumber;
 		this->ircPassword = obj.ircPassword;
-		this->serverData = obj.serverData;
+		// serverData cannot be coppied
 	}
 	return (*this);
 }
@@ -47,7 +43,7 @@ IrcServer::~IrcServer() {};
 
 void IrcServer::runIrcServer(void)
 {
-	ConnectionHandler connHandler = ConnectionHandler(this->serverPortNumber, &this->serverData);
+	ConnectionHandler connHandler = ConnectionHandler(this->serverPortNumber);
 	connHandler.enableSocket();
 	connHandler.enableNonBlockingFd(connHandler.getMasterSocketFd());
 	connHandler.enableSocketReus();

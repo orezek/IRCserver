@@ -6,35 +6,35 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 10:14:27 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 13:09:47 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ConnectionHandler.hpp"
 
-ConnectionHandler::ConnectionHandler()
-{
-	this->serverPortNumber = 0;
-	this->masterSocketFd = 0;
-	this->selectResponse = 0;
-	this->maxFd = 0;
-	this->ipAddressLenSrv = 0;
-	FD_ZERO(&this->readFds);
-	FD_ZERO(&this->writeFds);
-	FD_ZERO(&this->errorFds);
-	this->serverData = NULL;
+// ConnectionHandler::ConnectionHandler()
+// {
+// 	this->serverPortNumber = 0;
+// 	this->masterSocketFd = 0;
+// 	this->selectResponse = 0;
+// 	this->maxFd = 0;
+// 	this->ipAddressLenSrv = 0;
+// 	FD_ZERO(&this->readFds);
+// 	FD_ZERO(&this->writeFds);
+// 	FD_ZERO(&this->errorFds);
+// 	this->serverData = NULL;
 
-	memset(&this->ipServerAddress, 0, sizeof(this->ipServerAddress));
-	this->ipServerAddress.sin_addr.s_addr = INADDR_ANY;
-	this->ipServerAddress.sin_family = AF_INET;
-	this->ipServerAddress.sin_port = htons(this->serverPortNumber);
-	memset(&this->ipClientAddress, 0, sizeof(this->ipClientAddress));
-	this->ipClientAddress.sin_addr.s_addr = INADDR_ANY;
-	this->ipClientAddress.sin_family = AF_INET;
-	this->ipClientAddress.sin_port = htons(0);
-}
+// 	memset(&this->ipServerAddress, 0, sizeof(this->ipServerAddress));
+// 	this->ipServerAddress.sin_addr.s_addr = INADDR_ANY;
+// 	this->ipServerAddress.sin_family = AF_INET;
+// 	this->ipServerAddress.sin_port = htons(this->serverPortNumber);
+// 	memset(&this->ipClientAddress, 0, sizeof(this->ipClientAddress));
+// 	this->ipClientAddress.sin_addr.s_addr = INADDR_ANY;
+// 	this->ipClientAddress.sin_family = AF_INET;
+// 	this->ipClientAddress.sin_port = htons(0);
+// }
 
-ConnectionHandler::ConnectionHandler(int serverPortNumber, ServerDataManager *serverData)
+ConnectionHandler::ConnectionHandler(int serverPortNumber) : serverData(ServerDataManager::getInstance())
 {
 	this->serverPortNumber = serverPortNumber;
 	this->masterSocketFd = 0;
@@ -44,7 +44,6 @@ ConnectionHandler::ConnectionHandler(int serverPortNumber, ServerDataManager *se
 	FD_ZERO(&this->readFds);
 	FD_ZERO(&this->writeFds);
 	FD_ZERO(&this->errorFds);
-	this->serverData = serverData;
 
 	memset(&this->ipServerAddress, 0, sizeof(this->ipServerAddress));
 	this->ipServerAddress.sin_addr.s_addr = INADDR_ANY;
@@ -348,7 +347,7 @@ int ConnectionHandler::handleNewClients(void)
 						// m-bartos: added Splitter and ClientRequestHandler:
 						Client *client = &(it->second);
 						RawClientRequestsSplitter rawClientRequestSplitter(client);
-						ClientRequestHandler clientRequestHandler(this->serverData, &(it->second));
+						ClientRequestHandler clientRequestHandler(&(it->second));
 					}
 				}
 			}
