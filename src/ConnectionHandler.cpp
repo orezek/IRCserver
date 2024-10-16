@@ -6,35 +6,13 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 19:44:30 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/16 19:59:58 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ConnectionHandler.hpp"
 
-// ConnectionHandler::ConnectionHandler()
-// {
-// 	this->serverPortNumber = 0;
-// 	this->masterSocketFd = 0;
-// 	this->selectResponse = 0;
-// 	this->maxFd = 0;
-// 	this->ipAddressLenSrv = 0;
-// 	FD_ZERO(&this->readFds);
-// 	FD_ZERO(&this->writeFds);
-// 	FD_ZERO(&this->errorFds);
-// 	this->serverData = NULL;
-
-// 	memset(&this->ipServerAddress, 0, sizeof(this->ipServerAddress));
-// 	this->ipServerAddress.sin_addr.s_addr = INADDR_ANY;
-// 	this->ipServerAddress.sin_family = AF_INET;
-// 	this->ipServerAddress.sin_port = htons(this->serverPortNumber);
-// 	memset(&this->ipClientAddress, 0, sizeof(this->ipClientAddress));
-// 	this->ipClientAddress.sin_addr.s_addr = INADDR_ANY;
-// 	this->ipClientAddress.sin_family = AF_INET;
-// 	this->ipClientAddress.sin_port = htons(0);
-// }
-
-ConnectionHandler::ConnectionHandler(int serverPortNumber) : serverData(ServerDataManager::getInstance())
+ConnectionHandler::ConnectionHandler(int serverPortNumber)
 {
 	this->serverPortNumber = serverPortNumber;
 	this->masterSocketFd = 0;
@@ -61,9 +39,7 @@ ConnectionHandler::ConnectionHandler(const ConnectionHandler &other)
 	  masterSocketFd(other.masterSocketFd),
 	  selectResponse(other.selectResponse),
 	  maxFd(other.maxFd),
-	  ipAddressLenSrv(other.ipAddressLenSrv),
-	  // std::vector handles deep copy automatically
-	  serverData(other.serverData)
+	  ipAddressLenSrv(other.ipAddressLenSrv)
 {
 	// Copy the fd_set using memcpy
 	memcpy(&this->readFds, &other.readFds, sizeof(fd_set));
@@ -84,7 +60,6 @@ ConnectionHandler &ConnectionHandler::operator=(const ConnectionHandler &other)
 		this->selectResponse = other.selectResponse;
 		this->maxFd = other.maxFd;
 		this->ipAddressLenSrv = other.ipAddressLenSrv;
-		this->serverData = other.serverData;
 
 		// Copy the fd_set using memcpy
 		memcpy(&this->readFds, &other.readFds, sizeof(fd_set));
@@ -221,7 +196,7 @@ int ConnectionHandler::checkForNewClients(void)
 		this->enableNonBlockingFd(clientSocketFd);
 		clientBuffers[clientSocketFd] = "";  // map to map client to its buffer
 		// testing
-		std::cout << "Testing connected clients after Accept line 222" << std::endl;
+		std::cout << "Testing connected clients after Accept line 224" << std::endl;
 		for (std::map<int, Client>::iterator it = ClientManager::getInstance().clients.begin(); it != ClientManager::getInstance().clients.end(); ++it)
 		{
 			std::cout << "Connected client fd: " << it->first << std::endl;
@@ -345,7 +320,7 @@ int ConnectionHandler::serverEventLoop(void)
 			if (client.markedForDeletion == true)
 			{
 				terminateClientSession(clientIter);
-				std::cout << "Client " << clientSocketFd << " deleted properly." << std::endl;
+				std::cout << "Client " << clientSocketFd << " session has been terminated." << std::endl;
 			}
 			else
 			{
