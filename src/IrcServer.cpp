@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:45:52 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 13:15:09 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 13:03:29 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void IrcServer::runIrcServer(void)
 		// std::cout << "Check for new clients" << std::endl;
 		connHandler.checkForNewClients();
 		// std::cout << "Handle new clients" << std::endl;
-		connHandler.handleNewClients();
+		connHandler.serverEventLoop();
 		// std::cout << "END of while" << std::endl;
 	}
 	connHandler.closeServerFd();

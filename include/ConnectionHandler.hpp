@@ -63,7 +63,7 @@ class ConnectionHandler
 		void runSelect(void);
 		int checkForNewClients(void);
 		// this is the read event -- needs to be renamed
-		int handleNewClients(void);
+		int serverEventLoop(void);
 		// recv and send system calls in loops
 		ssize_t recvAll(int socketFd, char *buffer, size_t bufferSize);
 		ssize_t sendServerResponse(ServerResponse &serverResponse);
@@ -77,9 +77,10 @@ class ConnectionHandler
 		// void setSrvPortNumber(int srvPortNumber);
 		// void setIrcPassword(std::string password);
 		// utility functions for connection handler
-		void deleteClient(std::map<int, Client>::iterator &it);
-		void cleanClientData(int &clientSocketFd, std::map<int, Client>::iterator &it);
-		void onError(int &clientSocketFd, std::map<int, Client>::iterator &it);
+		void removeClientFromMap(std::map<int, Client>::iterator &it);
+		void terminateClientSession(std::map<int, Client>::iterator &it);
+		void onError(std::map<int, Client>::iterator &it);
+		void onRead(std::map<int, Client>::iterator &it);
 		void onWrite(std::map<int, Client>::iterator &it);
 
 		const static int MAX_CLIENTS = 1024;

@@ -21,7 +21,9 @@ class ClientManager
 	public:
 		static ClientManager &getInstance();
 		void addClient(int clientSocketFd);
-		std::map<int, Client> clientMap;
+		std::map<int, Client>::iterator getFirstClient(void);
+		std::map<int, Client>::iterator getLastClient(void);
+		std::map<int, Client> clients;
 
 	private:
 		ClientManager();

@@ -163,7 +163,7 @@ void ConnectionHandler::prepareFdSetForSelect(void)
 	FD_SET(this->masterSocketFd, &this->readFds);  // add the master fd to the read_fds set
 	this->maxFd = this->masterSocketFd;
 	// map implementation
-	for (std::map<int, Client>::iterator it = ClientManager::getInstance().clientMap.begin(); it != ClientManager::getInstance().clientMap.end(); ++it)
+	for (std::map<int, Client>::iterator it = ClientManager::getInstance().clients.begin(); it != ClientManager::getInstance().clients.end(); ++it)
 	{
 		Client &client = it->second;
 		int clientSocketFd = it->first;
@@ -220,14 +220,12 @@ int ConnectionHandler::checkForNewClients(void)
 				  << " and Port: "
 				  << ntohs(ipClientAddress.sin_port)
 				  << std::endl;
-		// map implementation
-		// serverData->clients.insert(std::make_pair(clientSocketFd, Client(clientSocketFd)));
 		ClientManager::getInstance().addClient(clientSocketFd);
 		this->enableNonBlockingFd(clientSocketFd);
 		clientBuffers[clientSocketFd] = "";  // map to map client to its buffer
 		// testing
 		std::cout << "Testing connected clients after Accept line 222" << std::endl;
-		for (std::map<int, Client>::iterator it = ClientManager::getInstance().clientMap.begin(); it != ClientManager::getInstance().clientMap.end(); ++it)
+		for (std::map<int, Client>::iterator it = ClientManager::getInstance().clients.begin(); it != ClientManager::getInstance().clients.end(); ++it)
 		{
 			std::cout << "Connected client fd: " << it->first << std::endl;
 		}
@@ -237,27 +235,94 @@ int ConnectionHandler::checkForNewClients(void)
 	return 0;  // No new client to process
 }
 
-void ConnectionHandler::deleteClient(std::map<int, Client>::iterator &it)
+void ConnectionHandler::removeClientFromMap(std::map<int, Client>::iterator &it)
 {
 	std::map<int, Client>::iterator itToErase = it;
 	++it;
-	// this->serverData->clients.erase(itToErase);
-	ClientManager::getInstance().clientMap.erase(itToErase);
+	ClientManager::getInstance().clients.erase(itToErase);
 }
 
-void ConnectionHandler::cleanClientData(int &clientSocketFd, std::map<int, Client>::iterator &it)
+void ConnectionHandler::terminateClientSession(std::map<int, Client>::iterator &it)
 {
+	int clientSocketFd = it->first;
 	close(clientSocketFd);
 	clientBuffers.erase(clientSocketFd);
-	deleteClient(it);
+	removeClientFromMap(it);
 }
 
-void ConnectionHandler::onError(int &clientSocketFd, std::map<int, Client>::iterator &it)
+void ConnectionHandler::onError(std::map<int, Client>::iterator &it)
 {
-	// it->second.markedForDeletion = true;
-	cleanClientData(clientSocketFd, it);
+	int clientSocketFd = it->first;
+	terminateClientSession(it);
 	// impelement logging
 	std::cout << "Client " << clientSocketFd << " on error event." << std::endl;
+}
+
+void ConnectionHandler::onRead(std::map<int, Client>::iterator &it)
+{
+	ssize_t bytesReceived = 0;
+	char recvBuff[MAX_BUFF_SIZE];
+	int clientBuffSize;
+	int clientSocketFd = it->first;
+
+	if ((bytesReceived = recvAll(clientSocketFd, recvBuff, MAX_BUFF_SIZE)) == -1)
+	{
+		// notify ProcessData - really is it needed, discuss with Martin
+		it->second.markedForDeletion = true;  // is this enough as notification for ProcessData?
+		std::cout << "Recv failed " << clientSocketFd << ": " << strerror(errno) << std::endl;
+	}
+	// client closed connection
+	else if (bytesReceived == 0)
+	{
+		// notify ProcessData - message has to be sent to all rooms where the user has been present
+		// notify ProcessData - really is it needed, discuss with Martin
+		it->second.markedForDeletion = true;  // is this enough as notification for ProcessData?
+		std::cout << "Client " << clientSocketFd << " quit." << std::endl;
+	}
+	// hard message limit
+	else if (bytesReceived > MESSAGE_SIZE)
+	{
+		// notify ProcessData - really is it needed, discuss with Martin
+		// notify ProcessData
+		it->second.markedForDeletion = true;  // is this enough as notification for ProcessData?
+		std::cout << "Client " << clientSocketFd << " disconnected due to a message limit." << std::endl;
+	}
+	else
+	{
+		clientBuffers[clientSocketFd].append(recvBuff, bytesReceived);
+		clientBuffSize = clientBuffers[clientSocketFd].size();
+		// partial message received
+		if ((*(clientBuffers[clientSocketFd].end() - 1) != '\n'))
+		{
+			// partial message limit reached - mark client for deletion and go to write buffer
+			if (clientBuffSize > MESSAGE_SIZE)
+			{
+				it->second.markedForDeletion = true;
+				std::cout << "Client " << clientSocketFd << " disconnected due to a message limit in partial read." << std::endl;
+			}
+		}
+		else
+		{
+			// Server ready to process data and create a response
+			// Create a ClientReqeust
+			ClientRequest clientRequest(clientSocketFd, bytesReceived, clientBuffers[clientSocketFd], this->ipClientAddress);
+			if (it != ClientManager::getInstance().clients.end())
+			{
+				// add a new client as reqeusted
+				it->second.rawClientRequests.push_back(clientRequest);
+			}
+			else
+			{
+				throw std::runtime_error("Client not found when trying to add a new request.");
+			}
+			// clear input buffer - valid message acquired and processed hence buffer no needed
+			clientBuffers.erase(clientSocketFd);
+			// m-bartos: added Splitter and ClientRequestHandler:
+			Client *client = &(it->second);
+			RawClientRequestsSplitter rawClientRequestSplitter(client);
+			ClientRequestHandler clientRequestHandler(this->serverData, &(it->second));
+		}
+	}
 }
 
 void ConnectionHandler::onWrite(std::map<int, Client>::iterator &it)
@@ -266,107 +331,36 @@ void ConnectionHandler::onWrite(std::map<int, Client>::iterator &it)
 	client.serverResponses.sendAll();
 }
 
-int ConnectionHandler::handleNewClients(void)
+int ConnectionHandler::serverEventLoop(void)
 {
 	int clientSocketFd;
-	char recvBuff[MAX_BUFF_SIZE];
-	int clientBuffSize;
-	ssize_t bytesReceived = 0;
-	ssize_t bytesSent = 0;
-	std::string userBuffer;
-	const std::string responseData;
-
 	if (selectResponse > 0)
 	{
-		std::map<int, Client>::iterator it = ClientManager::getInstance().clientMap.begin();
-		while (it != ClientManager::getInstance().clientMap.end())
+		std::map<int, Client>::iterator client = ClientManager::getInstance().getFirstClient();
+		while (client != ClientManager::getInstance().getLastClient())
 		{
-			clientSocketFd = it->first;
+			clientSocketFd = client->first;
 			if (FD_ISSET(clientSocketFd, &errorFds))
 			{
-				// delete the client and move to next - maybe it should not delete - what does error mean in this context?
-				// study and discuss
-				onError(clientSocketFd, it);
+				onError(client);
 				continue;
 			}
 			if (FD_ISSET(clientSocketFd, &readFds))
 			{
-				// read error - kernel side
-				if ((bytesReceived = recvAll(clientSocketFd, recvBuff, MAX_BUFF_SIZE)) == -1)
-				{
-					// notify ProcessData - really is it needed, discuss with Martin
-					it->second.markedForDeletion = true;  // is this enough as notification for ProcessData?
-					std::cout << "Recv failed " << clientSocketFd << ": " << strerror(errno) << std::endl;
-				}
-				// client closed connection
-				else if (bytesReceived == 0)
-				{
-					// notify ProcessData - message has to be sent to all rooms where the user has been present
-					// notify ProcessData - really is it needed, discuss with Martin
-					it->second.markedForDeletion = true;  // is this enough as notification for ProcessData?
-					std::cout << "Client " << clientSocketFd << " quit." << std::endl;
-				}
-				// hard message limit
-				else if (bytesReceived > MESSAGE_SIZE)
-				{
-					// notify ProcessData - really is it needed, discuss with Martin
-					// notify ProcessData
-					it->second.markedForDeletion = true;  // is this enough as notification for ProcessData?
-					std::cout << "Client " << clientSocketFd << " disconnected due to a message limit." << std::endl;
-				}
-				else
-				{
-					clientBuffers[clientSocketFd].append(recvBuff, bytesReceived);
-					clientBuffSize = clientBuffers[clientSocketFd].size();
-					// partial message received
-					if ((*(clientBuffers[clientSocketFd].end() - 1) != '\n'))
-					{
-						// partial message limit reached - mark client for deletion and go to write buffer
-						if (clientBuffSize > MESSAGE_SIZE)
-						{
-							it->second.markedForDeletion = true;
-							std::cout << "Client " << clientSocketFd << " disconnected due to a message limit in partial read." << std::endl;
-						}
-					}
-					else
-					{
-						// Server ready to process data and create a response
-						// Create a ClientReqeust
-						ClientRequest clientRequest(clientSocketFd, bytesReceived, clientBuffers[clientSocketFd], this->ipClientAddress);
-						if (it != ClientManager::getInstance().clientMap.end())
-						{
-							// add a new client as reqeusted
-							it->second.rawClientRequests.push_back(clientRequest);
-						}
-						else
-						{
-							throw std::runtime_error("Client not found when trying to add a new request.");
-						}
-						// clear input buffer - valid message acquired and processed hence buffer no needed
-						clientBuffers.erase(clientSocketFd);
-						// m-bartos: added Splitter and ClientRequestHandler:
-						Client *client = &(it->second);
-						RawClientRequestsSplitter rawClientRequestSplitter(client);
-						ClientRequestHandler clientRequestHandler(&(it->second));
-					}
-				}
+				onRead(client);
 			}
-			// write events
 			if (FD_ISSET(clientSocketFd, &writeFds))
 			{
-				onWrite(it);
+				onWrite(client);
 			}
-			// clients should be deleted at on place only after clearing write buffer
-			// here delete the client the deletation does ++it
-			if (it->second.markedForDeletion == true)
+			if (client->second.markedForDeletion == true)
 			{
-				cleanClientData(clientSocketFd, it);
+				terminateClientSession(client);
 				std::cout << "Client " << clientSocketFd << " deleted properly." << std::endl;
 			}
-			// go to next client - the current was processed (read, write in one iteration) and is still connected
 			else
 			{
-				++it;
+				++client;
 			}
 		}
 	}
