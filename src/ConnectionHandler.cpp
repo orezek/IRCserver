@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 13:00:28 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/16 13:09:49 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,25 +236,25 @@ int ConnectionHandler::checkForNewClients(void)
 	return 0;  // No new client to process
 }
 
-void ConnectionHandler::deleteClient(std::map<int, Client>::iterator &it)
+void ConnectionHandler::removeClientFromMap(std::map<int, Client>::iterator &it)
 {
 	std::map<int, Client>::iterator itToErase = it;
 	++it;
 	ClientManager::getInstance().clients.erase(itToErase);
 }
 
-void ConnectionHandler::cleanClientData(std::map<int, Client>::iterator &it)
+void ConnectionHandler::terminateClientSession(std::map<int, Client>::iterator &it)
 {
 	int clientSocketFd = it->first;
 	close(clientSocketFd);
 	clientBuffers.erase(clientSocketFd);
-	deleteClient(it);
+	removeClientFromMap(it);
 }
 
 void ConnectionHandler::onError(std::map<int, Client>::iterator &it)
 {
 	int clientSocketFd = it->first;
-	cleanClientData(it);
+	terminateClientSession(it);
 	// impelement logging
 	std::cout << "Client " << clientSocketFd << " on error event." << std::endl;
 }
@@ -332,7 +332,7 @@ void ConnectionHandler::onWrite(std::map<int, Client>::iterator &it)
 	client.serverResponses.sendAll();
 }
 
-int ConnectionHandler::handleNewClients(void)
+int ConnectionHandler::serverEventLoop(void)
 {
 	int clientSocketFd;
 	if (selectResponse > 0)
@@ -356,7 +356,7 @@ int ConnectionHandler::handleNewClients(void)
 			}
 			if (client->second.markedForDeletion == true)
 			{
-				cleanClientData(client);
+				terminateClientSession(client);
 				std::cout << "Client " << clientSocketFd << " deleted properly." << std::endl;
 			}
 			else

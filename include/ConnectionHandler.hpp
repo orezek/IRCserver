@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 12:56:29 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/16 13:09:49 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@
 #include "ServerResponse.hpp"
 // #include "IrcServer.hpp"
 #include "Client.hpp"
+#include "ClientManager.hpp"
 #include "ClientRequestHandler.hpp"
 #include "RawClientRequestsSplitter.hpp"
 #include "ServerData.hpp"
-#include "ClientManager.hpp"
 
 class ConnectionHandler
 {
@@ -63,7 +63,7 @@ class ConnectionHandler
 		void runSelect(void);
 		int checkForNewClients(void);
 		// this is the read event -- needs to be renamed
-		int handleNewClients(void);
+		int serverEventLoop(void);
 		// recv and send system calls in loops
 		ssize_t recvAll(int socketFd, char *buffer, size_t bufferSize);
 		ssize_t sendServerResponse(ServerResponse &serverResponse);
@@ -77,8 +77,8 @@ class ConnectionHandler
 		// void setSrvPortNumber(int srvPortNumber);
 		// void setIrcPassword(std::string password);
 		// utility functions for connection handler
-		void deleteClient(std::map<int, Client>::iterator &it);
-		void cleanClientData(std::map<int, Client>::iterator &it);
+		void removeClientFromMap(std::map<int, Client>::iterator &it);
+		void terminateClientSession(std::map<int, Client>::iterator &it);
 		void onError(std::map<int, Client>::iterator &it);
 		void onRead(std::map<int, Client>::iterator &it);
 		void onWrite(std::map<int, Client>::iterator &it);
