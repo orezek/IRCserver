@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerResponse.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 23:09:38 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/09 14:50:38 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/16 15:22:39 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,6 @@ ssize_t ServerResponse::sendServerResponse(void)
 
 			overallBytesSent += totalBytesSentToClient;
 		}
-		close(this->getClientsToSend()[0]);
 	}
 	return (overallBytesSent);
 }
