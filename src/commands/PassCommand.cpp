@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 13:05:16 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/18 11:19:37 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/18 12:08:09 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@ namespace Commands
 
 PassCommand::PassCommand(Client* client, ClientMessage& clientMessage) : client(client), serverData(ServerDataManager::getInstance()), clientMessage(clientMessage)
 {
-	if (client->user.isValidServerUser() == true)
+	if (client->userInfo.isValidServerUser() == true)
 	{
 		this->setServerResponse462();  // user already validated
 		return;
 	}
 
-	client->user.setPassSent(true);
+	client->userInfo.setPassSent(true);
 
 	std::string passedPassword = this->clientMessage.getFirstParameter();
 	std::string serverPassword = this->serverData.getServerPassword();
@@ -34,7 +34,7 @@ PassCommand::PassCommand(Client* client, ClientMessage& clientMessage) : client(
 	}
 	if (passedPassword == serverPassword)
 	{
-		client->user.setPassValid(true);
+		client->userInfo.setPassValid(true);
 		this->setServerResponseValid();
 	}
 	// else if
@@ -73,7 +73,7 @@ void PassCommand::addServerResponseToClient()
 
 void PassCommand::setServerResponse461()
 {
-	std::string nickname = client->user.getNickname();
+	std::string nickname = client->userInfo.getNickname();
 	if (nickname.empty())
 	{
 		nickname = "*";
@@ -92,7 +92,7 @@ void PassCommand::setServerResponse461()
 
 void PassCommand::setServerResponse462()
 {
-	std::string nickname = client->user.getNickname();
+	std::string nickname = client->userInfo.getNickname();
 	if (nickname.empty())
 	{
 		nickname = "*";

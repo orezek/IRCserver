@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 10:16:53 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/18 12:03:56 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/18 12:08:09 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ class Client
 		ClientRequestQueue rawClientRequests;
 		ClientRequestQueue clientRequests;
 		ServerResponseQueue serverResponses;
-		UserInfo user;
+		UserInfo userInfo;
 
 	private:
 		const int clientFd;

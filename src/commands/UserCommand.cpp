@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 14:13:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/18 11:19:14 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/18 12:08:09 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ namespace Commands
 
 UserCommand::UserCommand(Client* client, ClientMessage& clientMessage) : client(client), serverData(ServerDataManager::getInstance()), clientMessage(clientMessage) /*, user(NULL)*/
 {
-	if (client->user.isValidServerUser() == true)
+	if (client->userInfo.isValidServerUser() == true)
 	{
 		this->setServerResponse462();  // user already validated
 		this->addServerResponseToClient();
@@ -38,11 +38,11 @@ UserCommand::UserCommand(Client* client, ClientMessage& clientMessage) : client(
 
 	// check parameters, if they are valid
 
-	client->user.setUsername(username);
-	client->user.setHostname(hostname);
-	client->user.setServername(servername);
-	client->user.setRealname(realname);
-	client->user.setUserValid(true);
+	client->userInfo.setUsername(username);
+	client->userInfo.setHostname(hostname);
+	client->userInfo.setServername(servername);
+	client->userInfo.setRealname(realname);
+	client->userInfo.setUserValid(true);
 }
 
 UserCommand::UserCommand(UserCommand const& refObj) : client(refObj.client), serverData(refObj.serverData), clientMessage(refObj.clientMessage), serverResponse(refObj.serverResponse) /*, user(refObj.user)*/ {}
@@ -76,7 +76,7 @@ void UserCommand::addServerResponseToClient()
 
 void UserCommand::setServerResponse461()
 {
-	std::string nickname = client->user.getNickname();
+	std::string nickname = client->userInfo.getNickname();
 	if (nickname.empty())
 	{
 		nickname = "*";
@@ -93,7 +93,7 @@ void UserCommand::setServerResponse461()
 
 void UserCommand::setServerResponse462()
 {
-	std::string nickname = client->user.getNickname();
+	std::string nickname = client->userInfo.getNickname();
 	if (nickname.empty())
 	{
 		nickname = "*";

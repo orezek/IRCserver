@@ -17,7 +17,7 @@ namespace Commands
 
 Nick::Nick(Client* client, ClientMessage& clientMessage) : client(client), serverData(ServerDataManager::getInstance()), clientMessage(clientMessage), oldNick(""), newNick("")
 {
-	oldNick = client->user.getNickname();
+	oldNick = client->userInfo.getNickname();
 	if (oldNick == "")
 		oldNick = "*";
 
@@ -42,9 +42,9 @@ Nick::Nick(Client* client, ClientMessage& clientMessage) : client(client), serve
 		return;
 	}
 
-	client->user.setNickname(newNick);
-	client->user.setNickValid(true);
-	setServerResponseValid(&(client->user));
+	client->userInfo.setNickname(newNick);
+	client->userInfo.setNickValid(true);
+	setServerResponseValid(&(client->userInfo));
 	addServerResponseToClient();
 }
 
@@ -117,7 +117,7 @@ bool Nick::isAlreadyUsedNick(std::string& nick)
 
 	for (std::map<int, Client>::iterator it = clients.clients.begin(); it != clients.clients.end(); ++it)
 	{
-		std::string oldNick = it->second.user.getNickname();
+		std::string oldNick = it->second.userInfo.getNickname();
 		if (nick == oldNick)
 		{
 			return (true);

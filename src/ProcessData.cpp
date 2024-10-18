@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/18 12:03:04 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/18 12:08:46 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ ProcessData::ProcessData(Client *client, ClientRequest *clientRequest) : client(
 	ClientRequestParser parser(*clientRequest);
 	ClientMessage clientMessage = parser.getClientMessage();
 
-	if (!client->user.getUserValid() || !client->user.getNickValid() || !client->user.getPassSent())
+	if (!client->userInfo.getUserValid() || !client->userInfo.getNickValid() || !client->userInfo.getPassSent())
 	{
 		if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "CAP")
 		{
@@ -58,18 +58,18 @@ ProcessData::ProcessData(Client *client, ClientRequest *clientRequest) : client(
 		}
 
 		// Was Client validated in this loop?
-		UserInfo *user = &(client->user);
-		if (user->getUserValid() && user->getNickValid() && user->getPassSent())
+		UserInfo *userInfo = &(client->userInfo);
+		if (userInfo->getUserValid() && userInfo->getNickValid() && userInfo->getPassSent())
 		{
 			ServerResponse serverResponse;
 			serverResponse.setAction(ServerResponse::SEND);
 			serverResponse.setClientsToSend(clientFd);
-			if (user->isValidServerUser())
+			if (userInfo->isValidServerUser())
 			{
-				std::string response = ":" + serverData.getServerName() + " 001 " + user->getNickname() + " :Welcome to the IRC network, " + user->getNickname() + "!" + user->getUsername() + "@" + user->getHostname() + "\n";
-				response.append(":" + serverData.getServerName() + " 002 " + user->getNickname() + " :Your host is " + serverData.getServerName() + ", running version XXXX\n");
-				response.append(":" + serverData.getServerName() + " 003 " + user->getNickname() + " :This server was created XXXXXXXXXXXXXX" + "\n");
-				response.append(":" + serverData.getServerName() + " 004 " + user->getNickname() + " " + serverData.getServerName() + " \n");
+				std::string response = ":" + serverData.getServerName() + " 001 " + userInfo->getNickname() + " :Welcome to the IRC network, " + userInfo->getNickname() + "!" + userInfo->getUsername() + "@" + userInfo->getHostname() + "\n";
+				response.append(":" + serverData.getServerName() + " 002 " + userInfo->getNickname() + " :Your host is " + serverData.getServerName() + ", running version XXXX\n");
+				response.append(":" + serverData.getServerName() + " 003 " + userInfo->getNickname() + " :This server was created XXXXXXXXXXXXXX" + "\n");
+				response.append(":" + serverData.getServerName() + " 004 " + userInfo->getNickname() + " " + serverData.getServerName() + " \n");
 				serverResponse.setResponse(response);
 			}
 			else
