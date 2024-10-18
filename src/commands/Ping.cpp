@@ -1,21 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   PingCommand.cpp                                    :+:      :+:    :+:   */
+/*   Ping.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 13:05:16 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/18 11:19:30 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/18 12:13:56 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "PingCommand.hpp"
+#include "Ping.hpp"
 
 namespace Commands
 {
 
-PingCommand::PingCommand(Client* client, ClientMessage& clientMessage) : client(client), serverData(ServerDataManager::getInstance()), clientMessage(clientMessage)
+Ping::Ping(Client* client, ClientMessage& clientMessage) : client(client), serverData(ServerDataManager::getInstance()), clientMessage(clientMessage)
 {
 	if (clientMessage.getFirstParameter() == serverData.getServerName())
 	{
@@ -24,11 +24,11 @@ PingCommand::PingCommand(Client* client, ClientMessage& clientMessage) : client(
 	}
 }
 
-PingCommand::~PingCommand() {}
+Ping::~Ping() {}
 
-PingCommand::PingCommand(PingCommand const& refObj) : client(refObj.client), serverData(refObj.serverData), clientMessage(refObj.clientMessage), serverResponse(refObj.serverResponse) {}
+Ping::Ping(Ping const& refObj) : client(refObj.client), serverData(refObj.serverData), clientMessage(refObj.clientMessage), serverResponse(refObj.serverResponse) {}
 
-PingCommand& PingCommand::operator=(PingCommand const& refObj)
+Ping& Ping::operator=(Ping const& refObj)
 {
 	if (this != &refObj)
 	{
@@ -39,19 +39,19 @@ PingCommand& PingCommand::operator=(PingCommand const& refObj)
 	return (*this);
 }
 
-ServerResponse PingCommand::getServerResponse()
+ServerResponse Ping::getServerResponse()
 {
 	return (this->serverResponse);
 }
 
 // ---- PRIVATE ----
 
-void PingCommand::addServerResponseToClient()
+void Ping::addServerResponseToClient()
 {
 	client->serverResponses.push_back(serverResponse);
 }
 
-void PingCommand::setServerResponseValid()
+void Ping::setServerResponseValid()
 {
 	std::string response = ":" + serverData.getServerName() + " PONG " + serverData.getServerName() + " :" + serverData.getServerName() + "\n";
 	serverResponse.setAction(ServerResponse::SEND);

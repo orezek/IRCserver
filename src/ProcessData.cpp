@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/18 12:11:20 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/18 12:13:14 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ ProcessData::ProcessData(Client *client, ClientRequest *clientRequest) : client(
 		// whole command logic will be there
 		if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "PING")
 		{
-			Commands::PingCommand pingCommand(client, clientMessage);
+			Commands::Ping pingCommand(client, clientMessage);
 		}
 		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "PASS")
 		{
