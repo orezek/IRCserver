@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   NickCommand.cpp                                    :+:      :+:    :+:   */
+/*   Nick.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,12 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "NickCommand.hpp"
+#include "Nick.hpp"
 
 namespace Commands
 {
 
-NickCommand::NickCommand(Client* client, ClientMessage& clientMessage) : client(client), serverData(ServerDataManager::getInstance()), clientMessage(clientMessage), oldNick(""), newNick("")
+Nick::Nick(Client* client, ClientMessage& clientMessage) : client(client), serverData(ServerDataManager::getInstance()), clientMessage(clientMessage), oldNick(""), newNick("")
 {
 	oldNick = client->user.getNickname();
 	if (oldNick == "")
@@ -48,11 +48,11 @@ NickCommand::NickCommand(Client* client, ClientMessage& clientMessage) : client(
 	addServerResponseToClient();
 }
 
-NickCommand::~NickCommand() {}
+Nick::~Nick() {}
 
-NickCommand::NickCommand(NickCommand const& refObj) : client(refObj.client), serverData(refObj.serverData), clientMessage(refObj.clientMessage) {}
+Nick::Nick(Nick const& refObj) : client(refObj.client), serverData(refObj.serverData), clientMessage(refObj.clientMessage) {}
 
-NickCommand& NickCommand::operator=(NickCommand const& refObj)
+Nick& Nick::operator=(Nick const& refObj)
 {
 	if (this != &refObj)
 	{
@@ -64,23 +64,23 @@ NickCommand& NickCommand::operator=(NickCommand const& refObj)
 	return (*this);
 }
 
-ServerResponse NickCommand::getServerResponse()
+ServerResponse Nick::getServerResponse()
 {
 	return (this->serverResponse);
 }
 
 // ---- PRIVATE ----- //
-void NickCommand::addServerResponseToClient()
+void Nick::addServerResponseToClient()
 {
 	client->serverResponses.push_back(serverResponse);
 }
 
-std::string NickCommand::getNewNickname()
+std::string Nick::getNewNickname()
 {
 	return (clientMessage.getFirstParameter());
 }
 
-bool NickCommand::isValidNick(std::string& nick)
+bool Nick::isValidNick(std::string& nick)
 {
 	std::string allowedChars = "`|^_-{}[]";
 
@@ -111,7 +111,7 @@ bool NickCommand::isValidNick(std::string& nick)
 	return (true);
 }
 
-bool NickCommand::isAlreadyUsedNick(std::string& nick)
+bool Nick::isAlreadyUsedNick(std::string& nick)
 {
 	ClientManager& clients = ClientManager::getInstance();
 
@@ -126,7 +126,7 @@ bool NickCommand::isAlreadyUsedNick(std::string& nick)
 	return (false);
 }
 
-void NickCommand::setServerResponse431()
+void Nick::setServerResponse431()
 {
 	std::string response = ":";
 	response.append(serverData.getServerName());
@@ -136,7 +136,7 @@ void NickCommand::setServerResponse431()
 	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
 }
 
-void NickCommand::setServerResponse432()
+void Nick::setServerResponse432()
 {
 	std::string response = ":";
 	response.append(serverData.getServerName());
@@ -150,7 +150,7 @@ void NickCommand::setServerResponse432()
 	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
 }
 
-void NickCommand::setServerResponse433()
+void Nick::setServerResponse433()
 {
 	std::string response = ":";
 	response.append(serverData.getServerName());
@@ -164,7 +164,7 @@ void NickCommand::setServerResponse433()
 	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
 }
 
-void NickCommand::setServerResponseValid(User* user)
+void Nick::setServerResponseValid(UserInfo* user)
 {
 	// TODO - also send to other user, that someone has changed the nickname? in rooms?
 	// server prefix??? y/n?

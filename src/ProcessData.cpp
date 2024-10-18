@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/18 11:18:24 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/18 12:03:04 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ ProcessData::ProcessData(Client *client, ClientRequest *clientRequest) : client(
 		}
 		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "NICK")
 		{
-			Commands::NickCommand nickCommand(client, clientMessage);
+			Commands::Nick nickCommand(client, clientMessage);
 		}
 		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "USER")
 		{
@@ -58,7 +58,7 @@ ProcessData::ProcessData(Client *client, ClientRequest *clientRequest) : client(
 		}
 
 		// Was Client validated in this loop?
-		User *user = &(client->user);
+		UserInfo *user = &(client->user);
 		if (user->getUserValid() && user->getNickValid() && user->getPassSent())
 		{
 			ServerResponse serverResponse;
@@ -94,7 +94,7 @@ ProcessData::ProcessData(Client *client, ClientRequest *clientRequest) : client(
 		}
 		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "NICK")
 		{
-			Commands::NickCommand nickCommand(client, clientMessage);
+			Commands::Nick nickCommand(client, clientMessage);
 		}
 		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "USER")
 		{

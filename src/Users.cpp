@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:51:16 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/05 12:04:45 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/18 12:03:04 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@ Users &Users::operator=(const Users &obj)
 	return (*this);
 };
 
-User *Users::findUser(int clientFd)
+UserInfo *Users::findUser(int clientFd)
 {
-	for (std::vector<User>::iterator itUser = userList.begin(); itUser != userList.end(); ++itUser)
+	for (std::vector<UserInfo>::iterator itUser = userList.begin(); itUser != userList.end(); ++itUser)
 	{
 		if (itUser->getUserFd() == clientFd)
 			return (&(*itUser));
@@ -37,9 +37,9 @@ User *Users::findUser(int clientFd)
 	return (NULL);
 }
 
-User *Users::findUser(std::string nickname)
+UserInfo *Users::findUser(std::string nickname)
 {
-	for (std::vector<User>::iterator itUser = userList.begin(); itUser != userList.end(); ++itUser)
+	for (std::vector<UserInfo>::iterator itUser = userList.begin(); itUser != userList.end(); ++itUser)
 	{
 		if (itUser->getNickname() == nickname)
 			return (&(*itUser));
@@ -49,18 +49,18 @@ User *Users::findUser(std::string nickname)
 
 void Users::addUser(int clientFd)
 {
-	User tempUser = User(clientFd);
+	UserInfo tempUser = UserInfo(clientFd);
 	userList.push_back(tempUser);
 }
 
-void Users::addUser(User *user)
+void Users::addUser(UserInfo *user)
 {
 	userList.push_back(*user);
 }
 
-void Users::deleteUser(User *user)
+void Users::deleteUser(UserInfo *user)
 {
-	std::vector<User>::iterator it = std::find(userList.begin(), userList.end(), *user);
+	std::vector<UserInfo>::iterator it = std::find(userList.begin(), userList.end(), *user);
 
 	if (it != userList.end())
 	{
@@ -71,7 +71,7 @@ void Users::deleteUser(User *user)
 std::vector<int> Users::getAllUserFds()
 {
 	std::vector<int> allUserFds;
-	for (std::vector<User>::iterator it = userList.begin(); it != userList.end(); ++it)
+	for (std::vector<UserInfo>::iterator it = userList.begin(); it != userList.end(); ++it)
 	{
 		int clientFd = (*it).getUserFd();
 		allUserFds.push_back(clientFd);
