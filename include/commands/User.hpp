@@ -1,29 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   PingCommand.hpp                                    :+:      :+:    :+:   */
+/*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/09 11:21:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/16 12:53:39 by mbartos          ###   ########.fr       */
+/*   Created: 2024/09/30 14:13:47 by mbartos           #+#    #+#             */
+/*   Updated: 2024/10/18 12:15:55 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include "Client.hpp"
 #include "ClientMessage.hpp"
 #include "ServerDataManager.hpp"
 #include "ServerResponse.hpp"
 
-class PingCommand
+namespace Commands
+{
+
+class User
 {
 	public:
-		PingCommand(Client* client, ClientMessage& clientMessage);
-		~PingCommand();
-		PingCommand(PingCommand const& refObj);
-		PingCommand& operator=(PingCommand const& refObj);
+		User(Client* client, ClientMessage& clientMessage);
+		User(User const& refObj);
+		User& operator=(User const& refObj);
+		~User();
 
 		ServerResponse getServerResponse();
 
@@ -33,7 +35,12 @@ class PingCommand
 		ClientMessage& clientMessage;
 		ServerResponse serverResponse;
 
-		void setServerResponseValid();
+		// User* user;  // will be deleted
 
+		void setServerResponse461();
+		void setServerResponse462();
+		void setServerResponseValid();
 		void addServerResponseToClient();
 };
+
+}  // namespace Commands

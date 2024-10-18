@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:33 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 12:50:14 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/18 12:16:21 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,14 @@
 #include "ClientMessage.hpp"
 #include "ClientRequest.hpp"
 #include "ClientRequestParser.hpp"
-#include "NickCommand.hpp"
-#include "PassCommand.hpp"
-#include "PingCommand.hpp"
-#include "QuitCommand.hpp"
+#include "Nick.hpp"
+#include "Pass.hpp"
+#include "Ping.hpp"
+#include "Quit.hpp"
 #include "ServerDataManager.hpp"
 #include "ServerResponse.hpp"
 #include "StringUtils.hpp"
-#include "UserCommand.hpp"
+#include "User.hpp"
 
 class ProcessData
 {
@@ -37,6 +37,6 @@ class ProcessData
 
 	private:
 		Client *client;
-		ServerDataManager& serverData;
+		ServerDataManager &serverData;
 		ClientRequest *clientRequest;
 };

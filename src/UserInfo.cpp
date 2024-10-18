@@ -1,30 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   User.cpp                                           :+:      :+:    :+:   */
+/*   UserInfo.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 23:12:55 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/05 12:38:30 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/18 12:03:29 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "User.hpp"
+#include "UserInfo.hpp"
 
-User::User() : clientFd(-1), nickname(""), username(""), hostname(""), servername(""), realname(""), fullUsername(""), passSent(false), passValid(false), nickValid(false), userValid(false) {};
+UserInfo::UserInfo() : clientFd(-1), nickname(""), username(""), hostname(""), servername(""), realname(""), fullUsername(""), passSent(false), passValid(false), nickValid(false), userValid(false) {};
 
-User::User(int clientFd) : clientFd(clientFd), nickname(""), username(""), hostname(""), servername(""), realname(""), fullUsername(""), passSent(false), passValid(false), nickValid(false), userValid(false) {};
+UserInfo::UserInfo(int clientFd) : clientFd(clientFd), nickname(""), username(""), hostname(""), servername(""), realname(""), fullUsername(""), passSent(false), passValid(false), nickValid(false), userValid(false) {};
 
-User::~User() {};
+UserInfo::~UserInfo() {};
 
-User::User(const User &obj) : clientFd(obj.clientFd), nickname(obj.nickname), username(obj.username), hostname(obj.hostname), servername(obj.servername), realname(obj.realname), fullUsername(obj.fullUsername), passSent(obj.passSent), passValid(obj.passValid), nickValid(obj.nickValid), userValid(obj.userValid)
+UserInfo::UserInfo(const UserInfo &obj) : clientFd(obj.clientFd), nickname(obj.nickname), username(obj.username), hostname(obj.hostname), servername(obj.servername), realname(obj.realname), fullUsername(obj.fullUsername), passSent(obj.passSent), passValid(obj.passValid), nickValid(obj.nickValid), userValid(obj.userValid)
 {
 	this->operatorRoomIds = obj.operatorRoomIds;
 	this->roomIds = obj.roomIds;
 };
 
-User &User::operator=(const User &obj)
+UserInfo &UserInfo::operator=(const UserInfo &obj)
 {
 	if (this != &obj)
 	{
@@ -45,53 +45,53 @@ User &User::operator=(const User &obj)
 	return (*this);
 };
 
-bool User::operator==(const User &other) const
+bool UserInfo::operator==(const UserInfo &other) const
 {
 	// The objects are same if the FDs match
 	return (this->clientFd == other.clientFd);
 }
 
-int User::getUserFd()
+int UserInfo::getUserFd()
 {
 	return (this->clientFd);
 }
 
-std::string User::getNickname()
+std::string UserInfo::getNickname()
 {
 	return (this->nickname);
 }
 
-std::string User::getUsername()
+std::string UserInfo::getUsername()
 {
 	return (this->username);
 }
 
-std::string User::getHostname()
+std::string UserInfo::getHostname()
 {
 	return (this->hostname);
 }
 
-bool User::getPassSent()
+bool UserInfo::getPassSent()
 {
 	return (this->passSent);
 }
 
-bool User::getPassValid()
+bool UserInfo::getPassValid()
 {
 	return (this->passValid);
 }
 
-bool User::getNickValid()
+bool UserInfo::getNickValid()
 {
 	return (this->nickValid);
 }
 
-bool User::getUserValid()
+bool UserInfo::getUserValid()
 {
 	return (this->userValid);
 }
 
-bool User::isValidServerUser()
+bool UserInfo::isValidServerUser()
 {
 	if (passValid && nickValid && userValid)
 	{
@@ -103,47 +103,47 @@ bool User::isValidServerUser()
 	}
 }
 
-void User::setPassSent(bool passSentValue)
+void UserInfo::setPassSent(bool passSentValue)
 {
 	this->passSent = passSentValue;
 }
 
-void User::setNickname(std::string nickname)
+void UserInfo::setNickname(std::string nickname)
 {
 	this->nickname = nickname;
 }
 
-void User::setUsername(std::string username)
+void UserInfo::setUsername(std::string username)
 {
 	this->username = username;
 }
 
-void User::setHostname(std::string hostname)
+void UserInfo::setHostname(std::string hostname)
 {
 	this->hostname = hostname;
 }
 
-void User::setRealname(std::string realname)
+void UserInfo::setRealname(std::string realname)
 {
 	this->realname = realname;
 }
 
-void User::setServername(std::string servername)
+void UserInfo::setServername(std::string servername)
 {
 	this->servername = servername;
 }
 
-void User::setPassValid(bool passValue)
+void UserInfo::setPassValid(bool passValue)
 {
 	this->passValid = passValue;
 }
 
-void User::setNickValid(bool nickValue)
+void UserInfo::setNickValid(bool nickValue)
 {
 	this->nickValid = nickValue;
 }
 
-void User::setUserValid(bool userValue)
+void UserInfo::setUserValid(bool userValue)
 {
 	this->userValid = userValue;
 }

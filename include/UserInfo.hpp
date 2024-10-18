@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   User.hpp                                           :+:      :+:    :+:   */
+/*   UserInfo.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +w#+#+#+#+#+   +#+           */
@@ -14,15 +14,15 @@
 #include <string>
 #include <vector>
 
-class User
+class UserInfo
 {
 	public:
-		User();
-		User(int clientFd);
-		~User();
-		User(const User &obj);
-		User &operator=(const User &obj);
-		bool operator==(const User &other) const;
+		UserInfo();
+		UserInfo(int clientFd);
+		~UserInfo();
+		UserInfo(const UserInfo &obj);
+		UserInfo &operator=(const UserInfo &obj);
+		bool operator==(const UserInfo &other) const;
 
 		int getUserFd();
 		std::string getNickname();
@@ -44,7 +44,6 @@ class User
 		void setPassValid(bool passValue);
 		void setNickValid(bool nickValue);
 		void setUserValid(bool userValue);
-
 
 	private:
 		int clientFd;

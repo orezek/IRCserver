@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   PassCommand.hpp                                    :+:      :+:    :+:   */
+/*   QuitCommand.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/30 13:05:19 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/16 12:52:46 by mbartos          ###   ########.fr       */
+/*   Created: 2024/10/01 19:48:00 by mbartos           #+#    #+#             */
+/*   Updated: 2024/10/18 12:14:26 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,16 @@
 #include "ServerDataManager.hpp"
 #include "ServerResponse.hpp"
 
-class PassCommand
+namespace Commands
+{
+
+class Quit
 {
 	public:
-		// PassCommand(ServerDataManager& serverData, ClientMessage& clientMessage);
-		PassCommand(Client* client, ClientMessage& clientMessage);
-		~PassCommand();
-		PassCommand(PassCommand const& refObj);
-		PassCommand& operator=(PassCommand const& refObj);
+		Quit(Client* client, ClientMessage& clientMessage);
+		Quit(Quit const& refObj);
+		Quit& operator=(Quit const& refObj);
+		~Quit();
 
 		ServerResponse getServerResponse();
 
@@ -33,9 +35,7 @@ class PassCommand
 		ClientMessage& clientMessage;
 		ServerResponse serverResponse;
 
-		void setServerResponse461();
-		void setServerResponse462();
 		void setServerResponseValid();
-
-		void addServerResponseToClient();
 };
+
+}  // namespace Commands

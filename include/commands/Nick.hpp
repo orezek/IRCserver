@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   NickCommand.hpp                                    :+:      :+:    :+:   */
+/*   Nick.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:20:19 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/16 12:40:51 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/18 12:03:04 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,16 @@
 #include "ServerDataManager.hpp"
 #include "ServerResponse.hpp"
 
-class NickCommand
+namespace Commands
+{
+
+class Nick
 {
 	public:
-		NickCommand(Client* client, ClientMessage& clientMessage);
-		~NickCommand();
-		NickCommand(NickCommand const& refObj);
-		NickCommand& operator=(NickCommand const& refObj);
+		Nick(Client* client, ClientMessage& clientMessage);
+		~Nick();
+		Nick(Nick const& refObj);
+		Nick& operator=(Nick const& refObj);
 
 		ServerResponse getServerResponse();
 
@@ -43,6 +46,8 @@ class NickCommand
 		void setServerResponse431();
 		void setServerResponse432();
 		void setServerResponse433();
-		void setServerResponseValid(User* user);
+		void setServerResponseValid(UserInfo* user);
 		void addServerResponseToClient();
 };
+
+}  // namespace Commands

@@ -1,20 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   UserCommand.cpp                                    :+:      :+:    :+:   */
+/*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 14:13:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/16 12:56:18 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/18 12:16:09 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "UserCommand.hpp"
+#include "User.hpp"
 
-UserCommand::UserCommand(Client* client, ClientMessage& clientMessage) : client(client), serverData(ServerDataManager::getInstance()), clientMessage(clientMessage) /*, user(NULL)*/
+namespace Commands
 {
-	if (client->user.isValidServerUser() == true)
+
+User::User(Client* client, ClientMessage& clientMessage) : client(client), serverData(ServerDataManager::getInstance()), clientMessage(clientMessage) /*, user(NULL)*/
+{
+	if (client->userInfo.isValidServerUser() == true)
 	{
 		this->setServerResponse462();  // user already validated
 		this->addServerResponseToClient();
@@ -35,16 +38,16 @@ UserCommand::UserCommand(Client* client, ClientMessage& clientMessage) : client(
 
 	// check parameters, if they are valid
 
-	client->user.setUsername(username);
-	client->user.setHostname(hostname);
-	client->user.setServername(servername);
-	client->user.setRealname(realname);
-	client->user.setUserValid(true);
+	client->userInfo.setUsername(username);
+	client->userInfo.setHostname(hostname);
+	client->userInfo.setServername(servername);
+	client->userInfo.setRealname(realname);
+	client->userInfo.setUserValid(true);
 }
 
-UserCommand::UserCommand(UserCommand const& refObj) : client(refObj.client), serverData(refObj.serverData), clientMessage(refObj.clientMessage), serverResponse(refObj.serverResponse) /*, user(refObj.user)*/ {}
+User::User(User const& refObj) : client(refObj.client), serverData(refObj.serverData), clientMessage(refObj.clientMessage), serverResponse(refObj.serverResponse) /*, user(refObj.user)*/ {}
 
-UserCommand& UserCommand::operator=(UserCommand const& refObj)
+User& User::operator=(User const& refObj)
 {
 	if (this != &refObj)
 	{
@@ -57,23 +60,23 @@ UserCommand& UserCommand::operator=(UserCommand const& refObj)
 	return (*this);
 }
 
-UserCommand::~UserCommand() {}
+User::~User() {}
 
-ServerResponse UserCommand::getServerResponse()
+ServerResponse User::getServerResponse()
 {
 	return (this->serverResponse);
 }
 
 // ---- PRIVATE ----
 
-void UserCommand::addServerResponseToClient()
+void User::addServerResponseToClient()
 {
 	client->serverResponses.push_back(serverResponse);
 }
 
-void UserCommand::setServerResponse461()
+void User::setServerResponse461()
 {
-	std::string nickname = client->user.getNickname();
+	std::string nickname = client->userInfo.getNickname();
 	if (nickname.empty())
 	{
 		nickname = "*";
@@ -88,9 +91,9 @@ void UserCommand::setServerResponse461()
 	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
 }
 
-void UserCommand::setServerResponse462()
+void User::setServerResponse462()
 {
-	std::string nickname = client->user.getNickname();
+	std::string nickname = client->userInfo.getNickname();
 	if (nickname.empty())
 	{
 		nickname = "*";
@@ -105,3 +108,5 @@ void UserCommand::setServerResponse462()
 	serverResponse.setResponse(response);
 	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
 }
+
+}  // namespace Commands
