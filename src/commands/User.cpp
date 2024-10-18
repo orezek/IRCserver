@@ -1,21 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   UserCommand.cpp                                    :+:      :+:    :+:   */
+/*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 14:13:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/18 12:08:09 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/18 12:16:09 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "UserCommand.hpp"
+#include "User.hpp"
 
 namespace Commands
 {
 
-UserCommand::UserCommand(Client* client, ClientMessage& clientMessage) : client(client), serverData(ServerDataManager::getInstance()), clientMessage(clientMessage) /*, user(NULL)*/
+User::User(Client* client, ClientMessage& clientMessage) : client(client), serverData(ServerDataManager::getInstance()), clientMessage(clientMessage) /*, user(NULL)*/
 {
 	if (client->userInfo.isValidServerUser() == true)
 	{
@@ -45,9 +45,9 @@ UserCommand::UserCommand(Client* client, ClientMessage& clientMessage) : client(
 	client->userInfo.setUserValid(true);
 }
 
-UserCommand::UserCommand(UserCommand const& refObj) : client(refObj.client), serverData(refObj.serverData), clientMessage(refObj.clientMessage), serverResponse(refObj.serverResponse) /*, user(refObj.user)*/ {}
+User::User(User const& refObj) : client(refObj.client), serverData(refObj.serverData), clientMessage(refObj.clientMessage), serverResponse(refObj.serverResponse) /*, user(refObj.user)*/ {}
 
-UserCommand& UserCommand::operator=(UserCommand const& refObj)
+User& User::operator=(User const& refObj)
 {
 	if (this != &refObj)
 	{
@@ -60,21 +60,21 @@ UserCommand& UserCommand::operator=(UserCommand const& refObj)
 	return (*this);
 }
 
-UserCommand::~UserCommand() {}
+User::~User() {}
 
-ServerResponse UserCommand::getServerResponse()
+ServerResponse User::getServerResponse()
 {
 	return (this->serverResponse);
 }
 
 // ---- PRIVATE ----
 
-void UserCommand::addServerResponseToClient()
+void User::addServerResponseToClient()
 {
 	client->serverResponses.push_back(serverResponse);
 }
 
-void UserCommand::setServerResponse461()
+void User::setServerResponse461()
 {
 	std::string nickname = client->userInfo.getNickname();
 	if (nickname.empty())
@@ -91,7 +91,7 @@ void UserCommand::setServerResponse461()
 	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
 }
 
-void UserCommand::setServerResponse462()
+void User::setServerResponse462()
 {
 	std::string nickname = client->userInfo.getNickname();
 	if (nickname.empty())
