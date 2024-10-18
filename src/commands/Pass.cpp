@@ -6,16 +6,16 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 13:05:16 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/18 12:08:09 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/18 12:11:25 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "PassCommand.hpp"
+#include "Pass.hpp"
 
 namespace Commands
 {
 
-PassCommand::PassCommand(Client* client, ClientMessage& clientMessage) : client(client), serverData(ServerDataManager::getInstance()), clientMessage(clientMessage)
+Pass::Pass(Client* client, ClientMessage& clientMessage) : client(client), serverData(ServerDataManager::getInstance()), clientMessage(clientMessage)
 {
 	if (client->userInfo.isValidServerUser() == true)
 	{
@@ -43,11 +43,11 @@ PassCommand::PassCommand(Client* client, ClientMessage& clientMessage) : client(
 	// }
 }
 
-PassCommand::~PassCommand() {}
+Pass::~Pass() {}
 
-PassCommand::PassCommand(PassCommand const& refObj) : client(refObj.client), serverData(refObj.serverData), clientMessage(refObj.clientMessage), serverResponse(refObj.serverResponse) {}
+Pass::Pass(Pass const& refObj) : client(refObj.client), serverData(refObj.serverData), clientMessage(refObj.clientMessage), serverResponse(refObj.serverResponse) {}
 
-PassCommand& PassCommand::operator=(PassCommand const& refObj)
+Pass& Pass::operator=(Pass const& refObj)
 {
 	if (this != &refObj)
 	{
@@ -59,19 +59,19 @@ PassCommand& PassCommand::operator=(PassCommand const& refObj)
 	return (*this);
 }
 
-ServerResponse PassCommand::getServerResponse()
+ServerResponse Pass::getServerResponse()
 {
 	return (this->serverResponse);
 }
 
 // ---- PRIVATE ----
 
-void PassCommand::addServerResponseToClient()
+void Pass::addServerResponseToClient()
 {
 	client->serverResponses.push_back(serverResponse);
 }
 
-void PassCommand::setServerResponse461()
+void Pass::setServerResponse461()
 {
 	std::string nickname = client->userInfo.getNickname();
 	if (nickname.empty())
@@ -90,7 +90,7 @@ void PassCommand::setServerResponse461()
 	this->addServerResponseToClient();
 }
 
-void PassCommand::setServerResponse462()
+void Pass::setServerResponse462()
 {
 	std::string nickname = client->userInfo.getNickname();
 	if (nickname.empty())
@@ -109,7 +109,7 @@ void PassCommand::setServerResponse462()
 	this->addServerResponseToClient();
 }
 
-void PassCommand::setServerResponseValid()
+void Pass::setServerResponseValid()
 {
 	// std::string response = "";
 
