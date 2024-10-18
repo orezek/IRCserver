@@ -6,11 +6,14 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 19:48:17 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/16 14:34:42 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/18 11:19:24 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <QuitCommand.hpp>
+
+namespace Commands
+{
 
 QuitCommand::QuitCommand(Client* client, ClientMessage& clientMessage) : client(client), serverData(ServerDataManager::getInstance()), clientMessage(clientMessage)
 {
@@ -63,3 +66,5 @@ void QuitCommand::setServerResponseValid()
 	serverResponse.setResponse(response);
 	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
 }
+
+}  // namespace Commands

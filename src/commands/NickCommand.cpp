@@ -6,11 +6,14 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:42:28 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/16 14:06:36 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/18 11:19:45 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "NickCommand.hpp"
+
+namespace Commands
+{
 
 NickCommand::NickCommand(Client* client, ClientMessage& clientMessage) : client(client), serverData(ServerDataManager::getInstance()), clientMessage(clientMessage), oldNick(""), newNick("")
 {
@@ -55,8 +58,8 @@ NickCommand& NickCommand::operator=(NickCommand const& refObj)
 	{
 		this->client = refObj.client;
 		this->clientMessage = refObj.clientMessage;
-		//serverData cannot be coppied
-		// this->serverData = refObj.serverData;
+		// serverData cannot be coppied
+		//  this->serverData = refObj.serverData;
 	}
 	return (*this);
 }
@@ -184,5 +187,6 @@ void NickCommand::setServerResponseValid(User* user)
 		serverResponse.setAction(ServerResponse::SEND);
 		serverResponse.setClientsToSend(clientMessage.getFromUserFd());
 	}
-
 }
+
+}  // namespace Commands

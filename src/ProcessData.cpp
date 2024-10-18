@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 15:01:38 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/18 11:18:24 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,19 +33,19 @@ ProcessData::ProcessData(Client *client, ClientRequest *clientRequest) : client(
 		}
 		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "PASS")
 		{
-			PassCommand passCommand(client, clientMessage);
+			Commands::PassCommand passCommand(client, clientMessage);
 		}
 		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "NICK")
 		{
-			NickCommand nickCommand(client, clientMessage);
+			Commands::NickCommand nickCommand(client, clientMessage);
 		}
 		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "USER")
 		{
-			UserCommand userCommand(client, clientMessage);
+			Commands::UserCommand userCommand(client, clientMessage);
 		}
 		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "QUIT")
 		{
-			QuitCommand quitCommand(client, clientMessage);
+			Commands::QuitCommand quitCommand(client, clientMessage);
 		}
 		else
 		{
@@ -86,23 +86,23 @@ ProcessData::ProcessData(Client *client, ClientRequest *clientRequest) : client(
 		// whole command logic will be there
 		if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "PING")
 		{
-			PingCommand pingCommand(client, clientMessage);
+			Commands::PingCommand pingCommand(client, clientMessage);
 		}
 		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "PASS")
 		{
-			PassCommand passCommand(client, clientMessage);
+			Commands::PassCommand passCommand(client, clientMessage);
 		}
 		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "NICK")
 		{
-			NickCommand nickCommand(client, clientMessage);
+			Commands::NickCommand nickCommand(client, clientMessage);
 		}
 		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "USER")
 		{
-			UserCommand userCommand(client, clientMessage);
+			Commands::UserCommand userCommand(client, clientMessage);
 		}
 		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "QUIT")
 		{
-			QuitCommand quitCommand(client, clientMessage);
+			Commands::QuitCommand quitCommand(client, clientMessage);
 		}
 		else
 		{

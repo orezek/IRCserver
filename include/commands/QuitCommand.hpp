@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 19:48:00 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/16 12:55:01 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/18 11:12:21 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 #include "ClientMessage.hpp"
 #include "ServerDataManager.hpp"
 #include "ServerResponse.hpp"
+
+namespace Commands
+{
 
 class QuitCommand
 {
@@ -34,3 +37,5 @@ class QuitCommand
 
 		void setServerResponseValid();
 };
+
+}  // namespace Commands

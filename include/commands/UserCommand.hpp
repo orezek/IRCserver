@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   PassCommand.hpp                                    :+:      :+:    :+:   */
+/*   UserCommand.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/30 13:05:19 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/16 12:52:46 by mbartos          ###   ########.fr       */
+/*   Created: 2024/09/30 14:13:47 by mbartos           #+#    #+#             */
+/*   Updated: 2024/10/18 11:12:24 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,16 @@
 #include "ServerDataManager.hpp"
 #include "ServerResponse.hpp"
 
-class PassCommand
+namespace Commands
+{
+
+class UserCommand
 {
 	public:
-		// PassCommand(ServerDataManager& serverData, ClientMessage& clientMessage);
-		PassCommand(Client* client, ClientMessage& clientMessage);
-		~PassCommand();
-		PassCommand(PassCommand const& refObj);
-		PassCommand& operator=(PassCommand const& refObj);
+		UserCommand(Client* client, ClientMessage& clientMessage);
+		UserCommand(UserCommand const& refObj);
+		UserCommand& operator=(UserCommand const& refObj);
+		~UserCommand();
 
 		ServerResponse getServerResponse();
 
@@ -33,9 +35,12 @@ class PassCommand
 		ClientMessage& clientMessage;
 		ServerResponse serverResponse;
 
+		// User* user;  // will be deleted
+
 		void setServerResponse461();
 		void setServerResponse462();
 		void setServerResponseValid();
-
 		void addServerResponseToClient();
 };
+
+}  // namespace Commands

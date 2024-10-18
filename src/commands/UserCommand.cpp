@@ -1,93 +1,97 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   PassCommand.cpp                                    :+:      :+:    :+:   */
+/*   UserCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/30 13:05:16 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/16 15:00:26 by mbartos          ###   ########.fr       */
+/*   Created: 2024/09/30 14:13:45 by mbartos           #+#    #+#             */
+/*   Updated: 2024/10/18 11:19:14 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "PassCommand.hpp"
+#include "UserCommand.hpp"
 
-PassCommand::PassCommand(Client* client, ClientMessage& clientMessage) : client(client), serverData(ServerDataManager::getInstance()), clientMessage(clientMessage)
+namespace Commands
+{
+
+UserCommand::UserCommand(Client* client, ClientMessage& clientMessage) : client(client), serverData(ServerDataManager::getInstance()), clientMessage(clientMessage) /*, user(NULL)*/
 {
 	if (client->user.isValidServerUser() == true)
 	{
 		this->setServerResponse462();  // user already validated
+		this->addServerResponseToClient();
 		return;
 	}
 
-	client->user.setPassSent(true);
+	std::string username = clientMessage.getParameterAtPosition(0);
+	std::string hostname = clientMessage.getParameterAtPosition(1);
+	std::string servername = clientMessage.getParameterAtPosition(2);
+	std::string realname = clientMessage.getParameterAtPosition(3);
 
-	std::string passedPassword = this->clientMessage.getFirstParameter();
-	std::string serverPassword = this->serverData.getServerPassword();
-	if (passedPassword.empty())
+	if (realname.empty() || servername.empty() || hostname.empty() || username.empty())
 	{
 		this->setServerResponse461();
+		this->addServerResponseToClient();
 		return;
 	}
-	if (passedPassword == serverPassword)
-	{
-		client->user.setPassValid(true);
-		this->setServerResponseValid();
-	}
-	// else if
-	// {
-	// 	/* Pass not valid */
-	// }
+
+	// check parameters, if they are valid
+
+	client->user.setUsername(username);
+	client->user.setHostname(hostname);
+	client->user.setServername(servername);
+	client->user.setRealname(realname);
+	client->user.setUserValid(true);
 }
 
-PassCommand::~PassCommand() {}
+UserCommand::UserCommand(UserCommand const& refObj) : client(refObj.client), serverData(refObj.serverData), clientMessage(refObj.clientMessage), serverResponse(refObj.serverResponse) /*, user(refObj.user)*/ {}
 
-PassCommand::PassCommand(PassCommand const& refObj) : client(refObj.client), serverData(refObj.serverData), clientMessage(refObj.clientMessage), serverResponse(refObj.serverResponse) {}
-
-PassCommand& PassCommand::operator=(PassCommand const& refObj)
+UserCommand& UserCommand::operator=(UserCommand const& refObj)
 {
 	if (this != &refObj)
 	{
 		this->client = refObj.client;
-		// this->serverData = refObj.serverData;
 		this->clientMessage = refObj.clientMessage;
+		// this->serverData = refObj.serverData;
 		this->serverResponse = refObj.serverResponse;
+		// this->user = refObj.user;
 	}
 	return (*this);
 }
 
-ServerResponse PassCommand::getServerResponse()
+UserCommand::~UserCommand() {}
+
+ServerResponse UserCommand::getServerResponse()
 {
 	return (this->serverResponse);
 }
 
 // ---- PRIVATE ----
 
-void PassCommand::addServerResponseToClient()
+void UserCommand::addServerResponseToClient()
 {
 	client->serverResponses.push_back(serverResponse);
 }
 
-void PassCommand::setServerResponse461()
+void UserCommand::setServerResponse461()
 {
 	std::string nickname = client->user.getNickname();
 	if (nickname.empty())
 	{
 		nickname = "*";
 	}
-
 	std::string response = ":";
 	response.append(serverData.getServerName());
 	response.append(" 461 ");
 	response.append(nickname);
-	response.append(" PASS :Not enough parameters.\r\n");
+	response.append(" NICK :Not enough parameters.\r\n");
 	serverResponse.setAction(ServerResponse::SEND);
 	serverResponse.setResponse(response);
 	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
-	this->addServerResponseToClient();
 }
 
-void PassCommand::setServerResponse462()
+void UserCommand::setServerResponse462()
 {
 	std::string nickname = client->user.getNickname();
 	if (nickname.empty())
@@ -103,14 +107,6 @@ void PassCommand::setServerResponse462()
 	serverResponse.setAction(ServerResponse::SEND);
 	serverResponse.setResponse(response);
 	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
-	this->addServerResponseToClient();
 }
 
-void PassCommand::setServerResponseValid()
-{
-	// std::string response = "";
-
-	// serverResponse.setAction(ServerResponse::NOSEND);
-	// serverResponse.setResponse(response);
-	// serverResponse.setClientsToSend(clientMessage.getFromUserFd());
-}
+}  // namespace Commands

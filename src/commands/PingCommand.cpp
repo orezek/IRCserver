@@ -6,11 +6,14 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 13:05:16 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/16 12:54:14 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/18 11:19:30 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PingCommand.hpp"
+
+namespace Commands
+{
 
 PingCommand::PingCommand(Client* client, ClientMessage& clientMessage) : client(client), serverData(ServerDataManager::getInstance()), clientMessage(clientMessage)
 {
@@ -55,3 +58,5 @@ void PingCommand::setServerResponseValid()
 	serverResponse.setResponse(response);
 	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
 }
+
+}  // namespace Commands

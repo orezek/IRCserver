@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 11:21:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/16 12:53:39 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/18 11:12:17 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@
 #include "ClientMessage.hpp"
 #include "ServerDataManager.hpp"
 #include "ServerResponse.hpp"
+
+namespace Commands
+{
 
 class PingCommand
 {
@@ -37,3 +40,5 @@ class PingCommand
 
 		void addServerResponseToClient();
 };
+
+}  // namespace Commands
