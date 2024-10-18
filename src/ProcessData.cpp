@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/18 12:13:14 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/18 12:14:26 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ ProcessData::ProcessData(Client *client, ClientRequest *clientRequest) : client(
 		}
 		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "QUIT")
 		{
-			Commands::QuitCommand quitCommand(client, clientMessage);
+			Commands::Quit quitCommand(client, clientMessage);
 		}
 		else
 		{
@@ -102,7 +102,7 @@ ProcessData::ProcessData(Client *client, ClientRequest *clientRequest) : client(
 		}
 		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "QUIT")
 		{
-			Commands::QuitCommand quitCommand(client, clientMessage);
+			Commands::Quit quitCommand(client, clientMessage);
 		}
 		else
 		{

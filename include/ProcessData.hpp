@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:33 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/18 12:13:41 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/18 12:15:05 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 #include "Nick.hpp"
 #include "Pass.hpp"
 #include "Ping.hpp"
-#include "QuitCommand.hpp"
+#include "Quit.hpp"
 #include "ServerDataManager.hpp"
 #include "ServerResponse.hpp"
 #include "StringUtils.hpp"

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 19:48:00 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/18 11:12:21 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/18 12:14:26 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,13 @@
 namespace Commands
 {
 
-class QuitCommand
+class Quit
 {
 	public:
-		QuitCommand(Client* client, ClientMessage& clientMessage);
-		QuitCommand(QuitCommand const& refObj);
-		QuitCommand& operator=(QuitCommand const& refObj);
-		~QuitCommand();
+		Quit(Client* client, ClientMessage& clientMessage);
+		Quit(Quit const& refObj);
+		Quit& operator=(Quit const& refObj);
+		~Quit();
 
 		ServerResponse getServerResponse();
 
