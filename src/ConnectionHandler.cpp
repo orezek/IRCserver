@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 19:59:58 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/19 12:27:17 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -309,7 +309,7 @@ int ConnectionHandler::serverEventLoop(void)
 				onError(clientIter);
 				continue;
 			}
-			if (FD_ISSET(clientSocketFd, &readFds))
+			if (FD_ISSET(clientSocketFd, &readFds) && client.markedForDeletion == false)  // m-bartos: Added "&& client.markedForDeletion == false" - To check, that if the client is markedForDeletion, server will not read new ClientRequests
 			{
 				onRead(clientIter);
 			}
@@ -317,7 +317,7 @@ int ConnectionHandler::serverEventLoop(void)
 			{
 				onWrite(clientIter);
 			}
-			if (client.markedForDeletion == true)
+			if (client.markedForDeletion == true && client.serverResponses.isEmpty())  // m-bartos: Added "&& client.serverResponses.isEmpty()" - To check, that all serverResponses in the ServerResponseQueue were sent
 			{
 				terminateClientSession(clientIter);
 				std::cout << "Client " << clientSocketFd << " session has been terminated." << std::endl;
