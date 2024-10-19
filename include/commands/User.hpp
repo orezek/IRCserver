@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 14:13:47 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/19 10:57:48 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/19 12:00:33 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,9 @@ class User : public ABaseCommand
 		~User();
 
 		void execute();
-		// ServerResponse getServerResponse();
 
 	private:
-		// User* user;  // will be deleted
-
-		// void setServerResponse461();
-		// void setServerResponse462();
 		void setServerResponseValid();
-		// void addServerResponseToClient();
 };
 
 }  // namespace Commands

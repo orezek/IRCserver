@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 14:13:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/19 11:25:43 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/19 12:01:08 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void User::execute()
 	if (client->userInfo.isValidServerUser() == true)
 	{
 		this->setServerResponse462();  // user already validated
-		// this->addServerResponseToClient();
 		return;
 	}
 
@@ -36,7 +35,6 @@ void User::execute()
 	if (realname.empty() || servername.empty() || hostname.empty() || username.empty())
 	{
 		this->setServerResponse461();
-		// this->addServerResponseToClient();
 		return;
 	}
 
@@ -56,52 +54,5 @@ User& User::operator=(User const& refObj)
 	(void)refObj;
 	return (*this);
 }
-
-// ServerResponse User::getServerResponse()
-// {
-// 	return (this->serverResponse);
-// }
-
-// ---- PRIVATE ----
-
-// void User::addServerResponseToClient()
-// {
-// 	client->serverResponses.push_back(serverResponse);
-// }
-
-// void User::setServerResponse461()
-// {
-// 	std::string nickname = client->userInfo.getNickname();
-// 	if (nickname.empty())
-// 	{
-// 		nickname = "*";
-// 	}
-// 	std::string response = ":";
-// 	response.append(serverData.getServerName());
-// 	response.append(" 461 ");
-// 	response.append(nickname);
-// 	response.append(" NICK :Not enough parameters.\r\n");
-// 	serverResponse.setAction(ServerResponse::SEND);
-// 	serverResponse.setResponse(response);
-// 	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
-// }
-
-// void User::setServerResponse462()
-// {
-// 	std::string nickname = client->userInfo.getNickname();
-// 	if (nickname.empty())
-// 	{
-// 		nickname = "*";
-// 	}
-
-// 	std::string response = ":";
-// 	response.append(serverData.getServerName());
-// 	response.append(" 462 ");
-// 	response.append(nickname);
-// 	response.append(" :You may not reregister\r\n");
-// 	serverResponse.setAction(ServerResponse::SEND);
-// 	serverResponse.setResponse(response);
-// 	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
-// }
 
 }  // namespace Commands
