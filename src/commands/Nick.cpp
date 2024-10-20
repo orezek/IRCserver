@@ -119,6 +119,7 @@ void Nick::setServerResponse431()
 	std::string response = ":";
 	response.append(serverData.getServerName());
 	response.append(" 431 :No nickname given\r\n");
+
 	serverResponse.setAction(ServerResponse::SEND);
 	serverResponse.setResponse(response);
 	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
@@ -135,6 +136,7 @@ void Nick::setServerResponse432()
 	response.append(" ");
 	response.append(newNick);
 	response.append(" :Erroneus Nickname\r\n");
+
 	serverResponse.setAction(ServerResponse::SEND);
 	serverResponse.setResponse(response);
 	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
@@ -151,6 +153,7 @@ void Nick::setServerResponse433()
 	response.append(" ");
 	response.append(newNick);
 	response.append(" :Nickname is already in use\r\n");
+
 	serverResponse.setAction(ServerResponse::SEND);
 	serverResponse.setResponse(response);
 	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
@@ -180,9 +183,8 @@ void Nick::setServerResponseValid(UserInfo* user)
 	{
 		serverResponse.setAction(ServerResponse::SEND);
 		serverResponse.setClientsToSend(clientMessage.getFromUserFd());
+		addServerResponseToClient();
 	}
-
-	addServerResponseToClient();
 }
 
 }  // namespace Commands
