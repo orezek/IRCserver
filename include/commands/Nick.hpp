@@ -6,12 +6,13 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:20:19 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/18 12:03:04 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/20 12:53:20 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
+#include "ABaseCommand.hpp"
 #include "ClientManager.hpp"
 #include "ClientMessage.hpp"
 #include "ServerDataManager.hpp"
@@ -20,7 +21,7 @@
 namespace Commands
 {
 
-class Nick
+class Nick : protected ABaseCommand
 {
 	public:
 		Nick(Client* client, ClientMessage& clientMessage);
@@ -28,14 +29,9 @@ class Nick
 		Nick(Nick const& refObj);
 		Nick& operator=(Nick const& refObj);
 
-		ServerResponse getServerResponse();
+		void execute();
 
 	private:
-		Client* client;
-		ServerDataManager& serverData;
-		ClientMessage& clientMessage;
-		ServerResponse serverResponse;
-
 		std::string oldNick;
 		std::string newNick;
 
@@ -47,7 +43,6 @@ class Nick
 		void setServerResponse432();
 		void setServerResponse433();
 		void setServerResponseValid(UserInfo* user);
-		void addServerResponseToClient();
 };
 
 }  // namespace Commands

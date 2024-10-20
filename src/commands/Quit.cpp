@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   QuitCommand.cpp                                    :+:      :+:    :+:   */
+/*   Quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 19:48:17 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/18 12:14:34 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/20 12:11:05 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,31 +15,21 @@
 namespace Commands
 {
 
-Quit::Quit(Client* client, ClientMessage& clientMessage) : client(client), serverData(ServerDataManager::getInstance()), clientMessage(clientMessage)
-{
-	this->setServerResponseValid();
-	client->serverResponses.push_back(this->serverResponse);
-}
+Quit::Quit(Client* client, ClientMessage& clientMessage) : ABaseCommand(client, clientMessage) {}
 
-Quit::Quit(Quit const& refObj) : client(refObj.client), serverData(refObj.serverData), clientMessage(refObj.clientMessage), serverResponse(refObj.serverResponse) {}
+Quit::Quit(Quit const& refObj) : ABaseCommand(refObj) {}
 
 Quit& Quit::operator=(Quit const& refObj)
 {
-	if (this != &refObj)
-	{
-		this->client = refObj.client;
-		this->clientMessage = refObj.clientMessage;
-		// this->serverData = refObj.serverData;
-		this->serverResponse = refObj.serverResponse;
-	}
+	(void)refObj;
 	return (*this);
 }
 
 Quit::~Quit() {}
 
-ServerResponse Quit::getServerResponse()
+void Quit::execute()
 {
-	return (this->serverResponse);
+	this->setServerResponseValid();
 }
 
 // PRIVATE
@@ -65,6 +55,8 @@ void Quit::setServerResponseValid()
 	serverResponse.setAction(ServerResponse::QUIT);
 	serverResponse.setResponse(response);
 	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
+
+	addServerResponseToClient();
 }
 
 }  // namespace Commands
