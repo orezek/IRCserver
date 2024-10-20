@@ -15,7 +15,23 @@
 namespace Commands
 {
 
-Nick::Nick(Client* client, ClientMessage& clientMessage) : client(client), serverData(ServerDataManager::getInstance()), clientMessage(clientMessage), oldNick(""), newNick("")
+Nick::Nick(Client* client, ClientMessage& clientMessage) : ABaseCommand(client, clientMessage), newNick(""), oldNick("") {}
+
+Nick::Nick(Nick const& refObj) : ABaseCommand(refObj), newNick(refObj.newNick), oldNick(refObj.oldNick) {}
+
+Nick& Nick::operator=(Nick const& refObj)
+{
+	if (this != &refObj)
+	{
+		this->oldNick = refObj.oldNick;
+		this->newNick = refObj.newNick;
+	}
+	return (*this);
+}
+
+Nick::~Nick() {}
+
+void Nick::execute()
 {
 	oldNick = client->userInfo.getNickname();
 	if (oldNick == "")
@@ -26,54 +42,26 @@ Nick::Nick(Client* client, ClientMessage& clientMessage) : client(client), serve
 	if (newNick.empty())
 	{
 		setServerResponse431();
-		addServerResponseToClient();
 		return;
 	}
 	if (!isValidNick(newNick))
 	{
 		setServerResponse432();
-		addServerResponseToClient();
 		return;
 	}
 	if (isAlreadyUsedNick(newNick))
 	{
 		setServerResponse433();
-		addServerResponseToClient();
 		return;
 	}
 
 	client->userInfo.setNickname(newNick);
 	client->userInfo.setNickValid(true);
+
 	setServerResponseValid(&(client->userInfo));
-	addServerResponseToClient();
-}
-
-Nick::~Nick() {}
-
-Nick::Nick(Nick const& refObj) : client(refObj.client), serverData(refObj.serverData), clientMessage(refObj.clientMessage) {}
-
-Nick& Nick::operator=(Nick const& refObj)
-{
-	if (this != &refObj)
-	{
-		this->client = refObj.client;
-		this->clientMessage = refObj.clientMessage;
-		// serverData cannot be coppied
-		//  this->serverData = refObj.serverData;
-	}
-	return (*this);
-}
-
-ServerResponse Nick::getServerResponse()
-{
-	return (this->serverResponse);
 }
 
 // ---- PRIVATE ----- //
-void Nick::addServerResponseToClient()
-{
-	client->serverResponses.push_back(serverResponse);
-}
 
 std::string Nick::getNewNickname()
 {
@@ -134,6 +122,8 @@ void Nick::setServerResponse431()
 	serverResponse.setAction(ServerResponse::SEND);
 	serverResponse.setResponse(response);
 	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
+
+	addServerResponseToClient();
 }
 
 void Nick::setServerResponse432()
@@ -148,6 +138,8 @@ void Nick::setServerResponse432()
 	serverResponse.setAction(ServerResponse::SEND);
 	serverResponse.setResponse(response);
 	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
+
+	addServerResponseToClient();
 }
 
 void Nick::setServerResponse433()
@@ -162,6 +154,8 @@ void Nick::setServerResponse433()
 	serverResponse.setAction(ServerResponse::SEND);
 	serverResponse.setResponse(response);
 	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
+
+	addServerResponseToClient();
 }
 
 void Nick::setServerResponseValid(UserInfo* user)
@@ -187,6 +181,8 @@ void Nick::setServerResponseValid(UserInfo* user)
 		serverResponse.setAction(ServerResponse::SEND);
 		serverResponse.setClientsToSend(clientMessage.getFromUserFd());
 	}
+
+	addServerResponseToClient();
 }
 
 }  // namespace Commands
