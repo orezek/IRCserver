@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 09:51:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/20 13:16:20 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/20 13:21:25 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,7 @@ ABaseCommand::~ABaseCommand() {}
 
 void ABaseCommand::addServerResponseToClient()
 {
-	ServerResponse::Action action = serverResponse.getAction();
-	if (action == ServerResponse::SEND || action == ServerResponse::QUIT)
-	{
-		client->serverResponses.push_back(serverResponse);
-	}
+	client->serverResponses.push_back(serverResponse);
 }
 
 void ABaseCommand::setServerResponse461()

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:31:58 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/11 10:07:54 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/20 13:21:39 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,11 @@ ServerResponseQueue::~ServerResponseQueue() {};
 
 void ServerResponseQueue::push_back(ServerResponse& serverResponse)
 {
-	responseList.push_back(serverResponse);
+	ServerResponse::Action action = serverResponse.getAction();
+	if (action == ServerResponse::SEND || action == ServerResponse::QUIT)
+	{
+		responseList.push_back(serverResponse);
+	}
 }
 
 std::string ServerResponseQueue::getServerResponseQueueAsString() const
