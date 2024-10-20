@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/20 12:34:35 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/20 12:43:59 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ ProcessData::ProcessData(Client *client, ClientRequest *clientRequest) : client(
 		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "PASS")
 		{
 			Commands::Pass passCommand(client, clientMessage);
+			passCommand.execute();
 		}
 		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "NICK")
 		{
@@ -94,6 +95,7 @@ ProcessData::ProcessData(Client *client, ClientRequest *clientRequest) : client(
 		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "PASS")
 		{
 			Commands::Pass passCommand(client, clientMessage);
+			passCommand.execute();
 		}
 		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "NICK")
 		{

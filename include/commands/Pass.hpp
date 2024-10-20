@@ -12,6 +12,7 @@
 
 #pragma once
 
+#include "ABaseCommand.hpp"
 #include "ClientMessage.hpp"
 #include "ServerDataManager.hpp"
 #include "ServerResponse.hpp"
@@ -19,28 +20,18 @@
 namespace Commands
 {
 
-class Pass
+class Pass : protected ABaseCommand
 {
 	public:
-		// PassCommand(ServerDataManager& serverData, ClientMessage& clientMessage);
 		Pass(Client* client, ClientMessage& clientMessage);
 		~Pass();
 		Pass(Pass const& refObj);
 		Pass& operator=(Pass const& refObj);
 
-		ServerResponse getServerResponse();
+		void execute();
 
 	private:
-		Client* client;
-		ServerDataManager& serverData;
-		ClientMessage& clientMessage;
-		ServerResponse serverResponse;
-
-		void setServerResponse461();
-		void setServerResponse462();
 		void setServerResponseValid();
-
-		void addServerResponseToClient();
 };
 
 }  // namespace Commands
