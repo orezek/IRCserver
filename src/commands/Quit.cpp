@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 19:48:17 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/20 12:11:05 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/20 13:13:21 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,6 @@ void Quit::setServerResponseValid()
 	response.append("]");
 	response.append("\r\n");
 
-	// necessary? check how IRC servers behave
-	// if (user->getUsername() == "" || user->getHostname() == "")
-	// 	serverResponse.setAction(ServerResponse::NOSEND);
-	// else
-	// has to be changed to QUIT when it is implemented in ConnectionHandler
 	serverResponse.setAction(ServerResponse::QUIT);
 	serverResponse.setResponse(response);
 	serverResponse.setClientsToSend(clientMessage.getFromUserFd());

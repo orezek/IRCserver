@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/20 12:52:10 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/20 13:11:48 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,6 @@ ProcessData::ProcessData(Client *client, ClientRequest *clientRequest) : client(
 		if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "CAP")
 		{
 			// DO NOTHING
-
-			// ServerResponse serverResponse;
-			// serverResponse.setAction(ServerResponse::NOSEND);
-			// serverResponse.setClientsToSend(clientFd);
-			// std::string str = "\n";
-			// serverResponse.setResponse(str);
-			// client->serverResponses.push_back(serverResponse);
 		}
 		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "PASS")
 		{
