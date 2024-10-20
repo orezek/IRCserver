@@ -175,12 +175,9 @@ void Nick::setServerResponseValid(UserInfo* user)
 	response.append(newNick);
 	response.append("\r\n");
 
-	serverResponse.setResponse(response);
-
-	if (user->getUsername() == "" || user->getHostname() == "")
-		serverResponse.setAction(ServerResponse::NOSEND);
-	else
+	if (user->getUsername() != "" && user->getHostname() != "")
 	{
+		serverResponse.setResponse(response);
 		serverResponse.setAction(ServerResponse::SEND);
 		serverResponse.setClientsToSend(clientMessage.getFromUserFd());
 		addServerResponseToClient();

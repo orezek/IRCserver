@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 13:05:16 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/20 12:43:16 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/20 13:13:36 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,7 @@ void Pass::execute()
 
 void Pass::setServerResponseValid()
 {
-	// std::string response = "";
-
-	// serverResponse.setAction(ServerResponse::NOSEND);
-	// serverResponse.setResponse(response);
-	// serverResponse.setClientsToSend(clientMessage.getFromUserFd());
+	// DO NOTHING
 }
 
 }  // namespace Commands

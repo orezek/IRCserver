@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 09:51:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/19 11:07:37 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/20 13:21:25 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,5 @@ void ABaseCommand::setServerResponse462()
 
 	this->addServerResponseToClient();
 }
-
 
 }  // namespace Commands

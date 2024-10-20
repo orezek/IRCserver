@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ServerResponse.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 23:09:38 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 15:22:39 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/20 13:17:05 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ServerResponse.hpp"
 
-ServerResponse::ServerResponse() : action(NOSEND), clientsToSend(), data("") {}
+ServerResponse::ServerResponse() : action(ServerResponse::NOSEND), clientsToSend(), data("") {}
 
 ServerResponse::ServerResponse(const ServerResponse &obj) : action(obj.action), clientsToSend(obj.clientsToSend), data(obj.data) {}
 
@@ -107,10 +107,6 @@ ssize_t ServerResponse::sendServerResponse(void)
 
 			overallBytesSent += totalBytesSentToClient;
 		}
-	}
-	else if (this->action == this->NOSEND)
-	{
-		std::cout << "NOSEND" << std::endl;
 	}
 	else if (this->action == this->QUIT)
 	{
