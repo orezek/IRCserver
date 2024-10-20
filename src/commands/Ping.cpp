@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 13:05:16 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/18 12:13:56 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/20 12:34:06 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,48 +15,36 @@
 namespace Commands
 {
 
-Ping::Ping(Client* client, ClientMessage& clientMessage) : client(client), serverData(ServerDataManager::getInstance()), clientMessage(clientMessage)
+Ping::Ping(Client* client, ClientMessage& clientMessage) : ABaseCommand(client, clientMessage) {}
+
+Ping::Ping(Ping const& refObj) : ABaseCommand(refObj) {}
+
+Ping& Ping::operator=(Ping const& refObj)
 {
-	if (clientMessage.getFirstParameter() == serverData.getServerName())
-	{
-		this->setServerResponseValid();
-		this->addServerResponseToClient();
-	}
+	(void)refObj;
+	return (*this);
 }
 
 Ping::~Ping() {}
 
-Ping::Ping(Ping const& refObj) : client(refObj.client), serverData(refObj.serverData), clientMessage(refObj.clientMessage), serverResponse(refObj.serverResponse) {}
-
-Ping& Ping::operator=(Ping const& refObj)
+void Ping::execute()
 {
-	if (this != &refObj)
+	if (clientMessage.getFirstParameter() == serverData.getServerName())
 	{
-		this->client = refObj.client;
-		this->clientMessage = refObj.clientMessage;
-		this->serverResponse = refObj.serverResponse;
+		this->setServerResponseValid();
 	}
-	return (*this);
-}
-
-ServerResponse Ping::getServerResponse()
-{
-	return (this->serverResponse);
 }
 
 // ---- PRIVATE ----
-
-void Ping::addServerResponseToClient()
-{
-	client->serverResponses.push_back(serverResponse);
-}
-
 void Ping::setServerResponseValid()
 {
 	std::string response = ":" + serverData.getServerName() + " PONG " + serverData.getServerName() + " :" + serverData.getServerName() + "\n";
+
 	serverResponse.setAction(ServerResponse::SEND);
 	serverResponse.setResponse(response);
 	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
+
+	addServerResponseToClient();
 }
 
 }  // namespace Commands
