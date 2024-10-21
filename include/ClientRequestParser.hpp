@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:09:39 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/21 14:08:15 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/21 14:30:53 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ class ClientRequestParser
 {
 	public:
 		ClientRequestParser(ClientRequest& clientRequest);
-		CommonClientMessage getClientMessage();
+		CommonClientMessage* getClientMessage();
 		void parse();
 
 	private:
@@ -34,7 +34,7 @@ class ClientRequestParser
 
 		std::string tempInputData;
 
-		CommonClientMessage clientMessage;
+		CommonClientMessage* clientMessage;
 
 		void parsePrefixString();
 		void parseCommandString();

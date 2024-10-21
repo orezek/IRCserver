@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/21 14:07:02 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/21 14:30:47 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,16 @@
 ClientRequestParser::ClientRequestParser(ClientRequest& clientRequest) : clientRequest(clientRequest)
 {
 	this->tempInputData = clientRequest.getClientData();
+	clientMessage = NULL;
 }
 
-CommonClientMessage ClientRequestParser::getClientMessage()
+CommonClientMessage* ClientRequestParser::getClientMessage()
 {
-	return (this->clientMessage);
+	if (this->clientMessage != NULL)
+	{
+		return (this->clientMessage);
+	}
+	return (NULL);
 }
 
 void ClientRequestParser::parse()
@@ -29,10 +34,19 @@ void ClientRequestParser::parse()
 	this->parseCommandString();
 	this->parseParameters();
 
-	clientMessage.setFromUserFd(this->clientRequest.getClientFd());
-	clientMessage.setCommandString(this->commandString);
-	clientMessage.setPrefixString(this->prefixString);
-	clientMessage.setParameters(this->parameters);
+	if (StringUtils::toUpperCase(this->commandString) == "JOIN")
+	{
+		clientMessage = new CommonClientMessage(); // will be changed to JOIN
+	}
+	else
+	{
+		clientMessage = new CommonClientMessage();
+	}
+
+	clientMessage->setFromUserFd(this->clientRequest.getClientFd());
+	clientMessage->setCommandString(this->commandString);
+	clientMessage->setPrefixString(this->prefixString);
+	clientMessage->setParameters(this->parameters);
 
 	std::cout << clientMessage << std::endl;  // debug only
 }

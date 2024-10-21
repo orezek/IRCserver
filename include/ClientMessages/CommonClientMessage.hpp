@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ClientMessage.hpp                                  :+:      :+:    :+:   */
+/*   CommonClientMessage.hpp                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:18 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/21 14:07:02 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/21 14:26:52 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ class CommonClientMessage
 
 	public:
 		CommonClientMessage();
-		CommonClientMessage(int clientFd, std::string prefixString, std::string commandString, std::vector<std::string> parameters);
+		// CommonClientMessage(int clientFd, std::string prefixString, std::string commandString, std::vector<std::string> parameters);
 		CommonClientMessage(CommonClientMessage const &refObj);
 		CommonClientMessage &operator=(CommonClientMessage const &refObj);
 		~CommonClientMessage();
