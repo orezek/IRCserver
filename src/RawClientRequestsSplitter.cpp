@@ -6,23 +6,13 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:18:14 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/16 15:35:46 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/21 09:37:28 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "RawClientRequestsSplitter.hpp"
 
-RawClientRequestsSplitter::RawClientRequestsSplitter(Client* inputClient) : client(inputClient)
-{
-	while ((rawClientRequest = client->rawClientRequests.getFirst()) != NULL)
-	{
-		parseRawClientRequest();
-		std::cout << rawClientRequest->getClientData() << std::endl;
-		client->rawClientRequests.deleteFirst();
-		std::cout << "Splitted Requests:" << std::endl
-				  << client->clientRequests << std::endl;  // debugging purpose only
-	}
-}
+RawClientRequestsSplitter::RawClientRequestsSplitter(Client* inputClient) : client(inputClient) {}
 
 RawClientRequestsSplitter::RawClientRequestsSplitter(const RawClientRequestsSplitter& refObj) : client(refObj.client), rawClientRequest(refObj.rawClientRequest) {}
 
@@ -64,5 +54,17 @@ void RawClientRequestsSplitter::parseRawClientRequest()
 
 		client->clientRequests.push_back(tempClientRequest);
 		tempInputData = tempInputData.erase(0, pos + 1);
+	}
+}
+
+void RawClientRequestsSplitter::split()
+{
+	while ((rawClientRequest = client->rawClientRequests.getFirst()) != NULL)
+	{
+		parseRawClientRequest();
+		std::cout << rawClientRequest->getClientData() << std::endl;
+		client->rawClientRequests.deleteFirst();
+		std::cout << "Splitted Requests:" << std::endl
+				  << client->clientRequests << std::endl;  // debugging purpose only
 	}
 }

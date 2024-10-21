@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/19 12:27:17 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/21 09:34:48 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -280,7 +280,6 @@ void ConnectionHandler::onRead(std::map<int, Client>::iterator &it)
 			// Create a ClientRequest
 			ClientRequest clientRequest(clientSocketFd, bytesReceived, clientBuffers[clientSocketFd], this->ipClientAddress);
 			client.insertRawClientRequest(clientRequest);
-			RawClientRequestsSplitter rawClientRequestSplitter(&client);
 			ClientRequestHandler clientRequestHandler(&client);
 			clientBuffers.erase(clientSocketFd);
 		}
