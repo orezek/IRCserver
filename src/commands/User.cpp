@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 14:13:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/19 12:01:08 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/21 14:07:02 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 namespace Commands
 {
 
-User::User(Client* client, ClientMessage& clientMessage) : ABaseCommand(client, clientMessage) {}
+User::User(Client* client, CommonClientMessage& clientMessage) : ABaseCommand(client, clientMessage) {}
 
 User::~User() {}
 

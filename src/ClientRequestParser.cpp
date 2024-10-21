@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/21 09:44:17 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/21 14:07:02 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ ClientRequestParser::ClientRequestParser(ClientRequest& clientRequest) : clientR
 	this->tempInputData = clientRequest.getClientData();
 }
 
-ClientMessage ClientRequestParser::getClientMessage()
+CommonClientMessage ClientRequestParser::getClientMessage()
 {
 	return (this->clientMessage);
 }

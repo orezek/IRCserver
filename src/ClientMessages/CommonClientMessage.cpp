@@ -1,28 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ClientMessage.cpp                                  :+:      :+:    :+:   */
+/*   CommonClientMessage.cpp                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:21 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/09 14:25:59 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/21 14:10:09 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ClientMessage.hpp"
+#include "CommonClientMessage.hpp"
 
-ClientMessage::ClientMessage() : fromClientFd(-1), command(NOT_ASSIGNED), prefixString(""), commandString("") {}
+CommonClientMessage::CommonClientMessage() : fromClientFd(-1), command(NOT_ASSIGNED), prefixString(""), commandString("") {}
 
-ClientMessage::ClientMessage(int clientFd, std::string prefixString, std::string commandString, std::vector<std::string> parameters) : fromClientFd(clientFd), command(NOT_ASSIGNED), prefixString(prefixString), commandString(commandString), parameters(parameters)
+CommonClientMessage::CommonClientMessage(int clientFd, std::string prefixString, std::string commandString, std::vector<std::string> parameters) : fromClientFd(clientFd), command(NOT_ASSIGNED), prefixString(prefixString), commandString(commandString), parameters(parameters)
 {
 }
 
-ClientMessage::ClientMessage(ClientMessage const &refObj) : fromClientFd(refObj.fromClientFd), command(refObj.command), prefixString(refObj.prefixString), commandString(refObj.commandString), parameters(refObj.parameters)
+CommonClientMessage::CommonClientMessage(CommonClientMessage const &refObj) : fromClientFd(refObj.fromClientFd), command(refObj.command), prefixString(refObj.prefixString), commandString(refObj.commandString), parameters(refObj.parameters)
 {
 }
 
-ClientMessage &ClientMessage::operator=(ClientMessage const &refObj)
+CommonClientMessage &CommonClientMessage::operator=(CommonClientMessage const &refObj)
 {
 	if (this != &refObj)
 	{
@@ -35,59 +35,59 @@ ClientMessage &ClientMessage::operator=(ClientMessage const &refObj)
 	return (*this);
 }
 
-ClientMessage::~ClientMessage() {}
+CommonClientMessage::~CommonClientMessage() {}
 
-std::string ClientMessage::getPrefixString()
+std::string CommonClientMessage::getPrefixString()
 {
 	return (this->prefixString);
 }
 
-void ClientMessage::setPrefixString(std::string newPrefixString)
+void CommonClientMessage::setPrefixString(std::string newPrefixString)
 {
 	this->prefixString = newPrefixString;
 }
 
-std::string ClientMessage::getCommandString()
+std::string CommonClientMessage::getCommandString()
 {
 	return (this->commandString);
 }
 
-void ClientMessage::setCommandString(std::string newCommandString)
+void CommonClientMessage::setCommandString(std::string newCommandString)
 {
 	this->commandString = newCommandString;
 }
 
-int ClientMessage::getFromUserFd() const
+int CommonClientMessage::getFromUserFd() const
 {
 	return (this->fromClientFd);
 }
 
-std::string ClientMessage::getPrefixString() const
+std::string CommonClientMessage::getPrefixString() const
 {
 	return (this->prefixString);
 }
 
-std::string ClientMessage::getCommandString() const
+std::string CommonClientMessage::getCommandString() const
 {
 	return (this->commandString);
 }
 
-void ClientMessage::setFromUserFd(int newUserFd)
+void CommonClientMessage::setFromUserFd(int newUserFd)
 {
 	this->fromClientFd = newUserFd;
 }
 
-void ClientMessage::setParameters(std::vector<std::string> newParameters)
+void CommonClientMessage::setParameters(std::vector<std::string> newParameters)
 {
 	this->parameters = newParameters;
 }
 
-void ClientMessage::addToParameters(std::string newParameter)
+void CommonClientMessage::addToParameters(std::string newParameter)
 {
 	parameters.push_back(newParameter);
 }
 
-std::string ClientMessage::getFirstParameter()
+std::string CommonClientMessage::getFirstParameter()
 {
 	std::string firstParameter;
 	if (parameters.begin() == parameters.end())
@@ -97,7 +97,7 @@ std::string ClientMessage::getFirstParameter()
 	return (firstParameter);
 }
 
-std::string ClientMessage::getParameterAtPosition(size_t position)
+std::string CommonClientMessage::getParameterAtPosition(size_t position)
 {
 	if (position >= parameters.size())
 		return ("");
@@ -105,7 +105,7 @@ std::string ClientMessage::getParameterAtPosition(size_t position)
 	return parameters[position];
 }
 
-std::string ClientMessage::getAllParameters() const
+std::string CommonClientMessage::getAllParameters() const
 {
 	std::stringstream output;
 
@@ -121,7 +121,7 @@ std::string ClientMessage::getAllParameters() const
 // --- PRIVATE ---
 
 // --- OUTSIDE OF THE CLASS ---
-std::ostream &operator<<(std::ostream &output, ClientMessage const &instance)
+std::ostream &operator<<(std::ostream &output, CommonClientMessage const &instance)
 {
 	output << "---- ClientMessage ----" << std::endl;
 	output << "FromClientFd: |" << instance.getFromUserFd() << std::endl;

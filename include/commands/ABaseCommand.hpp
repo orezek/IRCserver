@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 11:10:59 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/19 11:03:52 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/21 14:08:28 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <string>
 
 #include "Client.hpp"
-#include "ClientMessage.hpp"
+#include "CommonClientMessage.hpp"
 #include "ServerDataManager.hpp"
 #include "ServerResponse.hpp"
 
@@ -25,16 +25,16 @@ namespace Commands
 class ABaseCommand
 {
 	public:
-		ABaseCommand(Client* client, ClientMessage& clientMessage);
+		ABaseCommand(Client* client, CommonClientMessage& clientMessage);
 		ABaseCommand(ABaseCommand const& refObj);
 		ABaseCommand& operator=(ABaseCommand const& refObj);
 		virtual void execute() = 0;  // Pure virtual function to be implemented by child classes
-		virtual ~ABaseCommand();  // Virtual destructor for safe cleanup
+		virtual ~ABaseCommand();     // Virtual destructor for safe cleanup
 
 	protected:
 		Client* client;
 		ServerDataManager& serverData;
-		ClientMessage& clientMessage;
+		CommonClientMessage& clientMessage;
 		ServerResponse serverResponse;
 
 		void addServerResponseToClient();

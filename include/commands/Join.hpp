@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 10:11:17 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/21 10:44:33 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/21 14:07:02 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ namespace Commands
 class Join : protected ABaseCommand
 {
 	public:
-		Join(Client* client, ClientMessage& clientMessage);
+		Join(Client* client, CommonClientMessage& clientMessage);
 		~Join();
 		Join(Join const& refObj);
 		Join& operator=(Join const& refObj);

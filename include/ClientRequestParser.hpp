@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:09:39 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/21 09:43:05 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/21 14:08:15 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,14 @@
 #include <string>
 #include <vector>
 
-#include "ClientMessage.hpp"
 #include "ClientRequest.hpp"
+#include "CommonClientMessage.hpp"
 
 class ClientRequestParser
 {
 	public:
 		ClientRequestParser(ClientRequest& clientRequest);
-		ClientMessage getClientMessage();
+		CommonClientMessage getClientMessage();
 		void parse();
 
 	private:
@@ -34,7 +34,7 @@ class ClientRequestParser
 
 		std::string tempInputData;
 
-		ClientMessage clientMessage;
+		CommonClientMessage clientMessage;
 
 		void parsePrefixString();
 		void parseCommandString();

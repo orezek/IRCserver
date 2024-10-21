@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:18 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/09 14:25:47 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/21 14:07:02 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,7 @@
 #include <vector>
 
 #include "StringUtils.hpp"
-
-class ClientMessage
+class CommonClientMessage
 {
 		enum cmdTypes
 		{
@@ -30,11 +29,11 @@ class ClientMessage
 		};
 
 	public:
-		ClientMessage();
-		ClientMessage(int clientFd, std::string prefixString, std::string commandString, std::vector<std::string> parameters);
-		ClientMessage(ClientMessage const &refObj);
-		ClientMessage &operator=(ClientMessage const &refObj);
-		~ClientMessage();
+		CommonClientMessage();
+		CommonClientMessage(int clientFd, std::string prefixString, std::string commandString, std::vector<std::string> parameters);
+		CommonClientMessage(CommonClientMessage const &refObj);
+		CommonClientMessage &operator=(CommonClientMessage const &refObj);
+		~CommonClientMessage();
 
 		std::string getPrefixString();
 		void setPrefixString(std::string newPrefixString);
@@ -60,4 +59,4 @@ class ClientMessage
 		std::vector<std::string> parameters;
 };
 
-std::ostream &operator<<(std::ostream &o, ClientMessage const &instance);
+std::ostream &operator<<(std::ostream &o, CommonClientMessage const &instance);

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:20:19 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/20 12:53:20 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/21 14:09:51 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 
 #include "ABaseCommand.hpp"
 #include "ClientManager.hpp"
-#include "ClientMessage.hpp"
-#include "ServerDataManager.hpp"
-#include "ServerResponse.hpp"
 
 namespace Commands
 {
@@ -24,7 +21,7 @@ namespace Commands
 class Nick : protected ABaseCommand
 {
 	public:
-		Nick(Client* client, ClientMessage& clientMessage);
+		Nick(Client* client, CommonClientMessage& clientMessage);
 		~Nick();
 		Nick(Nick const& refObj);
 		Nick& operator=(Nick const& refObj);

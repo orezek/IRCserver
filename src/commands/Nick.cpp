@@ -15,7 +15,7 @@
 namespace Commands
 {
 
-Nick::Nick(Client* client, ClientMessage& clientMessage) : ABaseCommand(client, clientMessage), newNick(""), oldNick("") {}
+Nick::Nick(Client* client, CommonClientMessage& clientMessage) : ABaseCommand(client, clientMessage), newNick(""), oldNick("") {}
 
 Nick::Nick(Nick const& refObj) : ABaseCommand(refObj), newNick(refObj.newNick), oldNick(refObj.oldNick) {}
 
