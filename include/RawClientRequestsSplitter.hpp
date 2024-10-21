@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 12:40:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/16 15:35:39 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/21 09:37:01 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ class RawClientRequestsSplitter
 		~RawClientRequestsSplitter();
 
 		void parseRawClientRequest();
+		void split();
+
 
 	private:
 		Client* client;
