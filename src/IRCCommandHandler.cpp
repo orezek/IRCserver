@@ -1,23 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ProcessData.cpp                                    :+:      :+:    :+:   */
+/*   IRCCommandHandler.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/20 13:11:48 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/21 09:28:37 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ProcessData.hpp"
+#include "IRCCommandHandler.hpp"
 
-ProcessData::ProcessData(Client *client, ClientRequest *clientRequest) : client(client), serverData(ServerDataManager::getInstance()), clientRequest(clientRequest)
+IRCCommandHandler::IRCCommandHandler(Client *client, ClientRequest *clientRequest) : client(client), serverData(ServerDataManager::getInstance()), clientRequest(clientRequest) {}
+
+// Copy constructor
+IRCCommandHandler::IRCCommandHandler(const IRCCommandHandler &refObj) : client(refObj.client), serverData(refObj.serverData), clientRequest(refObj.clientRequest) {}
+
+// Copy assignment operator
+IRCCommandHandler &IRCCommandHandler::operator=(const IRCCommandHandler &refObj)
+{
+	if (this != &refObj)
+	{
+		this->client = refObj.client;
+		this->clientRequest = refObj.clientRequest;
+	}
+	return (*this);
+}
+
+
+void IRCCommandHandler::execute()
 {
 	int clientFd = client->getClientFd();
 	ClientRequestParser parser(*clientRequest);
 	ClientMessage clientMessage = parser.getClientMessage();
-
 	if (!client->userInfo.getUserValid() || !client->userInfo.getNickValid() || !client->userInfo.getPassSent())
 	{
 		if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "CAP")
@@ -118,18 +134,4 @@ ProcessData::ProcessData(Client *client, ClientRequest *clientRequest) : client(
 		}
 		return;
 	}
-}
-
-// Copy constructor
-ProcessData::ProcessData(const ProcessData &refObj) : client(refObj.client), serverData(refObj.serverData), clientRequest(refObj.clientRequest) {}
-
-// Copy assignment operator
-ProcessData &ProcessData::operator=(const ProcessData &refObj)
-{
-	if (this != &refObj)
-	{
-		this->client = refObj.client;
-		this->clientRequest = refObj.clientRequest;
-	}
-	return (*this);
 }

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:12:39 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/16 12:48:48 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/21 09:28:53 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ ClientRequestHandler::ClientRequestHandler(Client* client) : client(client)
 
 	while ((clientRequest = client->clientRequests.getFirst()) != NULL)
 	{
-		ProcessData processData(this->client, clientRequest);
+		IRCCommandHandler commandHandler(this->client, clientRequest);
+		commandHandler.execute();
 		client->clientRequests.deleteFirst();
 	}
 	std::cout << client->serverResponses << std::endl;  // debuging purpose only
