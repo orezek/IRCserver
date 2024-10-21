@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/21 09:44:17 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/21 21:01:55 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,9 @@ void ClientRequestParser::parsePrefixString()
 
 		this->prefixString = tempInputData.substr(prefixStart, prefixEnd);
 		this->tempInputData = tempInputData.substr(prefixEnd + 1, tempInputData.size() - prefixEnd);
+
+		Token token(Token::PREFIX, prefixString);
+		this->clientMessage.addToken(token);
 	}
 }
 
@@ -59,6 +62,9 @@ void ClientRequestParser::parseCommandString()
 	{
 		this->commandString = tempInputData.substr(cmdStart, cmdEnd - cmdStart);
 		this->tempInputData = tempInputData.substr(cmdEnd + 1, tempInputData.size() - cmdEnd);
+
+		Token token(Token::COMMAND, commandString);
+		this->clientMessage.addToken(token);
 	}
 }
 
@@ -73,6 +79,7 @@ void ClientRequestParser::parseParameters()
 	else if (command == "USER")
 	{
 		parseParametersAsUser();
+		assignTokenTypesAsUser();
 	}
 	else if (command == "QUIT" || command == "PING")
 	{
@@ -110,6 +117,8 @@ void ClientRequestParser::parseParametersAsUser()
 		{
 			parameter = tempInputData.substr(0, pos);
 			parameters.push_back(parameter);
+			Token token = Token(Token::NOT_ASSIGNED, parameter);
+			this->clientMessage.addToken(token);
 		}
 		tempInputData = tempInputData.erase(0, pos + 1);
 	}
@@ -135,6 +144,9 @@ void ClientRequestParser::parseParametersAsUser()
 		parameter = tempInputData.substr(start, pos - start);
 		parameters.push_back(parameter);
 
+		Token token(Token::NOT_ASSIGNED, parameter);
+		this->clientMessage.addToken(token);
+
 		tempInputData = tempInputData.erase(0, pos + 1);
 	}
 }
@@ -156,5 +168,29 @@ void ClientRequestParser::parseParametersAsOneText()
 		parameter = tempInputData.substr(cmdStart, cmdEnd - cmdStart);
 		parameters.push_back(parameter);
 		tempInputData = tempInputData.erase(0, cmdEnd + 1);
+	}
+}
+
+void ClientRequestParser::assignTokenTypesAsUser()
+{
+	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+	if (token != NULL)
+	{
+		token->setType(Token::USER_NAME);
+	}
+	token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+	if (token != NULL)
+	{
+		token->setType(Token::HOST_NAME);
+	}
+	token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+	if (token != NULL)
+	{
+		token->setType(Token::SERVER_NAME);
+	}
+	token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+	if (token != NULL)
+	{
+		token->setType(Token::REAL_NAME);
 	}
 }

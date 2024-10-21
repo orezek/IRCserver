@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:09:39 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/21 09:43:05 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/21 20:48:10 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 
 #include "ClientMessage.hpp"
 #include "ClientRequest.hpp"
+#include "Token.hpp"
 
 class ClientRequestParser
 {
@@ -43,4 +44,6 @@ class ClientRequestParser
 		void parseParametersBySpace();
 		void parseParametersAsOneText();
 		void parseParametersAsUser();
+
+		void assignTokenTypesAsUser();
 };

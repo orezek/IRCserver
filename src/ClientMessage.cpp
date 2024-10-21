@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:21 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/09 14:25:59 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/21 20:52:03 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ ClientMessage::ClientMessage(int clientFd, std::string prefixString, std::string
 {
 }
 
-ClientMessage::ClientMessage(ClientMessage const &refObj) : fromClientFd(refObj.fromClientFd), command(refObj.command), prefixString(refObj.prefixString), commandString(refObj.commandString), parameters(refObj.parameters)
+ClientMessage::ClientMessage(ClientMessage const &refObj) : fromClientFd(refObj.fromClientFd), command(refObj.command), prefixString(refObj.prefixString), commandString(refObj.commandString), parameters(refObj.parameters), tokens(refObj.tokens)
 {
 }
 
@@ -31,6 +31,7 @@ ClientMessage &ClientMessage::operator=(ClientMessage const &refObj)
 		this->prefixString = refObj.prefixString;
 		this->commandString = refObj.commandString;
 		this->parameters = refObj.parameters;
+		this->tokens = refObj.tokens;
 	}
 	return (*this);
 }
@@ -102,7 +103,7 @@ std::string ClientMessage::getParameterAtPosition(size_t position)
 	if (position >= parameters.size())
 		return ("");
 
-	return parameters[position];
+	return (parameters[position]);
 }
 
 std::string ClientMessage::getAllParameters() const
@@ -116,6 +117,30 @@ std::string ClientMessage::getAllParameters() const
 			output << ", ";
 	}
 	return (output.str());
+}
+
+void ClientMessage::addToken(Token &newToken)
+{
+	tokens.push_back(newToken);
+}
+
+// Function to find the nth token of a specific type
+Token *ClientMessage::findNthTokenOfType(Token::Type type, int n)
+{
+	int count = 0;  // Track the number of matching tokens found
+
+	for (std::vector<Token>::iterator it = tokens.begin(); it != tokens.end(); ++it)
+	{
+		if (it->getType() == type)
+		{
+			++count;
+			if (count == n)
+			{
+				return &(*it);  // Return a pointer to the nth matching token
+			}
+		}
+	}
+	return (NULL);  // Return NULL if the token isn't found
 }
 
 // --- PRIVATE ---

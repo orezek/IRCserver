@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:18 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/09 14:25:47 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/21 20:52:07 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <vector>
 
 #include "StringUtils.hpp"
+#include "Token.hpp"
 
 class ClientMessage
 {
@@ -52,12 +53,16 @@ class ClientMessage
 
 		std::string getAllParameters() const;
 
+		void addToken(Token &newToken);
+		Token *findNthTokenOfType(Token::Type type, int n);
+
 	private:
 		int fromClientFd;
 		cmdTypes command;
 		std::string prefixString;
 		std::string commandString;
 		std::vector<std::string> parameters;
+		std::vector<Token> tokens;
 };
 
 std::ostream &operator<<(std::ostream &o, ClientMessage const &instance);
