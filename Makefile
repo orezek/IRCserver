@@ -6,7 +6,7 @@
 #    By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/21 10:59:06 by mbartos           #+#    #+#              #
-#    Updated: 2024/10/18 11:49:43 by mbartos          ###   ########.fr        #
+#    Updated: 2024/10/21 13:51:07 by mbartos          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,18 +20,22 @@ NAME =		ircserv
 
 CCP =		c++
 CFLAGS =	-g -std=c++98 \
-			-I./include/ -I./include/commands
+			-I./include/ -I./include/commands/ -I./include/ClientMessages/
 
 SRC_PATH = ./src/
 COMMANDS_PATH = ./src/commands/
+CLIENT_MESSAGE_PATH = ./src/ClientMessages/
 
-SRC =		$(wildcard $(SRC_PATH)*.cpp) $(wildcard $(COMMANDS_PATH)*.cpp)
+SRC =		$(wildcard $(SRC_PATH)*.cpp) $(wildcard $(COMMANDS_PATH)*.cpp) $(wildcard $(CLIENT_MESSAGE_PATH)*.cpp)
 
 # Objects and dependencies
 OBJ_PATH =	obj/
 OBJ_COMMANDS_PATH = $(OBJ_PATH)commands/
+OBJ_CLIENT_MESSAGE_PATH = $(OBJ_PATH)ClientMessages/
 OBJ =		$(patsubst $(SRC_PATH)%.cpp,$(OBJ_PATH)%.o,$(wildcard $(SRC_PATH)*.cpp)) \
-			$(patsubst $(COMMANDS_PATH)%.cpp,$(OBJ_COMMANDS_PATH)%.o,$(wildcard $(COMMANDS_PATH)*.cpp))
+			$(patsubst $(COMMANDS_PATH)%.cpp,$(OBJ_COMMANDS_PATH)%.o,$(wildcard $(COMMANDS_PATH)*.cpp)) \
+			$(patsubst $(CLIENT_MESSAGE_PATH)%.cpp,$(OBJ_CLIENT_MESSAGE_PATH)%.o,$(wildcard $(CLIENT_MESSAGE_PATH)*.cpp))
+
 
 DEPS =		$(OBJ:.o=.d)
 
@@ -47,6 +51,10 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.cpp | $(OBJ_PATH)
 $(OBJ_COMMANDS_PATH)%.o: $(COMMANDS_PATH)%.cpp | $(OBJ_COMMANDS_PATH)
 	$(CCP) $(CFLAGS) -MMD -MP -c $< -o $@
 
+# Rule to compile command .cpp files into obj/ClientMessage/
+$(OBJ_CLIENT_MESSAGE_PATH)%.o: $(CLIENT_MESSAGE_PATH)%.cpp | $(OBJ_CLIENT_MESSAGE_PATH)
+	$(CCP) $(CFLAGS) -MMD -MP -c $< -o $@
+
 -include $(DEPS)
 
 $(OBJ_PATH):
@@ -54,6 +62,9 @@ $(OBJ_PATH):
 
 $(OBJ_COMMANDS_PATH):
 	@mkdir -p $(OBJ_COMMANDS_PATH)
+
+$(OBJ_CLIENT_MESSAGE_PATH):
+	@mkdir -p $(OBJ_CLIENT_MESSAGE_PATH)
 
 $(BIN_PATH):
 	@mkdir -p $(BIN_PATH)
