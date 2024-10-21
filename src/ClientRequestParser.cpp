@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/09 14:24:50 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/21 09:44:17 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,15 @@
 ClientRequestParser::ClientRequestParser(ClientRequest& clientRequest) : clientRequest(clientRequest)
 {
 	this->tempInputData = clientRequest.getClientData();
+}
 
+ClientMessage ClientRequestParser::getClientMessage()
+{
+	return (this->clientMessage);
+}
+
+void ClientRequestParser::parse()
+{
 	// check if data are valid - how? Maybe it is not necessary
 	this->parsePrefixString();
 	this->parseCommandString();
@@ -25,17 +33,11 @@ ClientRequestParser::ClientRequestParser(ClientRequest& clientRequest) : clientR
 	clientMessage.setCommandString(this->commandString);
 	clientMessage.setPrefixString(this->prefixString);
 	clientMessage.setParameters(this->parameters);
-	std::cout << clientMessage << std::endl;
-	// clientMessage.printClientMessage();  // to show how the message was parsed
-}
 
-ClientMessage ClientRequestParser::getClientMessage()
-{
-	return (this->clientMessage);
+	std::cout << clientMessage << std::endl;  // debug only
 }
 
 // ---- PRIVATE ----
-
 void ClientRequestParser::parsePrefixString()
 {
 	// trim leading spaces?
