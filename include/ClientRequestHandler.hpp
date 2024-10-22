@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ClientRequestHandler.hpp                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:12:33 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/21 09:35:20 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/22 21:59:49 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,14 @@
 #include "RawClientRequestsSplitter.hpp"
 #include "ServerDataManager.hpp"
 #include "ServerResponse.hpp"
+#include "ClientRequest.hpp"
 
 class ClientRequestHandler
 {
 	public:
 		ClientRequestHandler(Client* client);
+		ClientRequestHandler(Client* client, ClientRequest& rawClientRequest);
+
 
 	private:
 		Client* client;

@@ -279,8 +279,7 @@ void ConnectionHandler::onRead(std::map<int, Client>::iterator &it)
 			// Server ready to process data and create a response
 			// Create a ClientRequest
 			ClientRequest clientRequest(clientSocketFd, bytesReceived, clientBuffers[clientSocketFd], this->ipClientAddress);
-			client.insertRawClientRequest(clientRequest);
-			ClientRequestHandler clientRequestHandler(&client);
+			ClientRequestHandler clientRequestHandler(&client, clientRequest);
 			clientBuffers.erase(clientSocketFd);
 		}
 	}
