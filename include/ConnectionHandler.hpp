@@ -35,7 +35,6 @@
 // #include "Client.hpp"
 #include "ClientManager.hpp"
 #include "ClientRequestHandler.hpp"
-#include "RawClientRequestsSplitter.hpp"
 #include "ServerDataManager.hpp"
 
 class ConnectionHandler

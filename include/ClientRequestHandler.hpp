@@ -13,7 +13,6 @@
 #pragma once
 
 #include "IRCCommandHandler.hpp"
-#include "RawClientRequestsSplitter.hpp"
 #include "ServerDataManager.hpp"
 #include "ServerResponse.hpp"
 #include "ClientRequest.hpp"
@@ -23,7 +22,8 @@ class ClientRequestHandler
 	public:
 		ClientRequestHandler(Client* client);
 		ClientRequestHandler(Client* client, ClientRequest& rawClientRequest);
-
+		void parseRawClientRequest(ClientRequest *rawClientRequest);
+		void splitRawClientReqeust(Client *client);
 
 	private:
 		Client* client;
