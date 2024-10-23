@@ -5,45 +5,35 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/23 14:18:05 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/23 14:48:36 by orezek           ###   ########.fr       */
+/*   Created: 2024/10/02 15:12:39 by mbartos           #+#    #+#             */
+/*   Updated: 2024/10/23 01:01:35 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ClientRequestHandler.hpp"
 
-ClientRequestHandler::ClientRequestHandler(Client *client) : client(client)
+ClientRequestHandler::ClientRequestHandler(Client *client, ClientRequest& rawClientRequest) : client(client)
 {
 	if (!client)
 	{
 		throw std::invalid_argument("Client pointer cannot be null line 19 ClientRequestHandler");
 	}
-}
 
-void ClientRequestHandler::handleClientRequest(ClientRequest &rawClientRequest)
-{
-	this->insertRawClientRequest(rawClientRequest);
-	this->splitRawClientRequest(this->client);
-	this->processClientRequests();
-	this->logDebugInfo();
-}
-
-void ClientRequestHandler::insertRawClientRequest(ClientRequest &rawClientRequest)
-{
-	this->client->insertRawClientRequest(rawClientRequest);
-}
-
-void ClientRequestHandler::splitRawClientRequest(Client *client)
-{
-	ClientRequest *rawClientRequest;
-	while ((rawClientRequest = client->rawClientRequests.getFirst()) != NULL)
+	try
 	{
-		parseRawClientRequest(rawClientRequest);
-		std::cout << rawClientRequest->getClientData() << std::endl;
-		client->rawClientRequests.deleteFirst();
-		std::cout << "Splitted Requests:" << std::endl
-				  << client->clientRequests << std::endl;  // debugging purpose only
+		client->insertRawClientRequest(rawClientRequest);
+		splitRawClientRequest(client);
+		processClientRequests();
+		// Conditional compilation - a way to globally control debugging :)
+		#ifdef DEBUG
+		logDebugInfo();
+		#endif
 	}
+	catch (const std::exception& e)
+	{
+		throw std::runtime_error("Failed to process client request: " + std::string(e.what()));
+	}
+	std::cout << client->serverResponses << std::endl;  // debuging purpose only
 }
 
 void ClientRequestHandler::processClientRequests()
@@ -61,7 +51,7 @@ void ClientRequestHandler::parseRawClientRequest(ClientRequest *rawClientRequest
 {
 	if (!rawClientRequest)
 	{
-		throw std::invalid_argument("Raw client request pointer cannot be null line 64 ClientRequestHandler");
+		throw std::invalid_argument("Raw client request pointer cannot be null line 54 ClientRequestHandler");
 	}
 	const std::string delimiters = "\n";
 	size_t pos = 0;
@@ -83,11 +73,21 @@ void ClientRequestHandler::parseRawClientRequest(ClientRequest *rawClientRequest
 	}
 }
 
-void ClientRequestHandler::logDebugInfo() const
+void ClientRequestHandler::splitRawClientRequest(Client *client)
 {
-	#ifdef DEBUG
-	std::cout << "DEBUG: Client Requests: " << client->clientRequests << std::endl;
-	std::cout << "DEBUG Server Responses: " << client->serverResponses << std::endl;
-	#endif
+	ClientRequest *rawClientRequest;
+	while ((rawClientRequest = client->rawClientRequests.getFirst()) != NULL)
+	{
+		parseRawClientRequest(rawClientRequest);
+		std::cout << rawClientRequest->getClientData() << std::endl;
+		client->rawClientRequests.deleteFirst();
+		std::cout << "Splitted Requests:" << std::endl
+				  << client->clientRequests << std::endl;  // debugging purpose only
+	}
 }
 
+void ClientRequestHandler::logDebugInfo() const
+{
+	std::cout << "DEBUG: Client Requests: " << client->clientRequests << std::endl;
+	std::cout << "DEBUG Server Responses: " << client->serverResponses << std::endl;
+}
