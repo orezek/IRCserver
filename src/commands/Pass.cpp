@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 13:05:16 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/20 13:13:36 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/24 21:59:03 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,17 @@ void Pass::execute()
 
 	client->userInfo.setPassSent(true);
 
-	std::string passedPassword = this->clientMessage.getFirstParameter();
-	std::string serverPassword = this->serverData.getServerPassword();
+	Token* tokenPassedPassword = this->clientMessage.findNthTokenOfType(Token::ROOM_PASSWORD, 1);
 
-	if (passedPassword.empty())
+	if (tokenPassedPassword == NULL)
 	{
 		this->setServerResponse461();
 		return;
 	}
+
+	std::string passedPassword = tokenPassedPassword->getText();
+	std::string serverPassword = this->serverData.getServerPassword();
+
 	if (passedPassword == serverPassword)
 	{
 		client->userInfo.setPassValid(true);
