@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:09:39 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/21 20:48:10 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/24 21:47:05 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,5 +45,9 @@ class ClientRequestParser
 		void parseParametersAsOneText();
 		void parseParametersAsUser();
 
+		void assignTokenTypesAsNick();
+		void assignTokenTypesAsPass();
+		void assignTokenTypesAsPing();
+		void assignTokenTypesAsQuit();
 		void assignTokenTypesAsUser();
 };

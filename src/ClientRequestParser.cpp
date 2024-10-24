@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/21 21:01:55 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/24 21:56:40 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ void ClientRequestParser::parseCommandString()
 		this->commandString = tempInputData.substr(cmdStart, cmdEnd - cmdStart);
 		this->tempInputData = tempInputData.substr(cmdEnd + 1, tempInputData.size() - cmdEnd);
 
+		this->commandString = StringUtils::toUpperCase(this->commandString);
+
 		Token token(Token::COMMAND, commandString);
 		this->clientMessage.addToken(token);
 	}
@@ -70,20 +72,30 @@ void ClientRequestParser::parseCommandString()
 
 void ClientRequestParser::parseParameters()
 {
-	std::string command = StringUtils::toUpperCase(commandString);
-
-	if (command == "NICK" || command == "PASS")
+	if (commandString == "NICK")
 	{
 		parseParametersBySpace();
+		assignTokenTypesAsNick();
 	}
-	else if (command == "USER")
+	else if (commandString == "PASS")
+	{
+		parseParametersBySpace();
+		assignTokenTypesAsPass();
+	}
+	else if (commandString == "USER")
 	{
 		parseParametersAsUser();
 		assignTokenTypesAsUser();
 	}
-	else if (command == "QUIT" || command == "PING")
+	else if (commandString == "QUIT")
 	{
 		parseParametersAsOneText();
+		assignTokenTypesAsQuit();
+	}
+	else if (commandString == "PING")
+	{
+		parseParametersAsOneText();
+		assignTokenTypesAsPing();
 	}
 	// add functionality for other commands
 }
@@ -168,6 +180,9 @@ void ClientRequestParser::parseParametersAsOneText()
 		parameter = tempInputData.substr(cmdStart, cmdEnd - cmdStart);
 		parameters.push_back(parameter);
 		tempInputData = tempInputData.erase(0, cmdEnd + 1);
+
+		Token token(Token::NOT_ASSIGNED, parameter);
+		this->clientMessage.addToken(token);
 	}
 }
 
@@ -192,5 +207,41 @@ void ClientRequestParser::assignTokenTypesAsUser()
 	if (token != NULL)
 	{
 		token->setType(Token::REAL_NAME);
+	}
+}
+
+void ClientRequestParser::assignTokenTypesAsNick()
+{
+	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+	if (token != NULL)
+	{
+		token->setType(Token::NICK_NAME);
+	}
+}
+
+void ClientRequestParser::assignTokenTypesAsPass()
+{
+	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+	if (token != NULL)
+	{
+		token->setType(Token::SERVER_PASSWORD);
+	}
+}
+
+void ClientRequestParser::assignTokenTypesAsQuit()
+{
+	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+	if (token != NULL)
+	{
+		token->setType(Token::MESSAGE);
+	}
+}
+
+void ClientRequestParser::assignTokenTypesAsPing()
+{
+	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+	if (token != NULL)
+	{
+		token->setType(Token::SERVER_NAME);
 	}
 }
