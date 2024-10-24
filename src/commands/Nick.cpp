@@ -33,7 +33,7 @@ Nick::~Nick() {}
 
 void Nick::execute()
 {
-	oldNick = client->userInfo.getNickname();
+	oldNick = client->userData.getNickname();
 	if (oldNick == "")
 		oldNick = "*";
 
@@ -58,10 +58,10 @@ void Nick::execute()
 		return;
 	}
 
-	client->userInfo.setNickname(newNick);
-	client->userInfo.setNickValid(true);
+	client->userData.setNickname(newNick);
+	client->userData.setNickValid(true);
 
-	setServerResponseValid(&(client->userInfo));
+	setServerResponseValid(&(client->userData));
 }
 
 // ---- PRIVATE ----- //
@@ -111,7 +111,7 @@ bool Nick::isAlreadyUsedNick(std::string& nick)
 
 	for (std::map<int, Client>::iterator it = clients.clients.begin(); it != clients.clients.end(); ++it)
 	{
-		std::string oldNick = it->second.userInfo.getNickname();
+		std::string oldNick = it->second.userData.getNickname();
 		if (nick == oldNick)
 		{
 			return (true);
@@ -167,7 +167,7 @@ void Nick::setServerResponse433()
 	addServerResponseToClient();
 }
 
-void Nick::setServerResponseValid(UserInfo* user)
+void Nick::setServerResponseValid(UserData* user)
 {
 	// TODO - also send to other user, that someone has changed the nickname? in rooms?
 	// server prefix??? y/n?
