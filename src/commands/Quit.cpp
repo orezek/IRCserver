@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 19:48:17 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/20 13:13:21 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/24 23:00:14 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,18 +38,28 @@ void Quit::setServerResponseValid()
 {
 	client->markedForDeletion = true;
 
+	Token* tokenQuitMessage = clientMessage.findNthTokenOfType(Token::MESSAGE, 1);
+
 	std::string response = "ERROR :Closing link: (";
 	response.append(client->userInfo.getUsername());
 	response.append("@");
 	response.append(client->userInfo.getHostname());
-	response.append(") [Quit: ");
-	response.append(clientMessage.getFirstParameter());  // put message there
-	response.append("]");
+	response.append(") ");
+	if (tokenQuitMessage == NULL)
+	{
+		response.append("[Client Exited]");
+	}
+	else
+	{
+		response.append("[Quit: ");
+		response.append(tokenQuitMessage->getText());
+		response.append("]");
+	}
 	response.append("\r\n");
 
 	serverResponse.setAction(ServerResponse::QUIT);
 	serverResponse.setResponse(response);
-	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
+	serverResponse.setClientsToSend(client->getClientFd());
 
 	addServerResponseToClient();
 }

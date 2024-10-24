@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 13:05:16 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/20 12:34:06 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/24 22:59:55 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,12 @@ Ping::~Ping() {}
 
 void Ping::execute()
 {
-	if (clientMessage.getFirstParameter() == serverData.getServerName())
+	Token* tokenServerName = clientMessage.findNthTokenOfType(Token::SERVER_NAME, 1);
+	if (tokenServerName == NULL)
+	{
+		this->setServerResponse461();
+	}
+	else if (tokenServerName->getText() == serverData.getServerName())
 	{
 		this->setServerResponseValid();
 	}
@@ -42,7 +47,7 @@ void Ping::setServerResponseValid()
 
 	serverResponse.setAction(ServerResponse::SEND);
 	serverResponse.setResponse(response);
-	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
+	serverResponse.setClientsToSend(client->getClientFd());
 
 	addServerResponseToClient();
 }

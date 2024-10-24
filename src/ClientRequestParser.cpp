@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/21 09:44:17 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/24 23:02:36 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,20 +25,15 @@ ClientMessage ClientRequestParser::getClientMessage()
 void ClientRequestParser::parse()
 {
 	// check if data are valid - how? Maybe it is not necessary
-	this->parsePrefixString();
-	this->parseCommandString();
+	this->parsePrefixToken();
+	this->parseCommandToken();
 	this->parseParameters();
-
-	clientMessage.setFromUserFd(this->clientRequest.getClientFd());
-	clientMessage.setCommandString(this->commandString);
-	clientMessage.setPrefixString(this->prefixString);
-	clientMessage.setParameters(this->parameters);
 
 	std::cout << clientMessage << std::endl;  // debug only
 }
 
 // ---- PRIVATE ----
-void ClientRequestParser::parsePrefixString()
+void ClientRequestParser::parsePrefixToken()
 {
 	// trim leading spaces?
 	if (tempInputData[0] == ':')
@@ -46,37 +41,64 @@ void ClientRequestParser::parsePrefixString()
 		int prefixStart = 0;
 		int prefixEnd = tempInputData.find_first_of(" \n");
 
-		this->prefixString = tempInputData.substr(prefixStart, prefixEnd);
+		std::string prefixString = tempInputData.substr(prefixStart, prefixEnd);
 		this->tempInputData = tempInputData.substr(prefixEnd + 1, tempInputData.size() - prefixEnd);
+
+		Token token(Token::PREFIX, prefixString);
+		this->clientMessage.addToken(token);
 	}
 }
 
-void ClientRequestParser::parseCommandString()
+void ClientRequestParser::parseCommandToken()
 {
 	int cmdStart = tempInputData.find_first_not_of(" \n");
 	int cmdEnd = tempInputData.find_first_of(" \n", cmdStart);
 	if (cmdStart < cmdEnd)
 	{
-		this->commandString = tempInputData.substr(cmdStart, cmdEnd - cmdStart);
+		std::string commandString = tempInputData.substr(cmdStart, cmdEnd - cmdStart);
 		this->tempInputData = tempInputData.substr(cmdEnd + 1, tempInputData.size() - cmdEnd);
+
+		commandString = StringUtils::toUpperCase(commandString);
+
+		Token token(Token::COMMAND, commandString);
+		this->clientMessage.addToken(token);
 	}
 }
 
 void ClientRequestParser::parseParameters()
 {
-	std::string command = StringUtils::toUpperCase(commandString);
+	Token* tokenCommand = clientMessage.findNthTokenOfType(Token::COMMAND, 1);
+	if (tokenCommand == NULL)
+	{
+		return;
+	}
 
-	if (command == "NICK" || command == "PASS")
+	std::string commandString = tokenCommand->getText();
+
+	if (commandString == "NICK")
 	{
 		parseParametersBySpace();
+		assignTokenTypesAsNick();
 	}
-	else if (command == "USER")
+	else if (commandString == "PASS")
+	{
+		parseParametersBySpace();
+		assignTokenTypesAsPass();
+	}
+	else if (commandString == "USER")
 	{
 		parseParametersAsUser();
+		assignTokenTypesAsUser();
 	}
-	else if (command == "QUIT" || command == "PING")
+	else if (commandString == "QUIT")
 	{
 		parseParametersAsOneText();
+		assignTokenTypesAsQuit();
+	}
+	else if (commandString == "PING")
+	{
+		parseParametersAsOneText();
+		assignTokenTypesAsPing();
 	}
 	// add functionality for other commands
 }
@@ -92,7 +114,9 @@ void ClientRequestParser::parseParametersBySpace()
 		if (pos > 0)
 		{
 			parameter = tempInputData.substr(0, pos);
-			parameters.push_back(parameter);
+
+			Token token = Token(Token::NOT_ASSIGNED, parameter);
+			this->clientMessage.addToken(token);
 		}
 		tempInputData = tempInputData.erase(0, pos + 1);
 	}
@@ -104,12 +128,14 @@ void ClientRequestParser::parseParametersAsUser()
 	int pos = 0;
 	std::string parameter;
 
-	while ((pos = tempInputData.find_first_of(delimiters)) != std::string::npos && parameters.size() < 3)
+	while ((pos = tempInputData.find_first_of(delimiters)) != std::string::npos && clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 3) == NULL)
 	{
 		if (pos > 0)
 		{
 			parameter = tempInputData.substr(0, pos);
-			parameters.push_back(parameter);
+
+			Token token = Token(Token::NOT_ASSIGNED, parameter);
+			this->clientMessage.addToken(token);
 		}
 		tempInputData = tempInputData.erase(0, pos + 1);
 	}
@@ -133,7 +159,9 @@ void ClientRequestParser::parseParametersAsUser()
 		}
 
 		parameter = tempInputData.substr(start, pos - start);
-		parameters.push_back(parameter);
+
+		Token token(Token::NOT_ASSIGNED, parameter);
+		this->clientMessage.addToken(token);
 
 		tempInputData = tempInputData.erase(0, pos + 1);
 	}
@@ -154,7 +182,69 @@ void ClientRequestParser::parseParametersAsOneText()
 	if (cmdEnd != std::string::npos && cmdStart < cmdEnd)
 	{
 		parameter = tempInputData.substr(cmdStart, cmdEnd - cmdStart);
-		parameters.push_back(parameter);
 		tempInputData = tempInputData.erase(0, cmdEnd + 1);
+
+		Token token(Token::NOT_ASSIGNED, parameter);
+		this->clientMessage.addToken(token);
+	}
+}
+
+void ClientRequestParser::assignTokenTypesAsUser()
+{
+	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+	if (token != NULL)
+	{
+		token->setType(Token::USER_NAME);
+	}
+	token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+	if (token != NULL)
+	{
+		token->setType(Token::HOST_NAME);
+	}
+	token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+	if (token != NULL)
+	{
+		token->setType(Token::SERVER_NAME);
+	}
+	token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+	if (token != NULL)
+	{
+		token->setType(Token::REAL_NAME);
+	}
+}
+
+void ClientRequestParser::assignTokenTypesAsNick()
+{
+	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+	if (token != NULL)
+	{
+		token->setType(Token::NICK_NAME);
+	}
+}
+
+void ClientRequestParser::assignTokenTypesAsPass()
+{
+	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+	if (token != NULL)
+	{
+		token->setType(Token::SERVER_PASSWORD);
+	}
+}
+
+void ClientRequestParser::assignTokenTypesAsQuit()
+{
+	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+	if (token != NULL)
+	{
+		token->setType(Token::MESSAGE);
+	}
+}
+
+void ClientRequestParser::assignTokenTypesAsPing()
+{
+	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+	if (token != NULL)
+	{
+		token->setType(Token::SERVER_NAME);
 	}
 }

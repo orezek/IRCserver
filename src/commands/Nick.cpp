@@ -37,13 +37,16 @@ void Nick::execute()
 	if (oldNick == "")
 		oldNick = "*";
 
-	newNick = clientMessage.getFirstParameter();
+	Token* tokenNewNick = clientMessage.findNthTokenOfType(Token::NICK_NAME, 1);
 
-	if (newNick.empty())
+	if (tokenNewNick == NULL)
 	{
 		setServerResponse431();
 		return;
 	}
+
+	newNick = tokenNewNick->getText();
+
 	if (!isValidNick(newNick))
 	{
 		setServerResponse432();
@@ -65,7 +68,10 @@ void Nick::execute()
 
 std::string Nick::getNewNickname()
 {
-	return (clientMessage.getFirstParameter());
+	Token* tokenNickName = clientMessage.findNthTokenOfType(Token::NICK_NAME, 1);
+	if (tokenNickName == NULL)
+		return ("");
+	return (tokenNickName->getText());
 }
 
 bool Nick::isValidNick(std::string& nick)
@@ -122,7 +128,7 @@ void Nick::setServerResponse431()
 
 	serverResponse.setAction(ServerResponse::SEND);
 	serverResponse.setResponse(response);
-	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
+	serverResponse.setClientsToSend(client->getClientFd());
 
 	addServerResponseToClient();
 }
@@ -139,7 +145,7 @@ void Nick::setServerResponse432()
 
 	serverResponse.setAction(ServerResponse::SEND);
 	serverResponse.setResponse(response);
-	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
+	serverResponse.setClientsToSend(client->getClientFd());
 
 	addServerResponseToClient();
 }
@@ -156,7 +162,7 @@ void Nick::setServerResponse433()
 
 	serverResponse.setAction(ServerResponse::SEND);
 	serverResponse.setResponse(response);
-	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
+	serverResponse.setClientsToSend(client->getClientFd());
 
 	addServerResponseToClient();
 }
@@ -179,7 +185,7 @@ void Nick::setServerResponseValid(UserInfo* user)
 	{
 		serverResponse.setResponse(response);
 		serverResponse.setAction(ServerResponse::SEND);
-		serverResponse.setClientsToSend(clientMessage.getFromUserFd());
+		serverResponse.setClientsToSend(client->getClientFd());
 		addServerResponseToClient();
 	}
 }

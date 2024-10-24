@@ -18,7 +18,6 @@
 #include "ClientRequestQueue.hpp"
 #include "RoomManager.hpp"
 #include "ServerResponseQueue.hpp"
-#include "Users.hpp"
 class ServerDataManager
 {
 	public:

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 14:13:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/19 12:01:08 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/24 22:50:43 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,29 +21,29 @@ User::~User() {}
 
 void User::execute()
 {
+	Token* usernameToken = clientMessage.findNthTokenOfType(Token::USER_NAME, 1);
+	Token* hostnameToken = clientMessage.findNthTokenOfType(Token::HOST_NAME, 1);
+	Token* servernameToken = clientMessage.findNthTokenOfType(Token::SERVER_NAME, 1);
+	Token* realnameToken = clientMessage.findNthTokenOfType(Token::REAL_NAME, 1);
+
+	if (!usernameToken || !hostnameToken || !servernameToken || !realnameToken)
+	{
+		this->setServerResponse461();
+		return;
+	}
+
 	if (client->userInfo.isValidServerUser() == true)
 	{
 		this->setServerResponse462();  // user already validated
 		return;
 	}
 
-	std::string username = clientMessage.getParameterAtPosition(0);
-	std::string hostname = clientMessage.getParameterAtPosition(1);
-	std::string servername = clientMessage.getParameterAtPosition(2);
-	std::string realname = clientMessage.getParameterAtPosition(3);
-
-	if (realname.empty() || servername.empty() || hostname.empty() || username.empty())
-	{
-		this->setServerResponse461();
-		return;
-	}
-
 	// check parameters, if they are valid
 
-	client->userInfo.setUsername(username);
-	client->userInfo.setHostname(hostname);
-	client->userInfo.setServername(servername);
-	client->userInfo.setRealname(realname);
+	client->userInfo.setUsername(usernameToken->getText());
+	client->userInfo.setHostname(hostnameToken->getText());
+	client->userInfo.setServername(servernameToken->getText());
+	client->userInfo.setRealname(realnameToken->getText());
 	client->userInfo.setUserValid(true);
 }
 
