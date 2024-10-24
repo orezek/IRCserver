@@ -37,13 +37,16 @@ void Nick::execute()
 	if (oldNick == "")
 		oldNick = "*";
 
-	newNick = clientMessage.getFirstParameter();
+	Token* tokenNewNick = clientMessage.findNthTokenOfType(Token::NICK_NAME, 1);
 
-	if (newNick.empty())
+	if (tokenNewNick == NULL)
 	{
 		setServerResponse431();
 		return;
 	}
+
+	newNick = tokenNewNick->getText();
+
 	if (!isValidNick(newNick))
 	{
 		setServerResponse432();
