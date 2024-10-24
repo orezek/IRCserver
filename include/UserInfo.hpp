@@ -22,9 +22,7 @@ class UserInfo
 		~UserInfo();
 		UserInfo(const UserInfo &obj);
 		UserInfo &operator=(const UserInfo &obj);
-		bool operator==(const UserInfo &other) const;
 
-		int getUserFd();
 		std::string getNickname();
 		std::string getUsername();
 		std::string getHostname();
@@ -46,7 +44,6 @@ class UserInfo
 		void setUserValid(bool userValue);
 
 	private:
-		int clientFd;
 		std::string nickname;
 		std::string username;
 		std::string hostname;

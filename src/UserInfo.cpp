@@ -6,19 +6,19 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 23:12:55 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/18 12:03:29 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/24 23:42:09 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "UserInfo.hpp"
 
-UserInfo::UserInfo() : clientFd(-1), nickname(""), username(""), hostname(""), servername(""), realname(""), fullUsername(""), passSent(false), passValid(false), nickValid(false), userValid(false) {};
+UserInfo::UserInfo() : nickname(""), username(""), hostname(""), servername(""), realname(""), fullUsername(""), passSent(false), passValid(false), nickValid(false), userValid(false) {};
 
-UserInfo::UserInfo(int clientFd) : clientFd(clientFd), nickname(""), username(""), hostname(""), servername(""), realname(""), fullUsername(""), passSent(false), passValid(false), nickValid(false), userValid(false) {};
+UserInfo::UserInfo(int clientFd) : nickname(""), username(""), hostname(""), servername(""), realname(""), fullUsername(""), passSent(false), passValid(false), nickValid(false), userValid(false) {};
 
 UserInfo::~UserInfo() {};
 
-UserInfo::UserInfo(const UserInfo &obj) : clientFd(obj.clientFd), nickname(obj.nickname), username(obj.username), hostname(obj.hostname), servername(obj.servername), realname(obj.realname), fullUsername(obj.fullUsername), passSent(obj.passSent), passValid(obj.passValid), nickValid(obj.nickValid), userValid(obj.userValid)
+UserInfo::UserInfo(const UserInfo &obj) : nickname(obj.nickname), username(obj.username), hostname(obj.hostname), servername(obj.servername), realname(obj.realname), fullUsername(obj.fullUsername), passSent(obj.passSent), passValid(obj.passValid), nickValid(obj.nickValid), userValid(obj.userValid)
 {
 	this->operatorRoomIds = obj.operatorRoomIds;
 	this->roomIds = obj.roomIds;
@@ -28,7 +28,6 @@ UserInfo &UserInfo::operator=(const UserInfo &obj)
 {
 	if (this != &obj)
 	{
-		this->clientFd = obj.clientFd;
 		this->nickname = obj.nickname;
 		this->username = obj.username;
 		this->hostname = obj.hostname;
@@ -44,17 +43,6 @@ UserInfo &UserInfo::operator=(const UserInfo &obj)
 	}
 	return (*this);
 };
-
-bool UserInfo::operator==(const UserInfo &other) const
-{
-	// The objects are same if the FDs match
-	return (this->clientFd == other.clientFd);
-}
-
-int UserInfo::getUserFd()
-{
-	return (this->clientFd);
-}
 
 std::string UserInfo::getNickname()
 {
