@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 10:16:53 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/18 12:08:09 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 00:04:51 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 #include "ClientRequestQueue.hpp"
 #include "ServerResponseQueue.hpp"
-#include "UserInfo.hpp"
+#include "UserData.hpp"
 
 class Client
 {
@@ -30,7 +30,7 @@ class Client
 		ClientRequestQueue rawClientRequests;
 		ClientRequestQueue clientRequests;
 		ServerResponseQueue serverResponses;
-		UserInfo userInfo;
+		UserData userData;
 
 	private:
 		const int clientFd;

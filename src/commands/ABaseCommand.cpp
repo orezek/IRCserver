@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 09:51:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/24 22:45:53 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 00:04:51 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void ABaseCommand::setServerResponse461()
 	}
 	std::string command = tokenCommand->getText();
 	
-	std::string nickname = client->userInfo.getNickname();
+	std::string nickname = client->userData.getNickname();
 
 	if (nickname.empty())
 	{
@@ -72,7 +72,7 @@ void ABaseCommand::setServerResponse461()
 
 void ABaseCommand::setServerResponse462()
 {
-	std::string nickname = client->userInfo.getNickname();
+	std::string nickname = client->userData.getNickname();
 	if (nickname.empty())
 	{
 		nickname = "*";

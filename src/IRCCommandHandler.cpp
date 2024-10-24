@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/24 22:43:08 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 00:05:04 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,14 @@ void IRCCommandHandler::execute()
 
 	ClientMessage clientMessage = parser.getClientMessage();
 
-	Token* tokenCommand = clientMessage.findNthTokenOfType(Token::COMMAND, 1);
+	Token *tokenCommand = clientMessage.findNthTokenOfType(Token::COMMAND, 1);
 	if (tokenCommand == NULL)
 	{
 		return;
 	}
 	std::string command = tokenCommand->getText();
-	
-	if (!client->userInfo.getUserValid() || !client->userInfo.getNickValid() || !client->userInfo.getPassSent())
+
+	if (!client->userData.getUserValid() || !client->userData.getNickValid() || !client->userData.getPassSent())
 	{
 		if (command == "CAP")
 		{
@@ -86,18 +86,18 @@ void IRCCommandHandler::execute()
 		}
 
 		// Was Client validated in this loop?
-		UserInfo *userInfo = &(client->userInfo);
-		if (userInfo->getUserValid() && userInfo->getNickValid() && userInfo->getPassSent())
+		UserData *userData = &(client->userData);
+		if (userData->getUserValid() && userData->getNickValid() && userData->getPassSent())
 		{
 			ServerResponse serverResponse;
 			serverResponse.setAction(ServerResponse::SEND);
 			serverResponse.setClientsToSend(clientFd);
-			if (userInfo->isValidServerUser())
+			if (userData->isValidServerUser())
 			{
-				std::string response = ":" + serverData.getServerName() + " 001 " + userInfo->getNickname() + " :Welcome to the IRC network, " + userInfo->getNickname() + "!" + userInfo->getUsername() + "@" + userInfo->getHostname() + "\n";
-				response.append(":" + serverData.getServerName() + " 002 " + userInfo->getNickname() + " :Your host is " + serverData.getServerName() + ", running version XXXX\n");
-				response.append(":" + serverData.getServerName() + " 003 " + userInfo->getNickname() + " :This server was created XXXXXXXXXXXXXX" + "\n");
-				response.append(":" + serverData.getServerName() + " 004 " + userInfo->getNickname() + " " + serverData.getServerName() + " \n");
+				std::string response = ":" + serverData.getServerName() + " 001 " + userData->getNickname() + " :Welcome to the IRC network, " + userData->getNickname() + "!" + userData->getUsername() + "@" + userData->getHostname() + "\n";
+				response.append(":" + serverData.getServerName() + " 002 " + userData->getNickname() + " :Your host is " + serverData.getServerName() + ", running version XXXX\n");
+				response.append(":" + serverData.getServerName() + " 003 " + userData->getNickname() + " :This server was created XXXXXXXXXXXXXX" + "\n");
+				response.append(":" + serverData.getServerName() + " 004 " + userData->getNickname() + " " + serverData.getServerName() + " \n");
 				serverResponse.setResponse(response);
 			}
 			else

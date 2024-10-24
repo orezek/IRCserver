@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 14:13:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/24 22:50:43 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 00:04:51 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void User::execute()
 		return;
 	}
 
-	if (client->userInfo.isValidServerUser() == true)
+	if (client->userData.isValidServerUser() == true)
 	{
 		this->setServerResponse462();  // user already validated
 		return;
@@ -40,11 +40,11 @@ void User::execute()
 
 	// check parameters, if they are valid
 
-	client->userInfo.setUsername(usernameToken->getText());
-	client->userInfo.setHostname(hostnameToken->getText());
-	client->userInfo.setServername(servernameToken->getText());
-	client->userInfo.setRealname(realnameToken->getText());
-	client->userInfo.setUserValid(true);
+	client->userData.setUsername(usernameToken->getText());
+	client->userData.setHostname(hostnameToken->getText());
+	client->userData.setServername(servernameToken->getText());
+	client->userData.setRealname(realnameToken->getText());
+	client->userData.setUserValid(true);
 }
 
 User::User(User const& refObj) : ABaseCommand(refObj) {}

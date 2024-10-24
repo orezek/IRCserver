@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   UserInfo.hpp                                           :+:      :+:    :+:   */
+/*   UserData.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
-/*                                                +w#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/22 19:49:48 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/25 15:29:05 by mbartos          ###   ########.fr       */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/25 00:03:56 by mbartos           #+#    #+#             */
+/*   Updated: 2024/10/25 00:04:02 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 #include <string>
 #include <vector>
 
-class UserInfo
+class UserData
 {
 	public:
-		UserInfo();
-		UserInfo(int clientFd);
-		~UserInfo();
-		UserInfo(const UserInfo &obj);
-		UserInfo &operator=(const UserInfo &obj);
+		UserData();
+		UserData(int clientFd);
+		~UserData();
+		UserData(const UserData &obj);
+		UserData &operator=(const UserData &obj);
 
 		std::string getNickname();
 		std::string getUsername();

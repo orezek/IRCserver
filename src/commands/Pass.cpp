@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 13:05:16 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/24 22:50:05 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 00:04:51 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ Pass::~Pass() {}
 
 void Pass::execute()
 {
-	client->userInfo.setPassSent(true);
+	client->userData.setPassSent(true);
 
 	Token* tokenPassedPassword = this->clientMessage.findNthTokenOfType(Token::SERVER_PASSWORD, 1);
 
@@ -39,7 +39,7 @@ void Pass::execute()
 		return;
 	}
 
-	if (client->userInfo.isValidServerUser() == true)
+	if (client->userData.isValidServerUser() == true)
 	{
 		this->setServerResponse462();  // user already validated
 		return;
@@ -50,7 +50,7 @@ void Pass::execute()
 
 	if (passedPassword == serverPassword)
 	{
-		client->userInfo.setPassValid(true);
+		client->userData.setPassValid(true);
 		this->setServerResponseValid();  // no need to have it there
 	}
 	// else if
