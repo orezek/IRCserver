@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/21 09:42:19 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/24 21:54:20 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,20 +28,24 @@ IRCCommandHandler &IRCCommandHandler::operator=(const IRCCommandHandler &refObj)
 	return (*this);
 }
 
-
 void IRCCommandHandler::execute()
 {
 	int clientFd = client->getClientFd();
 
 	ClientRequestParser parser(*clientRequest);
 	parser.parse();
-	
+
 	ClientMessage clientMessage = parser.getClientMessage();
 	if (!client->userInfo.getUserValid() || !client->userInfo.getNickValid() || !client->userInfo.getPassSent())
 	{
 		if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "CAP")
 		{
 			// DO NOTHING
+		}
+		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "PING")
+		{
+			Commands::Ping pingCommand(client, clientMessage);
+			pingCommand.execute();
 		}
 		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "PASS")
 		{
