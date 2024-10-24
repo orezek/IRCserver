@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/24 21:56:40 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/24 22:36:55 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,20 +25,17 @@ ClientMessage ClientRequestParser::getClientMessage()
 void ClientRequestParser::parse()
 {
 	// check if data are valid - how? Maybe it is not necessary
-	this->parsePrefixString();
-	this->parseCommandString();
+	this->parsePrefixToken();
+	this->parseCommandToken();
 	this->parseParameters();
 
 	clientMessage.setFromUserFd(this->clientRequest.getClientFd());
-	clientMessage.setCommandString(this->commandString);
-	clientMessage.setPrefixString(this->prefixString);
-	clientMessage.setParameters(this->parameters);
 
 	std::cout << clientMessage << std::endl;  // debug only
 }
 
 // ---- PRIVATE ----
-void ClientRequestParser::parsePrefixString()
+void ClientRequestParser::parsePrefixToken()
 {
 	// trim leading spaces?
 	if (tempInputData[0] == ':')
@@ -46,7 +43,7 @@ void ClientRequestParser::parsePrefixString()
 		int prefixStart = 0;
 		int prefixEnd = tempInputData.find_first_of(" \n");
 
-		this->prefixString = tempInputData.substr(prefixStart, prefixEnd);
+		std::string prefixString = tempInputData.substr(prefixStart, prefixEnd);
 		this->tempInputData = tempInputData.substr(prefixEnd + 1, tempInputData.size() - prefixEnd);
 
 		Token token(Token::PREFIX, prefixString);
@@ -54,16 +51,16 @@ void ClientRequestParser::parsePrefixString()
 	}
 }
 
-void ClientRequestParser::parseCommandString()
+void ClientRequestParser::parseCommandToken()
 {
 	int cmdStart = tempInputData.find_first_not_of(" \n");
 	int cmdEnd = tempInputData.find_first_of(" \n", cmdStart);
 	if (cmdStart < cmdEnd)
 	{
-		this->commandString = tempInputData.substr(cmdStart, cmdEnd - cmdStart);
+		std::string commandString = tempInputData.substr(cmdStart, cmdEnd - cmdStart);
 		this->tempInputData = tempInputData.substr(cmdEnd + 1, tempInputData.size() - cmdEnd);
 
-		this->commandString = StringUtils::toUpperCase(this->commandString);
+		commandString = StringUtils::toUpperCase(commandString);
 
 		Token token(Token::COMMAND, commandString);
 		this->clientMessage.addToken(token);
@@ -72,6 +69,14 @@ void ClientRequestParser::parseCommandString()
 
 void ClientRequestParser::parseParameters()
 {
+	Token* tokenCommand = clientMessage.findNthTokenOfType(Token::COMMAND, 1);
+	if (tokenCommand == NULL)
+	{
+		return;
+	}
+	
+	std::string commandString = tokenCommand->getText();
+
 	if (commandString == "NICK")
 	{
 		parseParametersBySpace();
@@ -111,7 +116,9 @@ void ClientRequestParser::parseParametersBySpace()
 		if (pos > 0)
 		{
 			parameter = tempInputData.substr(0, pos);
-			parameters.push_back(parameter);
+
+			Token token = Token(Token::NOT_ASSIGNED, parameter);
+			this->clientMessage.addToken(token);
 		}
 		tempInputData = tempInputData.erase(0, pos + 1);
 	}
@@ -123,12 +130,12 @@ void ClientRequestParser::parseParametersAsUser()
 	int pos = 0;
 	std::string parameter;
 
-	while ((pos = tempInputData.find_first_of(delimiters)) != std::string::npos && parameters.size() < 3)
+	while ((pos = tempInputData.find_first_of(delimiters)) != std::string::npos && clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 3) == NULL)
 	{
 		if (pos > 0)
 		{
 			parameter = tempInputData.substr(0, pos);
-			parameters.push_back(parameter);
+
 			Token token = Token(Token::NOT_ASSIGNED, parameter);
 			this->clientMessage.addToken(token);
 		}
@@ -154,7 +161,6 @@ void ClientRequestParser::parseParametersAsUser()
 		}
 
 		parameter = tempInputData.substr(start, pos - start);
-		parameters.push_back(parameter);
 
 		Token token(Token::NOT_ASSIGNED, parameter);
 		this->clientMessage.addToken(token);
@@ -178,7 +184,6 @@ void ClientRequestParser::parseParametersAsOneText()
 	if (cmdEnd != std::string::npos && cmdStart < cmdEnd)
 	{
 		parameter = tempInputData.substr(cmdStart, cmdEnd - cmdStart);
-		parameters.push_back(parameter);
 		tempInputData = tempInputData.erase(0, cmdEnd + 1);
 
 		Token token(Token::NOT_ASSIGNED, parameter);

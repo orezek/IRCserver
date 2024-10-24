@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/24 21:54:20 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/24 22:43:08 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,33 +36,41 @@ void IRCCommandHandler::execute()
 	parser.parse();
 
 	ClientMessage clientMessage = parser.getClientMessage();
+
+	Token* tokenCommand = clientMessage.findNthTokenOfType(Token::COMMAND, 1);
+	if (tokenCommand == NULL)
+	{
+		return;
+	}
+	std::string command = tokenCommand->getText();
+	
 	if (!client->userInfo.getUserValid() || !client->userInfo.getNickValid() || !client->userInfo.getPassSent())
 	{
-		if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "CAP")
+		if (command == "CAP")
 		{
 			// DO NOTHING
 		}
-		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "PING")
+		else if (command == "PING")
 		{
 			Commands::Ping pingCommand(client, clientMessage);
 			pingCommand.execute();
 		}
-		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "PASS")
+		else if (command == "PASS")
 		{
 			Commands::Pass passCommand(client, clientMessage);
 			passCommand.execute();
 		}
-		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "NICK")
+		else if (command == "NICK")
 		{
 			Commands::Nick nickCommand(client, clientMessage);
 			nickCommand.execute();
 		}
-		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "USER")
+		else if (command == "USER")
 		{
 			Commands::User userCommand(client, clientMessage);
 			userCommand.execute();
 		}
-		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "QUIT")
+		else if (command == "QUIT")
 		{
 			Commands::Quit quitCommand(client, clientMessage);
 			quitCommand.execute();
@@ -72,7 +80,7 @@ void IRCCommandHandler::execute()
 			ServerResponse serverResponse;
 			serverResponse.setAction(ServerResponse::SEND);
 			serverResponse.setClientsToSend(clientFd);
-			std::string str = ":" + serverData.getServerName() + " 451 * " + clientMessage.getCommandString() + " :You have not registered.\n";
+			std::string str = ":" + serverData.getServerName() + " 451 * " + command + " :You have not registered.\n";
 			serverResponse.setResponse(str);
 			client->serverResponses.push_back(serverResponse);
 		}
@@ -104,27 +112,27 @@ void IRCCommandHandler::execute()
 	else
 	{
 		// whole command logic will be there
-		if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "PING")
+		if (command == "PING")
 		{
 			Commands::Ping pingCommand(client, clientMessage);
 			pingCommand.execute();
 		}
-		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "PASS")
+		else if (command == "PASS")
 		{
 			Commands::Pass passCommand(client, clientMessage);
 			passCommand.execute();
 		}
-		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "NICK")
+		else if (command == "NICK")
 		{
 			Commands::Nick nickCommand(client, clientMessage);
 			nickCommand.execute();
 		}
-		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "USER")
+		else if (command == "USER")
 		{
 			Commands::User userCommand(client, clientMessage);
 			userCommand.execute();
 		}
-		else if (StringUtils::toUpperCase(clientMessage.getCommandString()) == "QUIT")
+		else if (command == "QUIT")
 		{
 			Commands::Quit quitCommand(client, clientMessage);
 			quitCommand.execute();

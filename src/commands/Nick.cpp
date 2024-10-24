@@ -68,7 +68,10 @@ void Nick::execute()
 
 std::string Nick::getNewNickname()
 {
-	return (clientMessage.getFirstParameter());
+	Token* tokenNickName = clientMessage.findNthTokenOfType(Token::NICK_NAME, 1);
+	if (tokenNickName == NULL)
+		return ("");
+	return (tokenNickName->getText());
 }
 
 bool Nick::isValidNick(std::string& nick)

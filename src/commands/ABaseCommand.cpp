@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 09:51:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/20 13:21:25 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/24 22:45:53 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,15 @@ void ABaseCommand::addServerResponseToClient()
 
 void ABaseCommand::setServerResponse461()
 {
+	Token* tokenCommand = clientMessage.findNthTokenOfType(Token::COMMAND, 1);
+	if (tokenCommand == NULL)
+	{
+		return;
+	}
+	std::string command = tokenCommand->getText();
+	
 	std::string nickname = client->userInfo.getNickname();
+
 	if (nickname.empty())
 	{
 		nickname = "*";
@@ -52,7 +60,7 @@ void ABaseCommand::setServerResponse461()
 	response.append(" 461 ");
 	response.append(nickname);
 	response.append(" ");
-	response.append(clientMessage.getCommandString());
+	response.append(command);
 	response.append(" :Not enough parameters.\r\n");
 
 	serverResponse.setAction(ServerResponse::SEND);

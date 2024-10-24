@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:18 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/21 20:52:07 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/24 22:51:49 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,32 +37,16 @@ class ClientMessage
 		ClientMessage &operator=(ClientMessage const &refObj);
 		~ClientMessage();
 
-		std::string getPrefixString();
-		void setPrefixString(std::string newPrefixString);
-		std::string getCommandString();
-		void setCommandString(std::string newCommandString);
 		int getFromUserFd() const;
-		std::string getPrefixString() const;
-		std::string getCommandString() const;
 		void setFromUserFd(int newUserFd);
-		void setParameters(std::vector<std::string> newParameters);
-
-		void addToParameters(std::string newParameter);
-		std::string getFirstParameter();
-		std::string getParameterAtPosition(size_t position);
-
-		std::string getAllParameters() const;
 
 		void addToken(Token &newToken);
 		Token *findNthTokenOfType(Token::Type type, int n);
+		std::vector<Token> tokens;
 
 	private:
 		int fromClientFd;
 		cmdTypes command;
-		std::string prefixString;
-		std::string commandString;
-		std::vector<std::string> parameters;
-		std::vector<Token> tokens;
 };
 
 std::ostream &operator<<(std::ostream &o, ClientMessage const &instance);
