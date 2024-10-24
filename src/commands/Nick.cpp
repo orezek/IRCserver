@@ -128,7 +128,7 @@ void Nick::setServerResponse431()
 
 	serverResponse.setAction(ServerResponse::SEND);
 	serverResponse.setResponse(response);
-	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
+	serverResponse.setClientsToSend(client->getClientFd());
 
 	addServerResponseToClient();
 }
@@ -145,7 +145,7 @@ void Nick::setServerResponse432()
 
 	serverResponse.setAction(ServerResponse::SEND);
 	serverResponse.setResponse(response);
-	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
+	serverResponse.setClientsToSend(client->getClientFd());
 
 	addServerResponseToClient();
 }
@@ -162,7 +162,7 @@ void Nick::setServerResponse433()
 
 	serverResponse.setAction(ServerResponse::SEND);
 	serverResponse.setResponse(response);
-	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
+	serverResponse.setClientsToSend(client->getClientFd());
 
 	addServerResponseToClient();
 }
@@ -185,7 +185,7 @@ void Nick::setServerResponseValid(UserInfo* user)
 	{
 		serverResponse.setResponse(response);
 		serverResponse.setAction(ServerResponse::SEND);
-		serverResponse.setClientsToSend(clientMessage.getFromUserFd());
+		serverResponse.setClientsToSend(client->getClientFd());
 		addServerResponseToClient();
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/24 22:36:55 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/24 23:02:36 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,6 @@ void ClientRequestParser::parse()
 	this->parsePrefixToken();
 	this->parseCommandToken();
 	this->parseParameters();
-
-	clientMessage.setFromUserFd(this->clientRequest.getClientFd());
 
 	std::cout << clientMessage << std::endl;  // debug only
 }
@@ -74,7 +72,7 @@ void ClientRequestParser::parseParameters()
 	{
 		return;
 	}
-	
+
 	std::string commandString = tokenCommand->getText();
 
 	if (commandString == "NICK")

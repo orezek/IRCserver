@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 19:48:17 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/24 22:04:28 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/24 23:00:14 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void Quit::setServerResponseValid()
 
 	serverResponse.setAction(ServerResponse::QUIT);
 	serverResponse.setResponse(response);
-	serverResponse.setClientsToSend(clientMessage.getFromUserFd());
+	serverResponse.setClientsToSend(client->getClientFd());
 
 	addServerResponseToClient();
 }

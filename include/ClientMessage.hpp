@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:18 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/24 22:51:49 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/24 23:01:01 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,11 @@ class ClientMessage
 		ClientMessage &operator=(ClientMessage const &refObj);
 		~ClientMessage();
 
-		int getFromUserFd() const;
-		void setFromUserFd(int newUserFd);
-
 		void addToken(Token &newToken);
 		Token *findNthTokenOfType(Token::Type type, int n);
 		std::vector<Token> tokens;
 
 	private:
-		int fromClientFd;
 		cmdTypes command;
 };
 
