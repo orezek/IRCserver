@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 13:05:16 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/24 21:59:03 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/24 22:23:52 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void Pass::execute()
 
 	client->userInfo.setPassSent(true);
 
-	Token* tokenPassedPassword = this->clientMessage.findNthTokenOfType(Token::ROOM_PASSWORD, 1);
+	Token* tokenPassedPassword = this->clientMessage.findNthTokenOfType(Token::SERVER_PASSWORD, 1);
 
 	if (tokenPassedPassword == NULL)
 	{
