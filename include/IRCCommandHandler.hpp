@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:33 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/21 09:27:48 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 11:29:16 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 #include "ServerDataManager.hpp"
 #include "ServerResponse.hpp"
 #include "StringUtils.hpp"
+#include "Unknown.hpp"
 #include "User.hpp"
 
 class IRCCommandHandler

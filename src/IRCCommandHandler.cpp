@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/25 00:05:04 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 11:30:22 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,46 +37,53 @@ void IRCCommandHandler::execute()
 
 	ClientMessage clientMessage = parser.getClientMessage();
 
-	Token *tokenCommand = clientMessage.findNthTokenOfType(Token::COMMAND, 1);
-	if (tokenCommand == NULL)
-	{
-		return;
-	}
-	std::string command = tokenCommand->getText();
+	ClientMessage::cmdTypes commandType = clientMessage.getCommandType();
 
 	if (!client->userData.getUserValid() || !client->userData.getNickValid() || !client->userData.getPassSent())
 	{
-		if (command == "CAP")
+		if (commandType == ClientMessage::CAP)
 		{
 			// DO NOTHING
 		}
-		else if (command == "PING")
+		else if (commandType == ClientMessage::PING)
 		{
 			Commands::Ping pingCommand(client, clientMessage);
 			pingCommand.execute();
 		}
-		else if (command == "PASS")
+		else if (commandType == ClientMessage::PASS)
 		{
 			Commands::Pass passCommand(client, clientMessage);
 			passCommand.execute();
 		}
-		else if (command == "NICK")
+		else if (commandType == ClientMessage::NICK)
 		{
 			Commands::Nick nickCommand(client, clientMessage);
 			nickCommand.execute();
 		}
-		else if (command == "USER")
+		else if (commandType == ClientMessage::USER)
 		{
 			Commands::User userCommand(client, clientMessage);
 			userCommand.execute();
 		}
-		else if (command == "QUIT")
+		else if (commandType == ClientMessage::QUIT)
 		{
 			Commands::Quit quitCommand(client, clientMessage);
 			quitCommand.execute();
 		}
+		else if (commandType == ClientMessage::UNKNOWN)
+		{
+			Commands::Unknown unknownCommand(client, clientMessage);
+			unknownCommand.execute();
+		}
 		else
 		{
+			Token *tokenCommand = clientMessage.findNthTokenOfType(Token::COMMAND, 1);
+			if (tokenCommand == NULL)
+			{
+				return;
+			}
+			std::string command = tokenCommand->getText();
+
 			ServerResponse serverResponse;
 			serverResponse.setAction(ServerResponse::SEND);
 			serverResponse.setClientsToSend(clientFd);
@@ -112,30 +119,35 @@ void IRCCommandHandler::execute()
 	else
 	{
 		// whole command logic will be there
-		if (command == "PING")
+		if (commandType == ClientMessage::PING)
 		{
 			Commands::Ping pingCommand(client, clientMessage);
 			pingCommand.execute();
 		}
-		else if (command == "PASS")
+		else if (commandType == ClientMessage::PASS)
 		{
 			Commands::Pass passCommand(client, clientMessage);
 			passCommand.execute();
 		}
-		else if (command == "NICK")
+		else if (commandType == ClientMessage::NICK)
 		{
 			Commands::Nick nickCommand(client, clientMessage);
 			nickCommand.execute();
 		}
-		else if (command == "USER")
+		else if (commandType == ClientMessage::USER)
 		{
 			Commands::User userCommand(client, clientMessage);
 			userCommand.execute();
 		}
-		else if (command == "QUIT")
+		else if (commandType == ClientMessage::QUIT)
 		{
 			Commands::Quit quitCommand(client, clientMessage);
 			quitCommand.execute();
+		}
+		else if (commandType == ClientMessage::UNKNOWN)
+		{
+			Commands::Unknown unknownCommand(client, clientMessage);
+			unknownCommand.execute();
 		}
 		else
 		{

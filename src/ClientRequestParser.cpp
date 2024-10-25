@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/24 23:02:36 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 11:16:17 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ void ClientRequestParser::parse()
 	// check if data are valid - how? Maybe it is not necessary
 	this->parsePrefixToken();
 	this->parseCommandToken();
-	this->parseParameters();
+	this->assignCommandType();
+	this->makeTokens();
 
 	std::cout << clientMessage << std::endl;  // debug only
 }
@@ -65,37 +66,31 @@ void ClientRequestParser::parseCommandToken()
 	}
 }
 
-void ClientRequestParser::parseParameters()
+void ClientRequestParser::makeTokens()
 {
-	Token* tokenCommand = clientMessage.findNthTokenOfType(Token::COMMAND, 1);
-	if (tokenCommand == NULL)
-	{
-		return;
-	}
+	ClientMessage::cmdTypes commandType = clientMessage.getCommandType();
 
-	std::string commandString = tokenCommand->getText();
-
-	if (commandString == "NICK")
+	if (commandType == ClientMessage::NICK)
 	{
 		parseParametersBySpace();
 		assignTokenTypesAsNick();
 	}
-	else if (commandString == "PASS")
+	else if (commandType == ClientMessage::PASS)
 	{
 		parseParametersBySpace();
 		assignTokenTypesAsPass();
 	}
-	else if (commandString == "USER")
+	else if (commandType == ClientMessage::USER)
 	{
 		parseParametersAsUser();
 		assignTokenTypesAsUser();
 	}
-	else if (commandString == "QUIT")
+	else if (commandType == ClientMessage::QUIT)
 	{
 		parseParametersAsOneText();
 		assignTokenTypesAsQuit();
 	}
-	else if (commandString == "PING")
+	else if (commandType == ClientMessage::PING)
 	{
 		parseParametersAsOneText();
 		assignTokenTypesAsPing();
@@ -186,6 +181,47 @@ void ClientRequestParser::parseParametersAsOneText()
 
 		Token token(Token::NOT_ASSIGNED, parameter);
 		this->clientMessage.addToken(token);
+	}
+}
+
+void ClientRequestParser::assignCommandType()
+{
+	Token* tokenCommand = clientMessage.findNthTokenOfType(Token::COMMAND, 1);
+	if (tokenCommand == NULL)
+	{
+		clientMessage.setCommandType(ClientMessage::NOT_ASSIGNED);
+		return;
+	}
+
+	std::string commandString = tokenCommand->getText();
+
+	if (commandString == "CAP")
+	{
+		clientMessage.setCommandType(ClientMessage::CAP);
+	}
+	else if (commandString == "NICK")
+	{
+		clientMessage.setCommandType(ClientMessage::NICK);
+	}
+	else if (commandString == "PASS")
+	{
+		clientMessage.setCommandType(ClientMessage::PASS);
+	}
+	else if (commandString == "PING")
+	{
+		clientMessage.setCommandType(ClientMessage::PING);
+	}
+	else if (commandString == "QUIT")
+	{
+		clientMessage.setCommandType(ClientMessage::QUIT);
+	}
+	else if (commandString == "USER")
+	{
+		clientMessage.setCommandType(ClientMessage::USER);
+	}
+	else
+	{
+		clientMessage.setCommandType(ClientMessage::UNKNOWN);
 	}
 }
 
