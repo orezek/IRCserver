@@ -13,9 +13,6 @@
 #pragma once
 
 #include "ABaseCommand.hpp"
-#include "ClientMessage.hpp"
-#include "ServerDataManager.hpp"
-#include "ServerResponse.hpp"
 
 namespace Commands
 {
