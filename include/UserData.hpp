@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 00:03:56 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/25 00:04:02 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 12:47:08 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,14 @@ class UserData
 		bool getNickValid();
 		bool getUserValid();
 
-		bool isValidServerUser();
+		bool isRegistered();
 
 		void setNickname(std::string nickname);
 		void setUsername(std::string username);
 		void setHostname(std::string hostname);
 		void setRealname(std::string realname);
 		void setServername(std::string servername);
+		// void setHasRegistered(bool isRegisteredValue);
 		void setPassSent(bool passSentValue);
 		void setPassValid(bool passValue);
 		void setNickValid(bool nickValue);
@@ -55,6 +56,7 @@ class UserData
 		std::vector<int> operatorRoomIds;
 		std::vector<int> roomIds;
 
+		bool hasRegistered;
 		bool passSent;
 		bool passValid;
 		bool nickValid;

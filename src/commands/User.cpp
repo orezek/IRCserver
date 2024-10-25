@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 14:13:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/25 00:04:51 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 13:04:10 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,10 @@ void User::execute()
 		return;
 	}
 
-	if (client->userData.isValidServerUser() == true)
+	if (client->userData.isRegistered() == true)
 	{
-		this->setServerResponse462();  // user already validated
+		// user already registered, send 462 "You may not reregister" response
+		this->setServerResponse462();
 		return;
 	}
 
