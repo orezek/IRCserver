@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ClientRequestParser.hpp                            :+:      :+:    :+:   */
+/*   IRCParser.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:09:39 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/25 18:49:12 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 18:56:54 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@
 // #include "ClientRequest.hpp"
 // #include "Token.hpp"
 
-class ClientRequestParser
+class IRCParser
 {
 	public:
-		ClientRequestParser(Client& client);
+		IRCParser(Client& client);
 		void parse();
 
 	private:

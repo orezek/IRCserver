@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/25 18:10:07 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 18:57:04 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -282,8 +282,8 @@ void ConnectionHandler::onRead(std::map<int, Client>::iterator &it)
 			// ClientRequestHandler clientRequestHandler(&client);
 			// clientRequestHandler.handleClientRequest(rawClientRequest);
 			client.setRawData(clientBuffers[clientSocketFd]);
-			ClientRequestParser clientRequestParser(client);
-			clientRequestParser.parse();
+			IRCParser parser(client);
+			parser.parse();
 			IRCCommandHandler ircCommandHandler(&client);
 			ircCommandHandler.processAllCommands();
 			clientBuffers.erase(clientSocketFd);
