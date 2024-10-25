@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/25 11:30:22 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 12:43:19 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void IRCCommandHandler::execute()
 			ServerResponse serverResponse;
 			serverResponse.setAction(ServerResponse::SEND);
 			serverResponse.setClientsToSend(clientFd);
-			if (userData->isValidServerUser())
+			if (userData->isRegistered())
 			{
 				std::string response = ":" + serverData.getServerName() + " 001 " + userData->getNickname() + " :Welcome to the IRC network, " + userData->getNickname() + "!" + userData->getUsername() + "@" + userData->getHostname() + "\n";
 				response.append(":" + serverData.getServerName() + " 002 " + userData->getNickname() + " :Your host is " + serverData.getServerName() + ", running version XXXX\n");
