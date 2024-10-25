@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/25 17:21:24 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 18:46:10 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@
 // #include "Client.hpp"
 #include "ClientManager.hpp"
 // #include "ClientRequestHandler.hpp"
+#include "ClientRequestParser.hpp"
 #include "IRCCommandHandler.hpp"
 #include "ServerDataManager.hpp"
 

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:33 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/25 17:29:28 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 18:44:22 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,15 @@
 
 #include "ClientMessage.hpp"
 // #include "ClientRequest.hpp"
-#include "ClientRequestParser.hpp"
-#include "NewClient.hpp"
+#include "Client.hpp"
+// #include "ClientRequestParser.hpp"
 #include "Nick.hpp"
 #include "Pass.hpp"
 #include "Ping.hpp"
 #include "Quit.hpp"
 #include "ServerDataManager.hpp"
 #include "ServerResponse.hpp"
-#include "StringUtils.hpp"
+// #include "StringUtils.hpp"
 #include "Unknown.hpp"
 #include "User.hpp"
 

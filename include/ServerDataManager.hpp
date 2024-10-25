@@ -14,7 +14,7 @@
 #include <map>
 #include <vector>
 
-// #include "NewClient.hpp"
+// #include "Client.hpp"
 // #include "ClientRequestQueue.hpp"
 #include "RoomManager.hpp"
 #include "ServerResponseQueue.hpp"
