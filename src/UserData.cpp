@@ -6,19 +6,19 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 23:12:55 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/25 00:05:12 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 12:41:17 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "UserData.hpp"
 
-UserData::UserData() : nickname(""), username(""), hostname(""), servername(""), realname(""), fullUsername(""), passSent(false), passValid(false), nickValid(false), userValid(false) {};
+UserData::UserData() : nickname(""), username(""), hostname(""), servername(""), realname(""), fullUsername(""), isRegistered(false), passSent(false), passValid(false), nickValid(false), userValid(false) {};
 
-UserData::UserData(int clientFd) : nickname(""), username(""), hostname(""), servername(""), realname(""), fullUsername(""), passSent(false), passValid(false), nickValid(false), userValid(false) {};
+UserData::UserData(int clientFd) : nickname(""), username(""), hostname(""), servername(""), realname(""), fullUsername(""), isRegistered(false), passSent(false), passValid(false), nickValid(false), userValid(false) {};
 
 UserData::~UserData() {};
 
-UserData::UserData(const UserData &obj) : nickname(obj.nickname), username(obj.username), hostname(obj.hostname), servername(obj.servername), realname(obj.realname), fullUsername(obj.fullUsername), passSent(obj.passSent), passValid(obj.passValid), nickValid(obj.nickValid), userValid(obj.userValid)
+UserData::UserData(const UserData &obj) : nickname(obj.nickname), username(obj.username), hostname(obj.hostname), servername(obj.servername), realname(obj.realname), fullUsername(obj.fullUsername), isRegistered(obj.isRegistered), passSent(obj.passSent), passValid(obj.passValid), nickValid(obj.nickValid), userValid(obj.userValid)
 {
 	this->operatorRoomIds = obj.operatorRoomIds;
 	this->roomIds = obj.roomIds;
@@ -36,6 +36,7 @@ UserData &UserData::operator=(const UserData &obj)
 		this->fullUsername = obj.fullUsername;
 		this->operatorRoomIds = obj.operatorRoomIds;
 		this->roomIds = obj.roomIds;
+		this->isRegistered = obj.isRegistered;
 		this->passSent = obj.passSent;
 		this->passValid = obj.passValid;
 		this->nickValid = obj.nickValid;
@@ -57,6 +58,11 @@ std::string UserData::getUsername()
 std::string UserData::getHostname()
 {
 	return (this->hostname);
+}
+
+bool UserData::getIsRegistered()
+{
+	return (this->isRegistered);
 }
 
 bool UserData::getPassSent()
@@ -89,6 +95,11 @@ bool UserData::isValidServerUser()
 	{
 		return (false);
 	}
+}
+
+void UserData::setIsRegistered(bool isRegisteredValue)
+{
+	this->isRegistered = isRegisteredValue;
 }
 
 void UserData::setPassSent(bool passSentValue)
