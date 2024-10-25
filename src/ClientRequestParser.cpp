@@ -6,28 +6,19 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/25 18:06:31 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 18:48:56 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ClientRequestParser.hpp"
 
-ClientRequestParser::ClientRequestParser(Client& client) : client(client)
-{
-	// this->tempInputData = client.getRawData();
-}
-
-// ClientMessage ClientRequestParser::getClientMessage()
-// {
-// 	return (this->clientMessage);
-// }
+ClientRequestParser::ClientRequestParser(Client& client) : client(client) {}
 
 void ClientRequestParser::parse()
 {
-	// check if data are valid - how? Maybe it is not necessary
-
 	this->splitRawDataToRawMessages();
-	// this->processClientRequests();
+	client.deleteRawData();
+
 	for (std::vector<std::string>::iterator it = rawMessages.begin(); it != rawMessages.end(); ++it)
 	{
 		this->clientMessage = ClientMessage();
@@ -37,6 +28,7 @@ void ClientRequestParser::parse()
 		this->assignCommandType();
 		this->makeTokens();
 		client.addMessage(clientMessage);
+
 		std::cout << clientMessage << std::endl;  // debug only
 	}
 }
@@ -309,6 +301,4 @@ void ClientRequestParser::splitRawDataToRawMessages()
 
 		std::cout << "rawMessage = |" << rawMessage << "|" << std::endl;
 	}
-
-	client.deleteRawData();
 }
