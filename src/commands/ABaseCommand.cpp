@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 09:51:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/25 00:04:51 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 12:36:52 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,15 +40,33 @@ void ABaseCommand::addServerResponseToClient()
 	client->serverResponses.push_back(serverResponse);
 }
 
+void ABaseCommand::setServerResponse451()
+{
+	std::string command = clientMessage.getCommandString();
+	std::string nickname = client->userData.getNickname();
+
+	if (nickname.empty())
+	{
+		nickname = "*";
+	}
+	std::string response = ":";
+	response.append(serverData.getServerName());
+	response.append(" 451 ");
+	response.append(nickname);
+	response.append(" ");
+	response.append(command);
+	response.append(" :You have not registered.\r\n");
+
+	serverResponse.setAction(ServerResponse::SEND);
+	serverResponse.setResponse(response);
+	serverResponse.setClientsToSend(client->getClientFd());
+
+	this->addServerResponseToClient();
+}
+
 void ABaseCommand::setServerResponse461()
 {
-	Token* tokenCommand = clientMessage.findNthTokenOfType(Token::COMMAND, 1);
-	if (tokenCommand == NULL)
-	{
-		return;
-	}
-	std::string command = tokenCommand->getText();
-	
+	std::string command = clientMessage.getCommandString();
 	std::string nickname = client->userData.getNickname();
 
 	if (nickname.empty())
