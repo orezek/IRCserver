@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:33 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/25 11:29:16 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 17:29:28 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,9 @@
 #include <string>
 
 #include "ClientMessage.hpp"
-#include "ClientRequest.hpp"
+// #include "ClientRequest.hpp"
 #include "ClientRequestParser.hpp"
+#include "NewClient.hpp"
 #include "Nick.hpp"
 #include "Pass.hpp"
 #include "Ping.hpp"
@@ -32,14 +33,17 @@ class IRCCommandHandler
 {
 	public:
 		// ProcessData(ClientRequest *clientRequest, ServerDataManager *serverData);
-		IRCCommandHandler(Client *client, ClientRequest *clientRequest);
+		IRCCommandHandler(Client *client);
 		IRCCommandHandler(const IRCCommandHandler &refObj);
 		IRCCommandHandler &operator=(const IRCCommandHandler &refObj);
 
-		void execute();
+		void processAllCommands();
+		void executeOneCommand(ClientMessage &clientMessage);
 
 	private:
 		Client *client;
 		ServerDataManager &serverData;
-		ClientRequest *clientRequest;
+		// ClientRequest *clientRequest;
+		// UserData *userData;
+		// ClientMessage clientMessage
 };

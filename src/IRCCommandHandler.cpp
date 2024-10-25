@@ -6,16 +6,22 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/25 13:12:30 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 18:11:01 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IRCCommandHandler.hpp"
 
-IRCCommandHandler::IRCCommandHandler(Client *client, ClientRequest *clientRequest) : client(client), serverData(ServerDataManager::getInstance()), clientRequest(clientRequest) {}
+IRCCommandHandler::IRCCommandHandler(Client *client) : client(client), serverData(ServerDataManager::getInstance())
+{
+	if (client == NULL)
+	{
+		throw std::runtime_error("Client unknown.");
+	}
+}
 
 // Copy constructor
-IRCCommandHandler::IRCCommandHandler(const IRCCommandHandler &refObj) : client(refObj.client), serverData(refObj.serverData), clientRequest(refObj.clientRequest) {}
+IRCCommandHandler::IRCCommandHandler(const IRCCommandHandler &refObj) : client(refObj.client), serverData(refObj.serverData) {}
 
 // Copy assignment operator
 IRCCommandHandler &IRCCommandHandler::operator=(const IRCCommandHandler &refObj)
@@ -23,20 +29,34 @@ IRCCommandHandler &IRCCommandHandler::operator=(const IRCCommandHandler &refObj)
 	if (this != &refObj)
 	{
 		this->client = refObj.client;
-		this->clientRequest = refObj.clientRequest;
 	}
 	return (*this);
 }
 
-void IRCCommandHandler::execute()
+void IRCCommandHandler::processAllCommands()
 {
-	ClientRequestParser parser(*clientRequest);
-	parser.parse();
-	ClientMessage clientMessage = parser.getClientMessage();
+	try
+	{
+		while (1)
+		{
+			ClientMessage clientMessage = client->popMessage();
+			this->executeOneCommand(clientMessage);
+		}
+	}
+	catch (const std::runtime_error &e)
+	{
+		return;
+	}
+}
 
-	UserData *userData = &(client->userData);
+void IRCCommandHandler::executeOneCommand(ClientMessage &clientMessage)
+{
+	// ClientRequestParser parser(*clientRequest);
+	// parser.parse();
+	// ClientMessage clientMessage = parser.getClientMessage();
+
 	ClientMessage::cmdTypes commandType = clientMessage.getCommandType();
-	bool wasRegistered = userData->isRegistered();
+	bool wasRegistered = client->isRegistered();
 
 	if (commandType == ClientMessage::CAP)
 	{
@@ -75,18 +95,19 @@ void IRCCommandHandler::execute()
 
 	// Was Client registered in this loop?
 	// needs to be updated!
-	if (wasRegistered == false && userData->getUserValid() && userData->getNickValid() && userData->getPassSent())
+	if (wasRegistered == false && client->getUserValid() && client->getNickValid() && client->getPassSent())
 	{
-		int clientFd = client->getClientFd();
+		int clientFd = client->getFd();
+		std::cout << clientFd << std::endl;
 		ServerResponse serverResponse;
 		serverResponse.setAction(ServerResponse::SEND);
 		serverResponse.setClientsToSend(clientFd);
-		if (userData->isRegistered())
+		if (client->isRegistered())
 		{
-			std::string response = ":" + serverData.getServerName() + " 001 " + userData->getNickname() + " :Welcome to the IRC network, " + userData->getNickname() + "!" + userData->getUsername() + "@" + userData->getHostname() + "\n";
-			response.append(":" + serverData.getServerName() + " 002 " + userData->getNickname() + " :Your host is " + serverData.getServerName() + ", running version XXXX\n");
-			response.append(":" + serverData.getServerName() + " 003 " + userData->getNickname() + " :This server was created XXXXXXXXXXXXXX" + "\n");
-			response.append(":" + serverData.getServerName() + " 004 " + userData->getNickname() + " " + serverData.getServerName() + " \n");
+			std::string response = ":" + serverData.getServerName() + " 001 " + client->getNickname() + " :Welcome to the IRC network, " + client->getNickname() + "!" + client->getUsername() + "@" + client->getHostname() + "\n";
+			response.append(":" + serverData.getServerName() + " 002 " + client->getNickname() + " :Your host is " + serverData.getServerName() + ", running version XXXX\n");
+			response.append(":" + serverData.getServerName() + " 003 " + client->getNickname() + " :This server was created XXXXXXXXXXXXXX" + "\n");
+			response.append(":" + serverData.getServerName() + " 004 " + client->getNickname() + " " + serverData.getServerName() + " \n");
 			serverResponse.setResponse(response);
 		}
 		else
@@ -94,7 +115,7 @@ void IRCCommandHandler::execute()
 			serverResponse.setResponse("Not validated - wrong password\r\n");
 			// kick user?
 		}
-		client->serverResponses.push_back(serverResponse);
+		client->addResponse(serverResponse);
 	}
 	// needs to be updated
 }

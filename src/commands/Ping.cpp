@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 13:05:16 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/25 13:01:48 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 17:27:20 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,9 @@ void Ping::setServerResponseValid()
 
 	serverResponse.setAction(ServerResponse::SEND);
 	serverResponse.setResponse(response);
-	serverResponse.setClientsToSend(client->getClientFd());
+	serverResponse.setClientsToSend(client->getFd());
 
-	addServerResponseToClient();
+	client->addResponse(serverResponse);
 }
 
 }  // namespace Commands

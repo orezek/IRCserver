@@ -3,33 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   NewClient.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:09 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/25 15:47:39 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/25 17:33:19 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CLIENT_HPP
 #define CLIENT_HPP
 
+#include <netinet/in.h>
+#include <sys/socket.h>
+
 #include <string>
 #include <vector>
-#include <sys/socket.h>
-#include <netinet/in.h>
+
+#include "ClientMessage.hpp"
 #include "ServerResponseQueue.hpp"
 #include "UserData.hpp"
-#include "ClientMessage.hpp"
 
-class Client {
+class Client
+{
 	public:
 		UserData userData;
 
 		Client(int fd);
+		Client(const Client&);
+		Client& operator=(const Client&);
 		~Client();
-		// Prevent copying
-		Client(const Client&) = delete;
-		Client& operator=(const Client&) = delete;
 
 		// Getters and setters
 		int getFd(void) const;
@@ -44,6 +46,7 @@ class Client {
 		void markForDeletion(void);
 
 		// Response handling
+		bool areResponsesEmpty();
 		void addResponse(const ServerResponse response);
 		void sendAllResponses(void);
 

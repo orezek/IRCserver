@@ -6,31 +6,39 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/25 11:16:17 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 18:06:31 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ClientRequestParser.hpp"
 
-ClientRequestParser::ClientRequestParser(ClientRequest& clientRequest) : clientRequest(clientRequest)
+ClientRequestParser::ClientRequestParser(Client& client) : client(client)
 {
-	this->tempInputData = clientRequest.getClientData();
+	// this->tempInputData = client.getRawData();
 }
 
-ClientMessage ClientRequestParser::getClientMessage()
-{
-	return (this->clientMessage);
-}
+// ClientMessage ClientRequestParser::getClientMessage()
+// {
+// 	return (this->clientMessage);
+// }
 
 void ClientRequestParser::parse()
 {
 	// check if data are valid - how? Maybe it is not necessary
-	this->parsePrefixToken();
-	this->parseCommandToken();
-	this->assignCommandType();
-	this->makeTokens();
 
-	std::cout << clientMessage << std::endl;  // debug only
+	this->splitRawDataToRawMessages();
+	// this->processClientRequests();
+	for (std::vector<std::string>::iterator it = rawMessages.begin(); it != rawMessages.end(); ++it)
+	{
+		this->clientMessage = ClientMessage();
+		tempInputData = *it;
+		this->parsePrefixToken();
+		this->parseCommandToken();
+		this->assignCommandType();
+		this->makeTokens();
+		client.addMessage(clientMessage);
+		std::cout << clientMessage << std::endl;  // debug only
+	}
 }
 
 // ---- PRIVATE ----
@@ -283,4 +291,24 @@ void ClientRequestParser::assignTokenTypesAsPing()
 	{
 		token->setType(Token::SERVER_NAME);
 	}
+}
+
+void ClientRequestParser::splitRawDataToRawMessages()
+{
+	const std::string delimiters = "\n";
+	std::string tempData = client.getRawData();
+
+	while (tempData.find_first_of(delimiters) != std::string::npos)
+	{
+		std::string rawMessage;
+		size_t pos = tempData.find_first_of(delimiters);
+		rawMessage = tempData.substr(0, pos + 1);
+
+		rawMessages.push_back(rawMessage);
+		tempData = tempData.erase(0, pos + 1);
+
+		std::cout << "rawMessage = |" << rawMessage << "|" << std::endl;
+	}
+
+	client.deleteRawData();
 }

@@ -3,20 +3,49 @@
 /*                                                        :::      ::::::::   */
 /*   NewClient.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/25 15:58:26 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/25 18:16:14 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "NewClient.hpp"
 
-
-Client::Client(int fd): fd(-1), markedForDeletion(false), rawData("")
+Client::Client(int fd) : fd(fd), markedForDeletion(false), rawData("")
 {
 	memset(&this->ipAddress, 0, sizeof(this->ipAddress));
 }
+
+// Copy Constructor
+Client::Client(const Client& other) : fd(other.fd),  // Initialize const member directly
+									  ipAddress(other.ipAddress),
+									  rawData(other.rawData),
+									  markedForDeletion(other.markedForDeletion),
+									  responses(other.responses),            // Assuming ServerResponseQueue has a valid copy constructor
+									  clientMessages(other.clientMessages),  // Deep copy vector
+									  userData(other.userData)               // Deep copy UserData
+{
+	// If any other special deep-copy logic is needed for members, add it here.
+}
+
+// Copy Assignment Operator
+Client& Client::operator=(const Client& other)
+{
+	if (this != &other)
+	{  // Check for self-assignment
+		// We cannot assign to `fd` since it's a const member, so leave it unchanged.
+		ipAddress = other.ipAddress;
+		rawData = other.rawData;
+		markedForDeletion = other.markedForDeletion;
+		responses = other.responses;            // Assuming ServerResponseQueue has a valid assignment operator
+		clientMessages = other.clientMessages;  // Deep copy vector
+		userData = other.userData;              // Deep copy UserData
+	}
+	return (*this);
+}
+
+Client::~Client() {}
 
 // Client socket info
 int Client::getFd(void) const
@@ -24,10 +53,10 @@ int Client::getFd(void) const
 	return (this->fd);
 }
 
- sockaddr_in Client::getIpAddress(void) const
- {
+sockaddr_in Client::getIpAddress(void) const
+{
 	return (this->ipAddress);
- }
+}
 
 // Raw Data from socket
 std::string Client::getRawData(void) const
@@ -35,12 +64,12 @@ std::string Client::getRawData(void) const
 	return (this->rawData);
 }
 
-void Client::setRawData(const std::string &data)
+void Client::setRawData(const std::string& data)
 {
 	this->rawData = data;
 }
 
-void Client::appendRawData(const std::string &data)
+void Client::appendRawData(const std::string& data)
 {
 	this->rawData.append(data);
 }
@@ -67,6 +96,11 @@ void Client::addResponse(const ServerResponse response)
 	this->responses.push_back(response);
 }
 
+bool Client::areResponsesEmpty()
+{
+	return (this->responses.isEmpty());
+}
+
 void Client::sendAllResponses(void)
 {
 	this->responses.sendAll();
@@ -88,6 +122,7 @@ ClientMessage Client::popMessage(void)
 
 	ClientMessage firstMessage = clientMessages.front();
 	clientMessages.erase(clientMessages.begin());
+	std::cout << firstMessage.getCommandString() << std::endl;
 	return firstMessage;
 }
 
@@ -104,7 +139,8 @@ std::string Client::getUsername(void)
 }
 
 // Getter for hostname
-std::string Client::getHostname() {
+std::string Client::getHostname()
+{
 	return userData.getHostname();
 }
 
