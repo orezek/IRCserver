@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.hpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 19:56:09 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/25 18:56:13 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,15 @@
 // Exceptions
 #include <stdexcept>
 // custom classes
-#include "ClientRequest.hpp"
+// #include "ClientRequest.hpp"
 // #include "ProcessData.hpp"
 #include "ServerResponse.hpp"
 // #include "IrcServer.hpp"
 // #include "Client.hpp"
 #include "ClientManager.hpp"
-#include "ClientRequestHandler.hpp"
+// #include "ClientRequestHandler.hpp"
+#include "IRCCommandHandler.hpp"
+#include "IRCParser.hpp"
 #include "ServerDataManager.hpp"
 
 class ConnectionHandler

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ClientRequestHandler.cpp                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 14:18:05 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/23 14:48:36 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/25 15:56:38 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,11 @@ void ClientRequestHandler::splitRawClientRequest(Client *client)
 
 void ClientRequestHandler::processClientRequests()
 {
-	ClientRequest* clientRequest;
+	ClientRequest *clientRequest;
 	while ((clientRequest = client->clientRequests.getFirst()) != NULL)
 	{
 		IRCCommandHandler commandHandler(client, clientRequest);
-		commandHandler.execute();
+		commandHandler.executeOneCommand();
 		client->clientRequests.deleteFirst();
 	}
 }
@@ -85,9 +85,8 @@ void ClientRequestHandler::parseRawClientRequest(ClientRequest *rawClientRequest
 
 void ClientRequestHandler::logDebugInfo() const
 {
-	#ifdef DEBUG
+#ifdef DEBUG
 	std::cout << "DEBUG: Client Requests: " << client->clientRequests << std::endl;
 	std::cout << "DEBUG Server Responses: " << client->serverResponses << std::endl;
-	#endif
+#endif
 }
-

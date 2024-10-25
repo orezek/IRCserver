@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 23:09:35 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/09 14:50:01 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 18:58:30 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ class ServerResponse
 
 	private:
 		Action action;
-		std::vector<int> clientsToSend;
+		std::vector<int> clientsToSend;  // Not needed!
 		std::string data;
 };
 
-std::ostream& operator<<(std::ostream& o, ServerResponse const& instance);
+std::ostream &operator<<(std::ostream &o, ServerResponse const &instance);

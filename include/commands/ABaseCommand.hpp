@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 11:10:59 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/25 12:35:10 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 18:43:43 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ class ABaseCommand
 		ClientMessage& clientMessage;
 		ServerResponse serverResponse;
 
-		void addServerResponseToClient();
+		// void addServerResponseToClient();
 
 		// Common error responses available for all derived classes
 		void setServerResponse451();

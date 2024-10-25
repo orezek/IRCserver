@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerResponseQueue.cpp                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:31:58 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/20 13:21:39 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 14:59:47 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ ServerResponseQueue& ServerResponseQueue::operator=(const ServerResponseQueue& r
 
 ServerResponseQueue::~ServerResponseQueue() {};
 
-void ServerResponseQueue::push_back(ServerResponse& serverResponse)
+void ServerResponseQueue::push_back(ServerResponse serverResponse)
 {
 	ServerResponse::Action action = serverResponse.getAction();
 	if (action == ServerResponse::SEND || action == ServerResponse::QUIT)
