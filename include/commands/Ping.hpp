@@ -6,17 +6,13 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 11:21:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/20 12:30:48 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 18:53:47 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include "ABaseCommand.hpp"
-#include "Client.hpp"
-#include "ClientMessage.hpp"
-#include "ServerDataManager.hpp"
-#include "ServerResponse.hpp"
 
 namespace Commands
 {

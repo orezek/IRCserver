@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 11:21:17 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/25 12:51:32 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 17:27:52 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,9 @@ void Unknown::setServerResponse421()
 
 	serverResponse.setAction(ServerResponse::SEND);
 	serverResponse.setResponse(response);
-	serverResponse.setClientsToSend(client->getClientFd());
+	serverResponse.setClientsToSend(client->getFd());
 
-	this->addServerResponseToClient();
+	client->addResponse(serverResponse);
 }
 
 }  // namespace Commands

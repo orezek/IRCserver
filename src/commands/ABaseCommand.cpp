@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 09:51:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/25 12:36:52 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 17:26:05 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,6 @@ ABaseCommand::~ABaseCommand() {}
 
 // PROTECTED
 
-void ABaseCommand::addServerResponseToClient()
-{
-	client->serverResponses.push_back(serverResponse);
-}
-
 void ABaseCommand::setServerResponse451()
 {
 	std::string command = clientMessage.getCommandString();
@@ -59,9 +54,9 @@ void ABaseCommand::setServerResponse451()
 
 	serverResponse.setAction(ServerResponse::SEND);
 	serverResponse.setResponse(response);
-	serverResponse.setClientsToSend(client->getClientFd());
+	serverResponse.setClientsToSend(client->getFd());
 
-	this->addServerResponseToClient();
+	client->addResponse(serverResponse);
 }
 
 void ABaseCommand::setServerResponse461()
@@ -83,9 +78,9 @@ void ABaseCommand::setServerResponse461()
 
 	serverResponse.setAction(ServerResponse::SEND);
 	serverResponse.setResponse(response);
-	serverResponse.setClientsToSend(client->getClientFd());
+	serverResponse.setClientsToSend(client->getFd());
 
-	this->addServerResponseToClient();
+	client->addResponse(serverResponse);
 }
 
 void ABaseCommand::setServerResponse462()
@@ -103,9 +98,9 @@ void ABaseCommand::setServerResponse462()
 	response.append(" :You may not reregister\r\n");
 	serverResponse.setAction(ServerResponse::SEND);
 	serverResponse.setResponse(response);
-	serverResponse.setClientsToSend(client->getClientFd());
+	serverResponse.setClientsToSend(client->getFd());
 
-	this->addServerResponseToClient();
+	client->addResponse(serverResponse);
 }
 
 }  // namespace Commands

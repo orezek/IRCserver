@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:20:19 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/25 00:03:19 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 18:54:18 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 
 #include "ABaseCommand.hpp"
 #include "ClientManager.hpp"
-#include "ClientMessage.hpp"
-#include "ServerDataManager.hpp"
-#include "ServerResponse.hpp"
 
 namespace Commands
 {

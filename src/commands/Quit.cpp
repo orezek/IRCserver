@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 19:48:17 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/25 00:04:51 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 17:28:18 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void Quit::execute()
 
 void Quit::setServerResponseValid()
 {
-	client->markedForDeletion = true;
+	client->markForDeletion();
 
 	Token* tokenQuitMessage = clientMessage.findNthTokenOfType(Token::MESSAGE, 1);
 
@@ -59,9 +59,9 @@ void Quit::setServerResponseValid()
 
 	serverResponse.setAction(ServerResponse::QUIT);
 	serverResponse.setResponse(response);
-	serverResponse.setClientsToSend(client->getClientFd());
+	serverResponse.setClientsToSend(client->getFd());
 
-	addServerResponseToClient();
+	client->addResponse(serverResponse);
 }
 
 }  // namespace Commands
