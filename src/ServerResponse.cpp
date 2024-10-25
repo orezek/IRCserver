@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 23:09:38 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/20 13:17:05 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 18:58:09 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ void ServerResponse::setClientsToSend(int clientFd)
 
 ssize_t ServerResponse::sendServerResponse(void)
 {
+	// NEEDS TO BE UPDATED! clientsToSend not needed!
+
 	// Total bytes sent to all clients. This may seem odd. Think of better return value or change the logic.
 	ssize_t overallBytesSent = 0;
 	if (this->action == this->SEND)
