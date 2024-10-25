@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/25 18:11:01 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 18:52:43 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ IRCCommandHandler &IRCCommandHandler::operator=(const IRCCommandHandler &refObj)
 	if (this != &refObj)
 	{
 		this->client = refObj.client;
+		this->serverData = refObj.serverData;
 	}
 	return (*this);
 }
@@ -45,16 +46,13 @@ void IRCCommandHandler::processAllCommands()
 	}
 	catch (const std::runtime_error &e)
 	{
+		// no more clientMessages in client to process
 		return;
 	}
 }
 
 void IRCCommandHandler::executeOneCommand(ClientMessage &clientMessage)
 {
-	// ClientRequestParser parser(*clientRequest);
-	// parser.parse();
-	// ClientMessage clientMessage = parser.getClientMessage();
-
 	ClientMessage::cmdTypes commandType = clientMessage.getCommandType();
 	bool wasRegistered = client->isRegistered();
 
