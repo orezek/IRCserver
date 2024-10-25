@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 13:05:16 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/25 12:43:19 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 13:03:21 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,15 @@ void Pass::execute()
 
 	if (tokenPassedPassword == NULL)
 	{
+		// not enough parameters
 		this->setServerResponse461();
 		return;
 	}
 
-	if (client->userData.isRegistered() == true)
+	if (client->userData.isRegistered())
 	{
-		this->setServerResponse462();  // user already validated
+		// user already registered, send 462 "You may not reregister" response
+		this->setServerResponse462();
 		return;
 	}
 
@@ -50,6 +52,7 @@ void Pass::execute()
 
 	if (passedPassword == serverPassword)
 	{
+		// valid password passed
 		client->userData.setPassValid(true);
 		this->setServerResponseValid();  // no need to have it there
 	}
