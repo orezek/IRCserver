@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:09 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/25 15:20:33 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/25 15:47:39 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,23 +45,30 @@ class Client {
 
 		// Response handling
 		void addResponse(const ServerResponse response);
-		// Does it make sense = what about just the dequeue?
-		ServerResponseQueue &getResponses(void);
-		void clearResponses(void);
+		void sendAllResponses(void);
 
 		// Message handling
 		void addMessage(const ClientMessage message);
-		// Do we needed?
-		//std::vector<ClientMessage> &getMessages();
 		ClientMessage popMessage(void);  // Returns copy
 
 		// User data management
-		UserData& getUserData(void);
-
-		// Does it make sens? Either create getter and setter in Client to
-		// call the actual UserData getters and setters
-		// or use getters and setters of the UserData directly
-		//void setUserData(const UserData& userData);
+		std::string getNickname();
+		std::string getUsername();
+		std::string getHostname();
+		bool getPassSent();
+		bool getPassValid();
+		bool getNickValid();
+		bool getUserValid();
+		bool isRegistered();
+		void setNickname(std::string nickname);
+		void setUsername(std::string username);
+		void setHostname(std::string hostname);
+		void setRealname(std::string realname);
+		void setServername(std::string servername);
+		void setPassSent(bool passSentValue);
+		void setPassValid(bool passValue);
+		void setNickValid(bool nickValue);
+		void setUserValid(bool userValue);
 
 	private:
 		const int fd;

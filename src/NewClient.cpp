@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/25 15:21:25 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/25 15:58:26 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,15 +66,10 @@ void Client::addResponse(const ServerResponse response)
 {
 	this->responses.push_back(response);
 }
-// Does it make sense? It returns the whole object. ok more methods needs to be defined in the class
-ServerResponseQueue &Client::getResponses(void)
+
+void Client::sendAllResponses(void)
 {
-	return (this->responses);
-}
-// The response queue should have method for clearing its deque buffer
-void Client::clearResponses(void)
-{
-	this->responses;
+	this->responses.sendAll();
 }
 
 // creates a copy and adds it to the vector
@@ -96,7 +91,103 @@ ClientMessage Client::popMessage(void)
 	return firstMessage;
 }
 
-UserData &Client::getUserData(void)
+// User data management - here should be used inheritance :) first case of usage, now it makes sense
+
+std::string Client::getNickname(void)
 {
-	return (this->userData);
+	return (userData.getNickname());
+}
+
+std::string Client::getUsername(void)
+{
+	return (userData.getUsername());
+}
+
+// Getter for hostname
+std::string Client::getHostname() {
+	return userData.getHostname();
+}
+
+// Getter for passSent
+bool Client::getPassSent()
+{
+	return userData.getPassSent();
+}
+
+// Getter for passValid
+bool Client::getPassValid()
+{
+	return userData.getPassValid();
+}
+
+// Getter for nickValid
+bool Client::getNickValid()
+{
+	return userData.getNickValid();
+}
+
+// Getter for userValid
+bool Client::getUserValid()
+{
+	return userData.getUserValid();
+}
+
+// Method to check if the client is fully registered
+bool Client::isRegistered()
+{
+	return getPassValid() && getNickValid() && getUserValid();
+}
+
+// Setter for nickname
+void Client::setNickname(std::string nickname)
+{
+	userData.setNickname(nickname);
+}
+
+// Setter for username
+void Client::setUsername(std::string username)
+{
+	userData.setUsername(username);
+}
+
+// Setter for hostname
+void Client::setHostname(std::string hostname)
+{
+	userData.setHostname(hostname);
+}
+
+// Setter for realname
+void Client::setRealname(std::string realname)
+{
+	userData.setRealname(realname);
+}
+
+// Setter for servername
+void Client::setServername(std::string servername)
+{
+	userData.setServername(servername);
+}
+
+// Setter for passSent
+void Client::setPassSent(bool passSentValue)
+{
+	userData.setPassSent(passSentValue);
+}
+
+// Setter for passValid
+void Client::setPassValid(bool passValue)
+{
+	userData.setPassValid(passValue);
+}
+
+// Setter for nickValid
+void Client::setNickValid(bool nickValue)
+{
+	userData.setNickValid(nickValue);
+}
+
+// Setter for userValid
+void Client::setUserValid(bool userValue)
+{
+	userData.setUserValid(userValue);
 }
