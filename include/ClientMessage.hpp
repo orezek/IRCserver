@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:18 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/24 23:01:01 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 11:27:23 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,19 @@
 
 class ClientMessage
 {
+	public:
 		enum cmdTypes
 		{
-			NOT_ASSIGNED,
+			NOT_ASSIGNED = -1,
+			NICK,
+			PASS,
+			PING,
+			QUIT,
 			USER,
-			NICK
-			// UNKNOWN
+			CAP,
+			UNKNOWN = 99
 		};
 
-	public:
 		ClientMessage();
 		ClientMessage(int clientFd, std::string prefixString, std::string commandString, std::vector<std::string> parameters);
 		ClientMessage(ClientMessage const &refObj);
@@ -41,8 +45,12 @@ class ClientMessage
 		Token *findNthTokenOfType(Token::Type type, int n);
 		std::vector<Token> tokens;
 
+		void setCommandType(cmdTypes);
+		cmdTypes getCommandType();
+		std::string getCommandString();
+
 	private:
-		cmdTypes command;
+		cmdTypes commandType;
 };
 
 std::ostream &operator<<(std::ostream &o, ClientMessage const &instance);

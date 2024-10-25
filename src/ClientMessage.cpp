@@ -6,21 +6,21 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:21 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/24 23:02:00 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/25 11:27:26 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ClientMessage.hpp"
 
-ClientMessage::ClientMessage() : command(NOT_ASSIGNED) {}
+ClientMessage::ClientMessage() : commandType(NOT_ASSIGNED) {}
 
-ClientMessage::ClientMessage(ClientMessage const &refObj) : command(refObj.command), tokens(refObj.tokens) {}
+ClientMessage::ClientMessage(ClientMessage const &refObj) : commandType(refObj.commandType), tokens(refObj.tokens) {}
 
 ClientMessage &ClientMessage::operator=(ClientMessage const &refObj)
 {
 	if (this != &refObj)
 	{
-		this->command = refObj.command;
+		this->commandType = refObj.commandType;
 		this->tokens = refObj.tokens;
 	}
 	return (*this);
@@ -50,6 +50,29 @@ Token *ClientMessage::findNthTokenOfType(Token::Type type, int n)
 		}
 	}
 	return (NULL);  // Return NULL if the token isn't found
+}
+
+void ClientMessage::setCommandType(cmdTypes newCommandType)
+{
+	this->commandType = newCommandType;
+}
+
+ClientMessage::cmdTypes ClientMessage::getCommandType()
+{
+	return (this->commandType);
+}
+
+std::string ClientMessage::getCommandString()
+{
+	Token *tokenCommand = this->findNthTokenOfType(Token::COMMAND, 1);
+	if (tokenCommand == NULL)
+	{
+		return ("");
+	}
+	else
+	{
+		return (tokenCommand->getText());
+	}
 }
 
 // --- PRIVATE ---
