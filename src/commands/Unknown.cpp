@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 11:21:17 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/25 17:27:52 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/26 15:20:13 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,11 +70,7 @@ void Unknown::setServerResponse421()
 	response.append(command);
 	response.append(" :Unknown command\r\n");
 
-	serverResponse.setAction(ServerResponse::SEND);
-	serverResponse.setResponse(response);
-	serverResponse.setClientsToSend(client->getFd());
-
-	client->addResponse(serverResponse);
+	client->addResponse(response);
 }
 
 }  // namespace Commands

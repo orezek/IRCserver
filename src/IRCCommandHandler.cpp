@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/26 12:44:58 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/26 15:22:28 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,25 +106,20 @@ void IRCCommandHandler::executeOneCommand(ClientMessage &clientMessage)
 	// needs to be updated!
 	if (wasRegistered == false && client->getUserValid() && client->getNickValid() && client->getPassSent())
 	{
-		int clientFd = client->getFd();
-		std::cout << clientFd << std::endl;
-		ServerResponse serverResponse;
-		serverResponse.setAction(ServerResponse::SEND);
-		serverResponse.setClientsToSend(clientFd);
+		std::string response;
 		if (client->isRegistered())
 		{
-			std::string response = ":" + serverData.getServerName() + " 001 " + client->getNickname() + " :Welcome to the IRC network, " + client->getNickname() + "!" + client->getUsername() + "@" + client->getHostname() + "\n";
+			response = ":" + serverData.getServerName() + " 001 " + client->getNickname() + " :Welcome to the IRC network, " + client->getNickname() + "!" + client->getUsername() + "@" + client->getHostname() + "\n";
 			response.append(":" + serverData.getServerName() + " 002 " + client->getNickname() + " :Your host is " + serverData.getServerName() + ", running version XXXX\n");
 			response.append(":" + serverData.getServerName() + " 003 " + client->getNickname() + " :This server was created XXXXXXXXXXXXXX" + "\n");
 			response.append(":" + serverData.getServerName() + " 004 " + client->getNickname() + " " + serverData.getServerName() + " \n");
-			serverResponse.setResponse(response);
 		}
 		else
 		{
-			serverResponse.setResponse("Not validated - wrong password\r\n");
+			response = "Not validated - wrong password\r\n";
 			// kick user?
 		}
-		client->addResponse(serverResponse);
+		client->addResponse(response);
 	}
 	// needs to be updated
 }

@@ -126,11 +126,7 @@ void Nick::setServerResponse431()
 	response.append(serverData.getServerName());
 	response.append(" 431 :No nickname given\r\n");
 
-	serverResponse.setAction(ServerResponse::SEND);
-	serverResponse.setResponse(response);
-	serverResponse.setClientsToSend(client->getFd());
-
-	client->addResponse(serverResponse);
+	client->addResponse(response);
 }
 
 void Nick::setServerResponse432()
@@ -143,11 +139,7 @@ void Nick::setServerResponse432()
 	response.append(newNick);
 	response.append(" :Erroneus Nickname\r\n");
 
-	serverResponse.setAction(ServerResponse::SEND);
-	serverResponse.setResponse(response);
-	serverResponse.setClientsToSend(client->getFd());
-
-	client->addResponse(serverResponse);
+	client->addResponse(response);
 }
 
 void Nick::setServerResponse433()
@@ -160,11 +152,7 @@ void Nick::setServerResponse433()
 	response.append(newNick);
 	response.append(" :Nickname is already in use\r\n");
 
-	serverResponse.setAction(ServerResponse::SEND);
-	serverResponse.setResponse(response);
-	serverResponse.setClientsToSend(client->getFd());
-
-	client->addResponse(serverResponse);
+	client->addResponse(response);
 }
 
 void Nick::setServerResponseValid(UserData* user)
@@ -183,10 +171,7 @@ void Nick::setServerResponseValid(UserData* user)
 
 	if (user->getUsername() != "" && user->getHostname() != "")
 	{
-		serverResponse.setResponse(response);
-		serverResponse.setAction(ServerResponse::SEND);
-		serverResponse.setClientsToSend(client->getFd());
-		client->addResponse(serverResponse);
+		client->addResponse(response);
 	}
 }
 
