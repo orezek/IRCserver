@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/26 20:06:54 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/26 20:41:45 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,7 @@ void ConnectionHandler::prepareFdSetForSelect(void)
 		Client &client = it->second;
 		int clientSocketFd = it->first;
 		FD_SET(clientSocketFd, &this->readFds);
-		if (!client.hasResponses())
+		if (client.hasResponses())
 		{
 			FD_SET(clientSocketFd, &this->writeFds);
 		}
@@ -235,7 +235,7 @@ void ConnectionHandler::terminateClientSession(std::map<int, Client>::iterator &
 
 void ConnectionHandler::onError(Client &client, const std::string reason)
 {
-	client.setRawData("QUIT :" + reason);
+	client.setRawData("QUIT :" + reason + "\n");
 	IRCCommandHandler ircCommandHandler(client.getFd());
 	ircCommandHandler.processAllCommands();
 }
