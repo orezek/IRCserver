@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/26 13:58:36 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/26 14:37:14 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,7 +264,7 @@ void ConnectionHandler::onRead(std::map<int, Client>::iterator &it)
 	else
 	{
 		client.appendRawData(recvBuff, bytesReceived);
-		if (client.getRawData().back() != '\n')
+		if (client.getRawData().back() != '\n') // back() is C++11 function
 		{
 			clientBuffSize = client.getRawData().size();
 			if (clientBuffSize > MESSAGE_SIZE)
@@ -275,9 +275,7 @@ void ConnectionHandler::onRead(std::map<int, Client>::iterator &it)
 		}
 		else
 		{
-			IRCParser parser(client);
-			parser.parse();
-			IRCCommandHandler ircCommandHandler(&client);
+			IRCCommandHandler ircCommandHandler(clientSocketFd);
 			ircCommandHandler.processAllCommands();
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/25 18:52:43 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/26 12:44:58 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,14 @@ IRCCommandHandler::IRCCommandHandler(Client *client) : client(client), serverDat
 	{
 		throw std::runtime_error("Client unknown.");
 	}
+	clientFd = client->getFd();
 }
+
+IRCCommandHandler::IRCCommandHandler(int newClientFd) : clientFd(newClientFd), serverData(ServerDataManager::getInstance())
+{
+	client = ClientManager::getInstance().findClient(clientFd);
+}
+
 
 // Copy constructor
 IRCCommandHandler::IRCCommandHandler(const IRCCommandHandler &refObj) : client(refObj.client), serverData(refObj.serverData) {}
@@ -28,6 +35,7 @@ IRCCommandHandler &IRCCommandHandler::operator=(const IRCCommandHandler &refObj)
 {
 	if (this != &refObj)
 	{
+		this->clientFd = refObj.clientFd;
 		this->client = refObj.client;
 		this->serverData = refObj.serverData;
 	}
@@ -38,6 +46,9 @@ void IRCCommandHandler::processAllCommands()
 {
 	try
 	{
+		IRCParser parser(clientFd);
+		parser.parse();
+
 		while (1)
 		{
 			ClientMessage clientMessage = client->popMessage();

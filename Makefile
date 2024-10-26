@@ -6,7 +6,7 @@
 #    By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/21 10:59:06 by mbartos           #+#    #+#              #
-#    Updated: 2024/10/18 11:49:43 by mbartos          ###   ########.fr        #
+#    Updated: 2024/10/26 14:36:52 by mbartos          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ NC =	\033[0m
 NAME =		ircserv
 
 CCP =		c++
-CFLAGS =	-g -std=c++98 \
+CFLAGS =	-g  \
 			-I./include/ -I./include/commands
 
 SRC_PATH = ./src/
