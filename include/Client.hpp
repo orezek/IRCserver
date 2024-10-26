@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:09 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/25 18:43:14 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/26 13:16:30 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,12 @@ class Client
 		// Getters and setters
 		int getFd(void) const;
 		sockaddr_in getIpAddress(void) const;
+		void setIpAddress(const sockaddr_in ipAddress);
 		std::string getRawData(void) const;
 		void setRawData(const std::string& data);
-		void appendRawData(const std::string& data);
+		void appendRawData(const char *data, ssize_t bytesReceived);
 		void deleteRawData();
+		void initRawData(void);
 
 		// Status management
 		bool isMarkedForDeletion() const;
