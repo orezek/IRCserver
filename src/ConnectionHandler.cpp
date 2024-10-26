@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/25 18:57:04 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/26 13:52:12 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -267,6 +267,7 @@ void ConnectionHandler::onRead(std::map<int, Client>::iterator &it)
 		// partial message received
 		if ((*(clientBuffers[clientSocketFd].end() - 1) != '\n'))
 		{
+			std::cout << "TEST" << std::endl;
 			// partial message limit reached - mark client for deletion and go to write buffer
 			if (clientBuffSize > MESSAGE_SIZE)
 			{
@@ -282,9 +283,9 @@ void ConnectionHandler::onRead(std::map<int, Client>::iterator &it)
 			// ClientRequestHandler clientRequestHandler(&client);
 			// clientRequestHandler.handleClientRequest(rawClientRequest);
 			client.setRawData(clientBuffers[clientSocketFd]);
-			IRCParser parser(client);
-			parser.parse();
-			IRCCommandHandler ircCommandHandler(&client);
+			// IRCParser parser(client);
+			// parser.parse();
+			IRCCommandHandler ircCommandHandler(client.getFd());
 			ircCommandHandler.processAllCommands();
 			clientBuffers.erase(clientSocketFd);
 		}

@@ -6,18 +6,26 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/25 18:56:30 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/26 12:37:52 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IRCParser.hpp"
 
-IRCParser::IRCParser(Client& client) : client(client) {}
+// IRCParser::IRCParser(Client* client) : client(client) 
+// {
+// 	clientFd = client.getFd();
+// }
+
+IRCParser::IRCParser(int newClientFd) : clientFd(newClientFd)
+{
+	client = ClientManager::getInstance().findClient(clientFd);
+}
 
 void IRCParser::parse()
 {
 	this->splitRawDataToRawMessages();
-	client.deleteRawData();
+	client->deleteRawData();
 
 	for (std::vector<std::string>::iterator it = rawMessages.begin(); it != rawMessages.end(); ++it)
 	{
@@ -27,7 +35,7 @@ void IRCParser::parse()
 		this->parseCommandToken();
 		this->assignCommandType();
 		this->makeTokens();
-		client.addMessage(clientMessage);
+		client->addMessage(clientMessage);
 
 		std::cout << clientMessage << std::endl;  // debug only
 	}
@@ -288,7 +296,7 @@ void IRCParser::assignTokenTypesAsPing()
 void IRCParser::splitRawDataToRawMessages()
 {
 	const std::string delimiters = "\n";
-	std::string tempData = client.getRawData();
+	std::string tempData = client->getRawData();
 
 	while (tempData.find_first_of(delimiters) != std::string::npos)
 	{

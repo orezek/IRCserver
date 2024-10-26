@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:33 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/25 18:51:12 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/26 12:25:04 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,9 @@
 
 #include "Client.hpp"
 #include "ClientMessage.hpp"
-#include "ServerDataManager.hpp" // Will be deleted in the future
-#include "ServerResponse.hpp" // Will be deleted in the future
+#include "IRCParser.hpp"
+#include "ServerDataManager.hpp"  // Will be deleted in the future
+#include "ServerResponse.hpp"     // Will be deleted in the future
 
 // commands
 #include "Nick.hpp"
@@ -32,6 +33,7 @@ class IRCCommandHandler
 {
 	public:
 		IRCCommandHandler(Client *client);
+		IRCCommandHandler(int clientFd);
 		IRCCommandHandler(const IRCCommandHandler &refObj);
 		IRCCommandHandler &operator=(const IRCCommandHandler &refObj);
 
@@ -39,6 +41,7 @@ class IRCCommandHandler
 		void executeOneCommand(ClientMessage &clientMessage);
 
 	private:
-		Client *client;
-		ServerDataManager &serverData; // Will be deleted in the future
+		int clientFd;
+		Client *client;                 // will be deleted
+		ServerDataManager &serverData;  // Will be deleted in the future
 };

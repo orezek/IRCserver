@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ClientManager.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:24 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 19:43:51 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/26 12:35:50 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ ClientManager::~ClientManager() {};
 
 // assignment operator and copy constructor should not be implemented (not defined) only declared (in hpp file)
 
-ClientManager &ClientManager::getInstance()
+ClientManager& ClientManager::getInstance()
 {
 	static ClientManager instance;
 	return (instance);
@@ -50,4 +50,21 @@ int ClientManager::getHighestKey(int masterSocketFd) const
 			return (masterSocketFd);
 	}
 	return (masterSocketFd);
+}
+
+Client* ClientManager::findClient(int clientFd)
+{
+	Client* client;
+
+	std::map<int, Client>::iterator clientsIt = clients.find(clientFd);
+
+	if (clientsIt != clients.end())
+	{
+		client = &(clientsIt->second);
+		return (client);
+	}
+	else
+	{
+		throw std::runtime_error("No client with desired FD found.");
+	}
 }
