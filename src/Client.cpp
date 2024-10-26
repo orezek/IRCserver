@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/26 15:53:56 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/26 16:08:52 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ Client::Client(const Client& other) : fd(other.fd),  // Initialize const member 
 									  ipAddress(other.ipAddress),
 									  rawData(other.rawData),
 									  markedForDeletion(other.markedForDeletion),
-									  responses(other.responses),            // Assuming ServerResponseQueue has a valid copy constructor
+									  //   responses(other.responses),            // Assuming ServerResponseQueue has a valid copy constructor
 									  clientMessages(other.clientMessages),  // Deep copy vector
 									  userData(other.userData)               // Deep copy UserData
 {
@@ -38,7 +38,7 @@ Client& Client::operator=(const Client& other)
 		ipAddress = other.ipAddress;
 		rawData = other.rawData;
 		markedForDeletion = other.markedForDeletion;
-		responses = other.responses;            // Assuming ServerResponseQueue has a valid assignment operator
+		// responses = other.responses;            // Assuming ServerResponseQueue has a valid assignment operator
 		clientMessages = other.clientMessages;  // Deep copy vector
 		userData = other.userData;              // Deep copy UserData
 	}
@@ -62,7 +62,7 @@ void Client::sendAllResponses(void)
 		{
 			if (errno == EAGAIN || errno == EWOULDBLOCK)
 			{
-				continue; // socket is busy, retry
+				continue;  // socket is busy, retry
 			}
 			else
 			{
@@ -70,8 +70,8 @@ void Client::sendAllResponses(void)
 			}
 		}
 	}
+	this->serverResponses.clear();
 }
-
 
 sockaddr_in Client::getIpAddress(void) const
 {
@@ -131,10 +131,10 @@ bool Client::hasResponses()
 	return (this->serverResponses.empty());
 }
 
-void Client::sendAllResponses(void)
-{
-	this->responses.sendAll();
-}
+// void Client::sendAllResponses(void)
+// {
+// 	this->responses.sendAll();
+// }
 
 // creates a copy and adds it to the vector
 void Client::addMessage(const ClientMessage message)

@@ -3,24 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:09 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/26 15:14:36 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/26 16:06:02 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CLIENT_HPP
-#define CLIENT_HPP
+#pragma once
 
 #include <netinet/in.h>
 #include <sys/socket.h>
+#include <cstring>
 
 #include <string>
 #include <vector>
 
 #include "ClientMessage.hpp"
-#include "ServerResponseQueue.hpp"
+// #include "ServerResponseQueue.hpp"
 #include "UserData.hpp"
 
 class Client
@@ -80,9 +80,7 @@ class Client
 		struct sockaddr_in ipAddress;
 		std::string rawData;
 		bool markedForDeletion;
-		ServerResponseQueue responses;
+		// ServerResponseQueue responses;
 		std::vector<ClientMessage> clientMessages;  // FIFO queue
 		std::vector<std::string> serverResponses;   // FIFO queue
 };
-
-#endif
