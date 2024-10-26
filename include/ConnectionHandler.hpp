@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.hpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/26 16:06:47 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/26 19:26:50 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,9 +77,9 @@ class ConnectionHandler
 		int closeServerFd(void);
 		void removeClientFromMap(std::map<int, Client>::iterator &it);
 		void terminateClientSession(std::map<int, Client>::iterator &it);
-		void onError(std::map<int, Client>::iterator &it);
-		void onRead(std::map<int, Client>::iterator &it);
-		void onWrite(std::map<int, Client>::iterator &it);
+		void onError(Client &client, const std::string reason);
+		void onRead(Client &client);
+		void onWrite(Client &client);
 
 		const static int MAX_CLIENTS = 1024;
 		const static int MAX_BUFF_SIZE = 1024;
