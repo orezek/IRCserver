@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/26 14:37:14 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/26 15:11:57 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,7 @@ void ConnectionHandler::prepareFdSetForSelect(void)
 		Client &client = it->second;
 		int clientSocketFd = it->first;
 		FD_SET(clientSocketFd, &this->readFds);
-		if (!client.areResponsesEmpty())
+		if (!client.hasResponses())
 		{
 			FD_SET(clientSocketFd, &this->writeFds);
 		}
@@ -196,8 +196,8 @@ int ConnectionHandler::checkForNewClients(void)
 		ClientManager::getInstance().getClient(clientSocketFd).initRawData();
 		ClientManager::getInstance().getClient(clientSocketFd).setIpAddress(ipClientAddress);
 		this->enableNonBlockingFd(clientSocketFd);
-		//clientBuffers[clientSocketFd] = "";  // map to map client to its buffer
-		// testing
+		// clientBuffers[clientSocketFd] = "";  // map to map client to its buffer
+		//  testing
 		std::cout << "Testing connected clients after Accept line 224" << std::endl;
 		for (std::map<int, Client>::iterator it = ClientManager::getInstance().clients.begin(); it != ClientManager::getInstance().clients.end(); ++it)
 		{
@@ -220,7 +220,7 @@ void ConnectionHandler::terminateClientSession(std::map<int, Client>::iterator &
 {
 	int clientSocketFd = it->first;
 	close(clientSocketFd);
-	//clientBuffers.erase(clientSocketFd);
+	// clientBuffers.erase(clientSocketFd);
 	ClientManager::getInstance().getClient(clientSocketFd).deleteRawData();
 	removeClientFromMap(it);
 }
@@ -264,7 +264,7 @@ void ConnectionHandler::onRead(std::map<int, Client>::iterator &it)
 	else
 	{
 		client.appendRawData(recvBuff, bytesReceived);
-		if (client.getRawData().back() != '\n') // back() is C++11 function
+		if (client.getRawData().back() != '\n')  // back() is C++11 function
 		{
 			clientBuffSize = client.getRawData().size();
 			if (clientBuffSize > MESSAGE_SIZE)
@@ -311,7 +311,7 @@ int ConnectionHandler::serverEventLoop(void)
 			{
 				onWrite(clientIter);
 			}
-			if (client.isMarkedForDeletion() && client.areResponsesEmpty())  // m-bartos: Added "&& client.serverResponses.isEmpty()" - To check, that all serverResponses in the ServerResponseQueue were sent
+			if (client.isMarkedForDeletion() && client.hasResponses())  // m-bartos: Added "&& client.serverResponses.isEmpty()" - To check, that all serverResponses in the ServerResponseQueue were sent
 			{
 				terminateClientSession(clientIter);
 				std::cout << "Client " << clientSocketFd << " session has been terminated." << std::endl;

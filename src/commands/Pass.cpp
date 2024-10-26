@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 13:05:16 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/25 13:03:21 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/26 15:53:25 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ Pass::~Pass() {}
 
 void Pass::execute()
 {
-	client->userData.setPassSent(true);
+	client->setPassSent(true);
 
 	Token* tokenPassedPassword = this->clientMessage.findNthTokenOfType(Token::SERVER_PASSWORD, 1);
 
@@ -40,7 +40,7 @@ void Pass::execute()
 		return;
 	}
 
-	if (client->userData.isRegistered())
+	if (client->isRegistered())
 	{
 		// user already registered, send 462 "You may not reregister" response
 		this->setServerResponse462();
@@ -53,7 +53,7 @@ void Pass::execute()
 	if (passedPassword == serverPassword)
 	{
 		// valid password passed
-		client->userData.setPassValid(true);
+		client->setPassValid(true);
 		this->setServerResponseValid();  // no need to have it there
 	}
 	// else if

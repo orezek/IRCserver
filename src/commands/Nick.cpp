@@ -33,7 +33,7 @@ Nick::~Nick() {}
 
 void Nick::execute()
 {
-	oldNick = client->userData.getNickname();
+	oldNick = client->getNickname();
 	if (oldNick == "")
 		oldNick = "*";
 
@@ -58,10 +58,10 @@ void Nick::execute()
 		return;
 	}
 
-	client->userData.setNickname(newNick);
-	client->userData.setNickValid(true);
+	client->setNickname(newNick);
+	client->setNickValid(true);
 
-	setServerResponseValid(&(client->userData));
+	setServerResponseValid();
 }
 
 // ---- PRIVATE ----- //
@@ -126,11 +126,7 @@ void Nick::setServerResponse431()
 	response.append(serverData.getServerName());
 	response.append(" 431 :No nickname given\r\n");
 
-	serverResponse.setAction(ServerResponse::SEND);
-	serverResponse.setResponse(response);
-	serverResponse.setClientsToSend(client->getFd());
-
-	client->addResponse(serverResponse);
+	client->addResponse(response);
 }
 
 void Nick::setServerResponse432()
@@ -143,11 +139,7 @@ void Nick::setServerResponse432()
 	response.append(newNick);
 	response.append(" :Erroneus Nickname\r\n");
 
-	serverResponse.setAction(ServerResponse::SEND);
-	serverResponse.setResponse(response);
-	serverResponse.setClientsToSend(client->getFd());
-
-	client->addResponse(serverResponse);
+	client->addResponse(response);
 }
 
 void Nick::setServerResponse433()
@@ -160,33 +152,26 @@ void Nick::setServerResponse433()
 	response.append(newNick);
 	response.append(" :Nickname is already in use\r\n");
 
-	serverResponse.setAction(ServerResponse::SEND);
-	serverResponse.setResponse(response);
-	serverResponse.setClientsToSend(client->getFd());
-
-	client->addResponse(serverResponse);
+	client->addResponse(response);
 }
 
-void Nick::setServerResponseValid(UserData* user)
+void Nick::setServerResponseValid()
 {
 	// TODO - also send to other user, that someone has changed the nickname? in rooms?
 	// server prefix??? y/n?
 	std::string response = ":";
 	response.append(oldNick);
 	response.append("!");
-	response.append(user->getUsername());
+	response.append(client->getUsername());
 	response.append("@");
-	response.append(user->getHostname());
+	response.append(client->getHostname());
 	response.append(" NICK :");
 	response.append(newNick);
 	response.append("\r\n");
 
-	if (user->getUsername() != "" && user->getHostname() != "")
+	if (client->getUsername() != "" && client->getHostname() != "")
 	{
-		serverResponse.setResponse(response);
-		serverResponse.setAction(ServerResponse::SEND);
-		serverResponse.setClientsToSend(client->getFd());
-		client->addResponse(serverResponse);
+		client->addResponse(response);
 	}
 }
 

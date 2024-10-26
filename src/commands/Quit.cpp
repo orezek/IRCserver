@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 19:48:17 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/25 17:28:18 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/26 15:55:09 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,9 @@ void Quit::setServerResponseValid()
 	Token* tokenQuitMessage = clientMessage.findNthTokenOfType(Token::MESSAGE, 1);
 
 	std::string response = "ERROR :Closing link: (";
-	response.append(client->userData.getUsername());
+	response.append(client->getUsername());
 	response.append("@");
-	response.append(client->userData.getHostname());
+	response.append(client->getHostname());
 	response.append(") ");
 	if (tokenQuitMessage == NULL)
 	{
@@ -57,11 +57,7 @@ void Quit::setServerResponseValid()
 	}
 	response.append("\r\n");
 
-	serverResponse.setAction(ServerResponse::QUIT);
-	serverResponse.setResponse(response);
-	serverResponse.setClientsToSend(client->getFd());
-
-	client->addResponse(serverResponse);
+	client->addResponse(response);
 }
 
 }  // namespace Commands

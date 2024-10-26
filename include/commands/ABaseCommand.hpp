@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 11:10:59 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/25 18:43:43 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/26 15:24:20 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 #include "Client.hpp"
 #include "ClientMessage.hpp"
 #include "ServerDataManager.hpp"
-#include "ServerResponse.hpp"
 
 namespace Commands
 {
@@ -35,7 +34,6 @@ class ABaseCommand
 		Client* client;
 		ServerDataManager& serverData;
 		ClientMessage& clientMessage;
-		ServerResponse serverResponse;
 
 		// void addServerResponseToClient();
 

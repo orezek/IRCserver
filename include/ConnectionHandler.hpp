@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.hpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/26 14:05:14 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/26 16:06:47 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 // custom classes
 // #include "ClientRequest.hpp"
 // #include "ProcessData.hpp"
-#include "ServerResponse.hpp"
+// #include "ServerResponse.hpp"
 // #include "IrcServer.hpp"
 // #include "Client.hpp"
 #include "ClientManager.hpp"
@@ -67,7 +67,7 @@ class ConnectionHandler
 		int serverEventLoop(void);
 		// recv and send system calls in loops
 		ssize_t recvAll(int socketFd, char *buffer, size_t bufferSize);
-		ssize_t sendServerResponse(ServerResponse &serverResponse);
+		// ssize_t sendServerResponse(ServerResponse &serverResponse);
 		// check partiality of a message
 		bool isMessageValid(int clientSocketFd, char *buff, ssize_t bytesReceived);
 
