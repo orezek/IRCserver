@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 14:13:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/25 13:04:10 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/26 15:23:15 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void User::execute()
 		return;
 	}
 
-	if (client->userData.isRegistered() == true)
+	if (client->isRegistered() == true)
 	{
 		// user already registered, send 462 "You may not reregister" response
 		this->setServerResponse462();
@@ -41,11 +41,11 @@ void User::execute()
 
 	// check parameters, if they are valid
 
-	client->userData.setUsername(usernameToken->getText());
-	client->userData.setHostname(hostnameToken->getText());
-	client->userData.setServername(servernameToken->getText());
-	client->userData.setRealname(realnameToken->getText());
-	client->userData.setUserValid(true);
+	client->setUsername(usernameToken->getText());
+	client->setHostname(hostnameToken->getText());
+	client->setServername(servernameToken->getText());
+	client->setRealname(realnameToken->getText());
+	client->setUserValid(true);
 }
 
 User::User(User const& refObj) : ABaseCommand(refObj) {}
