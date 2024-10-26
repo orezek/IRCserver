@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:09 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/26 13:16:30 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/26 15:14:36 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ class Client
 		void setIpAddress(const sockaddr_in ipAddress);
 		std::string getRawData(void) const;
 		void setRawData(const std::string& data);
-		void appendRawData(const char *data, ssize_t bytesReceived);
+		void appendRawData(const char* data, ssize_t bytesReceived);
 		void deleteRawData();
 		void initRawData(void);
 
@@ -48,8 +48,8 @@ class Client
 		void markForDeletion(void);
 
 		// Response handling
-		bool areResponsesEmpty();
-		void addResponse(const ServerResponse response);
+		bool hasResponses();
+		void addResponse(const std::string response);
 		void sendAllResponses(void);
 
 		// Message handling
@@ -82,6 +82,7 @@ class Client
 		bool markedForDeletion;
 		ServerResponseQueue responses;
 		std::vector<ClientMessage> clientMessages;  // FIFO queue
+		std::vector<std::string> serverResponses;   // FIFO queue
 };
 
 #endif
