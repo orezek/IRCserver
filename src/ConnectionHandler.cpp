@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/26 13:52:12 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/26 14:37:14 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,8 +193,10 @@ int ConnectionHandler::checkForNewClients(void)
 				  << ntohs(ipClientAddress.sin_port)
 				  << std::endl;
 		ClientManager::getInstance().addClient(clientSocketFd);
+		ClientManager::getInstance().getClient(clientSocketFd).initRawData();
+		ClientManager::getInstance().getClient(clientSocketFd).setIpAddress(ipClientAddress);
 		this->enableNonBlockingFd(clientSocketFd);
-		clientBuffers[clientSocketFd] = "";  // map to map client to its buffer
+		//clientBuffers[clientSocketFd] = "";  // map to map client to its buffer
 		// testing
 		std::cout << "Testing connected clients after Accept line 224" << std::endl;
 		for (std::map<int, Client>::iterator it = ClientManager::getInstance().clients.begin(); it != ClientManager::getInstance().clients.end(); ++it)
@@ -218,7 +220,8 @@ void ConnectionHandler::terminateClientSession(std::map<int, Client>::iterator &
 {
 	int clientSocketFd = it->first;
 	close(clientSocketFd);
-	clientBuffers.erase(clientSocketFd);
+	//clientBuffers.erase(clientSocketFd);
+	ClientManager::getInstance().getClient(clientSocketFd).deleteRawData();
 	removeClientFromMap(it);
 }
 
@@ -255,20 +258,15 @@ void ConnectionHandler::onRead(std::map<int, Client>::iterator &it)
 	// hard message limit
 	else if (bytesReceived > MESSAGE_SIZE)
 	{
-		// notify ProcessData - really is it needed, discuss with Martin
-		// notify ProcessData
-		client.markForDeletion();  // is this enough as notification for ProcessData?
+		client.markForDeletion();
 		std::cout << "Client " << clientSocketFd << " disconnected due to a message limit." << std::endl;
 	}
 	else
 	{
-		clientBuffers[clientSocketFd].append(recvBuff, bytesReceived);
-		clientBuffSize = clientBuffers[clientSocketFd].size();
-		// partial message received
-		if ((*(clientBuffers[clientSocketFd].end() - 1) != '\n'))
+		client.appendRawData(recvBuff, bytesReceived);
+		if (client.getRawData().back() != '\n') // back() is C++11 function
 		{
-			std::cout << "TEST" << std::endl;
-			// partial message limit reached - mark client for deletion and go to write buffer
+			clientBuffSize = client.getRawData().size();
 			if (clientBuffSize > MESSAGE_SIZE)
 			{
 				client.markForDeletion();
@@ -277,17 +275,8 @@ void ConnectionHandler::onRead(std::map<int, Client>::iterator &it)
 		}
 		else
 		{
-			// Server ready to process data and create a response
-			// Create a ClientRequest
-			// ClientRequest rawClientRequest(clientSocketFd, bytesReceived, clientBuffers[clientSocketFd], this->ipClientAddress);
-			// ClientRequestHandler clientRequestHandler(&client);
-			// clientRequestHandler.handleClientRequest(rawClientRequest);
-			client.setRawData(clientBuffers[clientSocketFd]);
-			// IRCParser parser(client);
-			// parser.parse();
-			IRCCommandHandler ircCommandHandler(client.getFd());
+			IRCCommandHandler ircCommandHandler(clientSocketFd);
 			ircCommandHandler.processAllCommands();
-			clientBuffers.erase(clientSocketFd);
 		}
 	}
 }

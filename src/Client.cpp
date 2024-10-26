@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/25 18:43:50 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/26 13:16:39 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,11 @@ sockaddr_in Client::getIpAddress(void) const
 	return (this->ipAddress);
 }
 
+void Client::setIpAddress(const sockaddr_in ipAddress)
+{
+	this->ipAddress = ipAddress;
+}
+
 // Raw Data from socket
 std::string Client::getRawData(void) const
 {
@@ -69,12 +74,17 @@ void Client::setRawData(const std::string& data)
 	this->rawData = data;
 }
 
-void Client::appendRawData(const std::string& data)
+void Client::appendRawData(const char *data, ssize_t bytesReceived)
 {
-	this->rawData.append(data);
+	this->rawData.append(data, bytesReceived);
 }
 
 void Client::deleteRawData(void)
+{
+	this->rawData.clear();
+}
+
+void Client::initRawData(void)
 {
 	this->rawData.clear();
 }

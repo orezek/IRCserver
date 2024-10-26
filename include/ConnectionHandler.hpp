@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.hpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/25 18:56:13 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/26 14:05:14 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,6 @@ class ConnectionHandler
 
 		int &getMasterSocketFd(void);
 		int closeServerFd(void);
-		// void setSrvPortNumber(int srvPortNumber);
-		// void setIrcPassword(std::string password);
-		// utility functions for connection handler
 		void removeClientFromMap(std::map<int, Client>::iterator &it);
 		void terminateClientSession(std::map<int, Client>::iterator &it);
 		void onError(std::map<int, Client>::iterator &it);
@@ -95,9 +92,6 @@ class ConnectionHandler
 		int selectResponse;
 		int maxFd;
 		socklen_t ipAddressLenSrv;
-		// std::vector<int> clientSockets;
-		std::map<int, std::string> clientBuffers;
-		// std::map<int, ServerResponse> serverResponseBuffer;
 		fd_set readFds;
 		fd_set writeFds;
 		fd_set errorFds;
