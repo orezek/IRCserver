@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/26 13:16:39 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/26 15:53:56 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,26 @@ int Client::getFd(void) const
 	return (this->fd);
 }
 
+void Client::sendAllResponses(void)
+{
+	for (int i = 0; i < this->serverResponses.size(); i++)
+	{
+		int bytesSent = send(this->fd, this->serverResponses[i].c_str(), this->serverResponses[i].size(), 0);
+		if (bytesSent == -1)
+		{
+			if (errno == EAGAIN || errno == EWOULDBLOCK)
+			{
+				continue; // socket is busy, retry
+			}
+			else
+			{
+				perror("Sending failed");
+			}
+		}
+	}
+}
+
+
 sockaddr_in Client::getIpAddress(void) const
 {
 	return (this->ipAddress);
@@ -74,7 +94,7 @@ void Client::setRawData(const std::string& data)
 	this->rawData = data;
 }
 
-void Client::appendRawData(const char *data, ssize_t bytesReceived)
+void Client::appendRawData(const char* data, ssize_t bytesReceived)
 {
 	this->rawData.append(data, bytesReceived);
 }
@@ -101,14 +121,14 @@ void Client::markForDeletion(void)
 }
 
 // Response methods - need adjustments
-void Client::addResponse(const ServerResponse response)
+void Client::addResponse(const std::string response)
 {
-	this->responses.push_back(response);
+	this->serverResponses.push_back(response);
 }
 
-bool Client::areResponsesEmpty()
+bool Client::hasResponses()
 {
-	return (this->responses.isEmpty());
+	return (this->serverResponses.empty());
 }
 
 void Client::sendAllResponses(void)
