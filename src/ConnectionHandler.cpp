@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/26 20:41:45 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/27 10:17:28 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -250,7 +250,7 @@ void ConnectionHandler::onRead(Client &client)
 	{
 		this->onError(client, "Recv failed");
 		// notify ProcessData - really is it needed, discuss with Martin
-		//client.markForDeletion();  // is this enough as notification for ProcessData?
+		// client.markForDeletion();  // is this enough as notification for ProcessData?
 		std::cout << "Recv failed " << clientSocketFd << ": " << strerror(errno) << std::endl;
 	}
 	// client closed connection
@@ -258,7 +258,7 @@ void ConnectionHandler::onRead(Client &client)
 	{
 		// notify ProcessData - message has to be sent to all rooms where the user has been present
 		// notify ProcessData - really is it needed, discuss with Martin
-		//client.markForDeletion();  // is this enough as notification for ProcessData?
+		// client.markForDeletion();  // is this enough as notification for ProcessData?
 		this->onError(client, "Client quit.");
 		std::cout << "Client " << clientSocketFd << " quit." << std::endl;
 	}
@@ -276,7 +276,7 @@ void ConnectionHandler::onRead(Client &client)
 			clientBuffSize = client.getRawData().size();
 			if (clientBuffSize > MESSAGE_SIZE)
 			{
-				this->onError(client,"Client disconnected due to a message limit in partial read.");
+				this->onError(client, "Client disconnected due to a message limit in partial read.");
 				std::cout << "Client " << clientSocketFd << " disconnected due to a message limit in partial read." << std::endl;
 			}
 		}
@@ -312,11 +312,11 @@ int ConnectionHandler::serverEventLoop(void)
 			{
 				onRead(client);
 			}
-			if (FD_ISSET(clientSocketFd, &writeFds) && !client.isMarkedForDeletion())
+			if (FD_ISSET(clientSocketFd, &writeFds))
 			{
 				onWrite(client);
 			}
-			if (client.isMarkedForDeletion())  // m-bartos: Added "&& client.serverResponses.isEmpty()" - To check, that all serverResponses in the ServerResponseQueue were sent
+			if (client.isMarkedForDeletion() && !client.hasResponses())  // m-bartos: Added "&& client.serverResponses.isEmpty()" - To check, that all serverResponses in the ServerResponseQueue were sent
 			{
 				terminateClientSession(clientIter);
 				std::cout << "Client " << clientSocketFd << " session has been terminated." << std::endl;

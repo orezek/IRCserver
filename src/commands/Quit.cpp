@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 19:48:17 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/26 15:55:09 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/27 10:18:35 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ Quit::~Quit() {}
 
 void Quit::execute()
 {
+	client->markForDeletion();
+
 	this->setServerResponseValid();
 }
 
@@ -36,28 +38,28 @@ void Quit::execute()
 
 void Quit::setServerResponseValid()
 {
-	client->markForDeletion();
+	// NO 
 
-	Token* tokenQuitMessage = clientMessage.findNthTokenOfType(Token::MESSAGE, 1);
+	// Token* tokenQuitMessage = clientMessage.findNthTokenOfType(Token::MESSAGE, 1);
 
-	std::string response = "ERROR :Closing link: (";
-	response.append(client->getUsername());
-	response.append("@");
-	response.append(client->getHostname());
-	response.append(") ");
-	if (tokenQuitMessage == NULL)
-	{
-		response.append("[Client Exited]");
-	}
-	else
-	{
-		response.append("[Quit: ");
-		response.append(tokenQuitMessage->getText());
-		response.append("]");
-	}
-	response.append("\r\n");
+	// std::string response = "ERROR :Closing link: (";
+	// response.append(client->getUsername());
+	// response.append("@");
+	// response.append(client->getHostname());
+	// response.append(") ");
+	// if (tokenQuitMessage == NULL)
+	// {
+	// 	response.append("[Client Exited]");
+	// }
+	// else
+	// {
+	// 	response.append("[Quit: ");
+	// 	response.append(tokenQuitMessage->getText());
+	// 	response.append("]");
+	// }
+	// response.append("\r\n");
 
-	client->addResponse(response);
+	// client->addResponse(response);
 }
 
 }  // namespace Commands
