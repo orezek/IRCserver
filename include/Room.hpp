@@ -3,17 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   Room.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:55:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/27 11:46:57 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/27 14:47:47 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
-#include <set>
+
+#include <algorithm>
 #include <sstream>
 #include <string>
+#include <vector>
 
 #include "Types.hpp"
 class Room
@@ -27,10 +29,11 @@ class Room
 		void removeClient(int clientSocketFd);
 		RoomName getRoomName() const;
 		std::string getRoomAsString() const;
+		int* findNthClient(int n);
 
 	private:
 		RoomName roomName;
-		std::set<int> clientFds;
+		std::vector<int> clientFds;
 		// to do //
 };
 

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:33 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/26 16:02:49 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/27 15:05:04 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 #include "Nick.hpp"
 #include "Pass.hpp"
 #include "Ping.hpp"
+#include "Privmsg.hpp"
 #include "Quit.hpp"
 #include "Unknown.hpp"
 #include "User.hpp"

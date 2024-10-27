@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Room.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:51:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/27 11:46:57 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/27 14:47:18 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,13 @@ RoomName Room::getRoomName() const
 
 void Room::addClient(int clientSocketFd)
 {
-	clientFds.insert(clientSocketFd);
+	clientFds.push_back(clientSocketFd);
 }
 
 void Room::removeClient(int clientSocketFd)
 {
-	clientFds.erase(clientSocketFd);
+	// Use std::remove to shift matching elements to the end, then erase them
+	clientFds.erase(std::remove(clientFds.begin(), clientFds.end(), clientSocketFd), clientFds.end());
 }
 
 std::string Room::getRoomAsString() const
@@ -47,11 +48,11 @@ std::string Room::getRoomAsString() const
 	output << "RoomName = " << this->getRoomName();
 	output << ", ";
 	output << "Clients = ";
-	for (std::set<int>::const_iterator it = clientFds.begin(); it != clientFds.end(); ++it)
+	for (std::vector<int>::const_iterator it = clientFds.begin(); it != clientFds.end(); ++it)
 	{
 		output << *it;
 
-		std::set<int>::const_iterator nextIt = it;
+		std::vector<int>::const_iterator nextIt = it;
 		nextIt++;
 		if (nextIt != clientFds.end())
 		{
@@ -59,6 +60,16 @@ std::string Room::getRoomAsString() const
 		}
 	}
 	return (output.str());
+}
+
+int* Room::findNthClient(int n)
+{
+	// Check if n is within the valid range
+	if (n > 0 && n <= clientFds.size())
+	{
+		return &clientFds[n - 1];  // Return a pointer to the nth element (1-based index)
+	}
+	return (NULL);  // Return NULL if n is out of range
 }
 
 // --- OUTSIDE OF THE CLASS ---
