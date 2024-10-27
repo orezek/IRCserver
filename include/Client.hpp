@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:09 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/27 10:52:45 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/27 14:46:40 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 #include <netinet/in.h>
 #include <sys/socket.h>
-#include <cstring>
 
+#include <algorithm>
+#include <cstring>
 #include <string>
 #include <vector>
 
@@ -26,7 +27,6 @@
 class Client
 {
 	public:
-
 		Client(int fd);
 		Client(const Client&);
 		Client& operator=(const Client&);
@@ -73,6 +73,10 @@ class Client
 		void setPassValid(bool passValue);
 		void setNickValid(bool nickValue);
 		void setUserValid(bool userValue);
+		// Room management
+		bool isInRoom(const std::string& roomName);
+		void addRoom(std::string roomName);
+		void deleteRoom(std::string roomName);
 
 	private:
 		const int fd;
@@ -83,4 +87,5 @@ class Client
 		UserData userData;
 		std::vector<ClientMessage> clientMessages;  // FIFO queue
 		std::vector<std::string> serverResponses;   // FIFO queue
+		std::vector<std::string> roomList;
 };

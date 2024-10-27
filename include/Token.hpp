@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 19:24:12 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/21 21:00:29 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/27 12:36:19 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@ class Token
 			NOT_ASSIGNED = -1,  // DO WE NEED IT?
 			PREFIX,
 			COMMAND,
-			NICK_NAME,        // NICK command
-			ROOM_NAME,        // JOIN command
+			NICK_NAME,        // NICK command, PRIVMSG
+			ROOM_NAME,        // JOIN command, PRIVMSG
 			ROOM_PASSWORD,    // JOIN command
 			SERVER_PASSWORD,  // PASS command
-			MESSAGE,          // QUIT command,
+			MESSAGE,          // QUIT command, PRIVMSG
 			USER_NAME,        // USER command
 			HOST_NAME,        // USER command
 			SERVER_NAME,      // USER command

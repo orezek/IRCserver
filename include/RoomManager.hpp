@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Rooms.hpp                                          :+:      :+:    :+:   */
+/*   RoomManager.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:34:46 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/16 10:11:23 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/27 11:54:16 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ class RoomManager
 		void removeRoom(RoomName roomName);
 		Room *getRoom(RoomName roomName);
 		std::string getRoomsAsString() const;
+		bool roomExist(RoomName roomName);
 
 	private:
 		RoomManager();

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/26 15:22:28 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/27 15:22:58 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ IRCCommandHandler::IRCCommandHandler(int newClientFd) : clientFd(newClientFd), s
 {
 	client = ClientManager::getInstance().findClient(clientFd);
 }
-
 
 // Copy constructor
 IRCCommandHandler::IRCCommandHandler(const IRCCommandHandler &refObj) : client(refObj.client), serverData(refObj.serverData) {}
@@ -80,6 +79,11 @@ void IRCCommandHandler::executeOneCommand(ClientMessage &clientMessage)
 	{
 		Commands::Pass passCommand(client, clientMessage);
 		passCommand.execute();
+	}
+	else if (commandType == ClientMessage::PRIVMSG)
+	{
+		Commands::Privmsg privmsgCommand(client, clientMessage);
+		privmsgCommand.execute();
 	}
 	else if (commandType == ClientMessage::NICK)
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/26 19:55:36 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/27 15:36:35 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,6 @@ ClientMessage Client::popMessage(void)
 
 	ClientMessage firstMessage = clientMessages.front();
 	clientMessages.erase(clientMessages.begin());
-	std::cout << firstMessage.getCommandString() << std::endl;
 	return firstMessage;
 }
 
@@ -256,4 +255,23 @@ void Client::setNickValid(bool nickValue)
 void Client::setUserValid(bool userValue)
 {
 	userData.setUserValid(userValue);
+}
+
+// Room manager
+// bool Client::isInRoom(std::string roomName)
+// {
+// 	return std::find(this->roomList.begin(), this->roomList.end(), roomName) != this->roomList.end();
+// }
+
+bool Client::isInRoom(const std::string& roomName)
+{
+	return std::find(this->roomList.begin(), this->roomList.end(), roomName) != this->roomList.end();
+}
+
+void Client::addRoom(std::string roomName)
+{
+	if (!isInRoom(roomName))
+	{
+		this->roomList.push_back(roomName);
+	}
 }

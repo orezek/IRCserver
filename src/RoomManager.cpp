@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:34:33 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/16 10:13:06 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/27 13:19:48 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,15 @@ RoomManager &RoomManager::getInstance()
 
 void RoomManager::addRoom(RoomName roomName)
 {
-	roomList.insert(std::make_pair(roomName, Room(roomName)));
+	if (!RoomManager::getInstance().roomExist(roomName))
+	{
+		roomList.insert(std::make_pair(roomName, Room(roomName)));
+	}
+}
+
+bool RoomManager::roomExist(RoomName roomName)
+{
+	return this->roomList.find(roomName) != this->roomList.end();
 }
 
 void RoomManager::removeRoom(RoomName roomName)
@@ -30,6 +38,7 @@ void RoomManager::removeRoom(RoomName roomName)
 
 Room *RoomManager::getRoom(RoomName roomName)
 {
+	// implement check that the room exists and return NULL if not
 	std::map<RoomName, Room>::iterator it = roomList.find(roomName);
 	Room *room = &(it->second);
 	return (room);

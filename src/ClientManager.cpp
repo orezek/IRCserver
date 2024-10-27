@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:24 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/26 14:33:49 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/27 13:31:45 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void ClientManager::addClient(int clientSocketFd)
 	this->clients.insert(std::make_pair(clientSocketFd, Client(clientSocketFd)));
 }
 
-Client &ClientManager::getClient(const int clientSocketFd)
+Client& ClientManager::getClient(const int clientSocketFd)
 {
 	return (this->clients.at(clientSocketFd));
 }
@@ -72,4 +72,17 @@ Client* ClientManager::findClient(int clientFd)
 	{
 		throw std::runtime_error("No client with desired FD found.");
 	}
+}
+
+Client* ClientManager::findClient(const std::string& nick)
+{
+	for (std::map<int, Client>::iterator clientsIt = clients.begin(); clientsIt != clients.end(); ++clientsIt)
+	{
+		if (clientsIt->second.getNickname() == nick)
+		{
+			return &(clientsIt->second);
+		}
+	}
+
+	throw std::runtime_error("No client with the desired nickname found.");
 }

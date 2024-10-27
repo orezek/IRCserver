@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 11:10:59 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/26 15:24:20 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/27 13:59:58 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <string>
 
 #include "Client.hpp"
+#include "ClientManager.hpp"
 #include "ClientMessage.hpp"
 #include "ServerDataManager.hpp"
 
@@ -28,7 +29,7 @@ class ABaseCommand
 		ABaseCommand(ABaseCommand const& refObj);
 		ABaseCommand& operator=(ABaseCommand const& refObj);
 		virtual void execute() = 0;  // Pure virtual function to be implemented by child classes
-		virtual ~ABaseCommand();  // Virtual destructor for safe cleanup
+		virtual ~ABaseCommand();     // Virtual destructor for safe cleanup
 
 	protected:
 		Client* client;
@@ -41,6 +42,10 @@ class ABaseCommand
 		void setServerResponse451();
 		void setServerResponse461();
 		void setServerResponse462();
+
+		// Send response to Room or Client
+		void addResponse(Client* client, std::string response);
+		void addResponse(Room* room, std::string response);
 };
 
 }  // namespace Commands

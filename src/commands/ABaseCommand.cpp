@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 09:51:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/26 15:26:39 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/27 14:01:51 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,29 @@ void ABaseCommand::setServerResponse462()
 	response.append(" :You may not reregister\r\n");
 
 	client->addResponse(response);
+}
+
+void ABaseCommand::addResponse(Client* client, std::string response)
+{
+	client->addResponse(response);
+}
+
+void ABaseCommand::addResponse(Room* room, std::string response)
+{
+	int i = 1;
+	int* clientFd;
+
+	do
+	{
+		clientFd = room->findNthClient(i);
+		if (clientFd != NULL)
+		{
+			Client& client = ClientManager::getInstance().getClient(*clientFd);
+			// exception?
+			client.addResponse(response);
+		}
+		i++;
+	} while (clientFd != NULL);
 }
 
 }  // namespace Commands

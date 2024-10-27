@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:18 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/25 11:27:23 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/27 12:34:33 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ class ClientMessage
 			NICK,
 			PASS,
 			PING,
+			PRIVMSG,
 			QUIT,
 			USER,
 			CAP,

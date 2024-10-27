@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:51:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/14 22:52:09 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/27 14:47:18 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 Room::Room(RoomName roomName) : roomName(roomName) {}
 Room::~Room() {}
-Room::Room(const Room& obj) : roomName(obj.roomName), clients(obj.clients) {}
+Room::Room(const Room& obj) : roomName(obj.roomName), clientFds(obj.clientFds) {}
 Room& Room::operator=(const Room& obj)
 {
 	if (this != &obj)
 	{
 		this->roomName = obj.roomName;
-		this->clients = obj.clients;
+		this->clientFds = obj.clientFds;
 	}
 	return (*this);
 }
@@ -30,14 +30,15 @@ RoomName Room::getRoomName() const
 	return (roomName);
 }
 
-void Room::addClient(ClientID clientID)
+void Room::addClient(int clientSocketFd)
 {
-	clients.insert(clientID);
+	clientFds.push_back(clientSocketFd);
 }
 
-void Room::removeClient(ClientID clientID)
+void Room::removeClient(int clientSocketFd)
 {
-	clients.erase(clientID);
+	// Use std::remove to shift matching elements to the end, then erase them
+	clientFds.erase(std::remove(clientFds.begin(), clientFds.end(), clientSocketFd), clientFds.end());
 }
 
 std::string Room::getRoomAsString() const
@@ -47,18 +48,28 @@ std::string Room::getRoomAsString() const
 	output << "RoomName = " << this->getRoomName();
 	output << ", ";
 	output << "Clients = ";
-	for (std::set<ClientID>::const_iterator it = clients.begin(); it != clients.end(); ++it)
+	for (std::vector<int>::const_iterator it = clientFds.begin(); it != clientFds.end(); ++it)
 	{
 		output << *it;
 
-		std::set<ClientID>::const_iterator nextIt = it;
+		std::vector<int>::const_iterator nextIt = it;
 		nextIt++;
-		if (nextIt != clients.end())
+		if (nextIt != clientFds.end())
 		{
 			output << ", ";
 		}
 	}
 	return (output.str());
+}
+
+int* Room::findNthClient(int n)
+{
+	// Check if n is within the valid range
+	if (n > 0 && n <= clientFds.size())
+	{
+		return &clientFds[n - 1];  // Return a pointer to the nth element (1-based index)
+	}
+	return (NULL);  // Return NULL if n is out of range
 }
 
 // --- OUTSIDE OF THE CLASS ---

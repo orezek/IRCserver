@@ -6,13 +6,13 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/26 12:37:52 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/27 15:33:18 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IRCParser.hpp"
 
-// IRCParser::IRCParser(Client* client) : client(client) 
+// IRCParser::IRCParser(Client* client) : client(client)
 // {
 // 	clientFd = client.getFd();
 // }
@@ -103,7 +103,72 @@ void IRCParser::makeTokens()
 		parseParametersAsOneText();
 		assignTokenTypesAsPing();
 	}
+	else if (commandType == ClientMessage::PRIVMSG)
+	{
+		parseParametersAsPrivmsg();
+		// assignTokenTypesAsPrivmsg();
+	}
 	// add functionality for other commands
+}
+
+void IRCParser::parseParametersAsPrivmsg()
+{
+	std::string clientsAndRoomsDelimiters = " \r\n";
+	int pos = 0;
+	std::string clientsAndRooms;
+
+	if ((pos = tempInputData.find_first_of(clientsAndRoomsDelimiters)) != std::string::npos)
+	{
+		if (pos > 0)
+		{
+			clientsAndRooms = tempInputData.substr(0, pos + 1);
+		}
+		tempInputData = tempInputData.erase(0, pos + 1);
+	}
+
+	std::string clientsAndRoomsDelimiters2 = ", \r\n";
+	int posClientOrRoom = 0;
+	std::string clientOrRoom;
+
+	while ((posClientOrRoom = clientsAndRooms.find_first_of(clientsAndRoomsDelimiters2)) != std::string::npos)
+	{
+		if (posClientOrRoom > 0)
+		{
+			clientOrRoom = clientsAndRooms.substr(0, posClientOrRoom);
+			if (clientOrRoom[0] == '#')
+			{
+				std::string room = clientOrRoom.substr(1, clientOrRoom.size() - 1);
+				Token tokenRoom(Token::ROOM_NAME, room);
+				this->clientMessage.addToken(tokenRoom);
+			}
+			else
+			{
+				std::string nick = clientOrRoom.substr(0, clientOrRoom.size());
+				Token tokenNick(Token::NICK_NAME, nick);
+				this->clientMessage.addToken(tokenNick);
+			}
+		}
+		clientsAndRooms = clientsAndRooms.erase(0, posClientOrRoom + 1);
+	}
+
+	std::string messageDelimiters = "\r\n";
+	std::string message;
+
+	tempInputData.erase(0, tempInputData.find_first_not_of(" "));
+
+	std::size_t messageStart = 0;
+	if (tempInputData[0] == ':')
+		messageStart = 1;
+	std::size_t messageEnd = tempInputData.find_first_of(messageDelimiters, messageStart);
+
+	if (messageEnd != std::string::npos && messageStart < messageEnd)
+	{
+		message = tempInputData.substr(messageStart, messageEnd - messageStart);
+		tempInputData = tempInputData.erase(0, messageEnd + 1);
+
+		Token token(Token::MESSAGE, message);
+		this->clientMessage.addToken(token);
+	}
 }
 
 void IRCParser::parseParametersBySpace()
@@ -226,6 +291,10 @@ void IRCParser::assignCommandType()
 	else if (commandString == "USER")
 	{
 		clientMessage.setCommandType(ClientMessage::USER);
+	}
+	else if (commandString == "PRIVMSG")
+	{
+		clientMessage.setCommandType(ClientMessage::PRIVMSG);
 	}
 	else
 	{

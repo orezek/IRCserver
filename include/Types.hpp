@@ -3,14 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   Types.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 20:00:26 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/14 22:29:14 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/27 11:47:16 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-typedef int ClientID;
 typedef std::string RoomName;

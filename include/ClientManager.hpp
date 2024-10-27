@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:28 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/26 14:33:12 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/27 13:25:55 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ class ClientManager
 		int	getHighestKey(int masterSocketFd) const;
 		std::map<int, Client> clients;
 		Client* findClient(int clientFd);
+		Client* findClient(const std::string& nick);
 		//new
 		Client &getClient(const int clientSocketFd);
 
