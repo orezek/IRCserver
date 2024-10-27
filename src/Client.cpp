@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/26 16:08:52 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/26 19:55:36 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ void Client::addResponse(const std::string response)
 
 bool Client::hasResponses()
 {
-	return (this->serverResponses.empty());
+	return (!this->serverResponses.empty());
 }
 
 // void Client::sendAllResponses(void)
