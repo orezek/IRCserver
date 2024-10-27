@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:09 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/27 10:52:45 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/27 12:14:04 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,10 @@ class Client
 		void setPassValid(bool passValue);
 		void setNickValid(bool nickValue);
 		void setUserValid(bool userValue);
+		// Room management
+		bool isInRoom(std::string roomName);
+		void addRoom(std::string roomName);
+		void deleteRoom(std::string roomName);
 
 	private:
 		const int fd;
@@ -83,4 +87,5 @@ class Client
 		UserData userData;
 		std::vector<ClientMessage> clientMessages;  // FIFO queue
 		std::vector<std::string> serverResponses;   // FIFO queue
+		std::vector<std::string> roomList;
 };

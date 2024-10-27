@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RoomManager.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:34:33 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/16 10:13:06 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/27 12:00:13 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,15 @@ RoomManager &RoomManager::getInstance()
 
 void RoomManager::addRoom(RoomName roomName)
 {
-	roomList.insert(std::make_pair(roomName, Room(roomName)));
+	if (!RoomManager::getInstance().roomExist(roomName))
+	{
+		roomList.insert(std::make_pair(roomName, Room(roomName)));
+	}
+}
+
+bool RoomManager::roomExist(RoomName roomName)
+{
+	return this->roomList.find(roomName) != this->roomList.end();
 }
 
 void RoomManager::removeRoom(RoomName roomName)

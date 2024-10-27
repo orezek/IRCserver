@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Room.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:51:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/14 22:52:09 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/27 11:46:57 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 Room::Room(RoomName roomName) : roomName(roomName) {}
 Room::~Room() {}
-Room::Room(const Room& obj) : roomName(obj.roomName), clients(obj.clients) {}
+Room::Room(const Room& obj) : roomName(obj.roomName), clientFds(obj.clientFds) {}
 Room& Room::operator=(const Room& obj)
 {
 	if (this != &obj)
 	{
 		this->roomName = obj.roomName;
-		this->clients = obj.clients;
+		this->clientFds = obj.clientFds;
 	}
 	return (*this);
 }
@@ -30,14 +30,14 @@ RoomName Room::getRoomName() const
 	return (roomName);
 }
 
-void Room::addClient(ClientID clientID)
+void Room::addClient(int clientSocketFd)
 {
-	clients.insert(clientID);
+	clientFds.insert(clientSocketFd);
 }
 
-void Room::removeClient(ClientID clientID)
+void Room::removeClient(int clientSocketFd)
 {
-	clients.erase(clientID);
+	clientFds.erase(clientSocketFd);
 }
 
 std::string Room::getRoomAsString() const
@@ -47,13 +47,13 @@ std::string Room::getRoomAsString() const
 	output << "RoomName = " << this->getRoomName();
 	output << ", ";
 	output << "Clients = ";
-	for (std::set<ClientID>::const_iterator it = clients.begin(); it != clients.end(); ++it)
+	for (std::set<int>::const_iterator it = clientFds.begin(); it != clientFds.end(); ++it)
 	{
 		output << *it;
 
-		std::set<ClientID>::const_iterator nextIt = it;
+		std::set<int>::const_iterator nextIt = it;
 		nextIt++;
-		if (nextIt != clients.end())
+		if (nextIt != clientFds.end())
 		{
 			output << ", ";
 		}

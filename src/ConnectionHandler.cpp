@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/27 10:17:28 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/27 12:23:34 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,8 +196,13 @@ int ConnectionHandler::checkForNewClients(void)
 		ClientManager::getInstance().getClient(clientSocketFd).initRawData();
 		ClientManager::getInstance().getClient(clientSocketFd).setIpAddress(ipClientAddress);
 		this->enableNonBlockingFd(clientSocketFd);
+		// Temp room
+		RoomManager::getInstance().addRoom("test");
+		RoomManager::getInstance().getRoom("test")->addClient(clientSocketFd);
+		ClientManager::getInstance().getClient(clientSocketFd).addRoom("test");
 		// clientBuffers[clientSocketFd] = "";  // map to map client to its buffer
 		//  testing
+		std::cout << ClientManager::getInstance().getClient(clientSocketFd).isInRoom("test") << std::endl;
 		std::cout << "Testing connected clients after Accept line 224" << std::endl;
 		for (std::map<int, Client>::iterator it = ClientManager::getInstance().clients.begin(); it != ClientManager::getInstance().clients.end(); ++it)
 		{
