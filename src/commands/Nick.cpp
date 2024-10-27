@@ -111,7 +111,7 @@ bool Nick::isAlreadyUsedNick(std::string& nick)
 
 	for (std::map<int, Client>::iterator it = clients.clients.begin(); it != clients.clients.end(); ++it)
 	{
-		std::string oldNick = it->second.userData.getNickname();
+		std::string oldNick = it->second.getNickname();
 		if (nick == oldNick)
 		{
 			return (true);

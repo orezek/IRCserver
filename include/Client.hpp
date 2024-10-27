@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:09 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/26 16:06:02 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/27 10:52:45 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 class Client
 {
 	public:
-		UserData userData;
 
 		Client(int fd);
 		Client(const Client&);
@@ -81,6 +80,7 @@ class Client
 		std::string rawData;
 		bool markedForDeletion;
 		// ServerResponseQueue responses;
+		UserData userData;
 		std::vector<ClientMessage> clientMessages;  // FIFO queue
 		std::vector<std::string> serverResponses;   // FIFO queue
 };
