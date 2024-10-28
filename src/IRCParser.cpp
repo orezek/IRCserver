@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/28 20:34:06 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/28 21:02:20 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,16 +190,20 @@ void IRCParser::parseAndAssignParametersAsJoin()
 	}
 	else
 	{
-		rooms = tempInputData.substr(0, posRoomsEnd + 1);
-		size_t posPasswordsEnd = tempInputData.substr(posRoomsEnd + 1).find_first_of(" \t");
+		rooms = tempInputData.substr(0, posRoomsEnd);
+
+		std::string remainingData = tempInputData.substr(posRoomsEnd + 1);
+		size_t posPasswordsEnd = remainingData.find_first_of(" \t");
 
 		if (posPasswordsEnd == std::string::npos)
 		{
-			passwords = tempInputData.substr(posRoomsEnd + 1);
+			// Take the entire remaining string
+			passwords = remainingData;
 		}
 		else
 		{
-			passwords = tempInputData.substr(posRoomsEnd + 1, posPasswordsEnd);
+			// Take only up to the next whitespace
+			passwords = remainingData.substr(0, posPasswordsEnd);
 		}
 	}
 
