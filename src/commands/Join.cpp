@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:14:27 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/28 15:38:11 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/28 16:11:36 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,25 @@ void Join::execute()
 	std::string roomPasword;
 	Token *tokenRoomname = NULL;
 
-	int i = 1;
+	tokenRoomname = clientMessage.findNthTokenOfType(Token::ROOM_NAME, 1);
+	if (tokenRoomname == NULL)
+	{
+		std::cout << "No ROOMS!" << std::endl;
+		return;
+	}
 
+	int i = 1;
 	do
 	{
 		tokenRoomname = clientMessage.findNthTokenOfType(Token::ROOM_NAME, i);
 		Token *tokenRoompassword = clientMessage.findNthTokenOfType(Token::ROOM_PASSWORD, i);
 
+		this->response = "Hello from\n";
+		//response. append(client->getFd());
 		if (tokenRoomname == NULL)
 		{
-			setServerResponse525(); // find exact server response
+			//setServerResponse525(); // find exact server response
+			//std::cout << "Wrong command" << std::endl;
 			return;
 		}
 
