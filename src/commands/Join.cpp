@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:14:27 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/28 16:11:36 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/28 23:11:54 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,14 @@ Join::~Join() {}
 
 void Join::execute()
 {
+	// JOIN command is has no rooms
+	//:server.name 461 Aldo JOIN :Not enough parameters
+
+	// JOIN replies to requesting client:
+	// success:
+	//:Aldo!user@hostname JOIN :#TEST
+	// failure:
+
 	bool roomExists;
 	std::string roomPasword;
 	Token *tokenRoomname = NULL;
@@ -34,7 +42,7 @@ void Join::execute()
 	tokenRoomname = clientMessage.findNthTokenOfType(Token::ROOM_NAME, 1);
 	if (tokenRoomname == NULL)
 	{
-		std::cout << "No ROOMS!" << std::endl;
+		setServerResponse461();
 		return;
 	}
 
@@ -43,13 +51,8 @@ void Join::execute()
 	{
 		tokenRoomname = clientMessage.findNthTokenOfType(Token::ROOM_NAME, i);
 		Token *tokenRoompassword = clientMessage.findNthTokenOfType(Token::ROOM_PASSWORD, i);
-
-		this->response = "Hello from\n";
-		//response. append(client->getFd());
 		if (tokenRoomname == NULL)
 		{
-			//setServerResponse525(); // find exact server response
-			//std::cout << "Wrong command" << std::endl;
 			return;
 		}
 
@@ -64,36 +67,70 @@ void Join::execute()
 
 		if ((roomExists = RoomManager::getInstance().roomExist(tokenRoomname->getText())))
 		{
-			Room *room = RoomManager::getInstance().getRoom((tokenRoomname->getText()));
-			if (room->isPasswordRequired())
+			this->room = RoomManager::getInstance().getRoom((tokenRoomname->getText()));
+			if (this->room->isPasswordRequired())
 			{
-				if (room->getPassword() != roomPasword)
+				if (this->room->getPassword() != roomPasword)
 				{
-					setServerResponse525();
+					setServerResponse475();
 					return;
 				}
 			}
-			room->addClient(client->getFd());
-			this->addResponse(room, this->response);
+			this->room->addClient(client->getFd());
+			setServerResponseJoin();
 		}
 		// room does not exist
 		else
 		{
 			RoomManager::getInstance().addRoom(tokenRoomname->getText());
-			Room *room = RoomManager::getInstance().getRoom(tokenRoomname->getText());
-			room->addClient(client->getFd());
+			this->room = RoomManager::getInstance().getRoom(tokenRoomname->getText());
+			this->room->addClient(client->getFd());
 			if (!roomPasword.empty())
 			{
-				room->setPassword(roomPasword);
+				this->room->setPassword(roomPasword);
 			}
+			setServerResponseJoin();
 		}
 		i++;
 	} while (tokenRoomname != NULL);
 }
-void Join::setServerResponse525()
+// wrong room password (key)
+void Join::setServerResponse475()
 {
-	std::cout << "Wrong room password." << std::endl;
+	//:server.name 475 Aldo #TEST :Cannot join channel (+k)
+	std::string nickname = client->getNickname();
+	if (nickname.empty())
+	{
+		nickname = "*";
+	}
+	std::string response = ":";
+	response.append(serverData.getServerName());
+	response.append(" 475 ");
+	response.append(nickname);
+	response.append(" #");
+	response.append(this->room->getRoomName());
+	response.append(" :Cannot join channel (+k)\r\n");
+	this->addResponse(client, response);
+}
+// Successfull join to the channell
+void Join::setServerResponseJoin()
+{
+	//:Aldo!user@hostname JOIN :#TEST
+	std::string nickname = client->getNickname();
+	if (nickname.empty())
+	{
+		nickname = "*";
+	}
+	std::string response = ":";
+	response.append(nickname);
+	response.append("!user@hostname");
+	response.append(" JOIN :");
+	response.append("#");
+	response.append(this->room->getRoomName());
+	response.append("\r\n");
+	this->addResponse(this->room, response);
 }
 
 }
+
 
