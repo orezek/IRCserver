@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/28 15:50:58 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/28 20:24:52 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,12 +110,12 @@ void IRCParser::makeTokens()
 	}
 	else if (commandType == ClientMessage::JOIN)
 	{
-		parseAndAssignParametersAsJoin2();
+		parseAndAssignParametersAsJoin();
 	}
 	// add functionality for other commands
 }
 
-void IRCParser::parseAndAssignParametersAsJoin2()
+void IRCParser::parseAndAssignParametersAsJoin()
 {
 	tempInputData = trim(tempInputData);
 	size_t posRoomsEnd = tempInputData.find_first_of(" \t");
@@ -210,76 +210,6 @@ void IRCParser::processRoomPassword(const std::string& password)
 
 	Token tokenRoomPassword(Token::ROOM_PASSWORD, trimmedPassword);
 	clientMessage.addToken(tokenRoomPassword);
-}
-
-void IRCParser::parseAndAssignParametersAsJoin()
-{
-	std::string clientsAndRoomsDelimiters = " \r\n";
-	int pos = 0;
-	std::string rooms;
-
-	// parse first parameter with all roomNames
-	tempInputData.erase(0, tempInputData.find_first_not_of(" "));  // trim leading spaces
-	if ((pos = tempInputData.find_first_of(clientsAndRoomsDelimiters)) != std::string::npos)
-	{
-		if (pos > 0)
-		{
-			rooms = tempInputData.substr(0, pos + 1);
-		}
-		tempInputData = tempInputData.erase(0, pos + 1);
-	}
-
-	std::string clientsAndRoomsDelimiters2 = ", \r\n";
-	int posRoom = 0;
-	std::string room;
-
-	// parse the first parameter to single roomNames
-	while ((posRoom = rooms.find_first_of(clientsAndRoomsDelimiters2)) != std::string::npos)
-	{
-		if (posRoom > 0)
-		{
-			room = rooms.substr(0, posRoom);
-			std::cout << room << std::endl;
-			if (room[0] == '#' || room[0] == '&')
-			{
-				room = room.substr(1, room.size() - 1);
-			}
-			Token tokenRoom(Token::ROOM_NAME, room);
-			this->clientMessage.addToken(tokenRoom);
-		}
-		rooms = rooms.erase(0, posRoom + 1);
-	}
-
-	std::string roomPasswordsDelimiters = " \r\n";
-	int posRoomPasswords = 0;
-	std::string roomPasswords;
-
-	// parse second parameter with all roomPasswords
-	tempInputData.erase(0, tempInputData.find_first_not_of(" "));  // trim leading spaces
-	if ((posRoomPasswords = tempInputData.find_first_of(roomPasswordsDelimiters)) != std::string::npos)
-	{
-		if (posRoomPasswords > 0)
-		{
-			roomPasswords = tempInputData.substr(0, posRoomPasswords + 1);
-		}
-		tempInputData = tempInputData.erase(0, posRoomPasswords + 1);
-	}
-
-	std::string roomPassworDelimiter = ", \r\n";
-	int posRoomPassword = 0;
-	std::string roomPassword;
-
-	// parse the second parameter to single roomPasswords
-	while ((posRoomPassword = roomPasswords.find_first_of(roomPassworDelimiter)) != std::string::npos)
-	{
-		if (posRoomPassword > 0)
-		{
-			roomPassword = roomPasswords.substr(0, posRoomPassword);
-			Token tokenRoomPassword(Token::ROOM_PASSWORD, roomPassword);
-			this->clientMessage.addToken(tokenRoomPassword);
-		}
-		roomPasswords = roomPasswords.erase(0, posRoomPassword + 1);
-	}
 }
 
 std::string IRCParser::trim(const std::string& str)
