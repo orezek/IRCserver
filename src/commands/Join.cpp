@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:14:27 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/28 15:35:42 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/28 15:38:11 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void Join::execute()
 			roomPasword = tokenRoompassword->getText();
 		}
 
-		if (roomExists = RoomManager::getInstance().roomExist(tokenRoomname->getText()))
+		if ((roomExists = RoomManager::getInstance().roomExist(tokenRoomname->getText())))
 		{
 			Room *room = RoomManager::getInstance().getRoom((tokenRoomname->getText()));
 			if (room->isPasswordRequired())

@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:51:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/28 14:17:00 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/28 15:37:39 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ Room& Room::operator=(const Room& obj)
 	{
 		this->roomName = obj.roomName;
 		this->clientFds = obj.clientFds;
-		this->Password = obj.password;
+		this->password = obj.password;
 	}
 	return (*this);
 }
