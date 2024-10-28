@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:33 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/27 15:05:04 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/28 15:43:17 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 // #include "ServerResponse.hpp"     // Will be deleted in the future
 
 // commands
+#include "Join.hpp"
 #include "Nick.hpp"
 #include "Pass.hpp"
 #include "Ping.hpp"
