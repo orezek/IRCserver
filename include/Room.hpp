@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Room.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:55:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/27 14:47:47 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/28 14:18:33 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,14 @@ class Room
 		RoomName getRoomName() const;
 		std::string getRoomAsString() const;
 		int* findNthClient(int n);
+		// Room password
+		const std::string& getPassword() const;
+		void setPassword(std::string password);
+		bool isPasswordRequired(void);
 
 	private:
 		RoomName roomName;
+		std::string password;
 		std::vector<int> clientFds;
 		// to do //
 };

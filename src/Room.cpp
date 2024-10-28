@@ -3,16 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   Room.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:51:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/27 14:47:18 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/28 14:17:00 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Room.hpp"
 
-Room::Room(RoomName roomName) : roomName(roomName) {}
+Room::Room(RoomName roomName) : roomName(roomName)
+{
+	// sets to an empty string
+	password.clear();
+}
 Room::~Room() {}
 Room::Room(const Room& obj) : roomName(obj.roomName), clientFds(obj.clientFds) {}
 Room& Room::operator=(const Room& obj)
@@ -21,6 +25,7 @@ Room& Room::operator=(const Room& obj)
 	{
 		this->roomName = obj.roomName;
 		this->clientFds = obj.clientFds;
+		this->Password = obj.password;
 	}
 	return (*this);
 }
@@ -39,6 +44,21 @@ void Room::removeClient(int clientSocketFd)
 {
 	// Use std::remove to shift matching elements to the end, then erase them
 	clientFds.erase(std::remove(clientFds.begin(), clientFds.end(), clientSocketFd), clientFds.end());
+}
+
+const std::string& Room::getPassword() const
+{
+	return (this->password);
+}
+
+void Room::setPassword(std::string password)
+{
+	this->password = password;
+}
+
+bool Room::isPasswordRequired(void)
+{
+	return (!this->password.empty());
 }
 
 std::string Room::getRoomAsString() const
@@ -78,3 +98,4 @@ std::ostream& operator<<(std::ostream& output, Room const& instance)
 	output << instance.getRoomAsString();
 	return (output);
 }
+
