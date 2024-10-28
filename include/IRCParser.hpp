@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:09:39 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/28 11:56:39 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/28 14:53:49 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@ class IRCParser
 		void parseParametersBySpace();
 		void parseParametersAsOneText();
 		void parseParametersAsUser();
-		void parseAndAssignParametersAsPrivmsg();
 		void parseAndAssignParametersAsJoin();
+		void parseAndAssignParametersAsJoin2();
 
 		void assignCommandType();
 
@@ -54,4 +54,12 @@ class IRCParser
 		void assignTokenTypesAsPing();
 		void assignTokenTypesAsQuit();
 		void assignTokenTypesAsUser();
+
+		// PRIVMSG functions:
+		void parseAndAssignParametersAsPrivmsg();
+		void processClientOrRoom(const std::string& target);
+		void processRoom(const std::string& room);
+		void processRoomPassword(const std::string& password);
+
+		std::string trim(const std::string& str);
 };

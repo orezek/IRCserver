@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/28 12:31:54 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/28 15:04:22 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,9 +110,103 @@ void IRCParser::makeTokens()
 	}
 	else if (commandType == ClientMessage::JOIN)
 	{
-		parseAndAssignParametersAsJoin();
+		parseAndAssignParametersAsJoin2();
 	}
 	// add functionality for other commands
+}
+
+void IRCParser::parseAndAssignParametersAsJoin2()
+{
+	tempInputData = trim(tempInputData);
+	size_t posRoomsEnd = tempInputData.find_first_of(" \t");
+
+	if (posRoomsEnd == std::string::npos)
+	{
+		return;
+	}
+
+	std::string Rooms = tempInputData.substr(0, posRoomsEnd);
+
+	size_t posPasswordsEnd = tempInputData.substr(posRoomsEnd + 1).find_first_of(" \t");
+
+	std::string passwords;
+	if (posPasswordsEnd == std::string::npos)
+	{
+		passwords = tempInputData.substr(posRoomsEnd + 1);
+	}
+	else
+	{
+		passwords = tempInputData.substr(posRoomsEnd + 1, posPasswordsEnd);
+	}
+
+	// Process rooms
+	size_t start = 0;
+	size_t end = 0;
+	while ((end = Rooms.find(',', start)) != std::string::npos)
+	{
+		processRoom(Rooms.substr(start, end - start));
+		start = end + 1;
+	}
+	// Process the last room
+	if (start < Rooms.length())
+	{
+		processRoom(Rooms.substr(start));
+	}
+
+	// Process room passwords
+	start = 0;
+	end = 0;
+	while ((end = passwords.find(',', start)) != std::string::npos)
+	{
+		processRoomPassword(passwords.substr(start, end - start));
+		start = end + 1;
+	}
+	// Process the last room password
+	if (start < passwords.length())
+	{
+		processRoomPassword(passwords.substr(start));
+	}
+
+	// Clear the temporary input data
+	tempInputData.clear();
+}
+
+void IRCParser::processRoom(const std::string& room)
+{
+	std::string trimmedRoom = trim(room);
+
+	if (trimmedRoom.empty())
+	{
+		return;
+	}
+
+	if (trimmedRoom[0] == '#' || trimmedRoom[0] == '&')
+	{
+		// Room name - remove the prefix character
+		std::string roomName = trimmedRoom.substr(1);
+		if (!roomName.empty())
+		{
+			Token tokenRoom(Token::ROOM_NAME, roomName);
+			clientMessage.addToken(tokenRoom);
+		}
+	}
+	else
+	{
+		std::cout << "Wrong room prefix" << std::endl;
+	}
+}
+
+void IRCParser::processRoomPassword(const std::string& password)
+{
+	std::string trimmedPassword = trim(password);
+
+	if (trimmedPassword.empty())
+	{
+		return;
+	}
+
+	Token tokenRoomPassword(Token::ROOM_PASSWORD, trimmedPassword);
+	clientMessage.addToken(tokenRoomPassword);
 }
 
 void IRCParser::parseAndAssignParametersAsJoin()
@@ -185,65 +279,86 @@ void IRCParser::parseAndAssignParametersAsJoin()
 	}
 }
 
+std::string IRCParser::trim(const std::string& str)
+{
+	size_t first = str.find_first_not_of(" \t\r\n");
+	if (first == std::string::npos) return "";
+
+	size_t last = str.find_last_not_of(" \t\r\n");
+	return (str.substr(first, last - first + 1));
+}
+
+// Helper method to process a single target (room or nickname)
+void IRCParser::processClientOrRoom(const std::string& clientOrRoom)
+{
+	std::string trimmedClientOrRoom = trim(clientOrRoom);
+
+	if (trimmedClientOrRoom.empty())
+	{
+		return;
+	}
+
+	if (trimmedClientOrRoom[0] == '#' || trimmedClientOrRoom[0] == '&')
+	{
+		// Room name - remove the prefix character
+		std::string roomName = trimmedClientOrRoom.substr(1);
+		if (!roomName.empty())
+		{
+			Token tokenRoom(Token::ROOM_NAME, roomName);
+			clientMessage.addToken(tokenRoom);
+		}
+	}
+	else
+	{
+		// Nickname
+		std::string nickname = trimmedClientOrRoom;
+		Token tokenNick(Token::NICK_NAME, nickname);
+		clientMessage.addToken(tokenNick);
+	}
+}
+
 void IRCParser::parseAndAssignParametersAsPrivmsg()
 {
-	std::string clientsAndRoomsDelimiters = " \r\n";
-	int pos = 0;
-	std::string clientsAndRooms;
+	tempInputData = trim(tempInputData);
+	size_t pos = tempInputData.find_first_of(" \t");
 
-	tempInputData.erase(0, tempInputData.find_first_not_of(" "));  // trim leading spaces
-	if ((pos = tempInputData.find_first_of(clientsAndRoomsDelimiters)) != std::string::npos)
+	if (pos == std::string::npos)
 	{
-		if (pos > 0)
-		{
-			clientsAndRooms = tempInputData.substr(0, pos + 1);
-		}
-		tempInputData = tempInputData.erase(0, pos + 1);
+		return;
 	}
 
-	std::string clientsAndRoomsDelimiters2 = ", \r\n";
-	int posClientOrRoom = 0;
-	std::string clientOrRoom;
+	std::string clientsAndRooms = tempInputData.substr(0, pos);
+	std::string message = trim(tempInputData.substr(pos + 1));
 
-	while ((posClientOrRoom = clientsAndRooms.find_first_of(clientsAndRoomsDelimiters2)) != std::string::npos)
+	// Process clientsAndRooms
+	size_t start = 0;
+	size_t end = 0;
+
+	while ((end = clientsAndRooms.find(',', start)) != std::string::npos)
 	{
-		if (posClientOrRoom > 0)
-		{
-			clientOrRoom = clientsAndRooms.substr(0, posClientOrRoom);
-			if (clientOrRoom[0] == '#')
-			{
-				std::string room = clientOrRoom.substr(1, clientOrRoom.size() - 1);
-				Token tokenRoom(Token::ROOM_NAME, room);
-				this->clientMessage.addToken(tokenRoom);
-			}
-			else
-			{
-				std::string nick = clientOrRoom.substr(0, clientOrRoom.size());
-				Token tokenNick(Token::NICK_NAME, nick);
-				this->clientMessage.addToken(tokenNick);
-			}
-		}
-		clientsAndRooms = clientsAndRooms.erase(0, posClientOrRoom + 1);
+		processClientOrRoom(clientsAndRooms.substr(start, end - start));
+		start = end + 1;
+	}
+	// Process the last client/room
+	if (start < clientsAndRooms.length())
+	{
+		processClientOrRoom(clientsAndRooms.substr(start));
 	}
 
-	std::string messageDelimiters = "\r\n";
-	std::string message;
-
-	tempInputData.erase(0, tempInputData.find_first_not_of(" "));  // trim leading spaces
-
-	std::size_t messageStart = 0;
-	if (tempInputData[0] == ':')
-		messageStart = 1;
-	std::size_t messageEnd = tempInputData.find_first_of(messageDelimiters, messageStart);
-
-	if (messageEnd != std::string::npos && messageStart < messageEnd)
+	// Handle optional ':' prefix in message
+	if (!message.empty() && message[0] == ':')
 	{
-		message = tempInputData.substr(messageStart, messageEnd - messageStart);
-		tempInputData = tempInputData.erase(0, messageEnd + 1);
-
-		Token token(Token::MESSAGE, message);
-		this->clientMessage.addToken(token);
+		message = message.substr(1);
 	}
+	// Process message
+	if (!message.empty())
+	{
+		Token tokenMessage(Token::MESSAGE, message);
+		clientMessage.addToken(tokenMessage);
+	}
+
+	// Clear the temporary input data
+	tempInputData.clear();
 }
 
 void IRCParser::parseParametersBySpace()
