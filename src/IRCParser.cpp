@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/28 15:04:22 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/28 15:50:58 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,37 +120,40 @@ void IRCParser::parseAndAssignParametersAsJoin2()
 	tempInputData = trim(tempInputData);
 	size_t posRoomsEnd = tempInputData.find_first_of(" \t");
 
+	std::string rooms;
+	std::string passwords;
+
 	if (posRoomsEnd == std::string::npos)
 	{
-		return;
-	}
-
-	std::string Rooms = tempInputData.substr(0, posRoomsEnd);
-
-	size_t posPasswordsEnd = tempInputData.substr(posRoomsEnd + 1).find_first_of(" \t");
-
-	std::string passwords;
-	if (posPasswordsEnd == std::string::npos)
-	{
-		passwords = tempInputData.substr(posRoomsEnd + 1);
+		rooms = tempInputData.substr(0);
 	}
 	else
 	{
-		passwords = tempInputData.substr(posRoomsEnd + 1, posPasswordsEnd);
+		rooms = tempInputData.substr(0, posRoomsEnd + 1);
+		size_t posPasswordsEnd = tempInputData.substr(posRoomsEnd + 1).find_first_of(" \t");
+
+		if (posPasswordsEnd == std::string::npos)
+		{
+			passwords = tempInputData.substr(posRoomsEnd + 1);
+		}
+		else
+		{
+			passwords = tempInputData.substr(posRoomsEnd + 1, posPasswordsEnd);
+		}
 	}
 
 	// Process rooms
 	size_t start = 0;
 	size_t end = 0;
-	while ((end = Rooms.find(',', start)) != std::string::npos)
+	while ((end = rooms.find(',', start)) != std::string::npos)
 	{
-		processRoom(Rooms.substr(start, end - start));
+		processRoom(rooms.substr(start, end - start));
 		start = end + 1;
 	}
 	// Process the last room
-	if (start < Rooms.length())
+	if (start < rooms.length())
 	{
-		processRoom(Rooms.substr(start));
+		processRoom(rooms.substr(start));
 	}
 
 	// Process room passwords
