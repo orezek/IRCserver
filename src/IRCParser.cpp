@@ -6,16 +6,11 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/28 20:24:52 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/28 20:34:06 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IRCParser.hpp"
-
-// IRCParser::IRCParser(Client* client) : client(client)
-// {
-// 	clientFd = client.getFd();
-// }
 
 IRCParser::IRCParser(int newClientFd) : clientFd(newClientFd)
 {
@@ -34,7 +29,7 @@ void IRCParser::parse()
 		this->parsePrefixToken();
 		this->parseCommandToken();
 		this->assignCommandType();
-		this->makeTokens();
+		this->parseParameterTokens();
 		client->addMessage(clientMessage);
 
 		std::cout << clientMessage << std::endl;  // debug only
@@ -42,6 +37,23 @@ void IRCParser::parse()
 }
 
 // ---- PRIVATE ----
+void IRCParser::splitRawDataToRawMessages()
+{
+	const std::string delimiters = "\n";
+	std::string tempData = client->getRawData();
+
+	while (tempData.find_first_of(delimiters) != std::string::npos)
+	{
+		std::string rawMessage;
+		size_t pos = tempData.find_first_of(delimiters);
+		rawMessage = tempData.substr(0, pos + 1);
+
+		rawMessages.push_back(rawMessage);
+		tempData = tempData.erase(0, pos + 1);
+
+		std::cout << "rawMessage = |" << rawMessage << "|" << std::endl;
+	}
+}
 void IRCParser::parsePrefixToken()
 {
 	// trim leading spaces?
@@ -74,7 +86,56 @@ void IRCParser::parseCommandToken()
 	}
 }
 
-void IRCParser::makeTokens()
+void IRCParser::assignCommandType()
+{
+	Token* tokenCommand = clientMessage.findNthTokenOfType(Token::COMMAND, 1);
+	if (tokenCommand == NULL)
+	{
+		clientMessage.setCommandType(ClientMessage::NOT_ASSIGNED);
+		return;
+	}
+
+	std::string commandString = tokenCommand->getText();
+
+	if (commandString == "CAP")
+	{
+		clientMessage.setCommandType(ClientMessage::CAP);
+	}
+	else if (commandString == "NICK")
+	{
+		clientMessage.setCommandType(ClientMessage::NICK);
+	}
+	else if (commandString == "PASS")
+	{
+		clientMessage.setCommandType(ClientMessage::PASS);
+	}
+	else if (commandString == "PING")
+	{
+		clientMessage.setCommandType(ClientMessage::PING);
+	}
+	else if (commandString == "QUIT")
+	{
+		clientMessage.setCommandType(ClientMessage::QUIT);
+	}
+	else if (commandString == "USER")
+	{
+		clientMessage.setCommandType(ClientMessage::USER);
+	}
+	else if (commandString == "PRIVMSG")
+	{
+		clientMessage.setCommandType(ClientMessage::PRIVMSG);
+	}
+	else if (commandString == "JOIN")
+	{
+		clientMessage.setCommandType(ClientMessage::JOIN);
+	}
+	else
+	{
+		clientMessage.setCommandType(ClientMessage::UNKNOWN);
+	}
+}
+
+void IRCParser::parseParameterTokens()
 {
 	ClientMessage::cmdTypes commandType = clientMessage.getCommandType();
 
@@ -193,10 +254,6 @@ void IRCParser::processRoom(const std::string& room)
 			clientMessage.addToken(tokenRoom);
 		}
 	}
-	else
-	{
-		std::cout << "Wrong room prefix" << std::endl;
-	}
 }
 
 void IRCParser::processRoomPassword(const std::string& password)
@@ -210,44 +267,6 @@ void IRCParser::processRoomPassword(const std::string& password)
 
 	Token tokenRoomPassword(Token::ROOM_PASSWORD, trimmedPassword);
 	clientMessage.addToken(tokenRoomPassword);
-}
-
-std::string IRCParser::trim(const std::string& str)
-{
-	size_t first = str.find_first_not_of(" \t\r\n");
-	if (first == std::string::npos) return "";
-
-	size_t last = str.find_last_not_of(" \t\r\n");
-	return (str.substr(first, last - first + 1));
-}
-
-// Helper method to process a single target (room or nickname)
-void IRCParser::processClientOrRoom(const std::string& clientOrRoom)
-{
-	std::string trimmedClientOrRoom = trim(clientOrRoom);
-
-	if (trimmedClientOrRoom.empty())
-	{
-		return;
-	}
-
-	if (trimmedClientOrRoom[0] == '#' || trimmedClientOrRoom[0] == '&')
-	{
-		// Room name - remove the prefix character
-		std::string roomName = trimmedClientOrRoom.substr(1);
-		if (!roomName.empty())
-		{
-			Token tokenRoom(Token::ROOM_NAME, roomName);
-			clientMessage.addToken(tokenRoom);
-		}
-	}
-	else
-	{
-		// Nickname
-		std::string nickname = trimmedClientOrRoom;
-		Token tokenNick(Token::NICK_NAME, nickname);
-		clientMessage.addToken(tokenNick);
-	}
 }
 
 void IRCParser::parseAndAssignParametersAsPrivmsg()
@@ -292,6 +311,34 @@ void IRCParser::parseAndAssignParametersAsPrivmsg()
 
 	// Clear the temporary input data
 	tempInputData.clear();
+}
+
+void IRCParser::processClientOrRoom(const std::string& clientOrRoom)
+{
+	std::string trimmedClientOrRoom = trim(clientOrRoom);
+
+	if (trimmedClientOrRoom.empty())
+	{
+		return;
+	}
+
+	if (trimmedClientOrRoom[0] == '#' || trimmedClientOrRoom[0] == '&')
+	{
+		// Room name - remove the prefix character
+		std::string roomName = trimmedClientOrRoom.substr(1);
+		if (!roomName.empty())
+		{
+			Token tokenRoom(Token::ROOM_NAME, roomName);
+			clientMessage.addToken(tokenRoom);
+		}
+	}
+	else
+	{
+		// Nickname
+		std::string nickname = trimmedClientOrRoom;
+		Token tokenNick(Token::NICK_NAME, nickname);
+		clientMessage.addToken(tokenNick);
+	}
 }
 
 void IRCParser::parseParametersBySpace()
@@ -380,52 +427,39 @@ void IRCParser::parseParametersAsOneText()
 	}
 }
 
-void IRCParser::assignCommandType()
+void IRCParser::assignTokenTypesAsNick()
 {
-	Token* tokenCommand = clientMessage.findNthTokenOfType(Token::COMMAND, 1);
-	if (tokenCommand == NULL)
+	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+	if (token != NULL)
 	{
-		clientMessage.setCommandType(ClientMessage::NOT_ASSIGNED);
-		return;
+		token->setType(Token::NICK_NAME);
 	}
+}
 
-	std::string commandString = tokenCommand->getText();
+void IRCParser::assignTokenTypesAsPass()
+{
+	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+	if (token != NULL)
+	{
+		token->setType(Token::SERVER_PASSWORD);
+	}
+}
 
-	if (commandString == "CAP")
+void IRCParser::assignTokenTypesAsPing()
+{
+	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+	if (token != NULL)
 	{
-		clientMessage.setCommandType(ClientMessage::CAP);
+		token->setType(Token::SERVER_NAME);
 	}
-	else if (commandString == "NICK")
+}
+
+void IRCParser::assignTokenTypesAsQuit()
+{
+	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+	if (token != NULL)
 	{
-		clientMessage.setCommandType(ClientMessage::NICK);
-	}
-	else if (commandString == "PASS")
-	{
-		clientMessage.setCommandType(ClientMessage::PASS);
-	}
-	else if (commandString == "PING")
-	{
-		clientMessage.setCommandType(ClientMessage::PING);
-	}
-	else if (commandString == "QUIT")
-	{
-		clientMessage.setCommandType(ClientMessage::QUIT);
-	}
-	else if (commandString == "USER")
-	{
-		clientMessage.setCommandType(ClientMessage::USER);
-	}
-	else if (commandString == "PRIVMSG")
-	{
-		clientMessage.setCommandType(ClientMessage::PRIVMSG);
-	}
-	else if (commandString == "JOIN")
-	{
-		clientMessage.setCommandType(ClientMessage::JOIN);
-	}
-	else
-	{
-		clientMessage.setCommandType(ClientMessage::UNKNOWN);
+		token->setType(Token::MESSAGE);
 	}
 }
 
@@ -453,56 +487,11 @@ void IRCParser::assignTokenTypesAsUser()
 	}
 }
 
-void IRCParser::assignTokenTypesAsNick()
+std::string IRCParser::trim(const std::string& str)
 {
-	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
-	if (token != NULL)
-	{
-		token->setType(Token::NICK_NAME);
-	}
-}
+	size_t first = str.find_first_not_of(" \t\r\n");
+	if (first == std::string::npos) return "";
 
-void IRCParser::assignTokenTypesAsPass()
-{
-	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
-	if (token != NULL)
-	{
-		token->setType(Token::SERVER_PASSWORD);
-	}
-}
-
-void IRCParser::assignTokenTypesAsQuit()
-{
-	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
-	if (token != NULL)
-	{
-		token->setType(Token::MESSAGE);
-	}
-}
-
-void IRCParser::assignTokenTypesAsPing()
-{
-	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
-	if (token != NULL)
-	{
-		token->setType(Token::SERVER_NAME);
-	}
-}
-
-void IRCParser::splitRawDataToRawMessages()
-{
-	const std::string delimiters = "\n";
-	std::string tempData = client->getRawData();
-
-	while (tempData.find_first_of(delimiters) != std::string::npos)
-	{
-		std::string rawMessage;
-		size_t pos = tempData.find_first_of(delimiters);
-		rawMessage = tempData.substr(0, pos + 1);
-
-		rawMessages.push_back(rawMessage);
-		tempData = tempData.erase(0, pos + 1);
-
-		std::cout << "rawMessage = |" << rawMessage << "|" << std::endl;
-	}
+	size_t last = str.find_last_not_of(" \t\r\n");
+	return (str.substr(first, last - first + 1));
 }

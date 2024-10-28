@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:09:39 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/28 20:24:52 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/28 20:32:44 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,29 +36,30 @@ class IRCParser
 		ClientMessage clientMessage;
 
 		void splitRawDataToRawMessages();
-
 		void parsePrefixToken();
 		void parseCommandToken();
-		void makeTokens();
+		void assignCommandType();
+		void parseParameterTokens();
 
+		// PARSE PARAMETERS FUNCTIONS
 		void parseParametersBySpace();
 		void parseParametersAsOneText();
 		void parseParametersAsUser();
-		void parseAndAssignParametersAsJoin();
 
-		void assignCommandType();
+		// JOIN functions
+		void parseAndAssignParametersAsJoin();
+		void processRoom(const std::string& room);
+		void processRoomPassword(const std::string& password);
+
+		// PRIVMSG functions
+		void parseAndAssignParametersAsPrivmsg();
+		void processClientOrRoom(const std::string& target);
 
 		void assignTokenTypesAsNick();
 		void assignTokenTypesAsPass();
 		void assignTokenTypesAsPing();
 		void assignTokenTypesAsQuit();
 		void assignTokenTypesAsUser();
-
-		// PRIVMSG functions:
-		void parseAndAssignParametersAsPrivmsg();
-		void processClientOrRoom(const std::string& target);
-		void processRoom(const std::string& room);
-		void processRoomPassword(const std::string& password);
-
+		// general functions
 		std::string trim(const std::string& str);
 };
