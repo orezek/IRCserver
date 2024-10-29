@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RoomManager.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:34:33 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/27 13:19:48 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/29 21:47:56 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ RoomManager &RoomManager::getInstance()
 	return (instance);
 }
 
-void RoomManager::addRoom(RoomName roomName)
+void RoomManager::addRoom(std::string roomName)
 {
 	if (!RoomManager::getInstance().roomExist(roomName))
 	{
@@ -26,20 +26,20 @@ void RoomManager::addRoom(RoomName roomName)
 	}
 }
 
-bool RoomManager::roomExist(RoomName roomName)
+bool RoomManager::roomExist(std::string roomName)
 {
 	return this->roomList.find(roomName) != this->roomList.end();
 }
 
-void RoomManager::removeRoom(RoomName roomName)
+void RoomManager::removeRoom(std::string roomName)
 {
 	roomList.erase(roomName);
 }
 
-Room *RoomManager::getRoom(RoomName roomName)
+Room *RoomManager::getRoom(std::string roomName)
 {
 	// implement check that the room exists and return NULL if not
-	std::map<RoomName, Room>::iterator it = roomList.find(roomName);
+	std::map<std::string, Room>::iterator it = roomList.find(roomName);
 	Room *room = &(it->second);
 	return (room);
 }
@@ -51,7 +51,7 @@ std::string RoomManager::getRoomsAsString() const
 
 	output << "-----------------------" << std::endl;
 	output << "Printing all Rooms: " << std::endl;
-	for (std::map<RoomName, Room>::const_iterator it = roomList.begin(); it != roomList.end(); ++it)
+	for (std::map<std::string, Room>::const_iterator it = roomList.begin(); it != roomList.end(); ++it)
 	{
 		output << i;
 		output << ". Room: ";
