@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:14:27 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/28 23:11:54 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/29 20:57:55 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,13 @@
 
 namespace Commands
 {
-Join::Join(Client *client, ClientMessage &clientMessage) : ABaseCommand(client, clientMessage) {}
+Join::Join(Client *client, ClientMessage &clientMessage) : ABaseCommand(client, clientMessage), room(NULL), response() {}
 
-Join::Join(const Join &refObj) : ABaseCommand(refObj) {}
+Join::Join(const Join &refObj) : ABaseCommand(refObj)
+{
+	this->response = refObj.response;
+	this->room = refObj.room;
+}
 
 Join& Join::operator=(const Join &refObj)
 {
@@ -27,14 +31,6 @@ Join::~Join() {}
 
 void Join::execute()
 {
-	// JOIN command is has no rooms
-	//:server.name 461 Aldo JOIN :Not enough parameters
-
-	// JOIN replies to requesting client:
-	// success:
-	//:Aldo!user@hostname JOIN :#TEST
-	// failure:
-
 	bool roomExists;
 	std::string roomPasword;
 	Token *tokenRoomname = NULL;
@@ -94,6 +90,7 @@ void Join::execute()
 		i++;
 	} while (tokenRoomname != NULL);
 }
+
 // wrong room password (key)
 void Join::setServerResponse475()
 {

@@ -6,14 +6,14 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:01:29 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/28 23:09:54 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/29 20:48:12 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #include "ABaseCommand.hpp"
-#include "ClientMessage.hpp"
 #include "Client.hpp"
+#include "ClientMessage.hpp"
 #include "Room.hpp"
 
 namespace Commands
@@ -28,8 +28,9 @@ class Join : protected ABaseCommand
 		void execute();
 		void setServerResponse475();
 		void setServerResponseJoin();
+
 	private:
 		std::string response;
-
+		Room *room;
 };
-};
+};  // namespace Commands

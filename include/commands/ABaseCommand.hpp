@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 11:10:59 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/28 22:17:43 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/29 20:48:51 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ class ABaseCommand
 
 	protected:
 		Client* client;
-		Room*	room;
 		ServerDataManager& serverData;
 		ClientMessage& clientMessage;
 
