@@ -6,19 +6,15 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:51:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/28 15:37:39 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/29 21:36:02 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Room.hpp"
 
-Room::Room(RoomName roomName) : roomName(roomName)
-{
-	// sets to an empty string
-	password.clear();
-}
+Room::Room(std::string roomName) : roomName(), password(), topic(){}
 Room::~Room() {}
-Room::Room(const Room& obj) : roomName(obj.roomName), clientFds(obj.clientFds) {}
+Room::Room(const Room& obj) : roomName(obj.roomName), clientFds(obj.clientFds), password(obj.password), topic(obj.topic) {}
 Room& Room::operator=(const Room& obj)
 {
 	if (this != &obj)
@@ -26,11 +22,12 @@ Room& Room::operator=(const Room& obj)
 		this->roomName = obj.roomName;
 		this->clientFds = obj.clientFds;
 		this->password = obj.password;
+		this->topic = obj.topic;
 	}
 	return (*this);
 }
 
-RoomName Room::getRoomName() const
+std::string Room::getRoomName() const
 {
 	return (roomName);
 }
@@ -59,6 +56,38 @@ void Room::setPassword(std::string password)
 bool Room::isPasswordRequired(void)
 {
 	return (!this->password.empty());
+}
+
+const std::string &Room::getTopic(void) const
+{
+	return (this->topic);
+}
+
+void Room::setTopic(const std::string message)
+{
+	this->topic = message;
+}
+
+bool Room::isTopicSet(void)
+{
+	return (!this->topic.empty());
+}
+
+// operators
+void Room::addOperator(const int clientFd)
+{
+	this->operators.push_back(clientFd);
+}
+
+void Room::removeOperator(const int clientFd)
+{
+	// Use std::remove to shift matching elements to the end, then erase them
+	operators.erase(std::remove(operators.begin(), operators.end(), clientFd), operators.end());
+}
+
+bool Room::isOperator(const int clientFd)
+{
+	return (std::find(operators.begin(), operators.end(), clientFd) != operators.end());
 }
 
 std::string Room::getRoomAsString() const

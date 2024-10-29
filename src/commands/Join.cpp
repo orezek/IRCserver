@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:14:27 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/29 20:57:55 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/29 21:04:46 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,16 @@ Join::~Join() {}
 
 void Join::execute()
 {
+	// This is received by the new client
+	//Topic if exists
+	//:server.name 332 Aldo #TEST :[topic of #TEST]
+
+	// User list
+	/*
+	:server.name 353 Aldo = #TEST :@existing_user1 existing_user2 Aldo
+	:server.name 366 Aldo #TEST :End of /NAMES list.
+	*/
+
 	bool roomExists;
 	std::string roomPasword;
 	Token *tokenRoomname = NULL;

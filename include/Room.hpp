@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:55:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/28 14:18:33 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/29 21:31:41 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,28 +17,38 @@
 #include <string>
 #include <vector>
 
-#include "Types.hpp"
 class Room
 {
 	public:
-		Room(RoomName roomName);
+		Room(std::string roomName);
 		~Room();
 		Room(const Room& obj);
 		Room& operator=(const Room& obj);
 		void addClient(int clientSocketFd);
 		void removeClient(int clientSocketFd);
-		RoomName getRoomName() const;
+		std::string getRoomName() const;
 		std::string getRoomAsString() const;
 		int* findNthClient(int n);
-		// Room password
+		// Room password is MODE -k
 		const std::string& getPassword() const;
 		void setPassword(std::string password);
 		bool isPasswordRequired(void);
+		// Topic
+		const std::string &getTopic(void) const;
+		void setTopic(const std::string message);
+		bool isTopicSet(void);
+		// Operator
+		bool isOperator(const int clientFd);
 
 	private:
-		RoomName roomName;
-		std::string password;
+		// operator
+		void addOperator(const int clientFd);
+		void removeOperator(const int clientFd);
+		std::string roomName;
+		std::string password; // mode -k
+		std::string topic;
 		std::vector<int> clientFds;
+		std::vector<int> operators;
 		// to do //
 };
 
