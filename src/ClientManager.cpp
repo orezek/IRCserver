@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:24 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/27 13:31:45 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/30 11:46:23 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,8 @@ Client* ClientManager::findClient(const std::string& nick)
 			return &(clientsIt->second);
 		}
 	}
+
+	return (NULL);
 
 	throw std::runtime_error("No client with the desired nickname found.");
 }
