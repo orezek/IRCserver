@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/28 21:02:20 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/30 11:19:58 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void IRCParser::parsePrefixToken()
 	if (tempInputData[0] == ':')
 	{
 		int prefixStart = 0;
-		int prefixEnd = tempInputData.find_first_of(" \n");
+		int prefixEnd = tempInputData.find_first_of(" \t\r\n");
 
 		std::string prefixString = tempInputData.substr(prefixStart, prefixEnd);
 		this->tempInputData = tempInputData.substr(prefixEnd + 1, tempInputData.size() - prefixEnd);
@@ -72,8 +72,8 @@ void IRCParser::parsePrefixToken()
 
 void IRCParser::parseCommandToken()
 {
-	int cmdStart = tempInputData.find_first_not_of(" \n");
-	int cmdEnd = tempInputData.find_first_of(" \n", cmdStart);
+	int cmdStart = tempInputData.find_first_not_of(" \t\r\n");
+	int cmdEnd = tempInputData.find_first_of(" \t\r\n", cmdStart);
 	if (cmdStart < cmdEnd)
 	{
 		std::string commandString = tempInputData.substr(cmdStart, cmdEnd - cmdStart);
@@ -347,7 +347,7 @@ void IRCParser::processClientOrRoom(const std::string& clientOrRoom)
 
 void IRCParser::parseParametersBySpace()
 {
-	std::string delimiters = " \r\n";
+	std::string delimiters = " \t\r\n";
 	int pos = 0;
 	std::string parameter;
 
@@ -366,7 +366,7 @@ void IRCParser::parseParametersBySpace()
 
 void IRCParser::parseParametersAsUser()
 {
-	std::string delimiters = " \r\n";
+	std::string delimiters = " \t\r\n";
 	int pos = 0;
 	std::string parameter;
 
@@ -494,7 +494,10 @@ void IRCParser::assignTokenTypesAsUser()
 std::string IRCParser::trim(const std::string& str)
 {
 	size_t first = str.find_first_not_of(" \t\r\n");
-	if (first == std::string::npos) return "";
+	if (first == std::string::npos)
+	{
+		return "";
+	}
 
 	size_t last = str.find_last_not_of(" \t\r\n");
 	return (str.substr(first, last - first + 1));
