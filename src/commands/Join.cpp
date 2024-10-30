@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:14:27 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/30 04:19:53 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/30 19:05:10 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,6 @@ Join::~Join() {}
 
 void Join::execute()
 {
-	// This is received by the new client
-	//Topic if exists
-	//:server.name 332 Aldo #TEST :[topic of #TEST]
-
-	// User list
-	/*
-	:server.name 353 Aldo = #TEST :@existing_user1 existing_user2 Aldo
-	:server.name 366 Aldo #TEST :End of /NAMES list.
-	*/
-
 	bool roomExists;
 	std::string roomPasword;
 	Token *tokenRoomname = NULL;
@@ -88,9 +78,8 @@ void Join::execute()
 			{
 				setServerResponse332();
 			}
-			// to do
-			// setServerResponse353();
-			// setServerResponse366();
+			setServerResponse353();
+			setServerResponse366();
 		}
 		// room does not exist
 		else
@@ -105,9 +94,8 @@ void Join::execute()
 				this->room->setPassword(roomPasword);
 			}
 			setServerResponseJoin();
-			// to do
-			// setServerResponse353();
-			// setServerResponse366();
+			setServerResponse353();
+			setServerResponse366();
 		}
 		i++;
 	} while (tokenRoomname != NULL);
@@ -168,6 +156,71 @@ void Join::setServerResponse332(void)
 	response.append("\r\n");
 	this->addResponse(this->client, response);
 }
+	// User list
+	/*
+	:server.name 353 Aldo = #TEST :@existing_user1 existing_user2 Aldo
+	:server.name 366 Aldo #TEST :End of /NAMES list.
+	*/
+void Join::setServerResponse353(void)
+{
+	std::string nickname = client->getNickname();
+	if (nickname.empty())
+	{
+		nickname = "*";
+	}
+	this->response.clear();
+	this->response = ":";
+	this->response.append(serverData.getServerName());
+	this->response.append(" 353 ");
+	this->response.append(nickname);
+	this->response.append(" #");
+	this->response.append(this->room->getRoomName());
+	this->response.append(" :");
+	appendUsersToResponse();
+	this->response.append("\r\n");
+	this->addResponse(this->client, this->response);
+}
+void Join::setServerResponse366(void)
+{
+	std::string nickname = client->getNickname();
+	if (nickname.empty())
+	{
+		nickname = "*";
+	}
+	this->response.clear();
+	this->response = ":";
+	this->response.append(serverData.getServerName());
+	this->response.append(" 366 ");
+	this->response.append(nickname);
+	this->response.append(" #");
+	this->response.append(this->room->getRoomName());
+	this->response.append(" :");
+	this->response.append("End of /NAMES list.\r\n");
+	this->addResponse(this->client, response);
+}
+
+void Join::appendUsersToResponse(void)
+{
+	const std::vector<int>& clients = this->room->getAllClients();
+	std::vector<int>::const_iterator it = clients.begin();
+
+	while (it != clients.end())
+	{
+		int clientFd = *it;
+		if (this->room->isOperator(clientFd))
+		{
+			this->response.append("@");
+		}
+		this->response.append(ClientManager::getInstance().getClient(clientFd).getNickname());
+		++it;
+		if (it != clients.end())
+		{
+			this->response.append(" ");
+		}
+		std::cout << response << std::endl;
+	}
+}
+
 
 }
 

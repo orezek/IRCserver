@@ -6,13 +6,13 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:51:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/30 04:07:25 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/30 18:18:28 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Room.hpp"
 
-Room::Room(std::string roomName) : roomName(roomName), password(), topic(){}
+Room::Room(std::string roomName) : roomName(roomName), password(), topic() {}
 Room::~Room() {}
 Room::Room(const Room& obj) : roomName(obj.roomName), clientFds(obj.clientFds), password(obj.password), topic(obj.topic) {}
 Room& Room::operator=(const Room& obj)
@@ -35,12 +35,14 @@ std::string Room::getRoomName() const
 void Room::addClient(int clientSocketFd)
 {
 	clientFds.push_back(clientSocketFd);
+	this->clientCount++;
 }
 
 void Room::removeClient(int clientSocketFd)
 {
 	// Use std::remove to shift matching elements to the end, then erase them
 	clientFds.erase(std::remove(clientFds.begin(), clientFds.end(), clientSocketFd), clientFds.end());
+	this->clientCount--;
 }
 
 const std::string& Room::getPassword() const
@@ -58,7 +60,7 @@ bool Room::isPasswordRequired(void)
 	return (!this->password.empty());
 }
 
-const std::string &Room::getTopic(void) const
+const std::string& Room::getTopic(void) const
 {
 	return (this->topic);
 }
@@ -88,6 +90,16 @@ void Room::removeOperator(const int clientFd)
 bool Room::isOperator(const int clientFd)
 {
 	return (std::find(operators.begin(), operators.end(), clientFd) != operators.end());
+}
+
+const std::vector<int>& Room::getAllClients() const
+{
+	return (this->clientFds);
+}
+
+const int Room::getNoClients(void) const
+{
+	return (this->clientCount);
 }
 
 std::string Room::getRoomAsString() const
@@ -127,4 +139,4 @@ std::ostream& operator<<(std::ostream& output, Room const& instance)
 	output << instance.getRoomAsString();
 	return (output);
 }
-
+int Room::clientCount = 0;
