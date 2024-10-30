@@ -6,13 +6,13 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:51:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/29 21:36:02 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/30 04:07:25 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Room.hpp"
 
-Room::Room(std::string roomName) : roomName(), password(), topic(){}
+Room::Room(std::string roomName) : roomName(roomName), password(), topic(){}
 Room::~Room() {}
 Room::Room(const Room& obj) : roomName(obj.roomName), clientFds(obj.clientFds), password(obj.password), topic(obj.topic) {}
 Room& Room::operator=(const Room& obj)

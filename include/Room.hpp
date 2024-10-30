@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:55:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/29 21:31:41 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/30 03:38:39 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,10 @@ class Room
 		bool isTopicSet(void);
 		// Operator
 		bool isOperator(const int clientFd);
-
-	private:
-		// operator
 		void addOperator(const int clientFd);
 		void removeOperator(const int clientFd);
+
+	private:
 		std::string roomName;
 		std::string password; // mode -k
 		std::string topic;

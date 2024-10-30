@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:14:27 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/29 21:04:46 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/30 04:19:53 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void Join::execute()
 		{
 			roomPasword = tokenRoompassword->getText();
 		}
-
+		// room does exist
 		if ((roomExists = RoomManager::getInstance().roomExist(tokenRoomname->getText())))
 		{
 			this->room = RoomManager::getInstance().getRoom((tokenRoomname->getText()));
@@ -83,7 +83,14 @@ void Join::execute()
 				}
 			}
 			this->room->addClient(client->getFd());
-			setServerResponseJoin();
+			setServerResponseJoin(); // join notification
+			if (room->isTopicSet()) // room has a topic - send it to the new client
+			{
+				setServerResponse332();
+			}
+			// to do
+			// setServerResponse353();
+			// setServerResponse366();
 		}
 		// room does not exist
 		else
@@ -91,18 +98,23 @@ void Join::execute()
 			RoomManager::getInstance().addRoom(tokenRoomname->getText());
 			this->room = RoomManager::getInstance().getRoom(tokenRoomname->getText());
 			this->room->addClient(client->getFd());
+			this->room->addOperator(client->getFd());
+			this->room->setTopic("This topic is default and hardcoded in Join.cpp line 102");
 			if (!roomPasword.empty())
 			{
 				this->room->setPassword(roomPasword);
 			}
 			setServerResponseJoin();
+			// to do
+			// setServerResponse353();
+			// setServerResponse366();
 		}
 		i++;
 	} while (tokenRoomname != NULL);
 }
 
 // wrong room password (key)
-void Join::setServerResponse475()
+void Join::setServerResponse475(void)
 {
 	//:server.name 475 Aldo #TEST :Cannot join channel (+k)
 	std::string nickname = client->getNickname();
@@ -120,7 +132,7 @@ void Join::setServerResponse475()
 	this->addResponse(client, response);
 }
 // Successfull join to the channell
-void Join::setServerResponseJoin()
+void Join::setServerResponseJoin(void)
 {
 	//:Aldo!user@hostname JOIN :#TEST
 	std::string nickname = client->getNickname();
@@ -136,6 +148,25 @@ void Join::setServerResponseJoin()
 	response.append(this->room->getRoomName());
 	response.append("\r\n");
 	this->addResponse(this->room, response);
+}
+//:server.name 332 Aldo #TEST :Welcome to the TEST channel! Discuss project updates here.
+void Join::setServerResponse332(void)
+{
+	std::string nickname = client->getNickname();
+	if (nickname.empty())
+	{
+		nickname = "*";
+	}
+	std::string response = ":";
+	response.append(serverData.getServerName());
+	response.append(" 332 ");
+	response.append(nickname);
+	response.append(" #");
+	response.append(this->room->getRoomName());
+	response.append(" :");
+	response.append(this->room->getTopic());
+	response.append("\r\n");
+	this->addResponse(this->client, response);
 }
 
 }

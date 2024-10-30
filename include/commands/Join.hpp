@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:01:29 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/29 20:48:12 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/30 03:42:40 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,9 @@ class Join : protected ABaseCommand
 		Join &operator=(const Join &refObj);
 		~Join();
 		void execute();
-		void setServerResponse475();
-		void setServerResponseJoin();
+		void setServerResponse475(void);
+		void setServerResponse332(void);
+		void setServerResponseJoin(void);
 
 	private:
 		std::string response;
