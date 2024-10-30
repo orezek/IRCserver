@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 13:03:06 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/27 13:24:21 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/30 12:11:10 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,13 @@ class Privmsg : protected ABaseCommand
 		void execute();
 
 	private:
-		std::string response;
+		std::string validResponsePrefix;
+		std::string messageResponse;
+
 		void addResponseToRoomsAndClients();
-		void setServerResponse411();
-		void setServerResponse412();
+		void setValidResponsePrefix();
+		void setServerResponse401(std::string nicknameToSend);
+		void setServerResponse403(std::string roomnameToSend);
 };
 
 };  // namespace Commands
