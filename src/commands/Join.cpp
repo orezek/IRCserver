@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:14:27 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/30 19:05:10 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/30 20:28:20 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,7 +217,7 @@ void Join::appendUsersToResponse(void)
 		{
 			this->response.append(" ");
 		}
-		std::cout << response << std::endl;
+		//std::cout << response << std::endl;
 	}
 }
 
