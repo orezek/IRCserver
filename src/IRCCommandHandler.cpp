@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/27 15:22:58 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/28 15:42:41 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,11 @@ void IRCCommandHandler::executeOneCommand(ClientMessage &clientMessage)
 	{
 		Commands::Quit quitCommand(client, clientMessage);
 		quitCommand.execute();
+	}
+	else if (commandType == ClientMessage::JOIN)
+	{
+		Commands::Join joinCommand(client, clientMessage);
+		joinCommand.execute();
 	}
 	else if (commandType == ClientMessage::UNKNOWN)
 	{

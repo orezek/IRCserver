@@ -3,29 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   Room.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:51:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/27 14:47:18 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/30 04:07:25 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Room.hpp"
 
-Room::Room(RoomName roomName) : roomName(roomName) {}
+Room::Room(std::string roomName) : roomName(roomName), password(), topic(){}
 Room::~Room() {}
-Room::Room(const Room& obj) : roomName(obj.roomName), clientFds(obj.clientFds) {}
+Room::Room(const Room& obj) : roomName(obj.roomName), clientFds(obj.clientFds), password(obj.password), topic(obj.topic) {}
 Room& Room::operator=(const Room& obj)
 {
 	if (this != &obj)
 	{
 		this->roomName = obj.roomName;
 		this->clientFds = obj.clientFds;
+		this->password = obj.password;
+		this->topic = obj.topic;
 	}
 	return (*this);
 }
 
-RoomName Room::getRoomName() const
+std::string Room::getRoomName() const
 {
 	return (roomName);
 }
@@ -39,6 +41,53 @@ void Room::removeClient(int clientSocketFd)
 {
 	// Use std::remove to shift matching elements to the end, then erase them
 	clientFds.erase(std::remove(clientFds.begin(), clientFds.end(), clientSocketFd), clientFds.end());
+}
+
+const std::string& Room::getPassword() const
+{
+	return (this->password);
+}
+
+void Room::setPassword(std::string password)
+{
+	this->password = password;
+}
+
+bool Room::isPasswordRequired(void)
+{
+	return (!this->password.empty());
+}
+
+const std::string &Room::getTopic(void) const
+{
+	return (this->topic);
+}
+
+void Room::setTopic(const std::string message)
+{
+	this->topic = message;
+}
+
+bool Room::isTopicSet(void)
+{
+	return (!this->topic.empty());
+}
+
+// operators
+void Room::addOperator(const int clientFd)
+{
+	this->operators.push_back(clientFd);
+}
+
+void Room::removeOperator(const int clientFd)
+{
+	// Use std::remove to shift matching elements to the end, then erase them
+	operators.erase(std::remove(operators.begin(), operators.end(), clientFd), operators.end());
+}
+
+bool Room::isOperator(const int clientFd)
+{
+	return (std::find(operators.begin(), operators.end(), clientFd) != operators.end());
 }
 
 std::string Room::getRoomAsString() const
@@ -78,3 +127,4 @@ std::ostream& operator<<(std::ostream& output, Room const& instance)
 	output << instance.getRoomAsString();
 	return (output);
 }
+

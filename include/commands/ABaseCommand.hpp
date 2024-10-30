@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ABaseCommand.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 11:10:59 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/27 13:59:58 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/29 20:48:51 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,9 @@
 #include <string>
 
 #include "Client.hpp"
+#include "Room.hpp"
 #include "ClientManager.hpp"
+#include "RoomManager.hpp"
 #include "ClientMessage.hpp"
 #include "ServerDataManager.hpp"
 

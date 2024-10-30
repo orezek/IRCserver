@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 13:02:55 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/27 15:31:41 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/30 12:19:58 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,6 @@ Privmsg& Privmsg::operator=(Privmsg const& refObj)
 	return (*this);
 }
 
-// privmsg #test :testMessage
-
 Privmsg::~Privmsg() {}
 
 void Privmsg::execute()
@@ -35,19 +33,17 @@ void Privmsg::execute()
 	Token* tokenRoomname = clientMessage.findNthTokenOfType(Token::ROOM_NAME, 1);
 	Token* tokenNickname = clientMessage.findNthTokenOfType(Token::NICK_NAME, 1);
 
-	if (tokenRoomname == NULL && tokenNickname == NULL)
+	if ((tokenRoomname == NULL && tokenNickname == NULL) || tokenMessage == NULL)
 	{
-		setServerResponse411();
+		setServerResponse461();
 		return;
 	}
 
-	if (tokenMessage == NULL)
-	{
-		setServerResponse412();
-		return;
-	}
-	response = tokenMessage->getText();
-	response.append("\r\n");
+	this->setValidResponsePrefix();
+
+	messageResponse = ":";
+	messageResponse.append(tokenMessage->getText());
+	messageResponse.append("\r\n");
 
 	this->addResponseToRoomsAndClients();
 }
@@ -56,23 +52,27 @@ void Privmsg::addResponseToRoomsAndClients()
 {
 	Token* tokenRoomname;
 	Token* tokenNickname;
-	int i = 1;
 
 	// add response to clients
+	int i = 1;
 	do
 	{
 		tokenNickname = clientMessage.findNthTokenOfType(Token::NICK_NAME, i);
 		if (tokenNickname != NULL)
 		{
-			std::string nickname = tokenNickname->getText();
-			Client* client = ClientManager::getInstance().findClient(nickname);
-			if (client != NULL)
+			std::string nicknameToSend = tokenNickname->getText();
+			Client* clientToSend = ClientManager::getInstance().findClient(nicknameToSend);
+			if (clientToSend != NULL)
 			{
-				this->addResponse(client, response);
+				std::string messageToSend = validResponsePrefix;
+				messageToSend.append(nicknameToSend);
+				messageToSend.append(" ");
+				messageToSend.append(this->messageResponse);
+				this->addResponse(clientToSend, messageToSend);
 			}
 			else
 			{
-				// error 401 - cannot send to nick
+				this->setServerResponse401(nicknameToSend);
 			}
 		}
 		i++;
@@ -85,15 +85,21 @@ void Privmsg::addResponseToRoomsAndClients()
 		tokenRoomname = clientMessage.findNthTokenOfType(Token::ROOM_NAME, i);
 		if (tokenRoomname != NULL)
 		{
-			std::string roomname = tokenRoomname->getText();
-			Room* room = RoomManager::getInstance().getRoom(roomname);
-			if (room != NULL)
+			std::string roomnameToSend = tokenRoomname->getText();
+			Room* roomToSend = RoomManager::getInstance().getRoom(roomnameToSend);
+			if (roomToSend != NULL)
 			{
-				this->addResponse(room, response);
+				// Is messageToSend correct? check with inspircd
+				std::string messageToSend = validResponsePrefix;
+				messageToSend.append("#");
+				messageToSend.append(roomnameToSend);
+				messageToSend.append(" ");
+				messageToSend.append(this->messageResponse);
+				this->addResponse(roomToSend, messageToSend);
 			}
 			else
 			{
-				// error 403 - cannot send to channel
+				this->setServerResponse403(roomnameToSend);
 			}
 		}
 		i++;
@@ -102,8 +108,60 @@ void Privmsg::addResponseToRoomsAndClients()
 	// check how IRC server handle errors
 }
 
-void Privmsg::setServerResponse411() {}
+void Privmsg::setValidResponsePrefix()
+{
+	std::string nickname = client->getNickname();
 
-void Privmsg::setServerResponse412() {}
+	if (nickname.empty())
+	{
+		nickname = "*";
+	}
+	validResponsePrefix = ":";
+	validResponsePrefix.append(nickname);
+	validResponsePrefix.append("!");
+	validResponsePrefix.append(client->getUsername());
+	validResponsePrefix.append("@");
+	validResponsePrefix.append(client->getHostname());
+	validResponsePrefix.append(" PRIVMSG ");
+}
+
+void Privmsg::setServerResponse401(std::string nicknameToSend)
+{
+	std::string nickname = client->getNickname();
+
+	if (nickname.empty())
+	{
+		nickname = "*";
+	}
+	std::string response = ":";
+	response.append(serverData.getServerName());
+	response.append(" 401 ");
+	response.append(nickname);
+	response.append(" ");
+	response.append(nicknameToSend);
+	response.append(" :No such nick\r\n");
+
+	this->client->addResponse(response);
+}
+
+void Privmsg::setServerResponse403(std::string roomnameToSend)
+{
+	std::string nickname = client->getNickname();
+
+	if (nickname.empty())
+	{
+		nickname = "*";
+	}
+	std::string response = ":";
+	response.append(serverData.getServerName());
+	response.append(" 403 ");
+	response.append(nickname);
+	response.append(" ");
+	response.append("#");
+	response.append(roomnameToSend);
+	response.append(" :No such channel\r\n");
+
+	this->client->addResponse(response);
+}
 
 }  // namespace Commands
