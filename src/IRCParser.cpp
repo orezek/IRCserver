@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/30 11:19:58 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/30 13:03:01 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,10 @@ void IRCParser::assignCommandType()
 	{
 		clientMessage.setCommandType(ClientMessage::JOIN);
 	}
+	else if (commandString == "PART")
+	{
+		clientMessage.setCommandType(ClientMessage::PART);
+	}
 	else
 	{
 		clientMessage.setCommandType(ClientMessage::UNKNOWN);
@@ -173,7 +177,72 @@ void IRCParser::parseParameterTokens()
 	{
 		parseAndAssignParametersAsJoin();
 	}
+	else if (commandType == ClientMessage::PART)
+	{
+		parseAndAssignParametersAsPart();
+	}
 	// add functionality for other commands
+}
+
+void IRCParser::parseAndAssignParametersAsPart()
+{
+	tempInputData = trim(tempInputData);
+	size_t posRoomsEnd = tempInputData.find_first_of(" \t");
+
+	std::string rooms;
+	std::string message;
+
+	if (posRoomsEnd == std::string::npos)
+	{
+		rooms = tempInputData.substr(0);
+	}
+	else
+	{
+		rooms = tempInputData.substr(0, posRoomsEnd);
+
+		std::string remainingData = tempInputData.substr(posRoomsEnd + 1);
+		size_t posMessageEnd = remainingData.find_first_of(" \t");
+
+		if (posMessageEnd == std::string::npos)
+		{
+			// Take the entire remaining string
+			message = remainingData;
+		}
+		else
+		{
+			// Take only up to the next whitespace
+			message = remainingData.substr(0, posMessageEnd);
+		}
+	}
+
+	// Process clientsAndRooms
+	size_t start = 0;
+	size_t end = 0;
+	while ((end = rooms.find(',', start)) != std::string::npos)
+	{
+		processRoom(rooms.substr(start, end - start));
+		start = end + 1;
+	}
+	// Process the last room
+	if (start < rooms.length())
+	{
+		processRoom(rooms.substr(start));
+	}
+
+	// Handle optional ':' prefix in message
+	if (!message.empty() && message[0] == ':')
+	{
+		message = message.substr(1);
+	}
+	// Process message
+	if (!message.empty())
+	{
+		Token tokenMessage(Token::MESSAGE, message);
+		clientMessage.addToken(tokenMessage);
+	}
+
+	// Clear the temporary input data
+	tempInputData.clear();
 }
 
 void IRCParser::parseAndAssignParametersAsJoin()
