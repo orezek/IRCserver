@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 19:24:27 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/21 20:53:15 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/30 14:44:23 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,9 @@ void Token::setType(Token::Type newType)
 std::string Token::getText() const
 {
 	return (this->text);
+}
+
+void Token::setText(std::string newText)
+{
+	this->text = newText;
 }

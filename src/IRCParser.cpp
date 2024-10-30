@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/30 13:03:01 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/30 14:42:48 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,10 @@ void IRCParser::assignCommandType()
 	{
 		clientMessage.setCommandType(ClientMessage::PART);
 	}
+	else if (commandString == "INVITE")
+	{
+		clientMessage.setCommandType(ClientMessage::INVITE);
+	}
 	else
 	{
 		clientMessage.setCommandType(ClientMessage::UNKNOWN);
@@ -171,7 +175,6 @@ void IRCParser::parseParameterTokens()
 	else if (commandType == ClientMessage::PRIVMSG)
 	{
 		parseAndAssignParametersAsPrivmsg();
-		// assignTokenTypesAsPrivmsg();
 	}
 	else if (commandType == ClientMessage::JOIN)
 	{
@@ -181,7 +184,32 @@ void IRCParser::parseParameterTokens()
 	{
 		parseAndAssignParametersAsPart();
 	}
+	else if (commandType == ClientMessage::INVITE)
+	{
+		parseParametersBySpace();
+		assignParametersAsInvite();
+	}
 	// add functionality for other commands
+}
+
+void IRCParser::assignParametersAsInvite()
+{
+	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+	if (token != NULL)
+	{
+		token->setType(Token::NICK_NAME);
+	}
+
+	token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+	if (token != NULL)
+	{
+		std::string roomName = token->getText();
+		if (!roomName.empty() && (roomName[0] == '#' || roomName[0] == '&'))
+		{
+			token->setText(roomName.substr(1));
+			token->setType(Token::ROOM_NAME);
+		}
+	}
 }
 
 void IRCParser::parseAndAssignParametersAsPart()
