@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RoomManager.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:34:33 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/29 21:47:56 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/30 12:03:26 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,13 @@ void RoomManager::removeRoom(std::string roomName)
 
 Room *RoomManager::getRoom(std::string roomName)
 {
-	// implement check that the room exists and return NULL if not
+	// DONE = implement check that the room exists and return NULL if not
 	std::map<std::string, Room>::iterator it = roomList.find(roomName);
-	Room *room = &(it->second);
-	return (room);
+	if (it != roomList.end())
+	{
+		return (&(it->second));
+	}
+	return (NULL);
 }
 
 std::string RoomManager::getRoomsAsString() const
