@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:18 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/28 11:55:44 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/30 14:35:19 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ class ClientMessage
 			USER,
 			CAP,
 			JOIN,
+			PART,
+			INVITE,
 			UNKNOWN = 99
 		};
 
