@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:24 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/31 13:42:22 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/31 18:23:03 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,11 @@ void ClientManager::addClient(int clientSocketFd)
 Client& ClientManager::getClient(const int clientSocketFd)
 {
 	return (this->clients.at(clientSocketFd));
+}
+
+std::map<int, Client>::iterator ClientManager::deleteClient(std::map<int, Client>::iterator &it)
+{
+	return (this->clients.erase(it));
 }
 
 std::map<int, Client>::iterator ClientManager::getFirstClient(void)
