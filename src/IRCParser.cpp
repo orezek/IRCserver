@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/31 22:26:14 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/31 22:30:18 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -313,7 +313,7 @@ void IRCParser::parseAndAssignParametersAsPart()
 		rooms = tempInputData.substr(0, posRoomsEnd);
 
 		std::string remainingData = tempInputData.substr(posRoomsEnd + 1);
-		size_t posMessageEnd = remainingData.find_first_of(" \t");
+		size_t posMessageEnd = remainingData.find_first_of("\r\n");
 
 		if (posMessageEnd == std::string::npos)
 		{
