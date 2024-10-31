@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/30 14:42:48 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/31 22:42:43 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,10 @@ void IRCParser::assignCommandType()
 	{
 		clientMessage.setCommandType(ClientMessage::INVITE);
 	}
+	else if (commandString == "KICK")
+	{
+		clientMessage.setCommandType(ClientMessage::KICK);
+	}
 	else
 	{
 		clientMessage.setCommandType(ClientMessage::UNKNOWN);
@@ -189,7 +193,87 @@ void IRCParser::parseParameterTokens()
 		parseParametersBySpace();
 		assignParametersAsInvite();
 	}
+	else if (commandType == ClientMessage::KICK)
+	{
+		parseAndAssignParametersAsKick();
+	}
 	// add functionality for other commands
+}
+
+void IRCParser::parseAndAssignParametersAsKick()
+{
+	tempInputData = trim(tempInputData);
+	size_t posRoomEnd = tempInputData.find_first_of(" \t");
+
+	std::string room;
+	std::string clients;
+
+	if (posRoomEnd == std::string::npos)
+	{
+		return;
+	}
+	room = tempInputData.substr(0, posRoomEnd);
+
+	std::string remainingData = trim(tempInputData.substr(posRoomEnd + 1));
+	size_t posClientsEnd = remainingData.find_first_of(" \t");
+
+	if (posClientsEnd == std::string::npos)
+	{
+		// Take the entire remaining string
+		clients = remainingData;
+		remainingData.clear();
+	}
+	else
+	{
+		// Take only up to the next whitespace
+		clients = remainingData.substr(0, posClientsEnd);
+		remainingData = remainingData.substr(posClientsEnd + 1);
+	}
+
+	std::string message;
+	if (!remainingData.empty())
+	{
+		message = trim(remainingData);
+	}
+
+	// Process Room
+	room = trim(room);
+	if (!room.empty() && (room[0] == '#' || room[0] == '&'))
+	{
+		room = room.substr(1);
+		Token tokenRoom(Token::ROOM_NAME, room);
+		clientMessage.addToken(tokenRoom);
+	}
+
+	// Process Clients
+	clients = trim(clients);
+	size_t start = 0;
+	size_t end = 0;
+	while ((end = clients.find(',', start)) != std::string::npos)
+	{
+		processClient(clients.substr(start, end - start));
+		start = end + 1;
+	}
+	// Process the last room
+	if (start < clients.length())
+	{
+		processClient(clients.substr(start));
+	}
+
+	// Handle optional ':' prefix in message
+	if (!message.empty() && message[0] == ':')
+	{
+		message = message.substr(1);
+	}
+	// Process message
+	if (!message.empty())
+	{
+		Token tokenMessage(Token::MESSAGE, message);
+		clientMessage.addToken(tokenMessage);
+	}
+
+	// Clear the temporary input data
+	tempInputData.clear();
 }
 
 void IRCParser::assignParametersAsInvite()
@@ -229,7 +313,7 @@ void IRCParser::parseAndAssignParametersAsPart()
 		rooms = tempInputData.substr(0, posRoomsEnd);
 
 		std::string remainingData = tempInputData.substr(posRoomsEnd + 1);
-		size_t posMessageEnd = remainingData.find_first_of(" \t");
+		size_t posMessageEnd = remainingData.find_first_of("\r\n");
 
 		if (posMessageEnd == std::string::npos)
 		{
@@ -243,7 +327,8 @@ void IRCParser::parseAndAssignParametersAsPart()
 		}
 	}
 
-	// Process clientsAndRooms
+	// Process rooms
+	rooms = trim(rooms);
 	size_t start = 0;
 	size_t end = 0;
 	while ((end = rooms.find(',', start)) != std::string::npos)
@@ -257,6 +342,7 @@ void IRCParser::parseAndAssignParametersAsPart()
 		processRoom(rooms.substr(start));
 	}
 
+	message = trim(message);
 	// Handle optional ':' prefix in message
 	if (!message.empty() && message[0] == ':')
 	{
@@ -355,6 +441,18 @@ void IRCParser::processRoom(const std::string& room)
 			clientMessage.addToken(tokenRoom);
 		}
 	}
+}
+
+void IRCParser::processClient(const std::string& client)
+{
+	std::string trimmedClient = trim(client);
+
+	if (trimmedClient.empty())
+	{
+		return;
+	}
+	Token tokenClient(Token::NICK_NAME, trimmedClient);
+	clientMessage.addToken(tokenClient);
 }
 
 void IRCParser::processRoomPassword(const std::string& password)
