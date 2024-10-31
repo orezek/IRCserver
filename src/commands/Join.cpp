@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:14:27 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/31 14:32:01 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/31 18:50:56 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ void Join::execute()
 			else
 			{
 				// Ignore: client is already in the room
+				// TODO: conditional logging or (void)0;  // no-op; placeholder for future logic
 				std::cout << "Client " << client->getFd() << " is already in the room: " << room->getRoomName() << std::endl;
 			}
 		}
