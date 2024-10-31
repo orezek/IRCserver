@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRCCommandHandler.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/28 15:42:41 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/31 19:25:33 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,11 @@ void IRCCommandHandler::executeOneCommand(ClientMessage &clientMessage)
 	{
 		Commands::Join joinCommand(client, clientMessage);
 		joinCommand.execute();
+	}
+	else if (commandType == ClientMessage::PART)
+	{
+		Commands::Part partCommand(client, clientMessage);
+		partCommand.execute();
 	}
 	else if (commandType == ClientMessage::UNKNOWN)
 	{
