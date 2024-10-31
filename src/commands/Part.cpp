@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 19:04:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/31 21:10:51 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/31 21:26:27 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ void Part::execute(void)
 		else
 		{
 			this->message = tokenMessage->getText();
-			std::cout << message << std::endl; // only partial message received - proof
 		}
 
 		// check if the room exists
@@ -81,24 +80,21 @@ void Part::execute(void)
 					RoomManager::getInstance().removeRoom(tokenRoomname->getText());
 					// do not send any response - no one will listen
 				}
+				// at least one send response that client left the room
 				else
 				{
-					// setServerResponse() to tell that client has left + message
-					std::cout << "User: " << client->getFd() << " has left the room: " << this->room->getRoomName() << std::endl;
 					setServerResponsePart();
 				}
 			}
 			// client is not in the room
 			else
 			{
-				// client is not in the room
 				setServerResponse442();
 			}
 		}
 		// room does not exists
 		else
 		{
-			// room does not exists
 			setServerResponse403();
 		}
 		i++;
