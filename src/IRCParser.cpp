@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/31 22:30:18 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/31 22:42:43 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,7 +214,7 @@ void IRCParser::parseAndAssignParametersAsKick()
 	}
 	room = tempInputData.substr(0, posRoomEnd);
 
-	std::string remainingData = tempInputData.substr(posRoomEnd + 1);
+	std::string remainingData = trim(tempInputData.substr(posRoomEnd + 1));
 	size_t posClientsEnd = remainingData.find_first_of(" \t");
 
 	if (posClientsEnd == std::string::npos)
@@ -233,8 +233,7 @@ void IRCParser::parseAndAssignParametersAsKick()
 	std::string message;
 	if (!remainingData.empty())
 	{
-		size_t posMessageEnd = remainingData.find_first_of("\r\n");
-		message = remainingData.substr(0, posMessageEnd);
+		message = trim(remainingData);
 	}
 
 	// Process Room
@@ -247,6 +246,7 @@ void IRCParser::parseAndAssignParametersAsKick()
 	}
 
 	// Process Clients
+	clients = trim(clients);
 	size_t start = 0;
 	size_t end = 0;
 	while ((end = clients.find(',', start)) != std::string::npos)
@@ -327,7 +327,8 @@ void IRCParser::parseAndAssignParametersAsPart()
 		}
 	}
 
-	// Process clientsAndRooms
+	// Process rooms
+	rooms = trim(rooms);
 	size_t start = 0;
 	size_t end = 0;
 	while ((end = rooms.find(',', start)) != std::string::npos)
@@ -341,6 +342,7 @@ void IRCParser::parseAndAssignParametersAsPart()
 		processRoom(rooms.substr(start));
 	}
 
+	message = trim(message);
 	// Handle optional ':' prefix in message
 	if (!message.empty() && message[0] == ':')
 	{
