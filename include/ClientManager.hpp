@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:28 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/31 12:44:33 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/31 18:22:29 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ class ClientManager
 	public:
 		static ClientManager &getInstance();
 		void addClient(int clientSocketFd);
+		std::map<int, Client>::iterator deleteClient(std::map<int, Client>::iterator &it);
 		std::map<int, Client>::iterator getFirstClient(void);
 		std::map<int, Client>::iterator getLastClient(void);
 		int	getHighestKey(int masterSocketFd) const;

@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/31 14:00:02 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/31 18:30:50 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,26 +207,19 @@ int ConnectionHandler::checkForNewClients(void)
 	return 0;  // No new client to process
 }
 
-void ConnectionHandler::removeClientFromMap(std::map<int, Client>::iterator &it)
-{
-	std::map<int, Client>::iterator itToErase = it;
-	++it;
-	ClientManager::getInstance().clients.erase(itToErase);
-}
-
 void ConnectionHandler::terminateClientSession(std::map<int, Client>::iterator &it)
 {
 	int clientSocketFd = it->first;
 	ClientManager::getInstance().getClient(clientSocketFd).deleteRawData();
 	ClientManager::getInstance().removeClientFromRooms(clientSocketFd);
 	RoomManager::getInstance().deleteAllEmptyRooms();
-	removeClientFromMap(it);
+	it = ClientManager::getInstance().deleteClient(it);
 	close(clientSocketFd);
 }
 
 void ConnectionHandler::onError(Client &client, const std::string reason)
 {
-	client.setRawData("QUIT :" + reason + "\n");
+	client.setRawData("QUIT :" + reason + "\r\n");
 	IRCCommandHandler ircCommandHandler(client.getFd());
 	ircCommandHandler.processAllCommands();
 }
