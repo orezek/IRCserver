@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:14:27 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/30 20:28:20 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/31 14:32:01 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,22 +64,31 @@ void Join::execute()
 		if ((roomExists = RoomManager::getInstance().roomExist(tokenRoomname->getText())))
 		{
 			this->room = RoomManager::getInstance().getRoom((tokenRoomname->getText()));
-			if (this->room->isPasswordRequired())
+			// check if client is not in the room
+			if (!room->isClientInRoom(client->getFd()))
 			{
-				if (this->room->getPassword() != roomPasword)
+				if (this->room->isPasswordRequired())
 				{
-					setServerResponse475();
-					return;
+					if (this->room->getPassword() != roomPasword)
+					{
+						setServerResponse475();
+						return;
+					}
 				}
+				this->room->addClient(client->getFd());
+				setServerResponseJoin(); // join notification
+				if (room->isTopicSet()) // room has a topic - send it to the new client
+				{
+					setServerResponse332();
+				}
+				setServerResponse353();
+				setServerResponse366();
 			}
-			this->room->addClient(client->getFd());
-			setServerResponseJoin(); // join notification
-			if (room->isTopicSet()) // room has a topic - send it to the new client
+			else
 			{
-				setServerResponse332();
+				// Ignore: client is already in the room
+				std::cout << "Client " << client->getFd() << " is already in the room: " << room->getRoomName() << std::endl;
 			}
-			setServerResponse353();
-			setServerResponse366();
 		}
 		// room does not exist
 		else
@@ -154,7 +163,7 @@ void Join::setServerResponse332(void)
 	response.append(" :");
 	response.append(this->room->getTopic());
 	response.append("\r\n");
-	this->addResponse(this->client, response);
+	this->addResponse(client, response);
 }
 	// User list
 	/*
@@ -176,9 +185,9 @@ void Join::setServerResponse353(void)
 	this->response.append(" #");
 	this->response.append(this->room->getRoomName());
 	this->response.append(" :");
-	appendUsersToResponse();
+	this->appendUsersToResponse();
 	this->response.append("\r\n");
-	this->addResponse(this->client, this->response);
+	this->addResponse(client, this->response);
 }
 void Join::setServerResponse366(void)
 {
@@ -196,7 +205,7 @@ void Join::setServerResponse366(void)
 	this->response.append(this->room->getRoomName());
 	this->response.append(" :");
 	this->response.append("End of /NAMES list.\r\n");
-	this->addResponse(this->client, response);
+	this->addResponse(client, response);
 }
 
 void Join::appendUsersToResponse(void)
@@ -217,7 +226,6 @@ void Join::appendUsersToResponse(void)
 		{
 			this->response.append(" ");
 		}
-		//std::cout << response << std::endl;
 	}
 }
 
