@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:34:33 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/31 13:32:27 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/31 13:37:27 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void RoomManager::deleteEmptyRoom(std::string roomName)
 	std::map<std::string, Room>::iterator it = roomList.find(roomName);
 	if (it != roomList.end() && it->second.getNoClients() == 0)
 	{
-		std::cout << "Deleting an empty room: " << it->first << std::endl;
+		std::cout << "Deleting an empty room: #" << it->first << std::endl;
 		roomList.erase(it);
 	}
 }

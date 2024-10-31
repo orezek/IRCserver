@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/31 13:31:33 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/31 14:00:02 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,7 +220,7 @@ void ConnectionHandler::terminateClientSession(std::map<int, Client>::iterator &
 	ClientManager::getInstance().getClient(clientSocketFd).deleteRawData();
 	ClientManager::getInstance().removeClientFromRooms(clientSocketFd);
 	RoomManager::getInstance().deleteAllEmptyRooms();
-	removeClientFromMap(it); 
+	removeClientFromMap(it);
 	close(clientSocketFd);
 }
 
@@ -240,18 +240,13 @@ void ConnectionHandler::onRead(Client &client)
 	if ((bytesReceived = recvAll(clientSocketFd, recvBuff, MAX_BUFF_SIZE)) == -1)
 	{
 		this->onError(client, "Recv failed");
-		// notify ProcessData - really is it needed, discuss with Martin
-		// client.markForDeletion();  // is this enough as notification for ProcessData?
 		std::cout << "Recv failed " << clientSocketFd << ": " << strerror(errno) << std::endl;
 	}
 	// client closed connection
 	else if (bytesReceived == 0)
 	{
-		// notify ProcessData - message has to be sent to all rooms where the user has been present
-		// notify ProcessData - really is it needed, discuss with Martin
-		// client.markForDeletion();  // is this enough as notification for ProcessData?
-		this->onError(client, "Client quit.");
-		std::cout << "Client " << clientSocketFd << " quit." << std::endl;
+		this->onError(client, "Client quit. ");
+		std::cout << "Client " << clientSocketFd << " quit. Pressed {Ctrl+c}" << std::endl;
 	}
 	// hard message limit
 	else if (bytesReceived > MESSAGE_SIZE)
@@ -299,7 +294,7 @@ int ConnectionHandler::serverEventLoop(void)
 			{
 				onError(client, "socket error.");
 			}
-			if (FD_ISSET(clientSocketFd, &readFds) && !client.isMarkedForDeletion())  // m-bartos: Added "&& client.markedForDeletion == false" - To check, that if the client is markedForDeletion, server will not read new ClientRequests
+			if (FD_ISSET(clientSocketFd, &readFds) && !client.isMarkedForDeletion())
 			{
 				onRead(client);
 			}
@@ -307,10 +302,10 @@ int ConnectionHandler::serverEventLoop(void)
 			{
 				onWrite(client);
 			}
-			if (client.isMarkedForDeletion() && !client.hasResponses())  // m-bartos: Added "&& client.serverResponses.isEmpty()" - To check, that all serverResponses in the ServerResponseQueue were sent
+			if (client.isMarkedForDeletion() && !client.hasResponses())
 			{
 				terminateClientSession(clientIter);
-				std::cout << "Client " << clientSocketFd << " session has been terminated." << std::endl;
+				std::cout << "Client " << clientSocketFd << " session has been terminated and cleaned." << std::endl;
 			}
 			else
 			{
