@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:24 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/31 13:31:17 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/31 13:42:22 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,11 @@ void ClientManager::removeClientFromRooms(const int clientSocketFd)
 		Room* room = &(it->second);
 		if (room->isClientInRoom(clientSocketFd))
 		{
+			if (room->isOperator(clientSocketFd))
+			{
+				room->removeOperator(clientSocketFd);
+				std::cout << "The client is operator: removing client: " << clientSocketFd << " from room's operators - room: #" << it->first << std::endl;
+			}
 			std::cout << "Removing client: " << clientSocketFd << " from room: #" << it->first << std::endl;
 			room->removeClient(clientSocketFd);
 		}
