@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:51:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/30 18:18:28 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/31 12:02:56 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,11 @@ std::string Room::getRoomName() const
 void Room::addClient(int clientSocketFd)
 {
 	clientFds.push_back(clientSocketFd);
-	this->clientCount++;
 }
 
 void Room::removeClient(int clientSocketFd)
 {
-	// Use std::remove to shift matching elements to the end, then erase them
-	clientFds.erase(std::remove(clientFds.begin(), clientFds.end(), clientSocketFd), clientFds.end());
-	this->clientCount--;
+	this->clientFds.erase(std::remove(clientFds.begin(), clientFds.end(), clientSocketFd), clientFds.end());
 }
 
 const std::string& Room::getPassword() const
@@ -99,7 +96,7 @@ const std::vector<int>& Room::getAllClients() const
 
 const int Room::getNoClients(void) const
 {
-	return (this->clientCount);
+	return (this->clientFds.size());
 }
 
 std::string Room::getRoomAsString() const
@@ -133,10 +130,14 @@ int* Room::findNthClient(int n)
 	return (NULL);  // Return NULL if n is out of range
 }
 
+bool Room::isClientInRoom(const int clientFd) const
+{
+	return std::find(clientFds.begin(), clientFds.end(), clientFd) != clientFds.end();
+}
+
 // --- OUTSIDE OF THE CLASS ---
 std::ostream& operator<<(std::ostream& output, Room const& instance)
 {
 	output << instance.getRoomAsString();
 	return (output);
 }
-int Room::clientCount = 0;

@@ -6,13 +6,12 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:55:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/30 18:18:04 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/31 12:55:27 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include <ClientManager.hpp>
 #include <algorithm>
 #include <sstream>
 #include <string>
@@ -27,6 +26,7 @@ class Room
 		Room& operator=(const Room& obj);
 		void addClient(int clientSocketFd);
 		void removeClient(int clientSocketFd);
+		bool isClientInRoom(const int clientSocketFd) const;
 		std::string getRoomName() const;
 		std::string getRoomAsString() const;
 		int* findNthClient(int n);
@@ -52,7 +52,6 @@ class Room
 		std::string topic;
 		std::vector<int> clientFds;
 		std::vector<int> operators;
-		static int clientCount;
 		// to do //
 };
 

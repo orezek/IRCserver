@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/27 12:23:34 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/31 13:31:33 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,13 +196,6 @@ int ConnectionHandler::checkForNewClients(void)
 		ClientManager::getInstance().getClient(clientSocketFd).initRawData();
 		ClientManager::getInstance().getClient(clientSocketFd).setIpAddress(ipClientAddress);
 		this->enableNonBlockingFd(clientSocketFd);
-		// Temp room
-		RoomManager::getInstance().addRoom("test");
-		RoomManager::getInstance().getRoom("test")->addClient(clientSocketFd);
-		ClientManager::getInstance().getClient(clientSocketFd).addRoom("test");
-		// clientBuffers[clientSocketFd] = "";  // map to map client to its buffer
-		//  testing
-		std::cout << ClientManager::getInstance().getClient(clientSocketFd).isInRoom("test") << std::endl;
 		std::cout << "Testing connected clients after Accept line 224" << std::endl;
 		for (std::map<int, Client>::iterator it = ClientManager::getInstance().clients.begin(); it != ClientManager::getInstance().clients.end(); ++it)
 		{
@@ -224,19 +217,12 @@ void ConnectionHandler::removeClientFromMap(std::map<int, Client>::iterator &it)
 void ConnectionHandler::terminateClientSession(std::map<int, Client>::iterator &it)
 {
 	int clientSocketFd = it->first;
-	close(clientSocketFd);
-	// clientBuffers.erase(clientSocketFd);
 	ClientManager::getInstance().getClient(clientSocketFd).deleteRawData();
-	removeClientFromMap(it);
+	ClientManager::getInstance().removeClientFromRooms(clientSocketFd);
+	RoomManager::getInstance().deleteAllEmptyRooms();
+	removeClientFromMap(it); 
+	close(clientSocketFd);
 }
-
-// void ConnectionHandler::onError(std::map<int, Client>::iterator &it)
-// {
-// 	int clientSocketFd = it->first;
-// 	terminateClientSession(it);
-// 	// impelement logging
-// 	std::cout << "Client " << clientSocketFd << " on error event." << std::endl;
-// }
 
 void ConnectionHandler::onError(Client &client, const std::string reason)
 {

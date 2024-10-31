@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ClientManager.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:24 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/30 11:46:23 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/31 13:31:17 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,4 +87,20 @@ Client* ClientManager::findClient(const std::string& nick)
 	return (NULL);
 
 	throw std::runtime_error("No client with the desired nickname found.");
+}
+
+void ClientManager::removeClientFromRooms(const int clientSocketFd)
+{
+	std::map<std::string, Room>& roomList = RoomManager::getInstance().getRoomList();
+	std::map<std::string, Room>::iterator it = roomList.begin();
+	while (it != roomList.end())
+	{
+		Room* room = &(it->second);
+		if (room->isClientInRoom(clientSocketFd))
+		{
+			std::cout << "Removing client: " << clientSocketFd << " from room: #" << it->first << std::endl;
+			room->removeClient(clientSocketFd);
+		}
+		++it;
+	}
 }
