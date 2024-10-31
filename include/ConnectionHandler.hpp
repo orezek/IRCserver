@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/26 19:26:50 by orezek           ###   ########.fr       */
+/*   Updated: 2024/10/31 13:07:40 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ class ConnectionHandler
 		const std::string ERR_INPUTTOOLONG;
 
 	private:
+		//void removeClientFromRooms(int clientSocketFd);
 		int serverPortNumber;
 		int masterSocketFd;
 		int selectResponse;

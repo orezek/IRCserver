@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RoomManager.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:34:33 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/30 12:03:26 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/31 13:32:27 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,39 @@ Room *RoomManager::getRoom(std::string roomName)
 		return (&(it->second));
 	}
 	return (NULL);
+}
+
+std::map<std::string, Room> &RoomManager::getRoomList()
+{
+	return (this->roomList);
+}
+
+void RoomManager::deleteEmptyRoom(std::string roomName)
+{
+	std::map<std::string, Room>::iterator it = roomList.find(roomName);
+	if (it != roomList.end() && it->second.getNoClients() == 0)
+	{
+		std::cout << "Deleting an empty room: " << it->first << std::endl;
+		roomList.erase(it);
+	}
+}
+
+void RoomManager::deleteAllEmptyRooms(void)
+{
+	std::map<std::string, Room>::iterator it = this->roomList.begin();
+	while (it != roomList.end())
+	{
+		Room *room = &(it->second);
+		if (room->getNoClients() == 0)
+		{
+			std::cout << "Deleting an empty room: #" << it->first << std::endl;
+			it = roomList.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
 }
 
 std::string RoomManager::getRoomsAsString() const

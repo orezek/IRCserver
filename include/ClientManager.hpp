@@ -3,18 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   ClientManager.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:28 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/27 13:25:55 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/10/31 12:44:33 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include <map>
-
 #include "Client.hpp"
+#include "RoomManager.hpp"
+//#include "Room.hpp"
 
 class ClientManager
 {
@@ -29,6 +30,7 @@ class ClientManager
 		Client* findClient(const std::string& nick);
 		//new
 		Client &getClient(const int clientSocketFd);
+		void removeClientFromRooms(const int clientSocketFd);
 
 	private:
 		ClientManager();
