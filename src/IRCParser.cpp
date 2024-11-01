@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/31 22:42:43 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/01 10:02:05 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,10 @@ void IRCParser::assignCommandType()
 	{
 		clientMessage.setCommandType(ClientMessage::KICK);
 	}
+	else if (commandString == "TOPIC")
+	{
+		clientMessage.setCommandType(ClientMessage::TOPIC);
+	}
 	else
 	{
 		clientMessage.setCommandType(ClientMessage::UNKNOWN);
@@ -197,7 +201,55 @@ void IRCParser::parseParameterTokens()
 	{
 		parseAndAssignParametersAsKick();
 	}
+	else if (commandType == ClientMessage::TOPIC)
+	{
+		parseAndAssignParametersAsTopic();
+	}
 	// add functionality for other commands
+}
+
+void IRCParser::parseAndAssignParametersAsTopic()
+{
+	tempInputData = trim(tempInputData);
+	size_t posRoomEnd = tempInputData.find_first_of(" \t");
+
+	std::string room;
+	std::string message;
+
+	if (posRoomEnd == std::string::npos)
+	{
+		room = tempInputData.substr(0);
+	}
+	else
+	{
+		room = tempInputData.substr(0, posRoomEnd);
+
+		// Take the entire remaining string
+		message = tempInputData.substr(posRoomEnd + 1);
+	}
+
+	// Process room
+	processRoom(room);
+
+	message = trim(message);
+	// Handle optional ':' prefix in message
+	if (!message.empty() && message[0] == ':')
+	{
+		message = message.substr(1);
+		Token tokenMessage(Token::MESSAGE, message);
+		clientMessage.addToken(tokenMessage);
+		tempInputData.clear();
+		return;
+	}
+	// Process message
+	if (!message.empty())
+	{
+		Token tokenMessage(Token::MESSAGE, message);
+		clientMessage.addToken(tokenMessage);
+	}
+
+	// Clear the temporary input data
+	tempInputData.clear();
 }
 
 void IRCParser::parseAndAssignParametersAsKick()
