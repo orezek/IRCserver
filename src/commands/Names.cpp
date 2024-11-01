@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 20:19:42 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/02 00:31:28 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/02 00:43:57 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void Names::execute(void)
 	if (tokenRoomname == NULL)
 	{
 		// NANES command without #ROOM arguments will list all public room user names
+		// TODO
 		return;
 	}
 	int i = 1;
@@ -59,7 +60,7 @@ void Names::execute(void)
 				// optional
 				// send room name only
 				std::cout << "Names 6" << std::endl;
-				(void)0; // OP
+				(void)0; // NO-OP
 			}
 		}
 		else

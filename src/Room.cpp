@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:51:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/01 23:41:19 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/02 00:45:26 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,7 +212,7 @@ std::string Room::getNicknamesAsString()
 {
 	std::string response;
 	std::vector<int>::const_iterator it = this->clientFds.begin();
-	while (it != clientFds.end())
+	while (it != this->clientFds.end())
 	{
 		int clientFd = *it;
 		if (this->isOperator(clientFd))
@@ -221,7 +221,7 @@ std::string Room::getNicknamesAsString()
 		}
 		response.append(ClientManager::getInstance().getClient(clientFd).getNickname());
 		++it;
-		if (it != clientFds.end())
+		if (it != this->clientFds.end())
 		{
 			response.append(" ");
 		}
