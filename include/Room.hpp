@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:55:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/31 12:55:27 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/01 13:28:15 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ class Room
 		const std::string& getTopic(void) const;
 		void setTopic(const std::string message);
 		bool isTopicSet(void);
+		bool IsTopicLocked(void);
 		// Operator
 		bool isOperator(const int clientFd);
 		void addOperator(const int clientFd);
@@ -45,13 +46,28 @@ class Room
 		// get read-only vector reference for iterating operations
 		const std::vector<int>& getAllClients() const;
 		const int getNoClients(void) const;
+		// Invite mode
+		bool isInviteOnly(void);
+		void addInvitee(const int clientFd);
+		void removeInvitee(const int clientFd);
+		// Room options
+		bool isPrivate(void);
+		bool isPublic(void);
+		bool isSecret(void);
 
 	private:
 		std::string roomName;
-		std::string password;  // mode -k
+		std::string password;  // mode k
 		std::string topic;
 		std::vector<int> clientFds;
 		std::vector<int> operators;
+		std::vector<int> invitees;
+		bool inviteOnly; // mode i
+		bool topicLocked; // mode t
+		// for visibility options - standard IRC channel options
+		bool privateRoom;
+		bool publicRoom;
+		bool secretRoom;
 		// to do //
 };
 
