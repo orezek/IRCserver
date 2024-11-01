@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:09:39 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/01 09:59:00 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/01 10:12:08 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,9 @@ class IRCParser
 		
 		// TOPIC functions
 		void parseAndAssignParametersAsTopic();
+
+		// NAMES functions
+		void parseAndAssignParametersAsNames();
 
 		void assignTokenTypesAsNick();
 		void assignTokenTypesAsPass();
