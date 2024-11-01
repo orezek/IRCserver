@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/01 10:16:18 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/01 17:17:42 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,10 @@ void IRCParser::assignCommandType()
 	{
 		clientMessage.setCommandType(ClientMessage::NAMES);
 	}
+	else if (commandString == "MODE")
+	{
+		clientMessage.setCommandType(ClientMessage::MODE);
+	}
 	else
 	{
 		clientMessage.setCommandType(ClientMessage::UNKNOWN);
@@ -213,7 +217,158 @@ void IRCParser::parseParameterTokens()
 	{
 		parseAndAssignParametersAsNames();
 	}
+	else if (commandType == ClientMessage::MODE)
+	{
+		parseAndAssignParametersAsMode();
+	}
 	// add functionality for other commands
+}
+
+void IRCParser::processModeRoom()
+{
+	// if it is room:
+	char signFlag = '0';
+	int tokenIter = 1;
+	Token* tokenToProcess;
+
+	while (tokenToProcess = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1))
+	{
+		tokenToProcess->setType(Token::PROCESSED);
+		std::string textToProcess = tokenToProcess->getText();
+		while (!textToProcess.empty())
+		{
+			char character = textToProcess[0];
+			if (character == '+' || character == '-')
+			{
+				signFlag = character;
+			}
+			else if (character == 'k')
+			{
+				Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, tokenIter);
+				if (token != NULL)
+				{
+					if (signFlag == '+')
+					{
+						token->setType(Token::ROOM_PASSWORD_ADD);
+					}
+					else if (signFlag == '-')
+					{
+						token->setType(Token::ROOM_PASSWORD_REMOVE);
+					}
+				}
+			}
+			else if (character == 'i')
+			{
+				Token tokenI(Token::NOT_ASSIGNED, "");
+				if (signFlag == '+')
+				{
+					tokenI.setText("+i");
+					tokenI.setType(Token::ROOM_INVITE_ONLY_ADD);
+				}
+				else if (signFlag == '-')
+				{
+					tokenI.setText("-i");
+					tokenI.setType(Token::ROOM_INVITE_ONLY_REMOVE);
+				}
+				clientMessage.insertTokenAtBeforeFirstTokenType(tokenI, Token::NOT_ASSIGNED);
+			}
+			else if (character == 't')
+			{
+				Token tokenT(Token::NOT_ASSIGNED, "");
+				if (signFlag == '+')
+				{
+					tokenT.setText("+t");
+					tokenT.setType(Token::ROOM_TOPIC_RESTRICTIONS_ADD);
+				}
+				else if (signFlag == '-')
+				{
+					tokenT.setText("-t");
+					tokenT.setType(Token::ROOM_TOPIC_RESTRICTIONS_REMOVE);
+				}
+				clientMessage.insertTokenAtBeforeFirstTokenType(tokenT, Token::NOT_ASSIGNED);
+			}
+			else if (character == 'o')
+			{
+				Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, tokenIter);
+				if (token != NULL)
+				{
+					if (signFlag == '+')
+					{
+						token->setType(Token::ROOM_OPERATOR_ADD);
+					}
+					else if (signFlag == '-')
+					{
+						token->setType(Token::ROOM_OPERATOR_REMOVE);
+					}
+				}
+			}
+			else if (character == 'l')
+			{
+				Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, tokenIter);
+				if (token != NULL)
+				{
+					if (signFlag == '+')
+					{
+						token->setType(Token::ROOM_USER_LIMIT_ADD);
+					}
+					else if (signFlag == '-')
+					{
+						token->setType(Token::ROOM_USER_LIMIT_REMOVE);
+					}
+				}
+			}
+			textToProcess = textToProcess.substr(1);
+		}
+	}
+	clientMessage.deleteAllProcessedTokens();
+}
+
+void IRCParser::processModeClient() {};
+
+void IRCParser::parseAndAssignParametersAsMode()
+{
+	parseParametersBySpace();
+
+	// process room or client
+	Token* tokenClientOrRoom = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+
+	if (tokenClientOrRoom == NULL)
+	{
+		return;
+	}
+
+	std::string trimmedClientOrRoom = trim(tokenClientOrRoom->getText());
+
+	if (trimmedClientOrRoom.empty())
+	{
+		return;
+	}
+
+	if (trimmedClientOrRoom[0] == '#' || trimmedClientOrRoom[0] == '&')
+	{
+		// Room name - remove the prefix character
+		std::string roomName = trimmedClientOrRoom.substr(1);
+		if (!roomName.empty())
+		{
+			tokenClientOrRoom->setText(roomName);
+			tokenClientOrRoom->setType(Token::ROOM_NAME);
+		}
+	}
+	else
+	{
+		// Nickname
+		std::string nickname = trimmedClientOrRoom;
+		tokenClientOrRoom->setType(Token::NICK_NAME);
+	}
+
+	if (tokenClientOrRoom->getType() == Token::ROOM_NAME)
+	{
+		processModeRoom();
+	}
+	else if (tokenClientOrRoom->getType() == Token::NICK_NAME)
+	{
+		processModeClient();
+	}
 }
 
 void IRCParser::parseAndAssignParametersAsNames()

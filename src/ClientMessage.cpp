@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:21 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/25 11:27:26 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/01 17:24:54 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,26 @@ Token *ClientMessage::findNthTokenOfType(Token::Type type, int n)
 		}
 	}
 	return (NULL);  // Return NULL if the token isn't found
+}
+
+void ClientMessage::insertTokenAtBeforeFirstTokenType(Token &newToken, Token::Type type)
+{
+	for (std::vector<Token>::const_iterator it = tokens.begin(); it != tokens.end(); ++it)
+	{
+		if (it->getType() == type)
+		{
+			this->tokens.insert(it, newToken);
+			return;
+		}
+	}
+	this->tokens.push_back(newToken);
+}
+
+void ClientMessage::deleteAllProcessedTokens()
+{
+	tokens.erase(std::remove_if(tokens.begin(), tokens.end(), [](const Token &token)
+								{ return token.getType() == Token::PROCESSED; }),
+				 tokens.end());
 }
 
 void ClientMessage::setCommandType(cmdTypes newCommandType)

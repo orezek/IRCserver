@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 19:24:12 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/30 14:44:17 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/01 16:00:41 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,22 @@ class Token
 			HOST_NAME,        // USER command
 			SERVER_NAME,      // USER command
 			REAL_NAME,        // USER command
-			OTHER = 99
+
+			// MODE for ROOM
+			ROOM_PASSWORD_ADD,               // MODE command "+k"
+			ROOM_PASSWORD_REMOVE,            // MODE command "-k"
+			ROOM_INVITE_ONLY_ADD,            // MODE command "+i"
+			ROOM_INVITE_ONLY_REMOVE,         // MODE command "-i"
+			ROOM_TOPIC_RESTRICTIONS_ADD,     // MODE command "+t"
+			ROOM_TOPIC_RESTRICTIONS_REMOVE,  // MODE command "-t"
+			ROOM_OPERATOR_ADD,               // MODE command "+o"
+			ROOM_OPERATOR_REMOVE,            // MODE command "-o"
+			ROOM_USER_LIMIT_ADD,             // MODE command "+l"
+			ROOM_USER_LIMIT_REMOVE,          // MODE command "-l"
+			PROCESSED = 99,                  // MODE flag for processed string - will be modified in future
+
+			// MODE for CLIENT
+			OTHER = 999
 		};
 
 		Token(Type type, std::string text);
