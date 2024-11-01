@@ -6,12 +6,13 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:18 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/01 10:12:32 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/01 17:21:07 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
+#include <algorithm>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -39,6 +40,7 @@ class ClientMessage
 			KICK,
 			TOPIC,
 			NAMES,
+			MODE,
 			UNKNOWN = 99
 		};
 
@@ -49,6 +51,8 @@ class ClientMessage
 		~ClientMessage();
 
 		void addToken(Token &newToken);
+		void insertTokenAtBeforeFirstTokenType(Token &newToken, Token::Type type);
+		void deleteAllProcessedTokens();
 		Token *findNthTokenOfType(Token::Type type, int n);
 		std::vector<Token> tokens;
 
