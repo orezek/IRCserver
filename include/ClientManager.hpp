@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:28 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/31 18:22:29 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/01 23:51:49 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 #include <map>
 #include "Client.hpp"
-#include "RoomManager.hpp"
-//#include "Room.hpp"
+#include "Room.hpp"
+//#include "RoomManager.hpp"
 
 class ClientManager
 {

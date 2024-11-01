@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:55:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/01 18:19:54 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/01 23:43:26 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include "ClientManager.hpp"
 
 class Room
 {
@@ -56,6 +57,8 @@ class Room
 		bool isPrivate(void);
 		bool isPublic(void);
 		bool isSecret(void);
+		// Higher level methods
+		std::string getNicknamesAsString();
 
 	private:
 		std::string roomName;
@@ -70,7 +73,6 @@ class Room
 		bool privateRoom;
 		bool publicRoom;
 		bool secretRoom;
-		size_t currentClientIndex;
 };
 
 std::ostream& operator<<(std::ostream& output, Room const& instance);

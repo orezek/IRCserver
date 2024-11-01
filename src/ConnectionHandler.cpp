@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/31 18:30:50 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/02 00:16:20 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,7 +211,7 @@ void ConnectionHandler::terminateClientSession(std::map<int, Client>::iterator &
 {
 	int clientSocketFd = it->first;
 	ClientManager::getInstance().getClient(clientSocketFd).deleteRawData();
-	ClientManager::getInstance().removeClientFromRooms(clientSocketFd);
+	RoomManager::getInstance().removeClientFromRooms(clientSocketFd);
 	RoomManager::getInstance().deleteAllEmptyRooms();
 	it = ClientManager::getInstance().deleteClient(it);
 	close(clientSocketFd);

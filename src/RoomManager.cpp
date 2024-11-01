@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:34:33 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/31 13:37:27 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/02 00:09:38 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,4 +119,24 @@ std::ostream &operator<<(std::ostream &output, RoomManager const &instance)
 {
 	output << instance.getRoomsAsString();
 	return (output);
+}
+
+void RoomManager::removeClientFromRooms(const int clientSocketFd)
+{
+	std::map<std::string, Room>::iterator it = roomList.begin();
+	while (it != roomList.end())
+	{
+		Room *room = &(it->second);
+		if (room->isClientInRoom(clientSocketFd))
+		{
+			if (room->isOperator(clientSocketFd))
+			{
+				room->removeOperator(clientSocketFd);
+				std::cout << "The client is operator: removing client: " << clientSocketFd << " from room's operators - room: #" << it->first << std::endl;
+			}
+			std::cout << "Removing client: " << clientSocketFd << " from room: #" << it->first << std::endl;
+			room->removeClient(clientSocketFd);
+		}
+		++it;
+	}
 }

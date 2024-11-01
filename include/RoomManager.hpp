@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:34:46 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/31 13:03:45 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/02 00:15:51 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include <map>
 #include <sstream>
 #include <string>
-
 #include "Room.hpp"
 
 class RoomManager
@@ -29,8 +28,10 @@ class RoomManager
 		std::string getRoomsAsString() const;
 		bool roomExist(std::string roomName);
 		// get read-only Room map reference for iterating operations
+		// Wrong!! Do not expose!
 		std::map<std::string, Room> &getRoomList();
 		void deleteAllEmptyRooms(void);
+		void removeClientFromRooms(const int clientSocketFd);
 
 	private:
 		RoomManager();

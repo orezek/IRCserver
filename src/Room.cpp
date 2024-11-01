@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:51:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/01 22:09:35 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/01 23:41:19 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,7 @@ Room::Room(std::string roomName) :  roomName(roomName),
 									topicLocked(false),
 									privateRoom(false),
 									publicRoom(true),
-									secretRoom(false),
-									currentClientIndex(0) {}
+									secretRoom(false) {}
 
 Room::Room(const Room& obj) : roomName(obj.roomName),
 							  clientFds(obj.clientFds),
@@ -32,8 +31,7 @@ Room::Room(const Room& obj) : roomName(obj.roomName),
 							  topicLocked(obj.topicLocked),
 							  privateRoom(obj.privateRoom),
 							  publicRoom(obj.publicRoom),
-							  secretRoom(obj.secretRoom),
-							  currentClientIndex(obj.currentClientIndex) {}
+							  secretRoom(obj.secretRoom) {}
 
 Room::~Room() {}
 
@@ -52,7 +50,6 @@ Room& Room::operator=(const Room& obj)
 		this->privateRoom = obj.privateRoom;
 		this->publicRoom = obj.publicRoom;
 		this->secretRoom = obj.secretRoom;
-		this->currentClientIndex = obj.currentClientIndex;
 	}
 	return (*this);
 }
@@ -128,23 +125,6 @@ bool Room::isOperator(const int clientFd)
 const std::vector<int>& Room::getAllClients() const
 {
 	return (this->clientFds);
-}
-
-const int Room::getNextClient(void)
-{
-	if(this->currentClientIndex < this->clientFds.size())
-	{
-		return (this->clientFds[this->currentClientIndex++]);
-	}
-	else
-	{
-		return (-1);
-	}
-}
-
-void Room::resetClientIndex(void)
-{
-	this->currentClientIndex = 0;
 }
 
 const int Room::getNoClients(void) const
@@ -225,4 +205,26 @@ bool Room::isPublic(void)
 bool Room::isSecret(void)
 {
 	return (this->secretRoom);
+}
+
+// Higher level methods
+std::string Room::getNicknamesAsString()
+{
+	std::string response;
+	std::vector<int>::const_iterator it = this->clientFds.begin();
+	while (it != clientFds.end())
+	{
+		int clientFd = *it;
+		if (this->isOperator(clientFd))
+		{
+			response.append("@");
+		}
+		response.append(ClientManager::getInstance().getClient(clientFd).getNickname());
+		++it;
+		if (it != clientFds.end())
+		{
+			response.append(" ");
+		}
+	}
+	return (response);
 }
