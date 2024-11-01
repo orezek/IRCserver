@@ -6,23 +6,50 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:51:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/31 12:02:56 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/01 13:43:28 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Room.hpp"
 
-Room::Room(std::string roomName) : roomName(roomName), password(), topic() {}
+Room::Room(std::string roomName) :  roomName(roomName),
+									password(),
+									topic(),
+									inviteOnly(false),
+									topicLocked(false),
+									privateRoom(false),
+									publicRoom(true),
+									secretRoom(false) {}
+
+Room::Room(const Room& obj) : roomName(obj.roomName),
+							  clientFds(obj.clientFds),
+							  operators(obj.operators),
+							  invitees(obj.invitees),
+							  password(obj.password),
+							  topic(obj.topic),
+							  inviteOnly(obj.inviteOnly),
+							  topicLocked(obj.topicLocked),
+							  privateRoom(obj.privateRoom),
+							  publicRoom(obj.publicRoom),
+							  secretRoom(obj.secretRoom) {}
+
 Room::~Room() {}
-Room::Room(const Room& obj) : roomName(obj.roomName), clientFds(obj.clientFds), password(obj.password), topic(obj.topic) {}
+
 Room& Room::operator=(const Room& obj)
 {
 	if (this != &obj)
 	{
 		this->roomName = obj.roomName;
 		this->clientFds = obj.clientFds;
+		this->operators = obj.operators;
+		this->invitees = obj.invitees;
 		this->password = obj.password;
 		this->topic = obj.topic;
+		this->inviteOnly = obj.inviteOnly;
+		this->topicLocked = obj.topicLocked;
+		this->privateRoom = obj.privateRoom;
+		this->publicRoom = obj.publicRoom;
+		this->secretRoom = obj.secretRoom;
 	}
 	return (*this);
 }
@@ -57,6 +84,7 @@ bool Room::isPasswordRequired(void)
 	return (!this->password.empty());
 }
 
+// Topic
 const std::string& Room::getTopic(void) const
 {
 	return (this->topic);
@@ -70,6 +98,11 @@ void Room::setTopic(const std::string message)
 bool Room::isTopicSet(void)
 {
 	return (!this->topic.empty());
+}
+
+bool Room::IsTopicLocked(void)
+{
+	return (this->topicLocked);
 }
 
 // operators
@@ -140,4 +173,36 @@ std::ostream& operator<<(std::ostream& output, Room const& instance)
 {
 	output << instance.getRoomAsString();
 	return (output);
+}
+
+// Invite modes
+bool Room::isInviteOnly(void)
+{
+	return (this->inviteOnly);
+}
+
+void Room::addInvitee(const int clientFd)
+{
+	this->invitees.push_back(clientFd);
+}
+
+void Room::removeInvitee(const int clientFd)
+{
+	invitees.erase(std::remove(invitees.begin(), invitees.end(), clientFd), invitees.end());
+}
+
+// Room Options
+bool Room::isPrivate(void)
+{
+	return (this->privateRoom);
+}
+
+bool Room::isPublic(void)
+{
+	return (this->publicRoom);
+}
+
+bool Room::isSecret(void)
+{
+	return (this->secretRoom);
 }
