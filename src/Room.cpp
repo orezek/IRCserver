@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:51:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/01 13:43:28 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/01 22:09:35 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ Room::Room(std::string roomName) :  roomName(roomName),
 									topicLocked(false),
 									privateRoom(false),
 									publicRoom(true),
-									secretRoom(false) {}
+									secretRoom(false),
+									currentClientIndex(0) {}
 
 Room::Room(const Room& obj) : roomName(obj.roomName),
 							  clientFds(obj.clientFds),
@@ -31,7 +32,8 @@ Room::Room(const Room& obj) : roomName(obj.roomName),
 							  topicLocked(obj.topicLocked),
 							  privateRoom(obj.privateRoom),
 							  publicRoom(obj.publicRoom),
-							  secretRoom(obj.secretRoom) {}
+							  secretRoom(obj.secretRoom),
+							  currentClientIndex(obj.currentClientIndex) {}
 
 Room::~Room() {}
 
@@ -50,6 +52,7 @@ Room& Room::operator=(const Room& obj)
 		this->privateRoom = obj.privateRoom;
 		this->publicRoom = obj.publicRoom;
 		this->secretRoom = obj.secretRoom;
+		this->currentClientIndex = obj.currentClientIndex;
 	}
 	return (*this);
 }
@@ -127,6 +130,23 @@ const std::vector<int>& Room::getAllClients() const
 	return (this->clientFds);
 }
 
+const int Room::getNextClient(void)
+{
+	if(this->currentClientIndex < this->clientFds.size())
+	{
+		return (this->clientFds[this->currentClientIndex++]);
+	}
+	else
+	{
+		return (-1);
+	}
+}
+
+void Room::resetClientIndex(void)
+{
+	this->currentClientIndex = 0;
+}
+
 const int Room::getNoClients(void) const
 {
 	return (this->clientFds.size());
@@ -158,7 +178,7 @@ int* Room::findNthClient(int n)
 	// Check if n is within the valid range
 	if (n > 0 && n <= clientFds.size())
 	{
-		return &clientFds[n - 1];  // Return a pointer to the nth element (1-based index)
+		return (&clientFds[n - 1]);  // Return a pointer to the nth element (1-based index)
 	}
 	return (NULL);  // Return NULL if n is out of range
 }

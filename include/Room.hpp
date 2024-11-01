@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:55:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/01 13:28:15 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/01 18:19:54 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,9 @@ class Room
 		void removeOperator(const int clientFd);
 		// get read-only vector reference for iterating operations
 		const std::vector<int>& getAllClients() const;
+		const int getNextClient(void);
 		const int getNoClients(void) const;
+		void resetClientIndex(void);
 		// Invite mode
 		bool isInviteOnly(void);
 		void addInvitee(const int clientFd);
@@ -68,7 +70,7 @@ class Room
 		bool privateRoom;
 		bool publicRoom;
 		bool secretRoom;
-		// to do //
+		size_t currentClientIndex;
 };
 
 std::ostream& operator<<(std::ostream& output, Room const& instance);
