@@ -6,11 +6,12 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 19:04:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/31 21:26:27 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/01 12:24:37 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Part.hpp"
+
 namespace Commands
 {
 Part::Part(Client *client, ClientMessage &clientMessage) : ABaseCommand(client, clientMessage), room(NULL), response() {}
@@ -31,6 +32,7 @@ Part::~Part() {}
 void Part::execute(void)
 {
 	bool roomExists;
+	bool deleteRoom = false;
 	Token *tokenRoomname = NULL;
 	tokenRoomname = clientMessage.findNthTokenOfType(Token::ROOM_NAME, 1);
 
@@ -77,7 +79,7 @@ void Part::execute(void)
 				// check how many clients still remain in the room
 				if (room->getNoClients() == 0)
 				{
-					RoomManager::getInstance().removeRoom(tokenRoomname->getText());
+					deleteRoom = true;
 					// do not send any response - no one will listen
 				}
 				// at least one send response that client left the room
@@ -96,6 +98,11 @@ void Part::execute(void)
 		else
 		{
 			setServerResponse403();
+		}
+		// setServerResponses use room instance object - has to be deleted here otherwise segfault
+		if (deleteRoom)
+		{
+			RoomManager::getInstance().removeRoom(tokenRoomname->getText());
 		}
 		i++;
 	} while (tokenRoomname != NULL);
@@ -135,7 +142,7 @@ void Part::setServerResponse403(void)
 	this->response.append(nickname);
 	this->response.append(" ");
 	this->response.append("#");
-	this->response.append(clientMessage.findNthTokenOfType(Token::ROOM_NAME, 1)->getText());
+	this->response.append(this->room->getRoomName());
 	this->response.append(" :No such channel\r\n");
 	addResponse(client, this->response);
 }
