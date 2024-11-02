@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 12:15:47 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/02 16:24:26 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/02 16:55:29 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,6 @@ void Invite::execute(void)
 		tokenRoomname = clientMessage.findNthTokenOfType(Token::ROOM_NAME, i);
 		if (tokenUser == NULL || tokenRoomname == NULL)
 		{
-			// invalid command
-			this->setServerResponse461();
 			return;
 		}
 		// check Room and User existance
@@ -61,15 +59,15 @@ void Invite::execute(void)
 					this->setServerResponse341(invitee->getNickname());
 					this->room->addInvitee(invitee->getFd());
 				}
-				// invitee is in the room
 				else
 				{
+					// invitee is in the room
 					this->setServerResponse443(tokenUser->getText());
 				}
 			}
-			// inviter cannot invite new user since he/she is not operator
 			else
 			{
+				// inviter cannot invite new user since he/she is not operator
 				this->setServerResponse442();
 			}
 		}
@@ -95,12 +93,11 @@ void Invite::setServerResponseInvite(const std::string invitee)
 	response.append(nickname);
 	response.append("!user@hostname");
 	response.append(" INVITE ");
-	response.append(" ");
 	response.append(invitee);
 	response.append(" :#");
 	response.append(this->room->getRoomName());
 	response.append("\r\n");
-	this->addResponse(this->room, response);
+	this->addResponse(ClientManager::getInstance().findClient(invitee), response);
 }
 // send back to Inviter
 // :server.name 341 Aldo Patrick #invite_only_channel
@@ -120,7 +117,7 @@ void Invite::setServerResponse341(const std::string invitee)
 	response.append(" #");
 	response.append(this->room->getRoomName());
 	response.append("\r\n");
-	this->client->addResponse(response);
+	addResponse(this->client, response);
 }
 
 // Error messages should be used from inheritance
@@ -140,7 +137,7 @@ void Invite::setServerResponse401(const std::string invitee)
 	response.append(" ");
 	response.append(invitee);
 	response.append(" :No such nick/channel\r\n");
-	this->client->addResponse(response);
+	this->addResponse(client, response);
 }
 
 //: server.name 442 Aldo #invite_only_channel :You're not on that channel
@@ -158,7 +155,7 @@ void Invite::setServerResponse442(void)
 	response.append(" ");
 	response.append("#");
 	response.append(this->room->getRoomName());
-	response.append(" :You're not on that channel\r\n");
+	response.append(" :You're not on that channel/or operator.\r\n");
 	this->client->addResponse(response);
 }
 
