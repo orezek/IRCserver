@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 12:15:47 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/02 16:55:29 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/02 17:00:21 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void Invite::execute(void)
 		}
 		else
 		{
-		// nor room or user exist - send resposne!
+			// nor room or user exist - send resposne!
 			this->setServerResponse401(tokenUser->getText());
 		}
 		i++;

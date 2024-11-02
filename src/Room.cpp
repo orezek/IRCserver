@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:51:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/02 00:45:26 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/02 17:22:44 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,4 +227,14 @@ std::string Room::getNicknamesAsString()
 		}
 	}
 	return (response);
+}
+
+bool Room::isClientInInviteList(const int clientFd) const
+{
+	return std::find(invitees.begin(), invitees.end(), clientFd) != invitees.end();
+}
+
+void Room::setInviteOnly(bool val)
+{
+	this->inviteOnly = val;
 }
