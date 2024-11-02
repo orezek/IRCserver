@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:14:27 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/31 18:50:56 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/02 00:42:06 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,7 @@ void Join::setServerResponse353(void)
 	this->response.append(" #");
 	this->response.append(this->room->getRoomName());
 	this->response.append(" :");
-	this->appendUsersToResponse();
+	this->response.append(this->room->getNicknamesAsString());
 	this->response.append("\r\n");
 	this->addResponse(client, this->response);
 }
@@ -208,29 +208,6 @@ void Join::setServerResponse366(void)
 	this->response.append("End of /NAMES list.\r\n");
 	this->addResponse(client, response);
 }
-
-void Join::appendUsersToResponse(void)
-{
-	const std::vector<int>& clients = this->room->getAllClients();
-	std::vector<int>::const_iterator it = clients.begin();
-
-	while (it != clients.end())
-	{
-		int clientFd = *it;
-		if (this->room->isOperator(clientFd))
-		{
-			this->response.append("@");
-		}
-		this->response.append(ClientManager::getInstance().getClient(clientFd).getNickname());
-		++it;
-		if (it != clients.end())
-		{
-			this->response.append(" ");
-		}
-	}
-}
-
-
 }
 
 

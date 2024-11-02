@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:51:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/01 13:43:28 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/02 00:45:26 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,7 @@ int* Room::findNthClient(int n)
 	// Check if n is within the valid range
 	if (n > 0 && n <= clientFds.size())
 	{
-		return &clientFds[n - 1];  // Return a pointer to the nth element (1-based index)
+		return (&clientFds[n - 1]);  // Return a pointer to the nth element (1-based index)
 	}
 	return (NULL);  // Return NULL if n is out of range
 }
@@ -205,4 +205,26 @@ bool Room::isPublic(void)
 bool Room::isSecret(void)
 {
 	return (this->secretRoom);
+}
+
+// Higher level methods
+std::string Room::getNicknamesAsString()
+{
+	std::string response;
+	std::vector<int>::const_iterator it = this->clientFds.begin();
+	while (it != this->clientFds.end())
+	{
+		int clientFd = *it;
+		if (this->isOperator(clientFd))
+		{
+			response.append("@");
+		}
+		response.append(ClientManager::getInstance().getClient(clientFd).getNickname());
+		++it;
+		if (it != this->clientFds.end())
+		{
+			response.append(" ");
+		}
+	}
+	return (response);
 }

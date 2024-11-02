@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRCParser.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/01 17:17:42 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/02 00:08:19 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,7 +231,7 @@ void IRCParser::processModeRoom()
 	int tokenIter = 1;
 	Token* tokenToProcess;
 
-	while (tokenToProcess = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1))
+	while ((tokenToProcess = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1)))
 	{
 		tokenToProcess->setType(Token::PROCESSED);
 		std::string textToProcess = tokenToProcess->getText();

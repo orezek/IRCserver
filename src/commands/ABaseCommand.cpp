@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 09:51:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/31 20:09:53 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/01 21:25:50 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,12 @@
 namespace Commands
 {
 
-ABaseCommand::ABaseCommand(Client* client, ClientMessage& clientMessage) : client(client), clientMessage(clientMessage), serverData(ServerDataManager::getInstance()) {}
+ABaseCommand::ABaseCommand(Client* client, ClientMessage& clientMessage) : client(client),
+																		   clientMessage(clientMessage),
+																		   room(NULL),
+																		   serverData(ServerDataManager::getInstance()) {}
 
-ABaseCommand::ABaseCommand(ABaseCommand const& refObj) : client(refObj.client), serverData(refObj.serverData), clientMessage(refObj.clientMessage) {};
+ABaseCommand::ABaseCommand(ABaseCommand const& refObj) : client(refObj.client), room(refObj.room), serverData(refObj.serverData), clientMessage(refObj.clientMessage) {};
 
 ABaseCommand& ABaseCommand::operator=(ABaseCommand const& refObj)
 {
@@ -26,6 +29,7 @@ ABaseCommand& ABaseCommand::operator=(ABaseCommand const& refObj)
 		this->client = refObj.client;
 		this->serverData = refObj.serverData;
 		this->clientMessage = refObj.clientMessage;
+		this->room = refObj.room;
 	}
 	return (*this);
 };
