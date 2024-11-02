@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:55:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/01 23:43:26 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/02 17:22:07 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ class Room
 		bool isInviteOnly(void);
 		void addInvitee(const int clientFd);
 		void removeInvitee(const int clientFd);
+		void setInviteOnly(bool val);
+		bool isClientInInviteList(const int clientFd) const;
 		// Room options
 		bool isPrivate(void);
 		bool isPublic(void);

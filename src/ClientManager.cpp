@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:24 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/02 00:16:04 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/02 13:02:56 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ Client& ClientManager::getClient(const int clientSocketFd)
 	return (this->clients.at(clientSocketFd));
 }
 
-std::map<int, Client>::iterator ClientManager::deleteClient(std::map<int, Client>::iterator &it)
+std::map<int, Client>::iterator ClientManager::deleteClient(std::map<int, Client>::iterator& it)
 {
 	return (this->clients.erase(it));
 }
@@ -88,9 +88,10 @@ Client* ClientManager::findClient(const std::string& nick)
 			return &(clientsIt->second);
 		}
 	}
-
 	return (NULL);
-
-	throw std::runtime_error("No client with the desired nickname found.");
 }
 
+bool ClientManager::clientExists(const std::string nick)
+{
+	return (this->findClient(nick) != NULL);
+}

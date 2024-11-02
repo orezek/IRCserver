@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:14:27 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/02 00:42:06 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/02 17:23:12 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ Join::Join(const Join &refObj) : ABaseCommand(refObj)
 	this->room = refObj.room;
 }
 
-Join& Join::operator=(const Join &refObj)
+Join &Join::operator=(const Join &refObj)
 {
 	(void)refObj;
 	return (*this);
@@ -75,9 +75,19 @@ void Join::execute()
 						return;
 					}
 				}
+				if (this->room->isInviteOnly())
+				{
+					if (!this->room->isClientInInviteList(client->getFd()))
+					{
+						// Room is invite-only and user is not invited
+						std::cout << "No invitation" << std::endl;
+						this->setServerResponse475();
+						return;
+					}
+				}
 				this->room->addClient(client->getFd());
-				setServerResponseJoin(); // join notification
-				if (room->isTopicSet()) // room has a topic - send it to the new client
+				setServerResponseJoin();  // join notification
+				if (room->isTopicSet())   // room has a topic - send it to the new client
 				{
 					setServerResponse332();
 				}
@@ -99,6 +109,8 @@ void Join::execute()
 			this->room->addClient(client->getFd());
 			this->room->addOperator(client->getFd());
 			this->room->setTopic("This topic is default and hardcoded in Join.cpp line 102");
+			// test make new rooms invite only
+			this->room->setInviteOnly(true);
 			if (!roomPasword.empty())
 			{
 				this->room->setPassword(roomPasword);
@@ -114,7 +126,7 @@ void Join::execute()
 // wrong room password (key)
 void Join::setServerResponse475(void)
 {
-	//:server.name 475 Aldo #TEST :Cannot join channel (+k)
+	//: server.name 475 Aldo #TEST :Cannot join channel (+k)
 	std::string nickname = client->getNickname();
 	if (nickname.empty())
 	{
@@ -132,7 +144,7 @@ void Join::setServerResponse475(void)
 // Successfull join to the channell
 void Join::setServerResponseJoin(void)
 {
-	//:Aldo!user@hostname JOIN :#TEST
+	//: Aldo!user@hostname JOIN :#TEST
 	std::string nickname = client->getNickname();
 	if (nickname.empty())
 	{
@@ -147,7 +159,7 @@ void Join::setServerResponseJoin(void)
 	response.append("\r\n");
 	this->addResponse(this->room, response);
 }
-//:server.name 332 Aldo #TEST :Welcome to the TEST channel! Discuss project updates here.
+//: server.name 332 Aldo #TEST :Welcome to the TEST channel! Discuss project updates here.
 void Join::setServerResponse332(void)
 {
 	std::string nickname = client->getNickname();
@@ -166,11 +178,11 @@ void Join::setServerResponse332(void)
 	response.append("\r\n");
 	this->addResponse(client, response);
 }
-	// User list
-	/*
-	:server.name 353 Aldo = #TEST :@existing_user1 existing_user2 Aldo
-	:server.name 366 Aldo #TEST :End of /NAMES list.
-	*/
+// User list
+/*
+:server.name 353 Aldo = #TEST :@existing_user1 existing_user2 Aldo
+:server.name 366 Aldo #TEST :End of /NAMES list.
+*/
 void Join::setServerResponse353(void)
 {
 	std::string nickname = client->getNickname();
@@ -208,6 +220,4 @@ void Join::setServerResponse366(void)
 	this->response.append("End of /NAMES list.\r\n");
 	this->addResponse(client, response);
 }
-}
-
-
+}  // namespace Commands
