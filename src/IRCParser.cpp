@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/02 22:33:09 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/02 22:35:34 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -408,6 +408,8 @@ void IRCParser::parseAndAssignParametersAsMode()
 	{
 		processModeClient();
 	}
+
+	tempInputData.clear();
 }
 
 void IRCParser::parseAndAssignParametersAsNames()
