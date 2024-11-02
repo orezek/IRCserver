@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:14:27 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/02 20:27:53 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/02 23:54:26 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,11 @@ void Join::execute()
 	std::string roomPasword;
 	Token *tokenRoomname = NULL;
 
-	if (!client->isRegistered())
-	{
-		setServerResponse451();
-		return;
-	}
+	// if (!client->isRegistered())
+	// {
+	// 	setServerResponse451();
+	// 	return;
+	// }
 
 	tokenRoomname = clientMessage.findNthTokenOfType(Token::ROOM_NAME, 1);
 	if (tokenRoomname == NULL)
@@ -92,6 +92,7 @@ void Join::execute()
 					}
 				}
 				this->room->addClient(client->getFd());
+				this->room->removeInvitee(client->getFd()); // remove the client from invite list
 				setServerResponseJoin();  // join notification
 				if (room->isTopicSet())   // room has a topic - send it to the new client
 				{

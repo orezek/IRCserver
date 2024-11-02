@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:51:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/02 17:22:44 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/02 23:18:46 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,6 +166,16 @@ int* Room::findNthClient(int n)
 bool Room::isClientInRoom(const int clientFd) const
 {
 	return std::find(clientFds.begin(), clientFds.end(), clientFd) != clientFds.end();
+}
+
+bool Room::isClientInRoom(const std::string nickname) const
+{
+	if (ClientManager::getInstance().clientExists(nickname))
+	{
+		int clientFd = ClientManager::getInstance().findClient(nickname)->getFd();
+		return std::find(clientFds.begin(), clientFds.end(), clientFd) != clientFds.end();
+	}
+	return (false);
 }
 
 // --- OUTSIDE OF THE CLASS ---

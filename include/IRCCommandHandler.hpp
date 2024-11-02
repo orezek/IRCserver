@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:33 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/02 12:11:21 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/02 21:38:24 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,9 @@
 #include "Part.hpp"
 #include "Names.hpp"
 #include "Invite.hpp"
+#include "Kick.hpp"
+// #include "Mode.hpp"
+// #include "Topic.hpp"
 
 class IRCCommandHandler
 {

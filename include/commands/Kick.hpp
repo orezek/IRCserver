@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Invite.hpp                                         :+:      :+:    :+:   */
+/*   Kick.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/02 12:14:39 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/02 23:26:22 by orezek           ###   ########.fr       */
+/*   Created: 2024/11/02 21:29:28 by orezek            #+#    #+#             */
+/*   Updated: 2024/11/02 23:36:01 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,19 @@
 
 namespace Commands
 {
-class Invite : protected ABaseCommand
+class Kick : protected ABaseCommand
 {
 	public:
-		Invite(Client *client, ClientMessage &clientMessage);
-		~Invite();
+		Kick(Client *client, ClientMessage &clientMessage);
+		~Kick();
 		void execute(void);
 
 	private:
 	std::string response;
-	void setServerResponse401(const std::string nickname);
-	void setServerResponse442(void);
-	void setServerResponse443(const std::string nickname);
-	void setServerResponse341(const std::string nickname);
-	void setServerResponseInvite(const std::string nickname);
+	void setServerResponse403(void);
+	void setServerResponse441(std::string kicked_user);
 	void setServerResponse482(void);
+	void setServerResponse442(void);
+	void setServerResponseKick(std::string message, std::string kicked_user);
 };
 };
