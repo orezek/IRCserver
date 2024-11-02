@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/02 00:11:00 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/02 12:12:47 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,11 @@ void IRCCommandHandler::executeOneCommand(ClientMessage &clientMessage)
 	{
 		Commands::Names NamesCommand(client, clientMessage);
 		NamesCommand.execute();
+	}
+	else if (commandType == ClientMessage::INVITE)
+	{
+		Commands::Invite InviteCommand(client, clientMessage);
+		InviteCommand.execute();
 	}
 	else if (commandType == ClientMessage::UNKNOWN)
 	{
