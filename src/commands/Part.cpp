@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 19:04:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/01 12:24:37 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/02 17:36:20 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,11 @@ void Part::execute(void)
 					// remove from operators vector
 					this->room->removeOperator(client->getFd());
 				}
+				if (room->isClientInInviteList(client->getFd()))
+				{
+					// remove from invitee vector
+					this->room->removeInvitee(client->getFd());
+				}
 				// check how many clients still remain in the room
 				if (room->getNoClients() == 0)
 				{
@@ -99,7 +104,7 @@ void Part::execute(void)
 		{
 			setServerResponse403();
 		}
-		// setServerResponses use room instance object - has to be deleted here otherwise segfault
+		// setServerResponses uses this->room instance object - has to be deleted here otherwise segfault
 		if (deleteRoom)
 		{
 			RoomManager::getInstance().removeRoom(tokenRoomname->getText());
