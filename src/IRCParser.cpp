@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRCParser.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/02 16:33:43 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/02 22:35:34 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,6 +153,10 @@ void IRCParser::assignCommandType()
 	{
 		clientMessage.setCommandType(ClientMessage::MODE);
 	}
+	else if (commandString == "WHO")
+	{
+		clientMessage.setCommandType(ClientMessage::WHO);
+	}
 	else
 	{
 		clientMessage.setCommandType(ClientMessage::UNKNOWN);
@@ -221,7 +225,42 @@ void IRCParser::parseParameterTokens()
 	{
 		parseAndAssignParametersAsMode();
 	}
+	else if (commandType == ClientMessage::WHO)
+	{
+		parseParametersBySpace();
+		assignParametersAsWho();
+	}
 	// add functionality for other commands
+}
+
+void IRCParser::assignParametersAsWho()
+{
+	Token* tokenClientOrRoom = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+
+	if (tokenClientOrRoom == NULL)
+	{
+		return;
+	}
+
+	std::string trimmedClientOrRoom = trim(tokenClientOrRoom->getText());
+
+	if (trimmedClientOrRoom.empty())
+	{
+		return;
+	}
+
+	if (trimmedClientOrRoom[0] == '#' || trimmedClientOrRoom[0] == '&')
+	{
+		// Room name - remove the prefix character
+		std::string roomName = trimmedClientOrRoom.substr(1);
+		if (!roomName.empty())
+		{
+			tokenClientOrRoom->setText(roomName);
+			tokenClientOrRoom->setType(Token::ROOM_NAME);
+		}
+	}
+	// client who would be implemented later
+	this->tempInputData.clear();
 }
 
 void IRCParser::processModeRoom()
@@ -369,6 +408,8 @@ void IRCParser::parseAndAssignParametersAsMode()
 	{
 		processModeClient();
 	}
+
+	tempInputData.clear();
 }
 
 void IRCParser::parseAndAssignParametersAsNames()
