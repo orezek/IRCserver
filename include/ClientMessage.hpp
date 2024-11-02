@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:18 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/01 17:21:07 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/02 22:18:25 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ class ClientMessage
 			TOPIC,
 			NAMES,
 			MODE,
+			WHO,
 			UNKNOWN = 99
 		};
 

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:09:39 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/01 16:23:29 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/02 22:27:15 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,9 @@ class IRCParser
 		void parseAndAssignParametersAsMode();
 		void processModeRoom();
 		void processModeClient();
+
+		// WHO functions
+		void assignParametersAsWho();
 
 		void assignTokenTypesAsNick();
 		void assignTokenTypesAsPass();
