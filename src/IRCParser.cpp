@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/02 22:35:34 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/03 10:24:23 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -501,7 +501,7 @@ void IRCParser::parseAndAssignParametersAsKick()
 	{
 		// Take the entire remaining string
 		clients = remainingData;
-		tempInputData.clear();
+		remainingData.clear();
 	}
 	else
 	{
