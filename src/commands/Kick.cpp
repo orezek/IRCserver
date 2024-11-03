@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 21:30:41 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/02 23:59:33 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/03 12:24:33 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void Kick::execute(void)
 	std::string message = "";
 
 	tokenRoom = clientMessage.findNthTokenOfType(Token::ROOM_NAME, 1);
-	tokenUser = clientMessage.findNthTokenOfType(Token::USER_NAME, 1);
+	tokenUser = clientMessage.findNthTokenOfType(Token::NICK_NAME, 1);
 	if (tokenRoom == NULL || tokenUser == NULL)
 	{
 		// wrong request
@@ -41,14 +41,14 @@ void Kick::execute(void)
 	do
 	{
 		tokenRoom = clientMessage.findNthTokenOfType(Token::ROOM_NAME, 1);
-		tokenUser = clientMessage.findNthTokenOfType(Token::USER_NAME, i);
-		std::cout << tokenRoom->getText() << std::endl;
-		std::cout << tokenUser->getText() << std::endl;
+		tokenUser = clientMessage.findNthTokenOfType(Token::NICK_NAME, i);
 		if (tokenUser == NULL)
 		{
 			// no more users to kick ass to
 			return;
 		}
+		std::cout << tokenRoom->getText() << std::endl;
+		std::cout << tokenUser->getText() << std::endl;
 		if ((tokenMessage = clientMessage.findNthTokenOfType(Token::MESSAGE, 1)) != NULL)
 		{
 			hasMessage = true;
@@ -77,8 +77,6 @@ void Kick::execute(void)
 						{
 							message = tokenMessage->getText();
 						}
-						//setServerResponse(); to room
-						//setServerResponse(); to kicked client
 						this->setServerResponseKick(message, kickedClient->getNickname());
 					}
 					else
@@ -102,7 +100,7 @@ void Kick::execute(void)
 		else
 		{
 			// Room does not exists
-			this->setServerResponse403();
+			this->setServerResponse403(tokenRoom->getText());
 		}
 		i++;
 	} while (tokenUser != NULL);
@@ -110,7 +108,7 @@ void Kick::execute(void)
 
 
 //:server.name 403 Aldo #nonexistent_channel :No such channel
-void Kick::setServerResponse403(void)
+void Kick::setServerResponse403(std::string roomName)
 {
 	std::string nickname = client->getNickname();
 	if (nickname.empty())
@@ -124,7 +122,7 @@ void Kick::setServerResponse403(void)
 	this->response.append(nickname);
 	this->response.append(" ");
 	this->response.append("#");
-	this->response.append(this->room->getRoomName());
+	this->response.append(roomName);
 	this->response.append(" :No such channel\r\n");
 	addResponse(client, this->response);
 }
@@ -201,7 +199,7 @@ void Kick::setServerResponseKick(std::string message, std::string kicked_user)
 	response.append(this->room->getRoomName());
 	response.append(" ");
 	response.append(kicked_user);
-	response.append(" ");
+	response.append(" :");
 	response.append(message);
 	response.append("\r\n");
 	this->addResponse(room, response);
