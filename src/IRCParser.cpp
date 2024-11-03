@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/03 10:24:23 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/03 21:43:49 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -266,12 +266,13 @@ void IRCParser::assignParametersAsWho()
 void IRCParser::processModeRoom()
 {
 	// if it is room:
-	char signFlag = '0';
+	char signFlag;
 	int tokenIter = 1;
 	Token* tokenToProcess;
 
 	while ((tokenToProcess = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1)))
 	{
+		signFlag = '0';
 		tokenToProcess->setType(Token::PROCESSED);
 		std::string textToProcess = tokenToProcess->getText();
 		while (!textToProcess.empty())
