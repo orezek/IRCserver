@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:51:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/02 23:18:46 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/03 17:46:06 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,4 +247,14 @@ bool Room::isClientInInviteList(const int clientFd) const
 void Room::setInviteOnly(bool val)
 {
 	this->inviteOnly = val;
+}
+
+void Room::lockTopic(void)
+{
+	this->topicLocked = true;
+}
+
+void Room::unlockTopic(void)
+{
+	this->topicLocked = false;
 }
