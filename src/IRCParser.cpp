@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/04 21:18:45 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/04 21:36:19 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -267,7 +267,6 @@ void IRCParser::processModeRoom()
 {
 	// if it is room:
 	char signFlag = '0';
-	int tokenIter = 1;
 	Token* tokenToProcess;
 
 	while ((tokenToProcess = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1)))
@@ -283,17 +282,20 @@ void IRCParser::processModeRoom()
 			}
 			else if (character == 'k')
 			{
-				Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, tokenIter);
-				if (token != NULL)
+				if (signFlag == '+')
 				{
-					if (signFlag == '+')
+					Token tokenK(Token::MODE_ROOM_PASSWORD_ADD, "+k");
+					clientMessage.insertTokenAtBeforeFirstTokenType(tokenK, Token::NOT_ASSIGNED);
+					Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+					if (token != NULL)
 					{
-						token->setType(Token::MODE_ROOM_PASSWORD_ADD);
+						token->setType(Token::MODE_ROOM_PASSWORD_PARAMETER);
 					}
-					else if (signFlag == '-')
-					{
-						token->setType(Token::MODE_ROOM_PASSWORD_REMOVE);
-					}
+				}
+				else if (signFlag == '-')
+				{
+					Token tokenK(Token::MODE_ROOM_PASSWORD_REMOVE, "-k");
+					clientMessage.insertTokenAtBeforeFirstTokenType(tokenK, Token::NOT_ASSIGNED);
 				}
 			}
 			else if (character == 'i')
@@ -313,47 +315,51 @@ void IRCParser::processModeRoom()
 			}
 			else if (character == 't')
 			{
-				Token tokenT(Token::NOT_ASSIGNED, "");
 				if (signFlag == '+')
 				{
-					tokenT.setText("+t");
-					tokenT.setType(Token::MODE_ROOM_TOPIC_RESTRICTIONS_ADD);
+					Token tokenT(Token::MODE_ROOM_TOPIC_RESTRICTIONS_ADD, "+t");
+					clientMessage.insertTokenAtBeforeFirstTokenType(tokenT, Token::NOT_ASSIGNED);
 				}
 				else if (signFlag == '-')
 				{
-					tokenT.setText("-t");
-					tokenT.setType(Token::MODE_ROOM_TOPIC_RESTRICTIONS_REMOVE);
+					Token tokenT(Token::MODE_ROOM_TOPIC_RESTRICTIONS_REMOVE, "-t");
+					clientMessage.insertTokenAtBeforeFirstTokenType(tokenT, Token::NOT_ASSIGNED);
 				}
-				clientMessage.insertTokenAtBeforeFirstTokenType(tokenT, Token::NOT_ASSIGNED);
 			}
 			else if (character == 'o')
 			{
-				Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, tokenIter);
+				if (signFlag == '+')
+				{
+					Token tokenO(Token::MODE_ROOM_OPERATOR_ADD, "+o");
+					clientMessage.insertTokenAtBeforeFirstTokenType(tokenO, Token::NOT_ASSIGNED);
+				}
+				else if (signFlag == '-')
+				{
+					Token tokenO(Token::MODE_ROOM_OPERATOR_REMOVE, "-o");
+					clientMessage.insertTokenAtBeforeFirstTokenType(tokenO, Token::NOT_ASSIGNED);
+				}
+				Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
 				if (token != NULL)
 				{
-					if (signFlag == '+')
-					{
-						token->setType(Token::MODE_ROOM_OPERATOR_ADD);
-					}
-					else if (signFlag == '-')
-					{
-						token->setType(Token::MODE_ROOM_OPERATOR_REMOVE);
-					}
+					token->setType(Token::MODE_ROOM_OPERATOR_PARAMETER);
 				}
 			}
 			else if (character == 'l')
 			{
-				Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, tokenIter);
+				if (signFlag == '+')
+				{
+					Token tokenL(Token::MODE_ROOM_USER_LIMIT_ADD, "+l");
+					clientMessage.insertTokenAtBeforeFirstTokenType(tokenL, Token::NOT_ASSIGNED);
+				}
+				else if (signFlag == '-')
+				{
+					Token tokenL(Token::MODE_ROOM_USER_LIMIT_REMOVE, "-l");
+					clientMessage.insertTokenAtBeforeFirstTokenType(tokenL, Token::NOT_ASSIGNED);
+				}
+				Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
 				if (token != NULL)
 				{
-					if (signFlag == '+')
-					{
-						token->setType(Token::MODE_ROOM_USER_LIMIT_ADD);
-					}
-					else if (signFlag == '-')
-					{
-						token->setType(Token::MODE_ROOM_USER_LIMIT_REMOVE);
-					}
+					token->setType(Token::MODE_ROOM_USER_LIMIT_PARAMETER);
 				}
 			}
 			textToProcess = textToProcess.substr(1);
