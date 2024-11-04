@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:51:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/03 17:46:06 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/04 12:54:13 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 Room::Room(std::string roomName) :  roomName(roomName),
 									password(),
+									passwordRequired(false),
 									topic(),
 									inviteOnly(false),
 									topicLocked(false),
@@ -26,6 +27,7 @@ Room::Room(const Room& obj) : roomName(obj.roomName),
 							  operators(obj.operators),
 							  invitees(obj.invitees),
 							  password(obj.password),
+							  passwordRequired(obj.passwordRequired),
 							  topic(obj.topic),
 							  inviteOnly(obj.inviteOnly),
 							  topicLocked(obj.topicLocked),
@@ -44,6 +46,7 @@ Room& Room::operator=(const Room& obj)
 		this->operators = obj.operators;
 		this->invitees = obj.invitees;
 		this->password = obj.password;
+		this->passwordRequired = obj.passwordRequired;
 		this->topic = obj.topic;
 		this->inviteOnly = obj.inviteOnly;
 		this->topicLocked = obj.topicLocked;
@@ -81,7 +84,12 @@ void Room::setPassword(std::string password)
 
 bool Room::isPasswordRequired(void)
 {
-	return (!this->password.empty());
+	return (this->passwordRequired);
+}
+
+void Room::setPasswordRequired(bool val)
+{
+	this->passwordRequired = val;
 }
 
 // Topic

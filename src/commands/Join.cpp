@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:14:27 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/03 17:42:52 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/04 12:40:42 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void Join::execute()
 					{
 						// Room is invite-only and user is not invited
 						std::cout << "No invitation" << std::endl;
-						this->setServerResponse475();
+						this->setServerResponse473();
 						return;
 					}
 				}
@@ -227,4 +227,24 @@ void Join::setServerResponse366(void)
 	this->response.append("End of /NAMES list.\r\n");
 	this->addResponse(client, response);
 }
+
+//:server.name 473 UserNick #channel :Cannot join channel (+i)
+void Join::setServerResponse473(void)
+{
+	//: server.name 475 Aldo #TEST :Cannot join channel (+k)
+	std::string nickname = client->getNickname();
+	if (nickname.empty())
+	{
+		nickname = "*";
+	}
+	std::string response = ":";
+	response.append(serverData.getServerName());
+	response.append(" 473 ");
+	response.append(nickname);
+	response.append(" #");
+	response.append(this->room->getRoomName());
+	response.append(" :Cannot join channel (+i)\r\n");
+	this->addResponse(client, response);
+}
+
 }  // namespace Commands

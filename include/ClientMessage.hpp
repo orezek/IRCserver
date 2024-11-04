@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ClientMessage.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:18 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/02 22:18:25 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/04 11:33:18 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,14 @@ class ClientMessage
 		cmdTypes getCommandType();
 		std::string getCommandString();
 
+		Token *getNextToken(void);
+		void resetIterator(void);
+
 	private:
 		cmdTypes commandType;
+		bool iteratorInitialized;
+		std::vector<Token>::iterator currentTokenIt;
+
 };
 
 std::ostream &operator<<(std::ostream &o, ClientMessage const &instance);

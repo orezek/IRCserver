@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:21 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/01 23:45:54 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/04 11:46:32 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,4 +109,27 @@ std::ostream &operator<<(std::ostream &output, ClientMessage const &instance)
 	}
 	output << "-----------------------";
 	return (output);
+}
+
+Token *ClientMessage::getNextToken()
+{
+	if (!this->iteratorInitialized || this->tokens.empty())
+	{
+		resetIterator();
+	}
+
+	if (this->currentTokenIt == this->tokens.end())
+	{
+		return (NULL);
+	}
+	Token *tokenPtr = &(*currentTokenIt);
+	++this->currentTokenIt;
+	return (tokenPtr);
+}
+
+// Resets iterator to the beginning of roomList
+void ClientMessage::resetIterator()
+{
+	currentTokenIt = tokens.begin();
+	iteratorInitialized = true;
 }

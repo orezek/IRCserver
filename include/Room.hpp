@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:55:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/03 17:43:52 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/04 12:52:37 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ class Room
 		const std::string& getPassword() const;
 		void setPassword(std::string password);
 		bool isPasswordRequired(void);
+		void setPasswordRequired(bool val);
 		// Topic
 		const std::string& getTopic(void) const;
 		void setTopic(const std::string message);
@@ -68,6 +69,7 @@ class Room
 	private:
 		std::string roomName;
 		std::string password;  // mode k
+		bool passwordRequired;
 		std::string topic;
 		std::vector<int> clientFds;
 		std::vector<int> operators;
