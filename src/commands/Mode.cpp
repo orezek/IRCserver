@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:14:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/04 13:31:05 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/04 16:13:12 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,28 +70,31 @@ void Mode::execute(void)
 			response.append(token->getText());
 			continue;
 		}
+		// to be re-implemented
 		if (token->getType() == Token::ROOM_PASSWORD_ADD)
 		{
 			this->room->setPasswordRequired(true);
-			response.append(token->getText());
+			this->room->setPassword(token->getText());
+			response.append("+k");
 			continue;
 		}
 		if (token->getType() == Token::ROOM_PASSWORD_REMOVE)
 		{
 			this->room->setPasswordRequired(false);
 			this->room->setPassword("");
-			response.append(token->getText());
+			response.append("-k");
 			continue;
 		}
-		if (token->getType() == Token::ROOM_PASSWORD)
-		{
-			if (room->isPasswordRequired())
-			{
-				this->room->setPassword(token->getText());
-				response.append(token->getText());
-			}
-			continue;
-		}
+		// to be re-implemented
+		// if (token->getType() == Token::ROOM_PASSWORD)
+		// {
+		// 	if (room->isPasswordRequired())
+		// 	{
+		// 		this->room->setPassword(token->getText());
+		// 		response.append(token->getText());
+		// 	}
+		// 	continue;
+		// }
 		if (token->getType() == Token::ROOM_TOPIC_RESTRICTIONS_ADD)
 		{
 			this->room->lockTopic();
@@ -104,24 +107,25 @@ void Mode::execute(void)
 			response.append(token->getText());
 			continue;
 		}
-		if (token->getType() == Token::ROOM_OPERATOR_ADD)
-		{
-			bool addOperator = true;
-			response.append(token->getText());
-			continue;
-		}
-		if (token->getType() == Token::ROOM_OPERATOR_REMOVE)
-		{
-			bool removeOperator = true;
-			response.append(token->getText());
-			continue;
-		}
-		if (token->getType() == Token::NICK_NAME)
-		{
-			// check the operator flags and decide on action
-			response.append(token->getText());
-			continue;
-		}
+		// to be re-implemented
+		// if (token->getType() == Token::ROOM_OPERATOR_ADD)
+		// {
+		// 	//bool addOperator = true;
+		// 	response.append(token->getText());
+		// 	continue;
+		// }
+		// if (token->getType() == Token::ROOM_OPERATOR_REMOVE)
+		// {
+		// 	//bool removeOperator = true;
+		// 	response.append(token->getText());
+		// 	continue;
+		// }
+		// if (token->getType() == Token::NICK_NAME)
+		// {
+		// 	// check the operator flags and decide on action
+		// 	response.append(token->getText());
+		// 	continue;
+		// }
 	}
 	clientMessage.resetIterator();
 	response.append("\r\n");
