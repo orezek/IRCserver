@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:14:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/04 21:20:12 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/04 22:32:48 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,12 +70,10 @@ void Mode::execute(void)
 			response.append(token->getText());
 			continue;
 		}
-		// to be re-implemented
 		if (token->getType() == Token::MODE_ROOM_PASSWORD_ADD)
 		{
 			this->room->setPasswordRequired(true);
-			this->room->setPassword(token->getText());
-			response.append("+k");
+			response.append(token->getText());
 			continue;
 		}
 		if (token->getType() == Token::MODE_ROOM_PASSWORD_REMOVE)
@@ -85,16 +83,14 @@ void Mode::execute(void)
 			response.append("-k");
 			continue;
 		}
-		// to be re-implemented
-		// if (token->getType() == Token::MODE_ROOM_PASSWORD)
-		// {
-		// 	if (room->isPasswordRequired())
-		// 	{
-		// 		this->room->setPassword(token->getText());
-		// 		response.append(token->getText());
-		// 	}
-		// 	continue;
-		// }
+		if (token->getType() == Token::MODE_ROOM_PASSWORD_PARAMETER)
+		{
+			if (room->isPasswordRequired())
+			{
+				this->room->setPassword(token->getText());
+			}
+			continue;
+		}
 		if (token->getType() == Token::MODE_ROOM_TOPIC_RESTRICTIONS_ADD)
 		{
 			this->room->lockTopic();
