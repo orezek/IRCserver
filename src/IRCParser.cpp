@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/04 21:36:19 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/04 21:45:20 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -300,18 +300,16 @@ void IRCParser::processModeRoom()
 			}
 			else if (character == 'i')
 			{
-				Token tokenI(Token::NOT_ASSIGNED, "");
 				if (signFlag == '+')
 				{
-					tokenI.setText("+i");
-					tokenI.setType(Token::MODE_ROOM_INVITE_ONLY_ADD);
+					Token tokenI(Token::MODE_ROOM_INVITE_ONLY_ADD, "+i");
+					clientMessage.insertTokenAtBeforeFirstTokenType(tokenI, Token::NOT_ASSIGNED);
 				}
 				else if (signFlag == '-')
 				{
-					tokenI.setText("-i");
-					tokenI.setType(Token::MODE_ROOM_INVITE_ONLY_REMOVE);
+					Token tokenI(Token::MODE_ROOM_INVITE_ONLY_REMOVE, "-i");
+					clientMessage.insertTokenAtBeforeFirstTokenType(tokenI, Token::NOT_ASSIGNED);
 				}
-				clientMessage.insertTokenAtBeforeFirstTokenType(tokenI, Token::NOT_ASSIGNED);
 			}
 			else if (character == 't')
 			{
