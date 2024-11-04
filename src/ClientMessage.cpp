@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ClientMessage.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:21 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/04 11:46:32 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/04 21:51:05 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,18 @@ void ClientMessage::insertTokenAtBeforeFirstTokenType(Token &newToken, Token::Ty
 
 void ClientMessage::deleteAllProcessedTokens()
 {
-	// tokens.erase(std::remove_if(tokens.begin(), tokens.end(), [](const Token &token)
-	// 							{ return token.getType() == Token::PROCESSED; }),
-	// 			 tokens.end());
+	std::vector<Token>::iterator it = tokens.begin();
+	while (it != tokens.end())
+	{
+		if (it->getType() == Token::PROCESSED)
+		{
+			it = tokens.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
 }
 
 void ClientMessage::setCommandType(cmdTypes newCommandType)
