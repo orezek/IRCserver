@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:14:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/04 16:13:12 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/04 21:20:12 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,27 +58,27 @@ void Mode::execute(void)
 	clientMessage.resetIterator();
 	while ((token = clientMessage.getNextToken()) != NULL)
 	{
-		if (token->getType() == Token::ROOM_INVITE_ONLY_ADD)
+		if (token->getType() == Token::MODE_ROOM_INVITE_ONLY_ADD)
 		{
 			this->room->setInviteOnly(true);
 			response.append(token->getText());
 			continue;
 		}
-		if (token->getType() == Token::ROOM_INVITE_ONLY_REMOVE)
+		if (token->getType() == Token::MODE_ROOM_INVITE_ONLY_REMOVE)
 		{
 			this->room->setInviteOnly(false);
 			response.append(token->getText());
 			continue;
 		}
 		// to be re-implemented
-		if (token->getType() == Token::ROOM_PASSWORD_ADD)
+		if (token->getType() == Token::MODE_ROOM_PASSWORD_ADD)
 		{
 			this->room->setPasswordRequired(true);
 			this->room->setPassword(token->getText());
 			response.append("+k");
 			continue;
 		}
-		if (token->getType() == Token::ROOM_PASSWORD_REMOVE)
+		if (token->getType() == Token::MODE_ROOM_PASSWORD_REMOVE)
 		{
 			this->room->setPasswordRequired(false);
 			this->room->setPassword("");
@@ -86,7 +86,7 @@ void Mode::execute(void)
 			continue;
 		}
 		// to be re-implemented
-		// if (token->getType() == Token::ROOM_PASSWORD)
+		// if (token->getType() == Token::MODE_ROOM_PASSWORD)
 		// {
 		// 	if (room->isPasswordRequired())
 		// 	{
@@ -95,32 +95,32 @@ void Mode::execute(void)
 		// 	}
 		// 	continue;
 		// }
-		if (token->getType() == Token::ROOM_TOPIC_RESTRICTIONS_ADD)
+		if (token->getType() == Token::MODE_ROOM_TOPIC_RESTRICTIONS_ADD)
 		{
 			this->room->lockTopic();
 			response.append(token->getText());
 			continue;
 		}
-		if (token->getType() == Token::ROOM_TOPIC_RESTRICTIONS_REMOVE)
+		if (token->getType() == Token::MODE_ROOM_TOPIC_RESTRICTIONS_REMOVE)
 		{
 			this->room->unlockTopic();
 			response.append(token->getText());
 			continue;
 		}
 		// to be re-implemented
-		// if (token->getType() == Token::ROOM_OPERATOR_ADD)
+		// if (token->getType() == Token::MODE_ROOM_OPERATOR_ADD)
 		// {
 		// 	//bool addOperator = true;
 		// 	response.append(token->getText());
 		// 	continue;
 		// }
-		// if (token->getType() == Token::ROOM_OPERATOR_REMOVE)
+		// if (token->getType() == Token::MODE_ROOM_OPERATOR_REMOVE)
 		// {
 		// 	//bool removeOperator = true;
 		// 	response.append(token->getText());
 		// 	continue;
 		// }
-		// if (token->getType() == Token::NICK_NAME)
+		// if (token->getType() == Token::MODE_NICK_NAME)
 		// {
 		// 	// check the operator flags and decide on action
 		// 	response.append(token->getText());

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/03 10:24:23 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/04 21:18:45 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -288,11 +288,11 @@ void IRCParser::processModeRoom()
 				{
 					if (signFlag == '+')
 					{
-						token->setType(Token::ROOM_PASSWORD_ADD);
+						token->setType(Token::MODE_ROOM_PASSWORD_ADD);
 					}
 					else if (signFlag == '-')
 					{
-						token->setType(Token::ROOM_PASSWORD_REMOVE);
+						token->setType(Token::MODE_ROOM_PASSWORD_REMOVE);
 					}
 				}
 			}
@@ -302,12 +302,12 @@ void IRCParser::processModeRoom()
 				if (signFlag == '+')
 				{
 					tokenI.setText("+i");
-					tokenI.setType(Token::ROOM_INVITE_ONLY_ADD);
+					tokenI.setType(Token::MODE_ROOM_INVITE_ONLY_ADD);
 				}
 				else if (signFlag == '-')
 				{
 					tokenI.setText("-i");
-					tokenI.setType(Token::ROOM_INVITE_ONLY_REMOVE);
+					tokenI.setType(Token::MODE_ROOM_INVITE_ONLY_REMOVE);
 				}
 				clientMessage.insertTokenAtBeforeFirstTokenType(tokenI, Token::NOT_ASSIGNED);
 			}
@@ -317,12 +317,12 @@ void IRCParser::processModeRoom()
 				if (signFlag == '+')
 				{
 					tokenT.setText("+t");
-					tokenT.setType(Token::ROOM_TOPIC_RESTRICTIONS_ADD);
+					tokenT.setType(Token::MODE_ROOM_TOPIC_RESTRICTIONS_ADD);
 				}
 				else if (signFlag == '-')
 				{
 					tokenT.setText("-t");
-					tokenT.setType(Token::ROOM_TOPIC_RESTRICTIONS_REMOVE);
+					tokenT.setType(Token::MODE_ROOM_TOPIC_RESTRICTIONS_REMOVE);
 				}
 				clientMessage.insertTokenAtBeforeFirstTokenType(tokenT, Token::NOT_ASSIGNED);
 			}
@@ -333,11 +333,11 @@ void IRCParser::processModeRoom()
 				{
 					if (signFlag == '+')
 					{
-						token->setType(Token::ROOM_OPERATOR_ADD);
+						token->setType(Token::MODE_ROOM_OPERATOR_ADD);
 					}
 					else if (signFlag == '-')
 					{
-						token->setType(Token::ROOM_OPERATOR_REMOVE);
+						token->setType(Token::MODE_ROOM_OPERATOR_REMOVE);
 					}
 				}
 			}
@@ -348,11 +348,11 @@ void IRCParser::processModeRoom()
 				{
 					if (signFlag == '+')
 					{
-						token->setType(Token::ROOM_USER_LIMIT_ADD);
+						token->setType(Token::MODE_ROOM_USER_LIMIT_ADD);
 					}
 					else if (signFlag == '-')
 					{
-						token->setType(Token::ROOM_USER_LIMIT_REMOVE);
+						token->setType(Token::MODE_ROOM_USER_LIMIT_REMOVE);
 					}
 				}
 			}
