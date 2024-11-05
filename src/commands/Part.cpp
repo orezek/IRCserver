@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 19:04:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/02 17:36:20 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/05 19:04:03 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ void Part::execute(void)
 		// room does not exists
 		else
 		{
-			setServerResponse403();
+			setServerResponse403(tokenRoomname->getText());
 		}
 		// setServerResponses uses this->room instance object - has to be deleted here otherwise segfault
 		if (deleteRoom)
@@ -133,7 +133,7 @@ void Part::setServerResponsePart(void)
 	this->response.append("\r\n");
 	addResponse(this->room, response);
 }
-void Part::setServerResponse403(void)
+void Part::setServerResponse403(std::string roomName)
 {
 	std::string nickname = client->getNickname();
 	if (nickname.empty())
@@ -147,7 +147,7 @@ void Part::setServerResponse403(void)
 	this->response.append(nickname);
 	this->response.append(" ");
 	this->response.append("#");
-	this->response.append(this->room->getRoomName());
+	this->response.append(roomName);
 	this->response.append(" :No such channel\r\n");
 	addResponse(client, this->response);
 }

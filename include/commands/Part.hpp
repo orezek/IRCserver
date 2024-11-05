@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 18:57:54 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/31 20:18:11 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/05 19:03:20 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ namespace Commands
 			~Part();
 			void execute(void);
 			void setServerResponsePart(void);
-			void setServerResponse403(void);
+			void setServerResponse403(std::string roomName);
 			void setServerResponse442(void);
 
 		private:
