@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:12:06 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/05 18:31:50 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/05 22:01:51 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ class Mode : protected ABaseCommand
 		void setServerResponse353(void);
 		void setServerResponse366(void);
 		bool stringToInt(const std::string &str, int &result);
+		std::string deleteSubstringFromEnd(std::string str, std::string toDelete);
 		std::string response;
 };
 };

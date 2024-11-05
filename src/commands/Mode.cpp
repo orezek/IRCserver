@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:14:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/05 18:45:54 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/05 22:05:47 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,21 +108,13 @@ void Mode::execute(void)
 		if (token->getType() == Token::MODE_ROOM_OPERATOR_ADD)
 		{
 			addOperator = true;
-			// check if the client is valid - token should be clientNick
-			if (room->isClientInRoom(token->getText()))
-			{
-				response.append(token->getText());
-			}
+			response.append(token->getText());
 			continue;
 		}
 		if (token->getType() == Token::MODE_ROOM_OPERATOR_REMOVE)
 		{
 			addOperator = false;
-			// check if the client is valid - token should be clientNick
-			if (room->isClientInRoom(token->getText()))
-			{
-				response.append(token->getText());
-			}
+			response.append(token->getText());
 			continue;
 		}
 		if (token->getType() == Token::MODE_ROOM_OPERATOR_PARAMETER)
@@ -145,6 +137,8 @@ void Mode::execute(void)
 				}
 
 			}
+			this->response = deleteSubstringFromEnd(this->response, "+o");
+			this->response = deleteSubstringFromEnd(this->response, "-o");
 			this->setServerResponse401(token->getText());
 			continue;
 		}
@@ -250,6 +244,16 @@ bool Mode::stringToInt(const std::string &str, int &result)
 		return false;
 	}
 	return true;
+}
+
+std::string Mode::deleteSubstringFromEnd(std::string str, std::string toDelete)
+{
+	size_t pos = str.rfind(toDelete);
+	if (pos != std::string::npos)
+	{
+		str.erase(pos, toDelete.length());
+	}
+	return str;
 }
 
 }
