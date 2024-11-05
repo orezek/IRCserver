@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:14:27 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/05 18:47:47 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/06 00:13:31 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,9 +123,9 @@ void Join::execute()
 			this->room = RoomManager::getInstance().getRoom(tokenRoomname->getText());
 			this->room->addClient(client->getFd());
 			this->room->addOperator(client->getFd());
-			this->room->setTopic("This topic is default and hardcoded in Join.cpp line 102");
+			//this->room->setTopic("This topic is default and hardcoded in Join.cpp line 102");
 			// test make new rooms invite only
-			this->room->setInviteOnly(true);
+			//this->room->setInviteOnly(true);
 			if (!roomPasword.empty())
 			{
 				this->room->setPassword(roomPasword);

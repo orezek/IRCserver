@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:51:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/05 18:21:24 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/06 00:11:32 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,6 +239,10 @@ std::string Room::getNicknamesAsString()
 		if (this->isOperator(clientFd))
 		{
 			response.append("@");
+		}
+		if (ClientManager::getInstance().getClient(clientFd).getNickname().empty())
+		{
+			response.append("*");
 		}
 		response.append(ClientManager::getInstance().getClient(clientFd).getNickname());
 		++it;
