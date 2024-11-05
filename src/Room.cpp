@@ -6,21 +6,22 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:51:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/04 12:54:13 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/05 18:21:24 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Room.hpp"
 
-Room::Room(std::string roomName) :  roomName(roomName),
-									password(),
-									passwordRequired(false),
-									topic(),
-									inviteOnly(false),
-									topicLocked(false),
-									privateRoom(false),
-									publicRoom(true),
-									secretRoom(false) {}
+Room::Room(std::string roomName) : roomName(roomName),
+								   password(),
+								   passwordRequired(false),
+								   topic(),
+								   inviteOnly(false),
+								   topicLocked(false),
+								   privateRoom(false),
+								   publicRoom(true),
+								   secretRoom(false),
+								   userLimit(0) {}
 
 Room::Room(const Room& obj) : roomName(obj.roomName),
 							  clientFds(obj.clientFds),
@@ -33,7 +34,8 @@ Room::Room(const Room& obj) : roomName(obj.roomName),
 							  topicLocked(obj.topicLocked),
 							  privateRoom(obj.privateRoom),
 							  publicRoom(obj.publicRoom),
-							  secretRoom(obj.secretRoom) {}
+							  secretRoom(obj.secretRoom),
+							  userLimit(obj.userLimit) {}
 
 Room::~Room() {}
 
@@ -53,6 +55,7 @@ Room& Room::operator=(const Room& obj)
 		this->privateRoom = obj.privateRoom;
 		this->publicRoom = obj.publicRoom;
 		this->secretRoom = obj.secretRoom;
+		this->userLimit = obj.userLimit;
 	}
 	return (*this);
 }
@@ -265,4 +268,26 @@ void Room::lockTopic(void)
 void Room::unlockTopic(void)
 {
 	this->topicLocked = false;
+}
+
+int Room::getUserLimit(void)
+{
+	return (this->userLimit);
+}
+
+void Room::setUserLimit(int userLimit)
+{
+	this->userLimit = userLimit;
+}
+
+bool Room::isUserLimit(void)
+{
+	if (userLimit < 1)
+	{
+		return (false);
+	}
+	else
+	{
+		return (true);
+	}
 }

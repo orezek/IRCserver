@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:14:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/04 22:32:48 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/05 18:45:54 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ Mode::~Mode() {}
 void Mode::execute(void)
 {
 	Token *tokenRoom = clientMessage.findNthTokenOfType(Token::ROOM_NAME, 1);
+	bool addOperator = false;
+	bool addUserLimit = false;
 
 	if(tokenRoom == NULL)
 	{
@@ -80,7 +82,7 @@ void Mode::execute(void)
 		{
 			this->room->setPasswordRequired(false);
 			this->room->setPassword("");
-			response.append("-k");
+			response.append(token->getText());
 			continue;
 		}
 		if (token->getType() == Token::MODE_ROOM_PASSWORD_PARAMETER)
@@ -103,29 +105,82 @@ void Mode::execute(void)
 			response.append(token->getText());
 			continue;
 		}
-		// to be re-implemented
-		// if (token->getType() == Token::MODE_ROOM_OPERATOR_ADD)
-		// {
-		// 	//bool addOperator = true;
-		// 	response.append(token->getText());
-		// 	continue;
-		// }
-		// if (token->getType() == Token::MODE_ROOM_OPERATOR_REMOVE)
-		// {
-		// 	//bool removeOperator = true;
-		// 	response.append(token->getText());
-		// 	continue;
-		// }
-		// if (token->getType() == Token::MODE_NICK_NAME)
-		// {
-		// 	// check the operator flags and decide on action
-		// 	response.append(token->getText());
-		// 	continue;
-		// }
+		if (token->getType() == Token::MODE_ROOM_OPERATOR_ADD)
+		{
+			addOperator = true;
+			// check if the client is valid - token should be clientNick
+			if (room->isClientInRoom(token->getText()))
+			{
+				response.append(token->getText());
+			}
+			continue;
+		}
+		if (token->getType() == Token::MODE_ROOM_OPERATOR_REMOVE)
+		{
+			addOperator = false;
+			// check if the client is valid - token should be clientNick
+			if (room->isClientInRoom(token->getText()))
+			{
+				response.append(token->getText());
+			}
+			continue;
+		}
+		if (token->getType() == Token::MODE_ROOM_OPERATOR_PARAMETER)
+		{
+			if (room->isClientInRoom(token->getText()))
+			{
+				if (addOperator)
+				{
+					room->addOperator(ClientManager::getInstance().findClient(token->getText())->getFd());
+					response.append(" ");
+					response.append(token->getText());
+					continue;
+				}
+				if (!addOperator)
+				{
+					room->removeOperator(ClientManager::getInstance().findClient(token->getText())->getFd());
+					response.append(" ");
+					response.append(token->getText());
+					continue;
+				}
+
+			}
+			this->setServerResponse401(token->getText());
+			continue;
+		}
+		if (token->getType() == Token::MODE_ROOM_USER_LIMIT_ADD)
+		{
+			addUserLimit = true;
+			response.append(" ");
+			response.append(token->getText());
+		}
+		if (token->getType() == Token::MODE_ROOM_USER_LIMIT_REMOVE)
+		{
+			addUserLimit = false;
+			response.append(" ");
+			response.append(token->getText());
+			room->setUserLimit(0);
+		}
+		if (token->getType() == Token::MODE_ROOM_USER_LIMIT_PARAMETER)
+		{
+			int userLimit;
+			stringToInt(token->getText(), userLimit);
+			if (addUserLimit)
+			{
+				this->room->setUserLimit(userLimit);
+				response.append(" ");
+				response.append(token->getText());
+			}
+			continue;
+		}
 	}
 	clientMessage.resetIterator();
 	response.append("\r\n");
-	this->addResponse(room, response);
+	if (response.size() > 32)
+	{
+		this->addResponse(room, response);
+	}
+
 }
 //:server.name 482 Aldo #example_channel :You're not a channel operator
 void Mode::setServerResponse482(void)
@@ -164,6 +219,37 @@ void Mode::setServerResponse403(std::string roomName)
 	this->response.append(roomName);
 	this->response.append(" :No such channel\r\n");
 	addResponse(client, this->response);
+}
+
+//: server.name 401 Aldo Patrick :No such nick/channel
+void Mode::setServerResponse401(const std::string invitee)
+{
+	std::string nickname =  this->client->getNickname();
+
+	if (nickname.empty())
+	{
+		nickname = "*";
+	}
+	std::string response = ":";
+	response.append(serverData.getServerName());
+	response.append(" 401 ");
+	response.append(nickname);
+	response.append(" ");
+	response.append(invitee);
+	response.append(" :No such nick/channel\r\n");
+	this->addResponse(client, response);
+}
+
+bool Mode::stringToInt(const std::string &str, int &result)
+{
+	std::stringstream ss(str);
+	ss >> result;
+
+	if (ss.fail() || !ss.eof())
+	{
+		return false;
+	}
+	return true;
 }
 
 }

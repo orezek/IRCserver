@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:01:29 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/04 12:37:53 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/05 18:43:59 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ class Join : protected ABaseCommand
 	private:
 		void setServerResponse475(void);
 		void setServerResponse473(void);
+		void setServerResponse471(void);
 		void setServerResponse332(void);
 		void setServerResponseJoin(void);
 		void setServerResponse353(void);

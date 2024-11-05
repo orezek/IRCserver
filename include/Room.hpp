@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:55:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/04 12:52:37 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/05 18:17:19 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,11 @@ class Room
 		bool isPrivate(void);
 		bool isPublic(void);
 		bool isSecret(void);
+		// User limit
+		int getUserLimit(void);
+		void setUserLimit(int userLimit);
+		bool isUserLimit(void);
+
 		// Higher level methods
 		std::string getNicknamesAsString();
 
@@ -80,6 +85,7 @@ class Room
 		bool privateRoom;
 		bool publicRoom;
 		bool secretRoom;
+		int userLimit;
 };
 
 std::ostream& operator<<(std::ostream& output, Room const& instance);

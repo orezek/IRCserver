@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:14:27 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/04 12:40:42 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/05 18:47:47 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,16 @@ void Join::execute()
 					if (!this->room->isClientInInviteList(client->getFd()))
 					{
 						// Room is invite-only and user is not invited
-						std::cout << "No invitation" << std::endl;
 						this->setServerResponse473();
+						return;
+					}
+				}
+				if (this->room->isUserLimit())
+				{
+					if (this->room->getUserLimit() <= this->room->getNoClients())
+					{
+						// Room is full
+						this->setServerResponse471();
 						return;
 					}
 				}
@@ -244,6 +252,24 @@ void Join::setServerResponse473(void)
 	response.append(" #");
 	response.append(this->room->getRoomName());
 	response.append(" :Cannot join channel (+i)\r\n");
+	this->addResponse(client, response);
+}
+
+//: server.name 471 Aldo #TEST :Cannot join channel (+l)
+void Join::setServerResponse471(void)
+{
+	std::string nickname = client->getNickname();
+	if (nickname.empty())
+	{
+		nickname = "*";
+	}
+	std::string response = ":";
+	response.append(serverData.getServerName());
+	response.append(" 471 ");
+	response.append(nickname);
+	response.append(" #");
+	response.append(this->room->getRoomName());
+	response.append(" :Cannot join channel (+l)\r\n");
 	this->addResponse(client, response);
 }
 
