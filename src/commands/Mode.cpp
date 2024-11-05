@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:14:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/05 22:05:47 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/05 23:56:21 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,27 +54,31 @@ void Mode::execute(void)
 	response.append(" MODE ");
 	response.append("#");
 	response.append(this->room->getRoomName());
-	response.append(" ");
+	//response.append(" ");
 	// end of response test
 	Token *token;
 	clientMessage.resetIterator();
 	while ((token = clientMessage.getNextToken()) != NULL)
 	{
+		std::cout << token->getText() << std::endl;
 		if (token->getType() == Token::MODE_ROOM_INVITE_ONLY_ADD)
 		{
 			this->room->setInviteOnly(true);
+			response.append(" ");
 			response.append(token->getText());
 			continue;
 		}
 		if (token->getType() == Token::MODE_ROOM_INVITE_ONLY_REMOVE)
 		{
 			this->room->setInviteOnly(false);
+			response.append(" ");
 			response.append(token->getText());
 			continue;
 		}
 		if (token->getType() == Token::MODE_ROOM_PASSWORD_ADD)
 		{
 			this->room->setPasswordRequired(true);
+			response.append(" ");
 			response.append(token->getText());
 			continue;
 		}
@@ -82,6 +86,7 @@ void Mode::execute(void)
 		{
 			this->room->setPasswordRequired(false);
 			this->room->setPassword("");
+			response.append(" ");
 			response.append(token->getText());
 			continue;
 		}
@@ -96,24 +101,28 @@ void Mode::execute(void)
 		if (token->getType() == Token::MODE_ROOM_TOPIC_RESTRICTIONS_ADD)
 		{
 			this->room->lockTopic();
+			response.append(" ");
 			response.append(token->getText());
 			continue;
 		}
 		if (token->getType() == Token::MODE_ROOM_TOPIC_RESTRICTIONS_REMOVE)
 		{
 			this->room->unlockTopic();
+			response.append(" ");
 			response.append(token->getText());
 			continue;
 		}
 		if (token->getType() == Token::MODE_ROOM_OPERATOR_ADD)
 		{
 			addOperator = true;
+			response.append(" ");
 			response.append(token->getText());
 			continue;
 		}
 		if (token->getType() == Token::MODE_ROOM_OPERATOR_REMOVE)
 		{
 			addOperator = false;
+			response.append(" ");
 			response.append(token->getText());
 			continue;
 		}
@@ -126,6 +135,7 @@ void Mode::execute(void)
 					room->addOperator(ClientManager::getInstance().findClient(token->getText())->getFd());
 					response.append(" ");
 					response.append(token->getText());
+					addOperator = false;
 					continue;
 				}
 				if (!addOperator)
@@ -133,12 +143,13 @@ void Mode::execute(void)
 					room->removeOperator(ClientManager::getInstance().findClient(token->getText())->getFd());
 					response.append(" ");
 					response.append(token->getText());
+					addOperator = false;
 					continue;
 				}
 
 			}
-			this->response = deleteSubstringFromEnd(this->response, "+o");
-			this->response = deleteSubstringFromEnd(this->response, "-o");
+			this->response = deleteSubstringFromEnd(this->response, " +o");
+			this->response = deleteSubstringFromEnd(this->response, " -o");
 			this->setServerResponse401(token->getText());
 			continue;
 		}
@@ -147,6 +158,7 @@ void Mode::execute(void)
 			addUserLimit = true;
 			response.append(" ");
 			response.append(token->getText());
+			continue;
 		}
 		if (token->getType() == Token::MODE_ROOM_USER_LIMIT_REMOVE)
 		{
@@ -154,22 +166,41 @@ void Mode::execute(void)
 			response.append(" ");
 			response.append(token->getText());
 			room->setUserLimit(0);
+			continue;
 		}
 		if (token->getType() == Token::MODE_ROOM_USER_LIMIT_PARAMETER)
 		{
 			int userLimit;
-			stringToInt(token->getText(), userLimit);
-			if (addUserLimit)
+			if (stringToInt(token->getText(), userLimit))
 			{
-				this->room->setUserLimit(userLimit);
-				response.append(" ");
-				response.append(token->getText());
+				if (addUserLimit)
+				{
+					if (userLimit > 0 && userLimit < 1025)
+					{
+						this->room->setUserLimit(userLimit);
+						this->response.append(" ");
+						this->response.append(token->getText());
+					}
+					else
+					{
+						this->response = deleteSubstringFromEnd(this->response, " +l");
+						this->setServerResponse472("l", "invalid limit <1 - 1024>");
+					}
+				}
+				continue;
+			}
+			else
+			{
+				this->response = deleteSubstringFromEnd(this->response, " +l");
+				this->setServerResponse472("l", "is unknown mode char to me");
 			}
 			continue;
 		}
 	}
+	std::cout << this->response << std::endl;
 	clientMessage.resetIterator();
 	response.append("\r\n");
+	std::cout << this->response.size() << std::endl;
 	if (response.size() > 32)
 	{
 		this->addResponse(room, response);
@@ -232,6 +263,24 @@ void Mode::setServerResponse401(const std::string invitee)
 	response.append(invitee);
 	response.append(" :No such nick/channel\r\n");
 	this->addResponse(client, response);
+}
+
+// "<client> <modechar> :is unknown mode char to me"
+void Mode::setServerResponse472(const std::string wrongMode, const std::string message)
+{
+	std::string nickname = client->getNickname();
+	if (nickname.empty())
+	{
+		nickname = "*";
+	}
+	std::string response;
+	response.append(nickname);
+	response.append("!user@hostname ");
+	response.append(wrongMode);
+	response.append(" :");
+	response.append(message);
+	response.append("\r\n");
+	this->addResponse(this->client, response);
 }
 
 bool Mode::stringToInt(const std::string &str, int &result)

@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:12:06 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/05 22:01:51 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/05 23:32:56 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ class Mode : protected ABaseCommand
 		void setServerResponse403(std::string roomName);
 		void setServerResponse401(const std::string invitee);
 		void setServerResponse475(void);
+		void setServerResponse472(const std::string wrongMode, const std::string messag);
 		void setServerResponse332(void);
 		void setServerResponse353(void);
 		void setServerResponse366(void);
