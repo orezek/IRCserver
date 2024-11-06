@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:34:33 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/02 17:44:14 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/06 00:46:36 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void RoomManager::addRoom(std::string roomName)
 {
 	if (!roomExist(roomName))
 	{
-		//this->roomList[roomName] = Room(roomName);
+		// this->roomList[roomName] = Room(roomName);
 		roomList.insert(std::make_pair(roomName, Room(roomName)));
 		++this->totalNumberOfRooms;
 		this->resetIterator();
@@ -184,20 +184,20 @@ Room *RoomManager::getNextRoom()
 }
 
 /*
-    if (!iteratorInitialized || roomList.empty()) {
-        resetIterator();  // Initialize the iterator at the beginning if necessary
-    }
+	if (!iteratorInitialized || roomList.empty()) {
+		resetIterator();  // Initialize the iterator at the beginning if necessary
+	}
 
-    // Return NULL if we've reached the end
-    if (currentRoomIt == roomList.end()) {
-        return NULL;
-    }
+	// Return NULL if we've reached the end
+	if (currentRoomIt == roomList.end()) {
+		return NULL;
+	}
 
-    // Get pointer to the current room and advance the iterator
-    Room* roomPtr = &(currentRoomIt->second);
-    ++currentRoomIt;
+	// Get pointer to the current room and advance the iterator
+	Room* roomPtr = &(currentRoomIt->second);
+	++currentRoomIt;
 
-    return roomPtr;
+	return roomPtr;
 
 */
 
