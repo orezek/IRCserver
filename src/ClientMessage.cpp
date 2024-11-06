@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:21 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/04 21:51:05 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/06 15:20:23 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,28 @@ void ClientMessage::insertTokenAtBeforeFirstTokenType(Token &newToken, Token::Ty
 		}
 	}
 	this->tokens.push_back(newToken);
+}
+
+void ClientMessage::insertTokenBeforeLastTokenType(Token &newToken, Token::Type type)
+{
+	if (tokens.empty())
+	{
+		tokens.push_back(newToken);
+		return;
+	}
+
+	std::vector<Token>::iterator it = tokens.end();
+	while (it != tokens.begin())
+	{
+		--it;
+		if (it->getType() == type)
+		{
+			tokens.insert(it, newToken);
+			return;
+		}
+	}
+
+	tokens.push_back(newToken);
 }
 
 void ClientMessage::deleteAllProcessedTokens()
