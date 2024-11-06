@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:14:27 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/03 17:42:52 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/06 00:13:31 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,16 @@ void Join::execute()
 					if (!this->room->isClientInInviteList(client->getFd()))
 					{
 						// Room is invite-only and user is not invited
-						std::cout << "No invitation" << std::endl;
-						this->setServerResponse475();
+						this->setServerResponse473();
+						return;
+					}
+				}
+				if (this->room->isUserLimit())
+				{
+					if (this->room->getUserLimit() <= this->room->getNoClients())
+					{
+						// Room is full
+						this->setServerResponse471();
 						return;
 					}
 				}
@@ -115,9 +123,9 @@ void Join::execute()
 			this->room = RoomManager::getInstance().getRoom(tokenRoomname->getText());
 			this->room->addClient(client->getFd());
 			this->room->addOperator(client->getFd());
-			this->room->setTopic("This topic is default and hardcoded in Join.cpp line 102");
+			//this->room->setTopic("This topic is default and hardcoded in Join.cpp line 102");
 			// test make new rooms invite only
-			this->room->setInviteOnly(true);
+			//this->room->setInviteOnly(true);
 			if (!roomPasword.empty())
 			{
 				this->room->setPassword(roomPasword);
@@ -227,4 +235,42 @@ void Join::setServerResponse366(void)
 	this->response.append("End of /NAMES list.\r\n");
 	this->addResponse(client, response);
 }
+
+//:server.name 473 UserNick #channel :Cannot join channel (+i)
+void Join::setServerResponse473(void)
+{
+	//: server.name 475 Aldo #TEST :Cannot join channel (+k)
+	std::string nickname = client->getNickname();
+	if (nickname.empty())
+	{
+		nickname = "*";
+	}
+	std::string response = ":";
+	response.append(serverData.getServerName());
+	response.append(" 473 ");
+	response.append(nickname);
+	response.append(" #");
+	response.append(this->room->getRoomName());
+	response.append(" :Cannot join channel (+i)\r\n");
+	this->addResponse(client, response);
+}
+
+//: server.name 471 Aldo #TEST :Cannot join channel (+l)
+void Join::setServerResponse471(void)
+{
+	std::string nickname = client->getNickname();
+	if (nickname.empty())
+	{
+		nickname = "*";
+	}
+	std::string response = ":";
+	response.append(serverData.getServerName());
+	response.append(" 471 ");
+	response.append(nickname);
+	response.append(" #");
+	response.append(this->room->getRoomName());
+	response.append(" :Cannot join channel (+l)\r\n");
+	this->addResponse(client, response);
+}
+
 }  // namespace Commands

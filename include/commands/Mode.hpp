@@ -1,41 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Join.hpp                                           :+:      :+:    :+:   */
+/*   Mode.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/28 12:01:29 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/05 18:43:59 by orezek           ###   ########.fr       */
+/*   Created: 2024/11/03 20:12:06 by orezek            #+#    #+#             */
+/*   Updated: 2024/11/05 23:32:56 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
 #include "ABaseCommand.hpp"
-#include "Client.hpp"
-#include "ClientMessage.hpp"
-#include "Room.hpp"
+#include <iostream>
+#include <sstream>
+#include <string>
 
 namespace Commands
 {
-class Join : protected ABaseCommand
+class Mode : protected ABaseCommand
 {
 	public:
-		Join(Client *client, ClientMessage &clientMessage);
-		Join(const Join &refObj);
-		Join &operator=(const Join &refObj);
-		~Join();
+		Mode(Client *client, ClientMessage &clientMessage);
+		~Mode();
 		void execute();
 
 	private:
+		void setServerResponse482(void);
+		void setServerResponse403(std::string roomName);
+		void setServerResponse401(const std::string invitee);
 		void setServerResponse475(void);
-		void setServerResponse473(void);
-		void setServerResponse471(void);
+		void setServerResponse472(const std::string wrongMode, const std::string messag);
 		void setServerResponse332(void);
-		void setServerResponseJoin(void);
 		void setServerResponse353(void);
 		void setServerResponse366(void);
+		bool stringToInt(const std::string &str, int &result);
+		std::string deleteSubstringFromEnd(std::string str, std::string toDelete);
 		std::string response;
-		Room *room;
 };
-};  // namespace Commands
+};

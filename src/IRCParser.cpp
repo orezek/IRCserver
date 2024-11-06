@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/03 21:43:49 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/06 15:21:15 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -266,8 +266,7 @@ void IRCParser::assignParametersAsWho()
 void IRCParser::processModeRoom()
 {
 	// if it is room:
-	char signFlag;
-	int tokenIter = 1;
+	char signFlag = '0';
 	Token* tokenToProcess;
 
 	while ((tokenToProcess = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1)))
@@ -284,77 +283,82 @@ void IRCParser::processModeRoom()
 			}
 			else if (character == 'k')
 			{
-				Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, tokenIter);
-				if (token != NULL)
+				if (signFlag == '+')
 				{
-					if (signFlag == '+')
+					Token tokenK(Token::MODE_ROOM_PASSWORD_ADD, "+k");
+					clientMessage.insertTokenBeforeLastTokenType(tokenK, Token::PROCESSED);
+					Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+					if (token != NULL)
 					{
-						token->setType(Token::ROOM_PASSWORD_ADD);
+						token->setType(Token::MODE_ROOM_PASSWORD_PARAMETER);
 					}
-					else if (signFlag == '-')
-					{
-						token->setType(Token::ROOM_PASSWORD_REMOVE);
-					}
+				}
+				else if (signFlag == '-')
+				{
+					Token tokenK(Token::MODE_ROOM_PASSWORD_REMOVE, "-k");
+					clientMessage.insertTokenBeforeLastTokenType(tokenK, Token::PROCESSED);
 				}
 			}
 			else if (character == 'i')
 			{
-				Token tokenI(Token::NOT_ASSIGNED, "");
 				if (signFlag == '+')
 				{
-					tokenI.setText("+i");
-					tokenI.setType(Token::ROOM_INVITE_ONLY_ADD);
+					Token tokenI(Token::MODE_ROOM_INVITE_ONLY_ADD, "+i");
+					clientMessage.insertTokenAtBeforeFirstTokenType(tokenI, Token::PROCESSED);
 				}
 				else if (signFlag == '-')
 				{
-					tokenI.setText("-i");
-					tokenI.setType(Token::ROOM_INVITE_ONLY_REMOVE);
+					Token tokenI(Token::MODE_ROOM_INVITE_ONLY_REMOVE, "-i");
+					clientMessage.insertTokenBeforeLastTokenType(tokenI, Token::PROCESSED);
 				}
-				clientMessage.insertTokenAtBeforeFirstTokenType(tokenI, Token::NOT_ASSIGNED);
 			}
 			else if (character == 't')
 			{
-				Token tokenT(Token::NOT_ASSIGNED, "");
 				if (signFlag == '+')
 				{
-					tokenT.setText("+t");
-					tokenT.setType(Token::ROOM_TOPIC_RESTRICTIONS_ADD);
+					Token tokenT(Token::MODE_ROOM_TOPIC_RESTRICTIONS_ADD, "+t");
+					clientMessage.insertTokenBeforeLastTokenType(tokenT, Token::PROCESSED);
 				}
 				else if (signFlag == '-')
 				{
-					tokenT.setText("-t");
-					tokenT.setType(Token::ROOM_TOPIC_RESTRICTIONS_REMOVE);
+					Token tokenT(Token::MODE_ROOM_TOPIC_RESTRICTIONS_REMOVE, "-t");
+					clientMessage.insertTokenBeforeLastTokenType(tokenT, Token::PROCESSED);
 				}
-				clientMessage.insertTokenAtBeforeFirstTokenType(tokenT, Token::NOT_ASSIGNED);
 			}
 			else if (character == 'o')
 			{
-				Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, tokenIter);
+				if (signFlag == '+')
+				{
+					Token tokenO(Token::MODE_ROOM_OPERATOR_ADD, "+o");
+					clientMessage.insertTokenBeforeLastTokenType(tokenO, Token::PROCESSED);
+				}
+				else if (signFlag == '-')
+				{
+					Token tokenO(Token::MODE_ROOM_OPERATOR_REMOVE, "-o");
+					clientMessage.insertTokenBeforeLastTokenType(tokenO, Token::PROCESSED);
+				}
+				Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
 				if (token != NULL)
 				{
-					if (signFlag == '+')
-					{
-						token->setType(Token::ROOM_OPERATOR_ADD);
-					}
-					else if (signFlag == '-')
-					{
-						token->setType(Token::ROOM_OPERATOR_REMOVE);
-					}
+					token->setType(Token::MODE_ROOM_OPERATOR_PARAMETER);
 				}
 			}
 			else if (character == 'l')
 			{
-				Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, tokenIter);
+				if (signFlag == '+')
+				{
+					Token tokenL(Token::MODE_ROOM_USER_LIMIT_ADD, "+l");
+					clientMessage.insertTokenBeforeLastTokenType(tokenL, Token::PROCESSED);
+				}
+				else if (signFlag == '-')
+				{
+					Token tokenL(Token::MODE_ROOM_USER_LIMIT_REMOVE, "-l");
+					clientMessage.insertTokenBeforeLastTokenType(tokenL, Token::PROCESSED);
+				}
+				Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
 				if (token != NULL)
 				{
-					if (signFlag == '+')
-					{
-						token->setType(Token::ROOM_USER_LIMIT_ADD);
-					}
-					else if (signFlag == '-')
-					{
-						token->setType(Token::ROOM_USER_LIMIT_REMOVE);
-					}
+					token->setType(Token::MODE_ROOM_USER_LIMIT_PARAMETER);
 				}
 			}
 			textToProcess = textToProcess.substr(1);
