@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ClientMessage.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:18 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/04 11:33:18 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/06 15:18:07 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ class ClientMessage
 
 		void addToken(Token &newToken);
 		void insertTokenAtBeforeFirstTokenType(Token &newToken, Token::Type type);
+		void insertTokenBeforeLastTokenType(Token &newToken, Token::Type type);
 		void deleteAllProcessedTokens();
 		Token *findNthTokenOfType(Token::Type type, int n);
 		std::vector<Token> tokens;
@@ -68,7 +69,6 @@ class ClientMessage
 		cmdTypes commandType;
 		bool iteratorInitialized;
 		std::vector<Token>::iterator currentTokenIt;
-
 };
 
 std::ostream &operator<<(std::ostream &o, ClientMessage const &instance);

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/04 21:45:20 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/06 15:21:15 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -285,7 +285,7 @@ void IRCParser::processModeRoom()
 				if (signFlag == '+')
 				{
 					Token tokenK(Token::MODE_ROOM_PASSWORD_ADD, "+k");
-					clientMessage.insertTokenAtBeforeFirstTokenType(tokenK, Token::NOT_ASSIGNED);
+					clientMessage.insertTokenBeforeLastTokenType(tokenK, Token::PROCESSED);
 					Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
 					if (token != NULL)
 					{
@@ -295,7 +295,7 @@ void IRCParser::processModeRoom()
 				else if (signFlag == '-')
 				{
 					Token tokenK(Token::MODE_ROOM_PASSWORD_REMOVE, "-k");
-					clientMessage.insertTokenAtBeforeFirstTokenType(tokenK, Token::NOT_ASSIGNED);
+					clientMessage.insertTokenBeforeLastTokenType(tokenK, Token::PROCESSED);
 				}
 			}
 			else if (character == 'i')
@@ -303,12 +303,12 @@ void IRCParser::processModeRoom()
 				if (signFlag == '+')
 				{
 					Token tokenI(Token::MODE_ROOM_INVITE_ONLY_ADD, "+i");
-					clientMessage.insertTokenAtBeforeFirstTokenType(tokenI, Token::NOT_ASSIGNED);
+					clientMessage.insertTokenAtBeforeFirstTokenType(tokenI, Token::PROCESSED);
 				}
 				else if (signFlag == '-')
 				{
 					Token tokenI(Token::MODE_ROOM_INVITE_ONLY_REMOVE, "-i");
-					clientMessage.insertTokenAtBeforeFirstTokenType(tokenI, Token::NOT_ASSIGNED);
+					clientMessage.insertTokenBeforeLastTokenType(tokenI, Token::PROCESSED);
 				}
 			}
 			else if (character == 't')
@@ -316,12 +316,12 @@ void IRCParser::processModeRoom()
 				if (signFlag == '+')
 				{
 					Token tokenT(Token::MODE_ROOM_TOPIC_RESTRICTIONS_ADD, "+t");
-					clientMessage.insertTokenAtBeforeFirstTokenType(tokenT, Token::NOT_ASSIGNED);
+					clientMessage.insertTokenBeforeLastTokenType(tokenT, Token::PROCESSED);
 				}
 				else if (signFlag == '-')
 				{
 					Token tokenT(Token::MODE_ROOM_TOPIC_RESTRICTIONS_REMOVE, "-t");
-					clientMessage.insertTokenAtBeforeFirstTokenType(tokenT, Token::NOT_ASSIGNED);
+					clientMessage.insertTokenBeforeLastTokenType(tokenT, Token::PROCESSED);
 				}
 			}
 			else if (character == 'o')
@@ -329,12 +329,12 @@ void IRCParser::processModeRoom()
 				if (signFlag == '+')
 				{
 					Token tokenO(Token::MODE_ROOM_OPERATOR_ADD, "+o");
-					clientMessage.insertTokenAtBeforeFirstTokenType(tokenO, Token::NOT_ASSIGNED);
+					clientMessage.insertTokenBeforeLastTokenType(tokenO, Token::PROCESSED);
 				}
 				else if (signFlag == '-')
 				{
 					Token tokenO(Token::MODE_ROOM_OPERATOR_REMOVE, "-o");
-					clientMessage.insertTokenAtBeforeFirstTokenType(tokenO, Token::NOT_ASSIGNED);
+					clientMessage.insertTokenBeforeLastTokenType(tokenO, Token::PROCESSED);
 				}
 				Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
 				if (token != NULL)
@@ -347,12 +347,12 @@ void IRCParser::processModeRoom()
 				if (signFlag == '+')
 				{
 					Token tokenL(Token::MODE_ROOM_USER_LIMIT_ADD, "+l");
-					clientMessage.insertTokenAtBeforeFirstTokenType(tokenL, Token::NOT_ASSIGNED);
+					clientMessage.insertTokenBeforeLastTokenType(tokenL, Token::PROCESSED);
 				}
 				else if (signFlag == '-')
 				{
 					Token tokenL(Token::MODE_ROOM_USER_LIMIT_REMOVE, "-l");
-					clientMessage.insertTokenAtBeforeFirstTokenType(tokenL, Token::NOT_ASSIGNED);
+					clientMessage.insertTokenBeforeLastTokenType(tokenL, Token::PROCESSED);
 				}
 				Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
 				if (token != NULL)
