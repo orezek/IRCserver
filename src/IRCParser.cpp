@@ -271,6 +271,7 @@ void IRCParser::processModeRoom()
 
 	while ((tokenToProcess = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1)))
 	{
+		signFlag = '0';
 		tokenToProcess->setType(Token::PROCESSED);
 		std::string textToProcess = tokenToProcess->getText();
 		while (!textToProcess.empty())
