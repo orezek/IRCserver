@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 14:28:44 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 15:11:20 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void Client::setIpAddress(const sockaddr_in ipAddress)
 
 std::string Client::getIpAddressAsString(void)
 {
-	 return (std::to_string(static_cast<unsigned int>(ntohl(this->ipAddress.sin_addr.s_addr))));
+	 return (inet_ntoa(this->ipAddress.sin_addr));
 }
 
 // Raw Data from socket
@@ -261,4 +261,13 @@ void Client::setNickValid(bool nickValue)
 void Client::setUserValid(bool userValue)
 {
 	userData.setUserValid(userValue);
+}
+
+// Gets FQDN of the valid client
+std::string Client::getFqdn(void)
+{
+	std::string str;
+	str.append(this->getUsername());
+	str.append("@");
+	str.append(this->getIpAddressAsString());
 }

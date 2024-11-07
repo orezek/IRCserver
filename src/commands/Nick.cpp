@@ -35,7 +35,9 @@ void Nick::execute()
 {
 	oldNick = client->getNickname();
 	if (oldNick == "")
+	{
 		oldNick = "*";
+	}
 
 	Token* tokenNewNick = clientMessage.findNthTokenOfType(Token::NICK_NAME, 1);
 

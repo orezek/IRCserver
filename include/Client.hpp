@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:09 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 14:28:33 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 15:09:57 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ class Client
 		std::string getUsername();
 		std::string getHostname();
 		std::string getRealname();
+		std::string getFqdn(void);
 		bool getPassSent();
 		bool getPassValid();
 		bool getNickValid();
