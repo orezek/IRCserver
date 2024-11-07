@@ -3,25 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:09 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/27 14:46:40 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/07 18:06:04 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
-
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #include <sys/socket.h>
-
 #include <algorithm>
 #include <cstring>
 #include <string>
 #include <vector>
-
 #include "ClientMessage.hpp"
-// #include "ServerResponseQueue.hpp"
 #include "UserData.hpp"
 
 class Client
@@ -36,6 +33,7 @@ class Client
 		int getFd(void) const;
 		sockaddr_in getIpAddress(void) const;
 		void setIpAddress(const sockaddr_in ipAddress);
+		std::string getIpAddressAsString(void);
 		std::string getRawData(void) const;
 		void setRawData(const std::string& data);
 		void appendRawData(const char* data, ssize_t bytesReceived);
@@ -56,9 +54,12 @@ class Client
 		ClientMessage popMessage(void);  // Returns copy
 
 		// User data management
-		std::string getNickname();
-		std::string getUsername();
-		std::string getHostname();
+		std::string getNickname(void);
+		std::string getUsername(void);
+		std::string getHostname(void);
+		std::string getRealname(void);
+		std::string getFqdn(void);
+		std::string getServername(void);
 		bool getPassSent();
 		bool getPassValid();
 		bool getNickValid();
@@ -73,19 +74,13 @@ class Client
 		void setPassValid(bool passValue);
 		void setNickValid(bool nickValue);
 		void setUserValid(bool userValue);
-		// Room management
-		bool isInRoom(const std::string& roomName);
-		void addRoom(std::string roomName);
-		void deleteRoom(std::string roomName);
 
 	private:
 		const int fd;
 		struct sockaddr_in ipAddress;
 		std::string rawData;
 		bool markedForDeletion;
-		// ServerResponseQueue responses;
 		UserData userData;
-		std::vector<ClientMessage> clientMessages;  // FIFO queue
-		std::vector<std::string> serverResponses;   // FIFO queue
-		std::vector<std::string> roomList;
+		std::vector<ClientMessage> clientMessages;
+		std::vector<std::string> serverResponses;
 };

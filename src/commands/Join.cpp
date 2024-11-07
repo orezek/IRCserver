@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:14:27 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/06 00:13:31 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 22:46:28 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,10 @@
 
 namespace Commands
 {
-Join::Join(Client *client, ClientMessage &clientMessage) : ABaseCommand(client, clientMessage), room(NULL), response() {}
+Join::Join(Client *client, ClientMessage &clientMessage) : ABaseCommand(client, clientMessage) {}
 
 Join::Join(const Join &refObj) : ABaseCommand(refObj)
 {
-	this->response = refObj.response;
 	this->room = refObj.room;
 }
 
@@ -100,10 +99,11 @@ void Join::execute()
 					}
 				}
 				this->room->addClient(client->getFd());
-				this->room->removeInvitee(client->getFd()); // remove the client from invite list
-				setServerResponseJoin();  // join notification
-				if (room->isTopicSet())   // room has a topic - send it to the new client
+				this->room->removeInvitee(client->getFd());  // remove the client from invite list
+				setServerResponseJoin();                     // join notification
+				if (this->room->isTopicSet())                // room has a topic - send it to the new client
 				{
+					std::cout << this->room->getRoomName() << std::endl;
 					setServerResponse332();
 				}
 				setServerResponse353();
@@ -123,9 +123,6 @@ void Join::execute()
 			this->room = RoomManager::getInstance().getRoom(tokenRoomname->getText());
 			this->room->addClient(client->getFd());
 			this->room->addOperator(client->getFd());
-			//this->room->setTopic("This topic is default and hardcoded in Join.cpp line 102");
-			// test make new rooms invite only
-			//this->room->setInviteOnly(true);
 			if (!roomPasword.empty())
 			{
 				this->room->setPassword(roomPasword);
@@ -174,69 +171,8 @@ void Join::setServerResponseJoin(void)
 	response.append("\r\n");
 	this->addResponse(this->room, response);
 }
-//: server.name 332 Aldo #TEST :Welcome to the TEST channel! Discuss project updates here.
-void Join::setServerResponse332(void)
-{
-	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
-	std::string response = ":";
-	response.append(serverData.getServerName());
-	response.append(" 332 ");
-	response.append(nickname);
-	response.append(" #");
-	response.append(this->room->getRoomName());
-	response.append(" :");
-	response.append(this->room->getTopic());
-	response.append("\r\n");
-	this->addResponse(client, response);
-}
-// User list
-/*
-:server.name 353 Aldo = #TEST :@existing_user1 existing_user2 Aldo
-:server.name 366 Aldo #TEST :End of /NAMES list.
-*/
-void Join::setServerResponse353(void)
-{
-	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
-	this->response.clear();
-	this->response = ":";
-	this->response.append(serverData.getServerName());
-	this->response.append(" 353 ");
-	this->response.append(nickname);
-	this->response.append(" #");
-	this->response.append(this->room->getRoomName());
-	this->response.append(" :");
-	this->response.append(this->room->getNicknamesAsString());
-	this->response.append("\r\n");
-	this->addResponse(client, this->response);
-}
-void Join::setServerResponse366(void)
-{
-	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
-	this->response.clear();
-	this->response = ":";
-	this->response.append(serverData.getServerName());
-	this->response.append(" 366 ");
-	this->response.append(nickname);
-	this->response.append(" #");
-	this->response.append(this->room->getRoomName());
-	this->response.append(" :");
-	this->response.append("End of /NAMES list.\r\n");
-	this->addResponse(client, response);
-}
 
-//:server.name 473 UserNick #channel :Cannot join channel (+i)
+//: server.name 473 UserNick #channel :Cannot join channel (+i)
 void Join::setServerResponse473(void)
 {
 	//: server.name 475 Aldo #TEST :Cannot join channel (+k)

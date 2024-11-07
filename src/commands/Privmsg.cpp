@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 13:02:55 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/01 12:30:04 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 22:52:47 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,49 +119,8 @@ void Privmsg::setValidResponsePrefix()
 	validResponsePrefix = ":";
 	validResponsePrefix.append(nickname);
 	validResponsePrefix.append("!");
-	validResponsePrefix.append(client->getUsername());
-	validResponsePrefix.append("@");
-	validResponsePrefix.append(client->getHostname());
+	validResponsePrefix.append(client->getFqdn());
 	validResponsePrefix.append(" PRIVMSG ");
-}
-
-void Privmsg::setServerResponse401(std::string nicknameToSend)
-{
-	std::string nickname = client->getNickname();
-
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
-	std::string response = ":";
-	response.append(serverData.getServerName());
-	response.append(" 401 ");
-	response.append(nickname);
-	response.append(" ");
-	response.append(nicknameToSend);
-	response.append(" :No such nick\r\n");
-
-	this->client->addResponse(response);
-}
-
-void Privmsg::setServerResponse403(std::string roomnameToSend)
-{
-	std::string nickname = client->getNickname();
-
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
-	std::string response = ":";
-	response.append(serverData.getServerName());
-	response.append(" 403 ");
-	response.append(nickname);
-	response.append(" ");
-	response.append("#");
-	response.append(roomnameToSend);
-	response.append(" :No such channel\r\n");
-
-	this->client->addResponse(response);
 }
 
 }  // namespace Commands

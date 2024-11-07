@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 20:19:42 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/02 11:27:06 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 23:00:56 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void Names::execute(void)
 	if (tokenRoomname == NULL)
 	{
 		// NANES command without #ROOM arguments will list all public room user names
-		//:server.name 366 ClientNick * :End of /NAMES list. if there are no rooms
+		//: server.name 366 ClientNick * :End of /NAMES list. if there are no rooms
 		this->setServerResponseNames();
 		return;
 	}
@@ -43,18 +43,18 @@ void Names::execute(void)
 			this->room = RoomManager::getInstance().getRoom(tokenRoomname->getText());
 			if (this->room->isPublic())
 			{
-				setServerResponse353();
-				setServerResponse366();
+				ABaseCommand::setServerResponse353();
+				ABaseCommand::setServerResponse366();
 			}
 			else if (this->room->isPrivate() && this->room->isClientInRoom(client->getFd()))
 			{
-				setServerResponse353();
-				setServerResponse366();
+				ABaseCommand::setServerResponse353();
+				ABaseCommand::setServerResponse366();
 			}
 			else if (this->room->isSecret() && this->room->isClientInRoom(client->getFd()))
 			{
-				setServerResponse353();
-				setServerResponse366();
+				ABaseCommand::setServerResponse353();
+				ABaseCommand::setServerResponse366();
 			}
 			else if (this->room->isPrivate())
 			{
@@ -66,8 +66,8 @@ void Names::execute(void)
 		else
 		{
 			// :server.name 366 ClientNick #nonexistent_channel :End of /NAMES list.
-			setServerResponse366("#nonexistent_channel");
-			std::cout << "Room does not exists!" << std::endl;
+			setServerResponse366(tokenRoomname->getText());
+			std::cout << "Room does not exist!" << std::endl;
 		}
 		i++;
 	} while (tokenRoomname != NULL);
@@ -76,81 +76,39 @@ void Names::execute(void)
 void Names::setServerResponseNames(void)
 {
 	this->room = NULL;
+	RoomManager::getInstance().resetIterator();
 	while ((this->room = RoomManager::getInstance().getNextRoom()) != NULL)
 	{
 		std::cout << this->room->getRoomName() << std::endl;
 		if (this->room->isPublic())
 		{
-			this->setServerResponse353(this->room->getNicknamesAsString());
+			this->setServerResponse353(this->room->getFormattedNicknames());
 		}
-		this->setServerResponse366();
+		ABaseCommand::setServerResponse366();
 	}
 	if (this->room == NULL)
 	{
-		this->setServerResponse366();
+		ABaseCommand::setServerResponse366();
 	}
 	RoomManager::getInstance().resetIterator();
 }
 
-void Names::setServerResponse353(void)
+void Names::setServerResponse366(std::string invalidRoom)
 {
 	std::string nickname = client->getNickname();
 	if (nickname.empty())
 	{
 		nickname = "*";
 	}
-	this->response.clear();
-	this->response = ":";
-	this->response.append(serverData.getServerName());
-	this->response.append(" 353 ");
-	this->response.append(nickname);
-	this->response.append(" #");
-	this->response.append(this->room->getRoomName());
-	this->response.append(" :");
-	this->response.append(this->room->getNicknamesAsString());
-	this->response.append("\r\n");
-	this->addResponse(client, this->response);
-}
-
-void Names::setServerResponse366(void)
-{
-	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
-	this->response.clear();
-	this->response = ":";
-	this->response.append(serverData.getServerName());
-	this->response.append(" 366 ");
-	this->response.append(nickname);
-	if (this->room != NULL)
-	{
-		this->response.append(" #");
-		this->response.append(this->room->getRoomName());
-	}
-	this->response.append(" :");
-	this->response.append("End of /NAMES list.\r\n");
-	this->addResponse(client, response);
-}
-
-void Names::setServerResponse366(std::string message)
-{
-	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
-	this->response.clear();
-	this->response = ":";
-	this->response.append(serverData.getServerName());
-	this->response.append(" 366 ");
-	this->response.append(nickname);
-	this->response.append(" #");
-	this->response.append(this->room->getRoomName());
-	this->response.append(" :");
-	this->response.append(message);
-	this->response.append("\r\n");
+	std::string response;
+	response = ":";
+	response.append(client->getServername());
+	response.append(" 366 ");
+	response.append(nickname);
+	response.append(" #");
+	response.append(invalidRoom);
+	response.append(" :End of /NAMES list");
+	response.append("\r\n");
 	this->addResponse(client, response);
 }
 
@@ -161,17 +119,17 @@ void Names::setServerResponse353(std::string nicknamesAsString)
 	{
 		nickname = "*";
 	}
-	this->response.clear();
-	this->response = ":";
-	this->response.append(serverData.getServerName());
-	this->response.append(" 353 ");
-	this->response.append(nickname);
-	this->response.append(" #");
-	this->response.append(this->room->getRoomName());
-	this->response.append(" :");
-	this->response.append(nicknamesAsString);
-	this->response.append("\r\n");
-	this->addResponse(client, this->response);
+	std::string response;
+	response = ":";
+	response.append(client->getServername());
+	response.append(" 353 ");
+	response.append(nickname);
+	response.append(" #");
+	response.append(this->room->getRoomName());
+	response.append(" :");
+	response.append(nicknamesAsString);
+	response.append("\r\n");
+	this->addResponse(client, response);
 }
 
 }  // namespace Commands

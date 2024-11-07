@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 14:13:47 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/25 18:53:39 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/07 22:51:03 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ class User : public ABaseCommand
 		void execute();
 
 	private:
-		void setServerResponseValid();
 };
 
 }  // namespace Commands

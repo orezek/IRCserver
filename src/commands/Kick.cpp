@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 21:30:41 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/03 12:24:33 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 18:52:22 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,26 +106,6 @@ void Kick::execute(void)
 	} while (tokenUser != NULL);
 }
 
-
-//:server.name 403 Aldo #nonexistent_channel :No such channel
-void Kick::setServerResponse403(std::string roomName)
-{
-	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
-	this->response.clear();
-	this->response = ":";
-	this->response.append(serverData.getServerName());
-	this->response.append(" 403 ");
-	this->response.append(nickname);
-	this->response.append(" ");
-	this->response.append("#");
-	this->response.append(roomName);
-	this->response.append(" :No such channel\r\n");
-	addResponse(client, this->response);
-}
 //:server.name 441 Aldo Patrick #example_channel :They aren't on that channel
 void Kick::setServerResponse441(std::string kicked_user)
 {
@@ -146,43 +126,7 @@ void Kick::setServerResponse441(std::string kicked_user)
 	this->response.append(" :They aren't on that channel.\r\n");
 	addResponse(client, response);
 }
-//:server.name 482 Aldo #example_channel :You're not a channel operator
-void Kick::setServerResponse482(void)
-{
-	std::string nickname =  this->client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
-	std::string response = ":";
-	response.append(serverData.getServerName());
-	response.append(" 482 ");
-	response.append(nickname);
-	response.append(" ");
-	response.append("#");
-	response.append(this->room->getRoomName());
-	response.append(" :You're not a channel operator.\r\n");
-	addResponse(client, response);
-}
 
-//:server.name 442 Aldo #example_channel :You're not on that channel
-void Kick::setServerResponse442(void)
-{
-	std::string nickname =  this->client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
-	std::string response = ":";
-	response.append(serverData.getServerName());
-	response.append(" 442 ");
-	response.append(nickname);
-	response.append(" ");
-	response.append("#");
-	response.append(this->room->getRoomName());
-	response.append(" :You're not on that channel.\r\n");
-	addResponse(client, response);
-}
 //:Aldo!user@hostname KICK #example_channel Patrick :Spamming not allowed
 void Kick::setServerResponseKick(std::string message, std::string kicked_user)
 {

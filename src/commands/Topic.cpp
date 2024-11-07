@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:35:58 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/03 18:11:53 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 22:44:16 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,30 +94,8 @@ void Topic::execute(void)
 	else
 	{
 		// room does not exists
-		this->setServerResponse403();
+		this->setServerResponse403(tokenRoom->getText());
 	}
-}
-
-//:server.name 332 UserNick #example_channel :Welcome to the channel! Please read the rules.
-void Topic::setServerResponse332(void)
-{
-	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
-	this->response.clear();
-	this->response = ":";
-	this->response.append(serverData.getServerName());
-	this->response.append(" 331 ");
-	this->response.append(nickname);
-	this->response.append(" ");
-	this->response.append("#");
-	this->response.append(this->room->getRoomName());
-	this->response.append(" :");
-	this->response.append(this->room->getTopic());
-	this->response.append("\r\n");
-	addResponse(client, this->response);
 }
 
 //: server.name 331 UserNick #example_channel :No topic is set
@@ -158,63 +136,6 @@ void Topic::setServerResponseTopic(void)
 	this->response.append(client->getNickname());
 	this->response.append("\r\n");
 	this->addResponse(room, response);
-}
-
-void Topic::setServerResponse403(void)
-{
-	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
-	this->response.clear();
-	this->response = ":";
-	this->response.append(serverData.getServerName());
-	this->response.append(" 403 ");
-	this->response.append(nickname);
-	this->response.append(" ");
-	this->response.append("#");
-	this->response.append(this->room->getRoomName());
-	this->response.append(" :No such channel\r\n");
-	addResponse(client, this->response);
-}
-
-//:server.name 442 Aldo #example_channel :You're not on that channel
-void Topic::setServerResponse442(void)
-{
-	std::string nickname =  this->client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
-	std::string response = ":";
-	response.append(serverData.getServerName());
-	response.append(" 442 ");
-	response.append(nickname);
-	response.append(" ");
-	response.append("#");
-	response.append(this->room->getRoomName());
-	response.append(" :You're not on that channel.\r\n");
-	addResponse(client, response);
-}
-
-//:server.name 482 Aldo #example_channel :You're not a channel operator
-void Topic::setServerResponse482(void)
-{
-	std::string nickname =  this->client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
-	std::string response = ":";
-	response.append(serverData.getServerName());
-	response.append(" 482 ");
-	response.append(nickname);
-	response.append(" ");
-	response.append("#");
-	response.append(this->room->getRoomName());
-	response.append(" :You're not a channel operator.\r\n");
-	addResponse(client, response);
 }
 
 }  // namespace Commands

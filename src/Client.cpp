@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/27 15:36:35 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/07 18:30:27 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,11 @@ void Client::setIpAddress(const sockaddr_in ipAddress)
 	this->ipAddress = ipAddress;
 }
 
+std::string Client::getIpAddressAsString(void)
+{
+	return (inet_ntoa(this->ipAddress.sin_addr));
+}
+
 // Raw Data from socket
 std::string Client::getRawData(void) const
 {
@@ -131,11 +136,6 @@ bool Client::hasResponses()
 	return (!this->serverResponses.empty());
 }
 
-// void Client::sendAllResponses(void)
-// {
-// 	this->responses.sendAll();
-// }
-
 // creates a copy and adds it to the vector
 void Client::addMessage(const ClientMessage message)
 {
@@ -171,6 +171,27 @@ std::string Client::getUsername(void)
 std::string Client::getHostname()
 {
 	return userData.getHostname();
+}
+
+// Getter for realname
+std::string Client::getRealname(void)
+{
+	return (userData.getRealname());
+}
+
+// Gets FQDN of the valid client
+std::string Client::getFqdn(void)
+{
+	std::string str;
+	str.append(this->getUsername());
+	str.append("@");
+	str.append(this->getIpAddressAsString());
+	return (str);
+}
+// every client is aware of its server
+std::string Client::getServername(void)
+{
+	return (userData.getServername());
 }
 
 // Getter for passSent
@@ -255,23 +276,4 @@ void Client::setNickValid(bool nickValue)
 void Client::setUserValid(bool userValue)
 {
 	userData.setUserValid(userValue);
-}
-
-// Room manager
-// bool Client::isInRoom(std::string roomName)
-// {
-// 	return std::find(this->roomList.begin(), this->roomList.end(), roomName) != this->roomList.end();
-// }
-
-bool Client::isInRoom(const std::string& roomName)
-{
-	return std::find(this->roomList.begin(), this->roomList.end(), roomName) != this->roomList.end();
-}
-
-void Client::addRoom(std::string roomName)
-{
-	if (!isInRoom(roomName))
-	{
-		this->roomList.push_back(roomName);
-	}
 }

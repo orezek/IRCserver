@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 11:10:59 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/01 21:24:50 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 19:06:03 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 #include <string>
 
 #include "Client.hpp"
-#include "Room.hpp"
 #include "ClientManager.hpp"
-#include "RoomManager.hpp"
 #include "ClientMessage.hpp"
+#include "Room.hpp"
+#include "RoomManager.hpp"
 #include "ServerDataManager.hpp"
 
 namespace Commands
@@ -35,20 +35,27 @@ class ABaseCommand
 
 	protected:
 		Client* client;
-		Room *room;
+		Room* room;
 		ServerDataManager& serverData;
 		ClientMessage& clientMessage;
-
-		// void addServerResponseToClient();
-
-		// Common error responses available for all derived classes
-		void setServerResponse451();
-		void setServerResponse461();
-		void setServerResponse462();
 
 		// Send response to Room or Client
 		void addResponse(Client* client, std::string response);
 		void addResponse(Room* room, std::string response);
+
+		// Common error responses
+		void setServerResponse401(const std::string nickname);  // ERR_NOSUCHNICK
+		void setServerResponse403(std::string roomName);        // ERR_NOSUCHCHANNEL
+		void setServerResponse442();                            // ERR_NOTONCHANNEL
+		void setServerResponse451();
+		void setServerResponse461();
+		void setServerResponse462();
+		void setServerResponse482();  // ERR_CHANOPRIVSNEEDED
+
+		// Common success/informational responses
+		void setServerResponse332();                               // RPL_TOPIC
+		void setServerResponse353();  // RPL_NAMREPLY
+		void setServerResponse366();                               // RPL_ENDOFNAMES
 };
 
 }  // namespace Commands

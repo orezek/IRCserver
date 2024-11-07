@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 14:13:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/26 15:23:15 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/07 14:38:57 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,10 @@ void User::execute()
 	// check parameters, if they are valid
 
 	client->setUsername(usernameToken->getText());
-	client->setHostname(hostnameToken->getText());
-	client->setServername(servernameToken->getText());
-	client->setRealname(realnameToken->getText());
+	// for hostname the server should perfom reverse DNS lookup
+	client->setHostname(client->getIpAddressAsString()); // a client IP address - server will assign
+	client->setServername(serverData.getServerName()); // irc server address - server will assign
+	client->setRealname(realnameToken->getText()); // any valid user text
 	client->setUserValid(true);
 }
 
