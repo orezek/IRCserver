@@ -6,22 +6,18 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:09 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 12:34:22 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 12:47:02 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
-
 #include <netinet/in.h>
 #include <sys/socket.h>
-
 #include <algorithm>
 #include <cstring>
 #include <string>
 #include <vector>
-
 #include "ClientMessage.hpp"
-// #include "ServerResponseQueue.hpp"
 #include "UserData.hpp"
 
 class Client
@@ -59,6 +55,7 @@ class Client
 		std::string getNickname();
 		std::string getUsername();
 		std::string getHostname();
+		std::string getRealname();
 		bool getPassSent();
 		bool getPassValid();
 		bool getNickValid();
@@ -79,8 +76,7 @@ class Client
 		struct sockaddr_in ipAddress;
 		std::string rawData;
 		bool markedForDeletion;
-		// ServerResponseQueue responses;
 		UserData userData;
-		std::vector<ClientMessage> clientMessages;  // FIFO queue
-		std::vector<std::string> serverResponses;   // FIFO queue
+		std::vector<ClientMessage> clientMessages;
+		std::vector<std::string> serverResponses;
 };

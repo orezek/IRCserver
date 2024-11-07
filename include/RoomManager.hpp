@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:34:46 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/07 12:12:35 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 12:47:54 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include <map>
 #include <sstream>
 #include <string>
-
 #include "Room.hpp"
 
 class RoomManager

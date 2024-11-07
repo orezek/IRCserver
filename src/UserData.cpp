@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserData.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 23:12:55 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/25 12:47:05 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/07 12:46:20 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,7 @@ UserData::UserData(int clientFd) : nickname(""), username(""), hostname(""), ser
 
 UserData::~UserData() {};
 
-UserData::UserData(const UserData &obj) : nickname(obj.nickname), username(obj.username), hostname(obj.hostname), servername(obj.servername), realname(obj.realname), fullUsername(obj.fullUsername), hasRegistered(obj.hasRegistered), passSent(obj.passSent), passValid(obj.passValid), nickValid(obj.nickValid), userValid(obj.userValid)
-{
-	this->operatorRoomIds = obj.operatorRoomIds;
-	this->roomIds = obj.roomIds;
-};
+UserData::UserData(const UserData &obj) : nickname(obj.nickname), username(obj.username), hostname(obj.hostname), servername(obj.servername), realname(obj.realname), fullUsername(obj.fullUsername), hasRegistered(obj.hasRegistered), passSent(obj.passSent), passValid(obj.passValid), nickValid(obj.nickValid), userValid(obj.userValid) {};
 
 UserData &UserData::operator=(const UserData &obj)
 {
@@ -34,8 +30,6 @@ UserData &UserData::operator=(const UserData &obj)
 		this->servername = obj.servername;
 		this->realname = obj.realname;
 		this->fullUsername = obj.fullUsername;
-		this->operatorRoomIds = obj.operatorRoomIds;
-		this->roomIds = obj.roomIds;
 		this->hasRegistered = obj.hasRegistered;
 		this->passSent = obj.passSent;
 		this->passValid = obj.passValid;
@@ -58,6 +52,11 @@ std::string UserData::getUsername()
 std::string UserData::getHostname()
 {
 	return (this->hostname);
+}
+
+std::string UserData::getRealname()
+{
+	return (this->realname);
 }
 
 bool UserData::getPassSent()
@@ -119,10 +118,6 @@ void UserData::setServername(std::string servername)
 	this->servername = servername;
 }
 
-// void UserData::setHasRegistered(bool isRegisteredValue)
-// {
-// 	this->hasRegistered = isRegisteredValue;
-// }
 
 void UserData::setPassSent(bool passSentValue)
 {

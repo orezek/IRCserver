@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 12:33:50 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 12:44:22 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,11 +131,6 @@ bool Client::hasResponses()
 	return (!this->serverResponses.empty());
 }
 
-// void Client::sendAllResponses(void)
-// {
-// 	this->responses.sendAll();
-// }
-
 // creates a copy and adds it to the vector
 void Client::addMessage(const ClientMessage message)
 {
@@ -171,6 +166,12 @@ std::string Client::getUsername(void)
 std::string Client::getHostname()
 {
 	return userData.getHostname();
+}
+
+// Getter for realname
+std::string Client::getRealname(void)
+{
+	return (userData.getRealname());
 }
 
 // Getter for passSent
