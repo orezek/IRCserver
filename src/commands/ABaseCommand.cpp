@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 09:51:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/07 21:18:58 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 23:14:29 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,105 @@ void ABaseCommand::setServerResponse332(void)
 	this->addResponse(client, response);
 }
 
+void ABaseCommand::setServerResponse353(void)
+{
+	std::string nickname = client->getNickname();
+	if (nickname.empty())
+	{
+		nickname = "*";
+	}
+	std::string response;
+	response = ":";
+	response.append(client->getServername());
+	response.append(" 353 ");
+	response.append(nickname);
+	response.append(" #");
+	response.append(this->room->getRoomName());
+	response.append(" :");
+	response.append(this->room->getFormattedNicknames());
+	response.append("\r\n");
+	addResponse(client, response);
+}
+
+void ABaseCommand::setServerResponse366(void)
+{
+	std::string nickname = client->getNickname();
+	if (nickname.empty())
+	{
+		nickname = "*";
+	}
+	std::string response;
+	response = ":";
+	response.append(client->getServername());
+	response.append(" 366 ");
+	response.append(nickname);
+	if (this->room != NULL)
+	{
+		response.append(" #");
+		response.append(this->room->getRoomName());
+	}
+	response.append(" :");
+	response.append("End of /NAMES list.\r\n");
+	addResponse(client, response);
+}
+
+//: server.name 401 Aldo Patrick :No such nick/channel
+void ABaseCommand::setServerResponse401(const std::string invitee)
+{
+	std::string nickname =  this->client->getNickname();
+
+	if (nickname.empty())
+	{
+		nickname = "*";
+	}
+	std::string response = ":";
+	response.append(client->getServername());
+	response.append(" 401 ");
+	response.append(nickname);
+	response.append(" ");
+	response.append(invitee);
+	response.append(" :No such nick/channel\r\n");
+	this->addResponse(client, response);
+}
+
+//:server.name 403 Aldo #nonexistent_channel :No such channel
+void ABaseCommand::setServerResponse403(std::string roomName)
+{
+	std::string nickname = client->getNickname();
+	if (nickname.empty())
+	{
+		nickname = "*";
+	}
+	std::string response;
+	response = ":";
+	response.append(client->getServername());
+	response.append(" 403 ");
+	response.append(nickname);
+	response.append(" ");
+	response.append("#");
+	response.append(roomName);
+	response.append(" :No such channel\r\n");
+	addResponse(client, response);
+}
+
+//: server.name 442 Aldo #invite_only_channel :You're not on that channel
+void ABaseCommand::setServerResponse442(void)
+{
+	std::string nickname =  this->client->getNickname();
+	if (nickname.empty())
+	{
+		nickname = "*";
+	}
+	std::string response = ":";
+	response.append(client->getServername());
+	response.append(" 442 ");
+	response.append(nickname);
+	response.append(" ");
+	response.append("#");
+	response.append(this->room->getRoomName());
+	response.append(" :You're not on that channel.\r\n");
+	addResponse(this->client, response);
+}
 
 void ABaseCommand::setServerResponse451()
 {
@@ -134,107 +233,6 @@ void ABaseCommand::setServerResponse482(void)
 	response.append(" :You're not a channel operator.\r\n");
 	addResponse(client, response);
 }
-
-//: server.name 442 Aldo #invite_only_channel :You're not on that channel
-void ABaseCommand::setServerResponse442(void)
-{
-	std::string nickname =  this->client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
-	std::string response = ":";
-	response.append(client->getServername());
-	response.append(" 442 ");
-	response.append(nickname);
-	response.append(" ");
-	response.append("#");
-	response.append(this->room->getRoomName());
-	response.append(" :You're not on that channel.\r\n");
-	addResponse(this->client, response);
-}
-
-//: server.name 401 Aldo Patrick :No such nick/channel
-void ABaseCommand::setServerResponse401(const std::string invitee)
-{
-	std::string nickname =  this->client->getNickname();
-
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
-	std::string response = ":";
-	response.append(client->getServername());
-	response.append(" 401 ");
-	response.append(nickname);
-	response.append(" ");
-	response.append(invitee);
-	response.append(" :No such nick/channel\r\n");
-	this->addResponse(client, response);
-}
-
-//:server.name 403 Aldo #nonexistent_channel :No such channel
-void ABaseCommand::setServerResponse403(std::string roomName)
-{
-	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
-	std::string response;
-	response = ":";
-	response.append(client->getServername());
-	response.append(" 403 ");
-	response.append(nickname);
-	response.append(" ");
-	response.append("#");
-	response.append(roomName);
-	response.append(" :No such channel\r\n");
-	addResponse(client, response);
-}
-
-void ABaseCommand::setServerResponse353(void)
-{
-	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
-	std::string response;
-	response = ":";
-	response.append(client->getServername());
-	response.append(" 353 ");
-	response.append(nickname);
-	response.append(" #");
-	response.append(this->room->getRoomName());
-	response.append(" :");
-	response.append(this->room->getFormattedNicknames());
-	response.append("\r\n");
-	addResponse(client, response);
-}
-
-void ABaseCommand::setServerResponse366(void)
-{
-	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
-	std::string response;
-	response = ":";
-	response.append(client->getServername());
-	response.append(" 366 ");
-	response.append(nickname);
-	if (this->room != NULL)
-	{
-		response.append(" #");
-		response.append(this->room->getRoomName());
-	}
-	response.append(" :");
-	response.append("End of /NAMES list.\r\n");
-	addResponse(client, response);
-}
-
 
 void ABaseCommand::addResponse(Client* client, std::string response)
 {
