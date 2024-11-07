@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 19:04:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 18:45:27 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 22:57:56 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,10 @@
 
 namespace Commands
 {
-Part::Part(Client *client, ClientMessage &clientMessage) : ABaseCommand(client, clientMessage), room(NULL), response() {}
+Part::Part(Client *client, ClientMessage &clientMessage) : ABaseCommand(client, clientMessage) {}
 
 Part::Part(const Part &refObj) : ABaseCommand(refObj)
 {
-	this->response = refObj.response;
 	this->room = refObj.room;
 }
 
@@ -121,37 +120,18 @@ void Part::setServerResponsePart(void)
 	{
 		nickname = "*";
 	}
-	this->response.clear();
-	this->response.append(":");
-	this->response.append(nickname);
-	this->response.append("!user@hostname");
-	this->response.append(" PART ");
-	this->response.append("#");
-	this->response.append(this->room->getRoomName());
-	this->response.append(" :");
-	this->response.append(this->message);
-	this->response.append("\r\n");
+	std::string response;
+	response.append(":");
+	response.append(nickname);
+	response.append("!user@hostname");
+	response.append(" PART ");
+	response.append("#");
+	response.append(this->room->getRoomName());
+	response.append(" :");
+	response.append(this->message);
+	response.append("\r\n");
 	addResponse(this->room, response);
 }
-void Part::setServerResponse403(std::string roomName)
-{
-	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
-	this->response.clear();
-	this->response = ":";
-	this->response.append(serverData.getServerName());
-	this->response.append(" 403 ");
-	this->response.append(nickname);
-	this->response.append(" ");
-	this->response.append("#");
-	this->response.append(roomName);
-	this->response.append(" :No such channel\r\n");
-	addResponse(client, this->response);
-}
-
 }
 
 

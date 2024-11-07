@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 20:21:58 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 20:00:41 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 22:59:39 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,5 @@ class Names : protected ABaseCommand
 	void setServerResponse353(std::string nicknamesAsString);
 	void setServerResponse366(std::string invalidRoom);
 	void setServerResponseNames(void);
-	std::string response;
 };
 };

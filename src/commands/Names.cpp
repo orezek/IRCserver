@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 20:19:42 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 20:00:09 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 23:00:56 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,15 +100,15 @@ void Names::setServerResponse366(std::string invalidRoom)
 	{
 		nickname = "*";
 	}
-	this->response.clear();
-	this->response = ":";
-	this->response.append(client->getServername());
-	this->response.append(" 366 ");
-	this->response.append(nickname);
-	this->response.append(" #");
-	this->response.append(invalidRoom);
-	this->response.append(" :End of /NAMES list");
-	this->response.append("\r\n");
+	std::string response;
+	response = ":";
+	response.append(client->getServername());
+	response.append(" 366 ");
+	response.append(nickname);
+	response.append(" #");
+	response.append(invalidRoom);
+	response.append(" :End of /NAMES list");
+	response.append("\r\n");
 	this->addResponse(client, response);
 }
 
@@ -119,17 +119,17 @@ void Names::setServerResponse353(std::string nicknamesAsString)
 	{
 		nickname = "*";
 	}
-	this->response.clear();
-	this->response = ":";
-	this->response.append(client->getServername());
-	this->response.append(" 353 ");
-	this->response.append(nickname);
-	this->response.append(" #");
-	this->response.append(this->room->getRoomName());
-	this->response.append(" :");
-	this->response.append(nicknamesAsString);
-	this->response.append("\r\n");
-	this->addResponse(client, this->response);
+	std::string response;
+	response = ":";
+	response.append(client->getServername());
+	response.append(" 353 ");
+	response.append(nickname);
+	response.append(" #");
+	response.append(this->room->getRoomName());
+	response.append(" :");
+	response.append(nicknamesAsString);
+	response.append("\r\n");
+	this->addResponse(client, response);
 }
 
 }  // namespace Commands
