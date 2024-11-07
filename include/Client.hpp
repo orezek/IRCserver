@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:09 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 15:09:57 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 18:06:04 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,12 @@ class Client
 		ClientMessage popMessage(void);  // Returns copy
 
 		// User data management
-		std::string getNickname();
-		std::string getUsername();
-		std::string getHostname();
-		std::string getRealname();
+		std::string getNickname(void);
+		std::string getUsername(void);
+		std::string getHostname(void);
+		std::string getRealname(void);
 		std::string getFqdn(void);
+		std::string getServername(void);
 		bool getPassSent();
 		bool getPassValid();
 		bool getNickValid();

@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 00:03:56 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/07 12:45:58 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 18:02:51 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ class UserData
 		std::string getUsername();
 		std::string getHostname();
 		std::string getRealname();
+		std::string getServername();
 		bool getPassSent();
 		bool getPassValid();
 		bool getNickValid();
@@ -48,7 +49,6 @@ class UserData
 		std::string hostname;
 		std::string servername;
 		std::string realname;
-		std::string fullUsername;  // @ip makes sense to compose user data here
 		bool hasRegistered;
 		bool passSent;
 		bool passValid;
