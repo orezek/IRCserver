@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Privmsg.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 13:03:06 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/30 12:11:10 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/07 20:05:59 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,6 @@ class Privmsg : protected ABaseCommand
 
 		void addResponseToRoomsAndClients();
 		void setValidResponsePrefix();
-		void setServerResponse401(std::string nicknameToSend);
-		void setServerResponse403(std::string roomnameToSend);
 };
 
 };  // namespace Commands
