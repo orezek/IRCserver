@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:35:58 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 20:16:13 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 22:44:16 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,28 +97,6 @@ void Topic::execute(void)
 		this->setServerResponse403(tokenRoom->getText());
 	}
 }
-
-//:server.name 332 UserNick #example_channel :Welcome to the channel! Please read the rules.
-// void Topic::setServerResponse332(void)
-// {
-// 	std::string nickname = client->getNickname();
-// 	if (nickname.empty())
-// 	{
-// 		nickname = "*";
-// 	}
-// 	this->response.clear();
-// 	this->response = ":";
-// 	this->response.append(serverData.getServerName());
-// 	this->response.append(" 331 ");
-// 	this->response.append(nickname);
-// 	this->response.append(" ");
-// 	this->response.append("#");
-// 	this->response.append(this->room->getRoomName());
-// 	this->response.append(" :");
-// 	this->response.append(this->room->getTopic());
-// 	this->response.append("\r\n");
-// 	addResponse(client, this->response);
-// }
 
 //: server.name 331 UserNick #example_channel :No topic is set
 void Topic::setServerResponse331(void)

@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:14:27 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 22:41:50 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 22:46:28 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,32 +171,6 @@ void Join::setServerResponseJoin(void)
 	response.append("\r\n");
 	this->addResponse(this->room, response);
 }
-
-// User list
-/*
-:server.name 353 Aldo = #TEST :@existing_user1 existing_user2 Aldo
-:server.name 366 Aldo #TEST :End of /NAMES list.
-*/
-void Join::setServerResponse353(void)
-{
-	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
-	std::string response;
-	response = ":";
-	response.append(serverData.getServerName());
-	response.append(" 353 ");
-	response.append(nickname);
-	response.append(" #");
-	response.append(this->room->getRoomName());
-	response.append(" :");
-	response.append(this->room->getFormattedNicknames());
-	response.append("\r\n");
-	this->addResponse(client, response);
-}
-
 
 //: server.name 473 UserNick #channel :Cannot join channel (+i)
 void Join::setServerResponse473(void)
