@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:55:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/05 18:17:19 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 12:30:33 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,6 @@ class Room
 		bool isOperator(const int clientFd);
 		void addOperator(const int clientFd);
 		void removeOperator(const int clientFd);
-		// get read-only vector reference for iterating operations
-		const std::vector<int>& getAllClients() const;
-		const int getNextClient(void);
-		const int getNoClients(void) const;
-		void resetClientIndex(void);
 		// Invite mode
 		bool isInviteOnly(void);
 		void addInvitee(const int clientFd);
@@ -67,13 +62,18 @@ class Room
 		int getUserLimit(void);
 		void setUserLimit(int userLimit);
 		bool isUserLimit(void);
+		// User stats
+		const int getNoClients(void) const;
 
 		// Higher level methods
+		// For NAMES command - gets nicknames of all clients in a room as string and marks if the client is an operator
 		std::string getNicknamesAsString();
+
 
 	private:
 		std::string roomName;
-		std::string password;  // mode k
+		std::string password; // mode k
+		int userLimit; // mode l
 		bool passwordRequired;
 		std::string topic;
 		std::vector<int> clientFds;
@@ -85,7 +85,6 @@ class Room
 		bool privateRoom;
 		bool publicRoom;
 		bool secretRoom;
-		int userLimit;
 };
 
 std::ostream& operator<<(std::ostream& output, Room const& instance);

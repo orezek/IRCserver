@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:34:46 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/02 11:38:04 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 12:12:35 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,11 @@ class RoomManager
 		void addRoom(std::string roomName);
 		void removeRoom(std::string roomName);
 		bool roomExist(std::string roomName);
+		// ok
 		void deleteEmptyRoom(std::string roomName);
+		// this makes sense
 		void deleteAllEmptyRooms(void);
+		// there should be a method on room to delete all clients from room and this function should call that method on each room
 		void removeClientFromRooms(const int clientSocketFd);
 		// Iterator functions for accessing rooms sequentially
 		Room *getNextRoom(void);

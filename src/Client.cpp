@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/27 15:36:35 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/07 12:33:50 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,23 +255,4 @@ void Client::setNickValid(bool nickValue)
 void Client::setUserValid(bool userValue)
 {
 	userData.setUserValid(userValue);
-}
-
-// Room manager
-// bool Client::isInRoom(std::string roomName)
-// {
-// 	return std::find(this->roomList.begin(), this->roomList.end(), roomName) != this->roomList.end();
-// }
-
-bool Client::isInRoom(const std::string& roomName)
-{
-	return std::find(this->roomList.begin(), this->roomList.end(), roomName) != this->roomList.end();
-}
-
-void Client::addRoom(std::string roomName)
-{
-	if (!isInRoom(roomName))
-	{
-		this->roomList.push_back(roomName);
-	}
 }

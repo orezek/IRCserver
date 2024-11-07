@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:51:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/06 00:11:32 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 12:20:11 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,11 +131,6 @@ void Room::removeOperator(const int clientFd)
 bool Room::isOperator(const int clientFd)
 {
 	return (std::find(operators.begin(), operators.end(), clientFd) != operators.end());
-}
-
-const std::vector<int>& Room::getAllClients() const
-{
-	return (this->clientFds);
 }
 
 const int Room::getNoClients(void) const
