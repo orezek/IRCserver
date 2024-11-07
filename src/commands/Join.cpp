@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:14:27 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 13:49:34 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 21:13:20 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,11 +102,14 @@ void Join::execute()
 				this->room->addClient(client->getFd());
 				this->room->removeInvitee(client->getFd());  // remove the client from invite list
 				setServerResponseJoin();                     // join notification
-				if (room->isTopicSet())                      // room has a topic - send it to the new client
+				if (this->room->isTopicSet())                      // room has a topic - send it to the new client
 				{
+					std::cout << this->room->getRoomName() << std::endl;
 					setServerResponse332();
 				}
+				std::cout << "TEST 353" << std::endl;
 				setServerResponse353();
+				std::cout << "TEST 366" << std::endl;
 				setServerResponse366();
 			}
 			else

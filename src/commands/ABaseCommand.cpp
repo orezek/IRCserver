@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 09:51:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/07 19:48:35 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 21:18:58 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,27 @@ ABaseCommand& ABaseCommand::operator=(ABaseCommand const& refObj)
 ABaseCommand::~ABaseCommand() {}
 
 // PROTECTED
+
+void ABaseCommand::setServerResponse332(void)
+{
+	std::string nickname = client->getNickname();
+	if (nickname.empty())
+	{
+		nickname = "*";
+	}
+	std::string response = ":";
+	response.append(client->getServername());
+	response.append(" 332 ");
+	response.append(nickname);
+	response.append(" #");
+	response.append(this->room->getRoomName());
+	response.append(" :");
+	response.append(this->room->getTopic());
+	std::cout << this->room->getTopic() << std::endl;
+	response.append("\r\n");
+	this->addResponse(client, response);
+}
+
 
 void ABaseCommand::setServerResponse451()
 {
