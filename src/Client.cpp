@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 12:44:22 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 14:28:44 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,11 @@ sockaddr_in Client::getIpAddress(void) const
 void Client::setIpAddress(const sockaddr_in ipAddress)
 {
 	this->ipAddress = ipAddress;
+}
+
+std::string Client::getIpAddressAsString(void)
+{
+	 return (std::to_string(static_cast<unsigned int>(ntohl(this->ipAddress.sin_addr.s_addr))));
 }
 
 // Raw Data from socket

@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:51:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 12:20:11 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 14:04:59 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,9 +224,37 @@ bool Room::isSecret(void)
 }
 
 // Higher level methods
-std::string Room::getNicknamesAsString()
+std::string Room::getFormattedNicknames()
 {
 	std::string response;
+	std::vector<int>::const_iterator it = this->clientFds.begin();
+	while (it != this->clientFds.end())
+	{
+		int clientFd = *it;
+		if (this->isOperator(clientFd))
+		{
+			response.append("@");
+		}
+		if (ClientManager::getInstance().getClient(clientFd).getNickname().empty())
+		{
+			response.append("*");
+		}
+		response.append(ClientManager::getInstance().getClient(clientFd).getNickname());
+		++it;
+		if (it != this->clientFds.end())
+		{
+			response.append(" ");
+		}
+	}
+	return (response);
+}
+// ??
+//:server 352 your_nick #room user host server nick H@ :0 Real Name
+std::string Room::getFormattedUserInfo()
+{
+	std::string response;
+	response.append("#");
+	response.append(this->getRoomName());
 	std::vector<int>::const_iterator it = this->clientFds.begin();
 	while (it != this->clientFds.end())
 	{

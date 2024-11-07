@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:55:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 12:30:33 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 13:51:02 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+
 #include "ClientManager.hpp"
 
 class Room
@@ -67,20 +68,20 @@ class Room
 
 		// Higher level methods
 		// For NAMES command - gets nicknames of all clients in a room as string and marks if the client is an operator
-		std::string getNicknamesAsString();
-
+		std::string getFormattedNicknames();
+		std::string getFormattedUserInfo();
 
 	private:
 		std::string roomName;
-		std::string password; // mode k
-		int userLimit; // mode l
+		std::string password;  // mode k
+		int userLimit;         // mode l
 		bool passwordRequired;
 		std::string topic;
 		std::vector<int> clientFds;
 		std::vector<int> operators;
 		std::vector<int> invitees;
-		bool inviteOnly; // mode i
-		bool topicLocked; // mode t
+		bool inviteOnly;   // mode i
+		bool topicLocked;  // mode t
 		// for visibility options - standard IRC channel options
 		bool privateRoom;
 		bool publicRoom;

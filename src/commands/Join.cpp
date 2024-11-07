@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:14:27 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/06 00:13:31 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 13:49:34 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,9 +100,9 @@ void Join::execute()
 					}
 				}
 				this->room->addClient(client->getFd());
-				this->room->removeInvitee(client->getFd()); // remove the client from invite list
-				setServerResponseJoin();  // join notification
-				if (room->isTopicSet())   // room has a topic - send it to the new client
+				this->room->removeInvitee(client->getFd());  // remove the client from invite list
+				setServerResponseJoin();                     // join notification
+				if (room->isTopicSet())                      // room has a topic - send it to the new client
 				{
 					setServerResponse332();
 				}
@@ -123,9 +123,9 @@ void Join::execute()
 			this->room = RoomManager::getInstance().getRoom(tokenRoomname->getText());
 			this->room->addClient(client->getFd());
 			this->room->addOperator(client->getFd());
-			//this->room->setTopic("This topic is default and hardcoded in Join.cpp line 102");
-			// test make new rooms invite only
-			//this->room->setInviteOnly(true);
+			// this->room->setTopic("This topic is default and hardcoded in Join.cpp line 102");
+			//  test make new rooms invite only
+			// this->room->setInviteOnly(true);
 			if (!roomPasword.empty())
 			{
 				this->room->setPassword(roomPasword);
@@ -213,7 +213,7 @@ void Join::setServerResponse353(void)
 	this->response.append(" #");
 	this->response.append(this->room->getRoomName());
 	this->response.append(" :");
-	this->response.append(this->room->getNicknamesAsString());
+	this->response.append(this->room->getFormattedNicknames());
 	this->response.append("\r\n");
 	this->addResponse(client, this->response);
 }
@@ -236,7 +236,7 @@ void Join::setServerResponse366(void)
 	this->addResponse(client, response);
 }
 
-//:server.name 473 UserNick #channel :Cannot join channel (+i)
+//: server.name 473 UserNick #channel :Cannot join channel (+i)
 void Join::setServerResponse473(void)
 {
 	//: server.name 475 Aldo #TEST :Cannot join channel (+k)

@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 20:19:42 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/02 11:27:06 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 13:49:34 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void Names::execute(void)
 	if (tokenRoomname == NULL)
 	{
 		// NANES command without #ROOM arguments will list all public room user names
-		//:server.name 366 ClientNick * :End of /NAMES list. if there are no rooms
+		//: server.name 366 ClientNick * :End of /NAMES list. if there are no rooms
 		this->setServerResponseNames();
 		return;
 	}
@@ -81,7 +81,7 @@ void Names::setServerResponseNames(void)
 		std::cout << this->room->getRoomName() << std::endl;
 		if (this->room->isPublic())
 		{
-			this->setServerResponse353(this->room->getNicknamesAsString());
+			this->setServerResponse353(this->room->getFormattedNicknames());
 		}
 		this->setServerResponse366();
 	}
@@ -107,7 +107,7 @@ void Names::setServerResponse353(void)
 	this->response.append(" #");
 	this->response.append(this->room->getRoomName());
 	this->response.append(" :");
-	this->response.append(this->room->getNicknamesAsString());
+	this->response.append(this->room->getFormattedNicknames());
 	this->response.append("\r\n");
 	this->addResponse(client, this->response);
 }
