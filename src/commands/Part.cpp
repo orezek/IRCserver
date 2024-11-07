@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 19:04:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/05 19:04:03 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 18:45:27 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,26 +151,6 @@ void Part::setServerResponse403(std::string roomName)
 	this->response.append(" :No such channel\r\n");
 	addResponse(client, this->response);
 }
-void Part::setServerResponse442(void)
-{
-	//:server.name 442 Aldo #TEST :You're not on that channel
-	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
-	this->response.clear();
-	this->response = ":";
-	this->response.append(serverData.getServerName());
-	this->response.append(" 442 ");
-	this->response.append(nickname);
-	this->response.append(" ");
-	this->response.append("#");
-	this->response.append(this->room->getRoomName());
-	this->response.append(" :You're not on that channel\r\n");
-	addResponse(client, this->response);
-}
-
 
 }
 

@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:35:35 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/03 16:22:35 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 18:32:41 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ class Topic : protected ABaseCommand
 		std::string response;
 		void setServerResponse331(void);
 		void setServerResponse332(void);
-		void setServerResponse482(void);
-		void setServerResponse442(void);
+		//void setServerResponse482(void);
+		//void setServerResponse442(void);
 		void setServerResponse403(void);
 		void setServerResponseTopic(void);
 };

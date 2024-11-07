@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:35:58 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/03 18:11:53 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 18:32:36 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,41 +180,41 @@ void Topic::setServerResponse403(void)
 }
 
 //:server.name 442 Aldo #example_channel :You're not on that channel
-void Topic::setServerResponse442(void)
-{
-	std::string nickname =  this->client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
-	std::string response = ":";
-	response.append(serverData.getServerName());
-	response.append(" 442 ");
-	response.append(nickname);
-	response.append(" ");
-	response.append("#");
-	response.append(this->room->getRoomName());
-	response.append(" :You're not on that channel.\r\n");
-	addResponse(client, response);
-}
+// void Topic::setServerResponse442(void)
+// {
+// 	std::string nickname =  this->client->getNickname();
+// 	if (nickname.empty())
+// 	{
+// 		nickname = "*";
+// 	}
+// 	std::string response = ":";
+// 	response.append(serverData.getServerName());
+// 	response.append(" 442 ");
+// 	response.append(nickname);
+// 	response.append(" ");
+// 	response.append("#");
+// 	response.append(this->room->getRoomName());
+// 	response.append(" :You're not on that channel.\r\n");
+// 	addResponse(client, response);
+// }
 
 //:server.name 482 Aldo #example_channel :You're not a channel operator
-void Topic::setServerResponse482(void)
-{
-	std::string nickname =  this->client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
-	std::string response = ":";
-	response.append(serverData.getServerName());
-	response.append(" 482 ");
-	response.append(nickname);
-	response.append(" ");
-	response.append("#");
-	response.append(this->room->getRoomName());
-	response.append(" :You're not a channel operator.\r\n");
-	addResponse(client, response);
-}
+// void Topic::setServerResponse482(void)
+// {
+// 	std::string nickname =  this->client->getNickname();
+// 	if (nickname.empty())
+// 	{
+// 		nickname = "*";
+// 	}
+// 	std::string response = ":";
+// 	response.append(serverData.getServerName());
+// 	response.append(" 482 ");
+// 	response.append(nickname);
+// 	response.append(" ");
+// 	response.append("#");
+// 	response.append(this->room->getRoomName());
+// 	response.append(" :You're not a channel operator.\r\n");
+// 	addResponse(client, response);
+// }
 
 }  // namespace Commands

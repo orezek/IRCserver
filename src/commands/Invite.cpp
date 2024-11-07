@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 12:15:47 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/02 23:27:28 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 18:43:48 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,45 +120,6 @@ void Invite::setServerResponse341(const std::string invitee)
 	addResponse(this->client, response);
 }
 
-// Error messages should be used from inheritance
-//: server.name 401 Aldo Patrick :No such nick/channel
-void Invite::setServerResponse401(const std::string invitee)
-{
-	std::string nickname =  this->client->getNickname();
-
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
-	std::string response = ":";
-	response.append(serverData.getServerName());
-	response.append(" 401 ");
-	response.append(nickname);
-	response.append(" ");
-	response.append(invitee);
-	response.append(" :No such nick/channel\r\n");
-	this->addResponse(client, response);
-}
-
-//: server.name 442 Aldo #invite_only_channel :You're not on that channel
-void Invite::setServerResponse442(void)
-{
-	std::string nickname =  this->client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
-	std::string response = ":";
-	response.append(serverData.getServerName());
-	response.append(" 442 ");
-	response.append(nickname);
-	response.append(" ");
-	response.append("#");
-	response.append(this->room->getRoomName());
-	response.append(" :You're not on that channel.\r\n");
-	this->client->addResponse(response);
-}
-
 //: server.name 443 Aldo Patrick #invite_only_channel :is already on channel
 void Invite::setServerResponse443(const std::string invitee)
 {
@@ -181,22 +142,4 @@ void Invite::setServerResponse443(const std::string invitee)
 	this->client->addResponse(response);
 }
 
-//:server.name 482 Aldo #example_channel :You're not a channel operator
-void Invite::setServerResponse482(void)
-{
-	std::string nickname =  this->client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
-	std::string response = ":";
-	response.append(serverData.getServerName());
-	response.append(" 482 ");
-	response.append(nickname);
-	response.append(" ");
-	response.append("#");
-	response.append(this->room->getRoomName());
-	response.append(" :You're not a channel operator.\r\n");
-	addResponse(client, response);
-}
 }  // namespace Commands

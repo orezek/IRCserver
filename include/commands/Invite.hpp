@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 12:14:39 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/02 23:26:22 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 18:59:14 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,8 @@ class Invite : protected ABaseCommand
 
 	private:
 	std::string response;
-	void setServerResponse401(const std::string nickname);
-	void setServerResponse442(void);
-	void setServerResponse443(const std::string nickname);
 	void setServerResponse341(const std::string nickname);
+	void setServerResponse443(const std::string nickname);
 	void setServerResponseInvite(const std::string nickname);
-	void setServerResponse482(void);
 };
 };

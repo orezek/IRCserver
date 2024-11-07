@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:14:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/05 23:56:21 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 18:53:53 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,63 +207,6 @@ void Mode::execute(void)
 	}
 
 }
-//:server.name 482 Aldo #example_channel :You're not a channel operator
-void Mode::setServerResponse482(void)
-{
-	std::string nickname =  this->client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
-	std::string response = ":";
-	response.append(serverData.getServerName());
-	response.append(" 482 ");
-	response.append(nickname);
-	response.append(" ");
-	response.append("#");
-	response.append(this->room->getRoomName());
-	response.append(" :You're not a channel operator.\r\n");
-	addResponse(client, response);
-}
-
-//:server.name 403 Aldo #nonexistent_channel :No such channel
-void Mode::setServerResponse403(std::string roomName)
-{
-	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
-	this->response.clear();
-	this->response = ":";
-	this->response.append(serverData.getServerName());
-	this->response.append(" 403 ");
-	this->response.append(nickname);
-	this->response.append(" ");
-	this->response.append("#");
-	this->response.append(roomName);
-	this->response.append(" :No such channel\r\n");
-	addResponse(client, this->response);
-}
-
-//: server.name 401 Aldo Patrick :No such nick/channel
-void Mode::setServerResponse401(const std::string invitee)
-{
-	std::string nickname =  this->client->getNickname();
-
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
-	std::string response = ":";
-	response.append(serverData.getServerName());
-	response.append(" 401 ");
-	response.append(nickname);
-	response.append(" ");
-	response.append(invitee);
-	response.append(" :No such nick/channel\r\n");
-	this->addResponse(client, response);
-}
 
 // "<client> <modechar> :is unknown mode char to me"
 void Mode::setServerResponse472(const std::string wrongMode, const std::string message)
@@ -275,7 +218,8 @@ void Mode::setServerResponse472(const std::string wrongMode, const std::string m
 	}
 	std::string response;
 	response.append(nickname);
-	response.append("!user@hostname ");
+	response.append("!");
+	response.append(client->getFqdn());
 	response.append(wrongMode);
 	response.append(" :");
 	response.append(message);

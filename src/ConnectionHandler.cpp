@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/02 00:16:20 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 19:44:30 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,6 +195,7 @@ int ConnectionHandler::checkForNewClients(void)
 		ClientManager::getInstance().addClient(clientSocketFd);
 		ClientManager::getInstance().getClient(clientSocketFd).initRawData();
 		ClientManager::getInstance().getClient(clientSocketFd).setIpAddress(ipClientAddress);
+		ClientManager::getInstance().getClient(clientSocketFd).setServername(ServerDataManager::getInstance().getServerName());
 		this->enableNonBlockingFd(clientSocketFd);
 		std::cout << "Testing connected clients after Accept line 224" << std::endl;
 		for (std::map<int, Client>::iterator it = ClientManager::getInstance().clients.begin(); it != ClientManager::getInstance().clients.end(); ++it)

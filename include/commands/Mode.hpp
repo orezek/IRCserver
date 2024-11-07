@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:12:06 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/05 23:32:56 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 18:57:36 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,7 @@ class Mode : protected ABaseCommand
 		void execute();
 
 	private:
-		void setServerResponse482(void);
-		void setServerResponse403(std::string roomName);
-		void setServerResponse401(const std::string invitee);
-		void setServerResponse475(void);
 		void setServerResponse472(const std::string wrongMode, const std::string messag);
-		void setServerResponse332(void);
-		void setServerResponse353(void);
-		void setServerResponse366(void);
 		bool stringToInt(const std::string &str, int &result);
 		std::string deleteSubstringFromEnd(std::string str, std::string toDelete);
 		std::string response;

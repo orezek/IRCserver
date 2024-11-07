@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 18:06:49 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/07 18:30:27 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,6 +186,7 @@ std::string Client::getFqdn(void)
 	str.append(this->getUsername());
 	str.append("@");
 	str.append(this->getIpAddressAsString());
+	return (str);
 }
 // every client is aware of its server
 std::string Client::getServername(void)
