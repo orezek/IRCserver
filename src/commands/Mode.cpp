@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:14:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 16:01:01 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/08 18:01:29 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void Mode::execute(void)
 	this->response.clear();
 	this->response = ":";
 	response.append(nickname);
-	response.append("!user@hostname");
+	response.append("!user@hostname");  // needs to be changed
 	response.append(" MODE ");
 	response.append("#");
 	response.append(this->room->getRoomName());
@@ -214,7 +214,7 @@ void Mode::execute(void)
 	clientMessage.resetIterator();
 	response.append("\r\n");
 	std::cout << this->response.size() << std::endl;
-	if (response.size() > 32)
+	if (response.size() > 32)  // the number (32) needs to be set dynamicly
 	{
 		this->addResponse(room, response);
 	}
