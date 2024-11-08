@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:14:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 09:30:26 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/08 12:59:35 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ void Mode::execute(void)
 	bool addOperator = false;
 	bool addUserLimit = false;
 
-	if(tokenRoom == NULL)
+	// TODO: Do not send anything when there IS tokenNickname but no tokenRoom in clientMessage.
+	if (tokenRoom == NULL)
 	{
 		this->setServerResponse461();
 		return;
@@ -47,7 +48,7 @@ void Mode::execute(void)
 		return;
 	}
 	// execute modes one by one
-	//:UserNick!user@hostname MODE #ABC +i
+	//: UserNick!user@hostname MODE #ABC +i
 	// response creation test
 	std::string nickname = client->getNickname();
 	if (nickname.empty())
@@ -61,8 +62,8 @@ void Mode::execute(void)
 	response.append(" MODE ");
 	response.append("#");
 	response.append(this->room->getRoomName());
-	//response.append(" ");
-	// end of response test
+	// response.append(" ");
+	//  end of response test
 	Token *token;
 	clientMessage.resetIterator();
 	while ((token = clientMessage.getNextToken()) != NULL)
@@ -153,7 +154,6 @@ void Mode::execute(void)
 					addOperator = false;
 					continue;
 				}
-
 			}
 			this->response = deleteSubstringFromEnd(this->response, " +o");
 			this->response = deleteSubstringFromEnd(this->response, " -o");
@@ -212,7 +212,6 @@ void Mode::execute(void)
 	{
 		this->addResponse(room, response);
 	}
-
 }
 
 // "<client> <modechar> :is unknown mode char to me"
@@ -256,4 +255,4 @@ std::string Mode::deleteSubstringFromEnd(std::string str, std::string toDelete)
 	return str;
 }
 
-}
+}  // namespace Commands

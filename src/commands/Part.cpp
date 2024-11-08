@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 19:04:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 09:32:03 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/08 13:02:31 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ Part::Part(const Part &refObj) : ABaseCommand(refObj)
 	this->room = refObj.room;
 }
 
-Part& Part::operator=(const Part &refObj)
+Part &Part::operator=(const Part &refObj)
 {
 	(void)refObj;
 	return (*this);
@@ -94,6 +94,7 @@ void Part::execute(void)
 					// do not send any response - no one will listen
 				}
 				// at least one send response that client left the room
+				// TODO: Implement sending response to client that have just left the room
 				else
 				{
 					setServerResponsePart();
@@ -121,7 +122,7 @@ void Part::execute(void)
 
 void Part::setServerResponsePart(void)
 {
-	//:Aldo!user@hostname PART #TEST :<message>
+	//: Aldo!user@hostname PART #TEST :<message>
 	std::string nickname = client->getNickname();
 	if (nickname.empty())
 	{
@@ -139,6 +140,4 @@ void Part::setServerResponsePart(void)
 	response.append("\r\n");
 	addResponse(this->room, response);
 }
-}
-
-
+}  // namespace Commands
