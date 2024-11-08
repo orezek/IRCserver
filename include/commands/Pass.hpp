@@ -28,6 +28,7 @@ class Pass : protected ABaseCommand
 		void execute();
 
 	private:
+		void setServerResponse464();
 		void setServerResponseValid();
 };
 

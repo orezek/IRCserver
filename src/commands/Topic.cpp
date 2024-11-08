@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:35:58 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 22:44:16 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/08 09:35:28 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,13 @@ void Topic::execute(void)
 		this->setServerResponse461();
 		return;
 	}
+
+	if (!client->isRegistered())
+	{
+		setServerResponse451();
+		return;
+	}
+
 	// Check if room exists
 	if (RoomManager::getInstance().roomExist(tokenRoom->getText()))
 	{
@@ -61,9 +68,9 @@ void Topic::execute(void)
 		else
 		{
 			// topic mode +t
-			if(room->IsTopicLocked())
+			if (room->IsTopicLocked())
 			{
-				if(room->isOperator(client->getFd()))
+				if (room->isOperator(client->getFd()))
 				{
 					// set topic and send notification to all in the room
 					room->setTopic(tokenMessage->getText());
@@ -118,7 +125,7 @@ void Topic::setServerResponse331(void)
 	addResponse(client, this->response);
 }
 
-//:UserNick!user@hostname TOPIC #example_channel :New channel topic set by UserNick.
+//: UserNick!user@hostname TOPIC #example_channel :New channel topic set by UserNick.
 void Topic::setServerResponseTopic(void)
 {
 	std::string nickname = client->getNickname();

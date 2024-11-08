@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 12:15:47 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 18:43:48 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/08 09:37:56 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,12 @@ void Invite::execute(void)
 
 	Token *tokenRoomname = NULL;
 	Token *tokenUser = NULL;
+
+	if (!client->isRegistered())
+	{
+		setServerResponse451();
+		return;
+	}
 
 	tokenUser = clientMessage.findNthTokenOfType(Token::NICK_NAME, 1);
 	tokenRoomname = clientMessage.findNthTokenOfType(Token::ROOM_NAME, 1);
@@ -103,7 +109,7 @@ void Invite::setServerResponseInvite(const std::string invitee)
 // :server.name 341 Aldo Patrick #invite_only_channel
 void Invite::setServerResponse341(const std::string invitee)
 {
-	std::string nickname =  this->client->getNickname();
+	std::string nickname = this->client->getNickname();
 	if (nickname.empty())
 	{
 		nickname = "*";
@@ -123,7 +129,7 @@ void Invite::setServerResponse341(const std::string invitee)
 //: server.name 443 Aldo Patrick #invite_only_channel :is already on channel
 void Invite::setServerResponse443(const std::string invitee)
 {
-	std::string nickname =  this->client->getNickname();
+	std::string nickname = this->client->getNickname();
 
 	if (nickname.empty())
 	{

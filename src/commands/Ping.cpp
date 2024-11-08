@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 13:05:16 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/26 15:54:04 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/08 09:33:00 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,17 @@ void Ping::execute()
 	{
 		// not enough parameters
 		this->setServerResponse461();
+		return;
 	}
-	else if (!client->isRegistered())
+
+	if (!client->isRegistered())
 	{
 		// if the client is not registered, send 451 "Not registered response"
 		this->setServerResponse451();
+		return;
 	}
-	else if (tokenServerName->getText() == serverData.getServerName())
+
+	if (tokenServerName->getText() == serverData.getServerName())
 	{
 		// ping message was addressed to this server, send valid PONG response
 		this->setServerResponseValid();

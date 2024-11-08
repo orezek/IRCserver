@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ABaseCommand.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 09:51:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/07 23:14:29 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/08 11:25:35 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ void ABaseCommand::setServerResponse366(void)
 //: server.name 401 Aldo Patrick :No such nick/channel
 void ABaseCommand::setServerResponse401(const std::string invitee)
 {
-	std::string nickname =  this->client->getNickname();
+	std::string nickname = this->client->getNickname();
 
 	if (nickname.empty())
 	{
@@ -119,7 +119,7 @@ void ABaseCommand::setServerResponse401(const std::string invitee)
 	this->addResponse(client, response);
 }
 
-//:server.name 403 Aldo #nonexistent_channel :No such channel
+//: server.name 403 Aldo #nonexistent_channel :No such channel
 void ABaseCommand::setServerResponse403(std::string roomName)
 {
 	std::string nickname = client->getNickname();
@@ -142,7 +142,7 @@ void ABaseCommand::setServerResponse403(std::string roomName)
 //: server.name 442 Aldo #invite_only_channel :You're not on that channel
 void ABaseCommand::setServerResponse442(void)
 {
-	std::string nickname =  this->client->getNickname();
+	std::string nickname = this->client->getNickname();
 	if (nickname.empty())
 	{
 		nickname = "*";
@@ -215,10 +215,10 @@ void ABaseCommand::setServerResponse462()
 	client->addResponse(response);
 }
 
-//:server.name 482 Aldo #example_channel :You're not a channel operator
+//: server.name 482 Aldo #example_channel :You're not a channel operator
 void ABaseCommand::setServerResponse482(void)
 {
-	std::string nickname =  this->client->getNickname();
+	std::string nickname = this->client->getNickname();
 	if (nickname.empty())
 	{
 		nickname = "*";
@@ -232,6 +232,33 @@ void ABaseCommand::setServerResponse482(void)
 	response.append(this->room->getRoomName());
 	response.append(" :You're not a channel operator.\r\n");
 	addResponse(client, response);
+}
+
+void ABaseCommand::setServerResponseWelcome()
+{
+	std::string response;
+
+	response = ":" + client->getServername() + " 001 " + client->getNickname() + " :Welcome to the IRC network, " + client->getNickname() + "!" + client->getUsername() + "@" + client->getHostname() + "\n";
+	response.append(":" + client->getServername() + " 002 " + client->getNickname() + " :Your host is " + client->getServername() + ", running version XXXX\n");
+	response.append(":" + client->getServername() + " 003 " + client->getNickname() + " :This server was created XXXXXXXXXXXXXX" + "\n");
+	response.append(":" + client->getServername() + " 004 " + client->getNickname() + " " + client->getServername() + " \n");
+	addResponse(client, response);
+}
+
+// should be inline with QUIT command?
+void ABaseCommand::setServerResponseInvalidAuthentication()
+{
+	std::string nickname = this->client->getNickname();
+	if (nickname.empty())
+	{
+		nickname = "*";
+	}
+
+	std::string response = "ERROR :Closing link: (";
+	response.append(client->getFqdn());
+	response.append(") ");
+	response.append("[Invalid Authentication]\r\n");
+	client->addResponse(response);
 }
 
 void ABaseCommand::addResponse(Client* client, std::string response)

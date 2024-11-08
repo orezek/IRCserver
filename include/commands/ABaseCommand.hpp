@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ABaseCommand.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 11:10:59 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/07 19:06:03 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/08 11:20:23 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,12 @@ class ABaseCommand
 		void setServerResponse482();  // ERR_CHANOPRIVSNEEDED
 
 		// Common success/informational responses
-		void setServerResponse332();                               // RPL_TOPIC
+		void setServerResponse332();  // RPL_TOPIC
 		void setServerResponse353();  // RPL_NAMREPLY
-		void setServerResponse366();                               // RPL_ENDOFNAMES
+		void setServerResponse366();  // RPL_ENDOFNAMES
+
+		void setServerResponseWelcome();
+		void setServerResponseInvalidAuthentication();
 };
 
 }  // namespace Commands

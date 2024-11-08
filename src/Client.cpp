@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 18:30:27 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/08 10:59:20 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,25 +195,25 @@ std::string Client::getServername(void)
 }
 
 // Getter for passSent
-bool Client::getPassSent()
+bool Client::isPassSent()
 {
 	return userData.getPassSent();
 }
 
 // Getter for passValid
-bool Client::getPassValid()
+bool Client::isPassValid()
 {
 	return userData.getPassValid();
 }
 
 // Getter for nickValid
-bool Client::getNickValid()
+bool Client::isNickValid()
 {
 	return userData.getNickValid();
 }
 
 // Getter for userValid
-bool Client::getUserValid()
+bool Client::isUserValid()
 {
 	return userData.getUserValid();
 }
@@ -221,7 +221,7 @@ bool Client::getUserValid()
 // Method to check if the client is fully registered
 bool Client::isRegistered()
 {
-	return getPassValid() && getNickValid() && getUserValid();
+	return isPassValid() && isNickValid() && isUserValid();
 }
 
 // Setter for nickname

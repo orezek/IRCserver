@@ -3,21 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:09 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 18:06:04 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/08 10:59:20 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
-#include <netinet/in.h>
 #include <arpa/inet.h>
+#include <netinet/in.h>
 #include <sys/socket.h>
+
 #include <algorithm>
 #include <cstring>
 #include <string>
 #include <vector>
+
 #include "ClientMessage.hpp"
 #include "UserData.hpp"
 
@@ -60,10 +62,10 @@ class Client
 		std::string getRealname(void);
 		std::string getFqdn(void);
 		std::string getServername(void);
-		bool getPassSent();
-		bool getPassValid();
-		bool getNickValid();
-		bool getUserValid();
+		bool isPassSent();
+		bool isPassValid();
+		bool isNickValid();
+		bool isUserValid();
 		bool isRegistered();
 		void setNickname(std::string nickname);
 		void setUsername(std::string username);

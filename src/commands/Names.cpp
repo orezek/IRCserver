@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Names.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 20:19:42 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 23:00:56 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/08 09:31:11 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,12 @@ void Names::execute(void)
 {
 	bool roomExists;
 	Token *tokenRoomname = NULL;
+
+	if (!client->isRegistered())
+	{
+		setServerResponse451();
+		return;
+	}
 
 	tokenRoomname = clientMessage.findNthTokenOfType(Token::ROOM_NAME, 1);
 	if (tokenRoomname == NULL)
