@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserData.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 00:03:56 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/08 12:48:10 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/08 16:59:12 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ class UserData
 		void setPassValid(bool passValue);
 		void setNickValid(bool nickValue);
 		void setUserValid(bool userValue);
+		std::string getUserInfo(void);
 
 	private:
 		std::string nickname;

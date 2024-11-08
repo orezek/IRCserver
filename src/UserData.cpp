@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserData.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 23:12:55 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 12:48:18 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/08 16:32:55 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,4 +152,9 @@ void UserData::setUserValid(bool userValue)
 std::string UserData::getServername()
 {
 	return(this->servername);
+}
+// <username> <hostname> <servername> <nickname> <H/G>*
+std::string UserData::getUserInfo(void)
+{
+	return (this->username + " " +  this->hostname + " " + servername + " " + nickname + " H");
 }
