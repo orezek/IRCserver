@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/06 15:21:15 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/08 16:43:29 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -894,7 +894,7 @@ void IRCParser::parseParametersAsOneText()
 	std::string delimiters = "\r\n";
 	std::string parameter;
 
-	tempInputData.erase(0, tempInputData.find_first_not_of(" "));
+	tempInputData.erase(0, tempInputData.find_first_not_of(" \t"));
 
 	std::size_t cmdStart = 0;
 	if (tempInputData[0] == ':')

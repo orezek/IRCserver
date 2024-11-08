@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 09:51:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/08 11:25:35 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/08 17:43:49 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -282,6 +282,67 @@ void ABaseCommand::addResponse(Room* room, std::string response)
 		}
 		i++;
 	} while (clientFd != NULL);
+}
+
+void ABaseCommand::addResponseToOthersInRoom(Room* room, std::string response)
+{
+	int i = 1;
+	int* clientFd;
+
+	do
+	{
+		clientFd = room->findNthClient(i);
+		if (clientFd != NULL && *clientFd != client->getFd())
+		{
+			Client& client = ClientManager::getInstance().getClient(*clientFd);
+			// exception?
+			client.addResponse(response);
+		}
+		i++;
+	} while (clientFd != NULL);
+}
+
+void ABaseCommand::addResponseToOthersOnceInAllRoomsIamIn(std::string response)
+{
+	RoomManager& roomManager = RoomManager::getInstance();
+	roomManager.resetIterator();
+
+	std::vector<int> clientsAlreadySent;
+	clientsAlreadySent.push_back(client->getFd());
+	// iterate all rooms
+	do
+	{
+		room = roomManager.getNextRoom();
+		if (!room)
+		{
+			roomManager.resetIterator();
+			return;
+		}
+		// iterate all clients in room
+		int i = 1;
+		int* clientFd;
+		do
+		{
+			clientFd = room->findNthClient(i);
+			if (clientFd != NULL && isNotInVector(clientsAlreadySent, *clientFd))
+			{
+				Client& clientToSend = ClientManager::getInstance().getClient(*clientFd);
+				// exception?
+				clientToSend.addResponse(response);
+				clientsAlreadySent.push_back(*clientFd);
+			}
+			i++;
+		} while (clientFd != NULL);
+
+		//
+		room->removeClient(client->getFd());
+	} while (room != NULL);
+	roomManager.resetIterator();
+}
+
+bool ABaseCommand::isNotInVector(const std::vector<int>& vec, int num)
+{
+	return (std::find(vec.begin(), vec.end(), num) == vec.end());
 }
 
 }  // namespace Commands

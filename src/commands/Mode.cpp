@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:14:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 12:59:35 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/08 18:01:29 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,13 @@ void Mode::execute(void)
 	bool addOperator = false;
 	bool addUserLimit = false;
 
-	// TODO: Do not send anything when there IS tokenNickname but no tokenRoom in clientMessage.
+	// if it is mode for client, skip execution - WILL BE IMPLEMENTED IN THE FUTURE
+	Token *tokenClient = clientMessage.findNthTokenOfType(Token::NICK_NAME, 1);
+	if (tokenClient != NULL)
+	{
+		return;
+	}
+
 	if (tokenRoom == NULL)
 	{
 		this->setServerResponse461();
@@ -58,7 +64,7 @@ void Mode::execute(void)
 	this->response.clear();
 	this->response = ":";
 	response.append(nickname);
-	response.append("!user@hostname");
+	response.append("!user@hostname");  // needs to be changed
 	response.append(" MODE ");
 	response.append("#");
 	response.append(this->room->getRoomName());
@@ -208,7 +214,7 @@ void Mode::execute(void)
 	clientMessage.resetIterator();
 	response.append("\r\n");
 	std::cout << this->response.size() << std::endl;
-	if (response.size() > 32)
+	if (response.size() > 32)  // the number (32) needs to be set dynamicly
 	{
 		this->addResponse(room, response);
 	}

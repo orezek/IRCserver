@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Room.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:51:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 14:04:59 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/08 16:16:28 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,18 @@ void Room::addClient(int clientSocketFd)
 
 void Room::removeClient(int clientSocketFd)
 {
-	this->clientFds.erase(std::remove(clientFds.begin(), clientFds.end(), clientSocketFd), clientFds.end());
+	if (isClientInRoom(clientSocketFd))
+	{
+		this->clientFds.erase(std::remove(clientFds.begin(), clientFds.end(), clientSocketFd), clientFds.end());
+	}
+	if (isClientInInviteList(clientSocketFd))
+	{
+		removeInvitee(clientSocketFd);
+	}
+	if (isOperator(clientSocketFd))
+	{
+		removeOperator(clientSocketFd);
+	}
 }
 
 const std::string& Room::getPassword() const
@@ -249,7 +260,7 @@ std::string Room::getFormattedNicknames()
 	return (response);
 }
 // ??
-//:server 352 your_nick #room user host server nick H@ :0 Real Name
+//: server 352 your_nick #room user host server nick H@ :0 Real Name
 std::string Room::getFormattedUserInfo()
 {
 	std::string response;
