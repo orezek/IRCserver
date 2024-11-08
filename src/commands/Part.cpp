@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 19:04:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 13:02:31 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/08 16:56:15 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,30 +74,13 @@ void Part::execute(void)
 			// check if the client is in the room
 			if (room->isClientInRoom(client->getFd()))
 			{
-				// remove client
-				this->room->removeClient(client->getFd());
-				// check if client is operator
-				if (room->isOperator(client->getFd()))
-				{
-					// remove from operators vector
-					this->room->removeOperator(client->getFd());
-				}
-				if (room->isClientInInviteList(client->getFd()))
-				{
-					// remove from invitee vector
-					this->room->removeInvitee(client->getFd());
-				}
+				// remove client from room, also removes the client from operators and invitees
+				room->removeClient(client->getFd());
+				setServerResponsePart();
 				// check how many clients still remain in the room
 				if (room->getNoClients() == 0)
 				{
 					deleteRoom = true;
-					// do not send any response - no one will listen
-				}
-				// at least one send response that client left the room
-				// TODO: Implement sending response to client that have just left the room
-				else
-				{
-					setServerResponsePart();
 				}
 			}
 			// client is not in the room
@@ -138,6 +121,7 @@ void Part::setServerResponsePart(void)
 	response.append(" :");
 	response.append(this->message);
 	response.append("\r\n");
+	addResponse(client, response);
 	addResponse(this->room, response);
 }
 }  // namespace Commands
