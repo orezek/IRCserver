@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 14:13:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/08 09:36:55 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/08 11:25:00 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,26 @@ void User::execute()
 		return;
 	}
 
-	// check parameters, if they are valid
+	// TODO: check parameters, if they are valid
+
+	bool wasRegistered = client->isRegistered();
 
 	client->setUsername(usernameToken->getText());
 	// for hostname the server should perfom reverse DNS lookup
 	client->setHostname(client->getIpAddressAsString());  // a client IP address - server will assign
-	client->setServername(serverData.getServerName());    // irc server address - server will assign
+	client->setServername(client->getServername());       // irc server address - server will assign
 	client->setRealname(realnameToken->getText());        // any valid user text
 	client->setUserValid(true);
+
+	if (client->isNickValid() && client->isUserValid() && !client->isPassValid())
+	{
+		client->markForDeletion();
+		setServerResponseInvalidAuthentication();
+	}
+	else if (!wasRegistered && client->isRegistered())
+	{
+		setServerResponseWelcome();
+	}
 }
 
 User::User(User const& refObj) : ABaseCommand(refObj) {}

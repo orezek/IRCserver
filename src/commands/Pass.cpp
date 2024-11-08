@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 13:05:16 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/26 15:53:25 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/08 10:35:46 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,10 @@ void Pass::execute()
 		client->setPassValid(true);
 		this->setServerResponseValid();  // no need to have it there
 	}
-	// else if
-	// {
-	// 	/* Pass not valid */
-	// }
+	else
+	{
+		this->setServerResponse464();
+	}
 }
 
 // ---- PRIVATE ----
@@ -67,6 +67,23 @@ void Pass::execute()
 void Pass::setServerResponseValid()
 {
 	// DO NOTHING
+}
+
+void Pass::setServerResponse464()
+{
+	std::string nickname = client->getNickname();
+	if (nickname.empty())
+	{
+		nickname = "*";
+	}
+
+	std::string response = ":";
+	response.append(client->getServername());
+	response.append(" 464 ");
+	response.append(nickname);
+	response.append(" :Password incorrect\r\n");
+
+	client->addResponse(response);
 }
 
 }  // namespace Commands

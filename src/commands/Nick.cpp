@@ -60,10 +60,26 @@ void Nick::execute()
 		return;
 	}
 
+	bool wasRegistered = client->isRegistered();
+
 	client->setNickname(newNick);
 	client->setNickValid(true);
 
-	setServerResponseValid();
+	if (client->isNickValid() && client->isUserValid() && !client->isPassValid())
+	{
+		client->markForDeletion();
+		setServerResponseInvalidAuthentication();
+		// response for kick user with invalid password
+	}
+	else if (!wasRegistered && client->isRegistered())
+	{
+		setServerResponseWelcome();
+	}
+
+	if (wasRegistered)
+	{
+		setServerResponseValid();
+	}
 }
 
 // ---- PRIVATE ----- //
@@ -125,7 +141,7 @@ bool Nick::isAlreadyUsedNick(std::string& nick)
 void Nick::setServerResponse431()
 {
 	std::string response = ":";
-	response.append(serverData.getServerName());
+	response.append(client->getServername());
 	response.append(" 431 :No nickname given\r\n");
 
 	client->addResponse(response);
@@ -134,7 +150,7 @@ void Nick::setServerResponse431()
 void Nick::setServerResponse432()
 {
 	std::string response = ":";
-	response.append(serverData.getServerName());
+	response.append(client->getServername());
 	response.append(" 432 ");
 	response.append(oldNick);
 	response.append(" ");
@@ -147,7 +163,7 @@ void Nick::setServerResponse432()
 void Nick::setServerResponse433()
 {
 	std::string response = ":";
-	response.append(serverData.getServerName());
+	response.append(client->getServername());
 	response.append(" 433 ");
 	response.append(oldNick);
 	response.append(" ");
