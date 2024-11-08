@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserData.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 00:03:56 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/07 18:02:51 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/08 12:48:10 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ class UserData
 {
 	public:
 		UserData();
-		UserData(int clientFd);
+		// UserData(int clientFd);
 		~UserData();
 		UserData(const UserData &obj);
 		UserData &operator=(const UserData &obj);
@@ -28,10 +28,10 @@ class UserData
 		std::string getHostname();
 		std::string getRealname();
 		std::string getServername();
-		bool getPassSent();
-		bool getPassValid();
-		bool getNickValid();
-		bool getUserValid();
+		bool isPassSent();
+		bool isPassValid();
+		bool isNickValid();
+		bool isUserValid();
 		bool isRegistered();
 		void setNickname(std::string nickname);
 		void setUsername(std::string username);
