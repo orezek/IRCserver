@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 10:59:20 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/08 12:43:40 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ Client::Client(const Client& other) : fd(other.fd),  // Initialize const member 
 									  rawData(other.rawData),
 									  markedForDeletion(other.markedForDeletion),
 									  //   responses(other.responses),            // Assuming ServerResponseQueue has a valid copy constructor
-									  clientMessages(other.clientMessages),  // Deep copy vector
-									  userData(other.userData)               // Deep copy UserData
+									  clientMessages(other.clientMessages)  // Deep copy vector
+									//   userData(other.userData)               // Deep copy UserData
 {
 	// If any other special deep-copy logic is needed for members, add it here.
 }
@@ -40,7 +40,7 @@ Client& Client::operator=(const Client& other)
 		markedForDeletion = other.markedForDeletion;
 		// responses = other.responses;            // Assuming ServerResponseQueue has a valid assignment operator
 		clientMessages = other.clientMessages;  // Deep copy vector
-		userData = other.userData;              // Deep copy UserData
+		// userData = other.userData;              // Deep copy UserData
 	}
 	return (*this);
 }
@@ -157,27 +157,27 @@ ClientMessage Client::popMessage(void)
 
 // User data management - here should be used inheritance :) first case of usage, now it makes sense
 
-std::string Client::getNickname(void)
-{
-	return (userData.getNickname());
-}
+// std::string Client::getNickname(void)
+// {
+// 	return (userData.getNickname());
+// }
 
-std::string Client::getUsername(void)
-{
-	return (userData.getUsername());
-}
+// std::string Client::getUsername(void)
+// {
+// 	return (userData.getUsername());
+// }
 
-// Getter for hostname
-std::string Client::getHostname()
-{
-	return userData.getHostname();
-}
+// // Getter for hostname
+// std::string Client::getHostname()
+// {
+// 	return userData.getHostname();
+// }
 
-// Getter for realname
-std::string Client::getRealname(void)
-{
-	return (userData.getRealname());
-}
+// // Getter for realname
+// std::string Client::getRealname(void)
+// {
+// 	return (userData.getRealname());
+// }
 
 // Gets FQDN of the valid client
 std::string Client::getFqdn(void)
@@ -189,91 +189,91 @@ std::string Client::getFqdn(void)
 	return (str);
 }
 // every client is aware of its server
-std::string Client::getServername(void)
-{
-	return (userData.getServername());
-}
+// std::string Client::getServername(void)
+// {
+// 	return (userData.getServername());
+// }
 
-// Getter for passSent
-bool Client::isPassSent()
-{
-	return userData.getPassSent();
-}
+// // Getter for passSent
+// bool Client::isPassSent()
+// {
+// 	return userData.isPassSent();
+// }
 
-// Getter for passValid
-bool Client::isPassValid()
-{
-	return userData.getPassValid();
-}
+// // Getter for passValid
+// bool Client::isPassValid()
+// {
+// 	return userData.isPassValid();
+// }
 
-// Getter for nickValid
-bool Client::isNickValid()
-{
-	return userData.getNickValid();
-}
+// // Getter for nickValid
+// bool Client::isNickValid()
+// {
+// 	return userData.isNickValid();
+// }
 
-// Getter for userValid
-bool Client::isUserValid()
-{
-	return userData.getUserValid();
-}
+// // Getter for userValid
+// bool Client::isUserValid()
+// {
+// 	return userData.isUserValid();
+// }
 
 // Method to check if the client is fully registered
-bool Client::isRegistered()
-{
-	return isPassValid() && isNickValid() && isUserValid();
-}
+// bool Client::isRegistered()
+// {
+// 	return isPassValid() && isNickValid() && isUserValid();
+// }
 
-// Setter for nickname
-void Client::setNickname(std::string nickname)
-{
-	userData.setNickname(nickname);
-}
+// // Setter for nickname
+// void Client::setNickname(std::string nickname)
+// {
+// 	userData.setNickname(nickname);
+// }
 
-// Setter for username
-void Client::setUsername(std::string username)
-{
-	userData.setUsername(username);
-}
+// // Setter for username
+// void Client::setUsername(std::string username)
+// {
+// 	userData.setUsername(username);
+// }
 
-// Setter for hostname
-void Client::setHostname(std::string hostname)
-{
-	userData.setHostname(hostname);
-}
+// // Setter for hostname
+// void Client::setHostname(std::string hostname)
+// {
+// 	userData.setHostname(hostname);
+// }
 
-// Setter for realname
-void Client::setRealname(std::string realname)
-{
-	userData.setRealname(realname);
-}
+// // Setter for realname
+// void Client::setRealname(std::string realname)
+// {
+// 	userData.setRealname(realname);
+// }
 
-// Setter for servername
-void Client::setServername(std::string servername)
-{
-	userData.setServername(servername);
-}
+// // Setter for servername
+// void Client::setServername(std::string servername)
+// {
+// 	userData.setServername(servername);
+// }
 
-// Setter for passSent
-void Client::setPassSent(bool passSentValue)
-{
-	userData.setPassSent(passSentValue);
-}
+// // Setter for passSent
+// void Client::setPassSent(bool passSentValue)
+// {
+// 	userData.setPassSent(passSentValue);
+// }
 
-// Setter for passValid
-void Client::setPassValid(bool passValue)
-{
-	userData.setPassValid(passValue);
-}
+// // Setter for passValid
+// void Client::setPassValid(bool passValue)
+// {
+// 	userData.setPassValid(passValue);
+// }
 
-// Setter for nickValid
-void Client::setNickValid(bool nickValue)
-{
-	userData.setNickValid(nickValue);
-}
+// // Setter for nickValid
+// void Client::setNickValid(bool nickValue)
+// {
+// 	userData.setNickValid(nickValue);
+// }
 
-// Setter for userValid
-void Client::setUserValid(bool userValue)
-{
-	userData.setUserValid(userValue);
-}
+// // Setter for userValid
+// void Client::setUserValid(bool userValue)
+// {
+// 	userData.setUserValid(userValue);
+// }

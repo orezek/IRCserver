@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserData.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 23:12:55 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 18:03:45 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/08 12:48:18 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 UserData::UserData() : nickname(""), username(""), hostname(""), servername(""), realname(""), hasRegistered(false), passSent(false), passValid(false), nickValid(false), userValid(false) {};
 
-UserData::UserData(int clientFd) : nickname(""), username(""), hostname(""), servername(""), realname(""), hasRegistered(false), passSent(false), passValid(false), nickValid(false), userValid(false) {};
+// UserData::UserData(int clientFd) : nickname(""), username(""), hostname(""), servername(""), realname(""), hasRegistered(false), passSent(false), passValid(false), nickValid(false), userValid(false) {};
 
 UserData::~UserData() {};
 
@@ -58,22 +58,22 @@ std::string UserData::getRealname()
 	return (this->realname);
 }
 
-bool UserData::getPassSent()
+bool UserData::isPassSent()
 {
 	return (this->passSent);
 }
 
-bool UserData::getPassValid()
+bool UserData::isPassValid()
 {
 	return (this->passValid);
 }
 
-bool UserData::getNickValid()
+bool UserData::isNickValid()
 {
 	return (this->nickValid);
 }
 
-bool UserData::getUserValid()
+bool UserData::isUserValid()
 {
 	return (this->userValid);
 }
