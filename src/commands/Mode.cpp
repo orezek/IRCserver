@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:14:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 12:59:35 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/08 16:01:01 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,13 @@ void Mode::execute(void)
 	bool addOperator = false;
 	bool addUserLimit = false;
 
-	// TODO: Do not send anything when there IS tokenNickname but no tokenRoom in clientMessage.
+	// if it is mode for client, skip execution - WILL BE IMPLEMENTED IN THE FUTURE
+	Token *tokenClient = clientMessage.findNthTokenOfType(Token::NICK_NAME, 1);
+	if (tokenClient != NULL)
+	{
+		return;
+	}
+
 	if (tokenRoom == NULL)
 	{
 		this->setServerResponse461();
