@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:14:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 18:53:53 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/08 09:30:26 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,13 @@ void Mode::execute(void)
 		this->setServerResponse461();
 		return;
 	}
+
+	if (!client->isRegistered())
+	{
+		setServerResponse451();
+		return;
+	}
+
 	if (!RoomManager::getInstance().roomExist(tokenRoom->getText()))
 	{
 		this->setServerResponse403(tokenRoom->getText());

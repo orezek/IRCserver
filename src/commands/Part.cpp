@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Part.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 19:04:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 22:57:56 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/08 09:32:03 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,13 @@ void Part::execute(void)
 		setServerResponse461();
 		return;
 	}
+
+	if (!client->isRegistered())
+	{
+		setServerResponse451();
+		return;
+	}
+
 	int i = 1;
 	do
 	{

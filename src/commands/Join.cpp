@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:14:27 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 22:46:28 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/08 09:29:52 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,16 +34,17 @@ void Join::execute()
 	std::string roomPasword;
 	Token *tokenRoomname = NULL;
 
-	// if (!client->isRegistered())
-	// {
-	// 	setServerResponse451();
-	// 	return;
-	// }
 
 	tokenRoomname = clientMessage.findNthTokenOfType(Token::ROOM_NAME, 1);
 	if (tokenRoomname == NULL)
 	{
 		setServerResponse461();
+		return;
+	}
+
+	if (!client->isRegistered())
+	{
+		setServerResponse451();
 		return;
 	}
 

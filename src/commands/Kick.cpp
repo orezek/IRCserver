@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 21:30:41 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 18:52:22 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/08 09:30:11 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,13 @@ void Kick::execute(void)
 		this->setServerResponse461();
 		return;
 	}
+
+	if (!client->isRegistered())
+	{
+		setServerResponse451();
+		return;
+	}
+	
 	int i = 1;
 	do
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 14:13:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/07 14:38:57 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/08 09:36:55 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void User::execute()
 		return;
 	}
 
-	if (client->isRegistered() == true)
+	if (client->isRegistered())
 	{
 		// user already registered, send 462 "You may not reregister" response
 		this->setServerResponse462();
@@ -43,9 +43,9 @@ void User::execute()
 
 	client->setUsername(usernameToken->getText());
 	// for hostname the server should perfom reverse DNS lookup
-	client->setHostname(client->getIpAddressAsString()); // a client IP address - server will assign
-	client->setServername(serverData.getServerName()); // irc server address - server will assign
-	client->setRealname(realnameToken->getText()); // any valid user text
+	client->setHostname(client->getIpAddressAsString());  // a client IP address - server will assign
+	client->setServername(serverData.getServerName());    // irc server address - server will assign
+	client->setRealname(realnameToken->getText());        // any valid user text
 	client->setUserValid(true);
 }
 

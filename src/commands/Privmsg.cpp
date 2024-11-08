@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Privmsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 13:02:55 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/07 22:52:47 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/08 09:33:14 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,12 @@ void Privmsg::execute()
 	if ((tokenRoomname == NULL && tokenNickname == NULL) || tokenMessage == NULL)
 	{
 		setServerResponse461();
+		return;
+	}
+
+	if (!client->isRegistered())
+	{
+		setServerResponse451();
 		return;
 	}
 
