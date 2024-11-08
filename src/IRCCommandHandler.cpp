@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRCCommandHandler.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 13:39:51 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/08 17:06:09 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void IRCCommandHandler::executeOneCommand(ClientMessage &clientMessage)
 
 	if (commandType == ClientMessage::CAP)
 	{
-		// DO NOTHING
+		void(0); // no-op
 	}
 	else if (commandType == ClientMessage::PING)
 	{
@@ -121,6 +121,10 @@ void IRCCommandHandler::executeOneCommand(ClientMessage &clientMessage)
 	else if (commandType == ClientMessage::MODE)
 	{
 		command = new Commands::Mode(client, clientMessage);
+	}
+	else if (commandType == ClientMessage::WHO)
+	{
+		command = new Commands::Who(client, clientMessage);
 	}
 	else if (commandType == ClientMessage::UNKNOWN)
 	{
