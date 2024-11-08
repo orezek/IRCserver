@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:12:06 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 18:57:36 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/08 13:38:57 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 namespace Commands
 {
-class Mode : protected ABaseCommand
+class Mode : public ABaseCommand
 {
 	public:
 		Mode(Client *client, ClientMessage &clientMessage);

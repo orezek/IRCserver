@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 19:48:00 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/25 18:53:32 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/08 13:38:38 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 namespace Commands
 {
 
-class Quit : protected ABaseCommand
+class Quit : public ABaseCommand
 {
 	public:
 		Quit(Client* client, ClientMessage& clientMessage);

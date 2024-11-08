@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 11:21:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/25 18:53:47 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/08 13:38:44 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 namespace Commands
 {
 
-class Ping : protected ABaseCommand
+class Ping : public ABaseCommand
 {
 	public:
 		Ping(Client* client, ClientMessage& clientMessage);

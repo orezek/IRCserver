@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Who.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 09:24:30 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/06 09:36:27 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/08 13:38:23 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 namespace Commands
 {
-class Who : protected ABaseCommand
+class Who : public ABaseCommand
 {
 	public:
 		Who(Client *client, ClientMessage &mesage);
