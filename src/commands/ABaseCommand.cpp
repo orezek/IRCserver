@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 09:51:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/08 11:25:35 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/08 15:50:56 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -275,6 +275,24 @@ void ABaseCommand::addResponse(Room* room, std::string response)
 	{
 		clientFd = room->findNthClient(i);
 		if (clientFd != NULL)
+		{
+			Client& client = ClientManager::getInstance().getClient(*clientFd);
+			// exception?
+			client.addResponse(response);
+		}
+		i++;
+	} while (clientFd != NULL);
+}
+
+void ABaseCommand::addResponseToOthers(Room* room, std::string response)
+{
+	int i = 1;
+	int* clientFd;
+	
+	do
+	{
+		clientFd = room->findNthClient(i);
+		if (clientFd != NULL && *clientFd != client->getFd())
 		{
 			Client& client = ClientManager::getInstance().getClient(*clientFd);
 			// exception?

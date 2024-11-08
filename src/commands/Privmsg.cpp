@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 13:02:55 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/08 12:57:24 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/08 15:57:48 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ void Privmsg::addResponseToRoomsAndClients()
 		i++;
 	} while (tokenNickname != NULL);
 
-	// TODO: Implement not sending response to client who sent the message
 	// add response to rooms
 	i = 1;
 	do
@@ -102,7 +101,7 @@ void Privmsg::addResponseToRoomsAndClients()
 				messageToSend.append(roomnameToSend);
 				messageToSend.append(" ");
 				messageToSend.append(this->messageResponse);
-				this->addResponse(roomToSend, messageToSend);
+				this->addResponseToOthers(roomToSend, messageToSend);
 			}
 			else
 			{

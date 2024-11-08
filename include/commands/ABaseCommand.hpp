@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 11:10:59 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/08 11:20:23 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/08 15:50:20 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ class ABaseCommand
 		// Send response to Room or Client
 		void addResponse(Client* client, std::string response);
 		void addResponse(Room* room, std::string response);
+		void addResponseToOthers(Room* room, std::string response);
 
 		// Common error responses
 		void setServerResponse401(const std::string nickname);  // ERR_NOSUCHNICK
