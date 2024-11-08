@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRCParser.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:09:39 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/02 22:27:15 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/08 21:04:03 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,9 @@ class IRCParser
 		void assignTokenTypesAsPing();
 		void assignTokenTypesAsQuit();
 		void assignTokenTypesAsUser();
+		
+		// BOT functions
+		void parseAndAssignParametersAsBot();
 		// general functions
 		std::string trim(const std::string& str);
 };

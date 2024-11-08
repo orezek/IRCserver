@@ -3,28 +3,20 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+         #
+#    By: orezek <orezek@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/11/21 10:59:06 by mbartos           #+#    #+#              #
-#    Updated: 2024/10/26 14:36:52 by mbartos          ###   ########.fr        #
+#    Created: 2024/11/08 20:51:02 by orezek            #+#    #+#              #
+#    Updated: 2024/11/08 20:51:04 by orezek           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-BOLD =	\033[1m
-GREEN =	\033[32m
-RED =	\033[31m
-BCYAN =	\033[96m
-NC =	\033[0m
-
 NAME =		ircserv
-
 CCP =		c++
-CFLAGS =	-g  \
-			-I./include/ -I./include/commands
+CFLAGS =	-g -I./include/ -I./include/commands -I/opt/homebrew/Cellar/cjson/1.7.18/include
+LIBS =      -L/opt/homebrew/lib -lcurl -lcjson  # Correctly link libcjson
 
 SRC_PATH = ./src/
 COMMANDS_PATH = ./src/commands/
-
 SRC =		$(wildcard $(SRC_PATH)*.cpp) $(wildcard $(COMMANDS_PATH)*.cpp)
 
 # Objects and dependencies
@@ -58,9 +50,10 @@ $(OBJ_COMMANDS_PATH):
 $(BIN_PATH):
 	@mkdir -p $(BIN_PATH)
 
+# Link step includes $(LIBS) to link against libcurl and libcjson
 $(BIN_PATH)$(NAME): $(OBJ) | $(BIN_PATH)
 	@echo "$(BOLD)$(BCYAN)[ Compiling $(NAME)... ]$(NC)"
-	$(CCP) $(CFLAGS) $(OBJ) -o $@
+	$(CCP) $(CFLAGS) $(OBJ) -o $@ $(LIBS)
 	@echo "$(BOLD)$(GREEN)[ Program $(NAME) ready in bin/ folder! ]$(NC)"
 
 clean:

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ClientMessage.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:18 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/06 15:18:07 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/08 20:59:47 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ class ClientMessage
 			NAMES,
 			MODE,
 			WHO,
+			BOT,
 			UNKNOWN = 99
 		};
 

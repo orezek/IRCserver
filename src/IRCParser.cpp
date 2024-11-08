@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRCParser.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/08 16:43:29 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/08 21:06:17 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,6 +157,10 @@ void IRCParser::assignCommandType()
 	{
 		clientMessage.setCommandType(ClientMessage::WHO);
 	}
+	else if (commandString == "BOT")
+	{
+		clientMessage.setCommandType(ClientMessage::BOT);
+	}
 	else
 	{
 		clientMessage.setCommandType(ClientMessage::UNKNOWN);
@@ -229,6 +233,10 @@ void IRCParser::parseParameterTokens()
 	{
 		parseParametersBySpace();
 		assignParametersAsWho();
+	}
+	else if (commandType == ClientMessage::BOT)
+	{
+		parseAndAssignParametersAsKick();
 	}
 	// add functionality for other commands
 }
@@ -781,6 +789,69 @@ void IRCParser::parseAndAssignParametersAsPrivmsg()
 		processClientOrRoom(clientsAndRooms.substr(start));
 	}
 
+	// Handle optional ':' prefix in message
+	if (!message.empty() && message[0] == ':')
+	{
+		message = message.substr(1);
+	}
+	// Process message
+	if (!message.empty())
+	{
+		Token tokenMessage(Token::MESSAGE, message);
+		clientMessage.addToken(tokenMessage);
+	}
+
+	// Clear the temporary input data
+	tempInputData.clear();
+}
+
+void IRCParser::parseAndAssignParametersAsBot()
+{
+	tempInputData = trim(tempInputData);
+	size_t posRoomsEnd = tempInputData.find_first_of(" \t");
+
+	std::string rooms;
+	std::string message;
+
+	if (posRoomsEnd == std::string::npos)
+	{
+		rooms = tempInputData.substr(0);
+	}
+	else
+	{
+		rooms = tempInputData.substr(0, posRoomsEnd);
+
+		std::string remainingData = tempInputData.substr(posRoomsEnd + 1);
+		size_t posMessageEnd = remainingData.find_first_of("\r\n");
+
+		if (posMessageEnd == std::string::npos)
+		{
+			// Take the entire remaining string
+			message = remainingData;
+		}
+		else
+		{
+			// Take only up to the next whitespace
+			message = remainingData.substr(0, posMessageEnd);
+		}
+	}
+
+	// Process rooms
+	rooms = trim(rooms);
+	size_t start = 0;
+	size_t end = 0;
+	while ((end = rooms.find(',', start)) != std::string::npos)
+	{
+		processRoom(rooms.substr(start, end - start));
+		start = end + 1;
+	}
+	// Process the last room
+	if (start < rooms.length())
+	{
+		processRoom(rooms.substr(start));
+	}
+
+	message = trim(message);
 	// Handle optional ':' prefix in message
 	if (!message.empty() && message[0] == ':')
 	{
