@@ -65,6 +65,8 @@ void Nick::execute()
 	client->setNickname(newNick);
 	client->setNickValid(true);
 
+	// TODO: Implement sending response to all clients in all rooms the client is in
+
 	if (client->isNickValid() && client->isUserValid() && !client->isPassValid())
 	{
 		client->markForDeletion();
