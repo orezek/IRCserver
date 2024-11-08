@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 11:17:20 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/08 13:39:51 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ void IRCCommandHandler::processAllCommands()
 void IRCCommandHandler::executeOneCommand(ClientMessage &clientMessage)
 {
 	ClientMessage::cmdTypes commandType = clientMessage.getCommandType();
+	Commands::ABaseCommand *command = NULL;
 
 	if (commandType == ClientMessage::CAP)
 	{
@@ -71,72 +72,64 @@ void IRCCommandHandler::executeOneCommand(ClientMessage &clientMessage)
 	}
 	else if (commandType == ClientMessage::PING)
 	{
-		Commands::Ping pingCommand(client, clientMessage);
-		pingCommand.execute();
+		command = new Commands::Ping(client, clientMessage);
 	}
 	else if (commandType == ClientMessage::PASS)
 	{
-		Commands::Pass passCommand(client, clientMessage);
-		passCommand.execute();
+		command = new Commands::Pass(client, clientMessage);
 	}
 	else if (commandType == ClientMessage::PRIVMSG)
 	{
-		Commands::Privmsg privmsgCommand(client, clientMessage);
-		privmsgCommand.execute();
+		command = new Commands::Privmsg(client, clientMessage);
 	}
 	else if (commandType == ClientMessage::NICK)
 	{
-		Commands::Nick nickCommand(client, clientMessage);
-		nickCommand.execute();
+		command = new Commands::Nick(client, clientMessage);
 	}
 	else if (commandType == ClientMessage::USER)
 	{
-		Commands::User userCommand(client, clientMessage);
-		userCommand.execute();
+		command = new Commands::User(client, clientMessage);
 	}
 	else if (commandType == ClientMessage::QUIT)
 	{
-		Commands::Quit quitCommand(client, clientMessage);
-		quitCommand.execute();
+		command = new Commands::Quit(client, clientMessage);
 	}
 	else if (commandType == ClientMessage::JOIN)
 	{
-		Commands::Join joinCommand(client, clientMessage);
-		joinCommand.execute();
+		command = new Commands::Join(client, clientMessage);
 	}
 	else if (commandType == ClientMessage::PART)
 	{
-		Commands::Part partCommand(client, clientMessage);
-		partCommand.execute();
+		command = new Commands::Part(client, clientMessage);
 	}
 	else if (commandType == ClientMessage::NAMES)
 	{
-		Commands::Names NamesCommand(client, clientMessage);
-		NamesCommand.execute();
+		command = new Commands::Names(client, clientMessage);
 	}
 	else if (commandType == ClientMessage::INVITE)
 	{
-		Commands::Invite InviteCommand(client, clientMessage);
-		InviteCommand.execute();
+		command = new Commands::Invite(client, clientMessage);
 	}
 	else if (commandType == ClientMessage::KICK)
 	{
-		Commands::Kick KickCommand(client, clientMessage);
-		KickCommand.execute();
+		command = new Commands::Kick(client, clientMessage);
 	}
 	else if (commandType == ClientMessage::TOPIC)
 	{
-		Commands::Topic TopicCommand(client, clientMessage);
-		TopicCommand.execute();
+		command = new Commands::Topic(client, clientMessage);
 	}
 	else if (commandType == ClientMessage::MODE)
 	{
-		Commands::Mode ModeCommand(client, clientMessage);
-		ModeCommand.execute();
+		command = new Commands::Mode(client, clientMessage);
 	}
 	else if (commandType == ClientMessage::UNKNOWN)
 	{
-		Commands::Unknown unknownCommand(client, clientMessage);
-		unknownCommand.execute();
+		command = new Commands::Unknown(client, clientMessage);
+	}
+
+	if (command != NULL)
+	{
+		command->execute();
+		delete command;
 	}
 }

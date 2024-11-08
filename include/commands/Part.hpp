@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Part.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 18:57:54 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 22:58:15 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/08 13:38:48 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 namespace Commands
 {
-	class Part : protected ABaseCommand
+	class Part : public ABaseCommand
 	{
 		public:
 			Part(Client *client, ClientMessage &clientMessage);

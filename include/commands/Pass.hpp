@@ -17,7 +17,7 @@
 namespace Commands
 {
 
-class Pass : protected ABaseCommand
+class Pass : public ABaseCommand
 {
 	public:
 		Pass(Client* client, ClientMessage& clientMessage);

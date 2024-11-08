@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Names.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 20:21:58 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 22:59:39 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/08 13:38:55 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 namespace Commands
 {
-class Names : protected ABaseCommand
+class Names : public ABaseCommand
 {
 	public:
 		Names(Client *client, ClientMessage &clientMessage);

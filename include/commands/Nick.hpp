@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:20:19 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/26 15:29:18 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/08 13:38:51 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 namespace Commands
 {
 
-class Nick : protected ABaseCommand
+class Nick : public ABaseCommand
 {
 	public:
 		Nick(Client* client, ClientMessage& clientMessage);

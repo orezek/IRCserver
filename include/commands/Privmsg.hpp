@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Privmsg.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 13:03:06 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/07 20:05:59 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/08 13:38:41 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 namespace Commands
 {
-class Privmsg : protected ABaseCommand
+class Privmsg : public ABaseCommand
 {
 	public:
 		Privmsg(Client* client, ClientMessage& clientMessage);

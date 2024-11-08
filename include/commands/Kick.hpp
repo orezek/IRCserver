@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 21:29:28 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 18:58:04 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/08 13:39:00 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 namespace Commands
 {
-class Kick : protected ABaseCommand
+class Kick : public ABaseCommand
 {
 	public:
 		Kick(Client *client, ClientMessage &clientMessage);
