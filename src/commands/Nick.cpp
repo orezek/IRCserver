@@ -65,8 +65,6 @@ void Nick::execute()
 	client->setNickname(newNick);
 	client->setNickValid(true);
 
-	// TODO: Implement sending response to all clients in all rooms the client is in
-
 	if (client->isNickValid() && client->isUserValid() && !client->isPassValid())
 	{
 		client->markForDeletion();
@@ -80,7 +78,7 @@ void Nick::execute()
 
 	if (wasRegistered)
 	{
-		setServerResponseValid();
+		setServerResponseNick();
 	}
 }
 
@@ -175,9 +173,8 @@ void Nick::setServerResponse433()
 	client->addResponse(response);
 }
 
-void Nick::setServerResponseValid()
+void Nick::setServerResponseNick()
 {
-	// TODO - also send to other user, that someone has changed the nickname? in rooms?
 	// server prefix??? y/n?
 	std::string response = ":";
 	response.append(oldNick);
@@ -193,6 +190,7 @@ void Nick::setServerResponseValid()
 	{
 		client->addResponse(response);
 	}
+	addResponseToOthersOnceInAllRoomsIamIn(response);
 }
 
 }  // namespace Commands

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 19:48:17 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/08 16:46:37 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/08 17:44:07 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,21 +61,9 @@ void Quit::setServerResponseValid()
 	roomManager.resetIterator();
 	Room* room;
 
-	// TODO: ResponseToOthers should be send only once on each client. IRSSI can handle also multiple sends.
 	std::string responseToOthers;
 	responseToOthers = ":" + client->getNickname() + "!" + client->getFqdn() + " QUIT :" + tokenQuitMessage->getText() + "\r\n";
-	do
-	{
-		room = roomManager.getNextRoom();
-		if (!room)
-		{
-			roomManager.resetIterator();
-			return;
-		}
-		addResponseToOthers(room, responseToOthers);
-		room->removeClient(client->getFd());
-	} while (room != NULL);
-	roomManager.resetIterator();
+	addResponseToOthersOnceInAllRoomsIamIn(responseToOthers);
 }
 
 }  // namespace Commands

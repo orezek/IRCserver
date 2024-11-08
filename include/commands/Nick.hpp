@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:20:19 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/08 13:38:51 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/08 17:43:37 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ class Nick : public ABaseCommand
 		void setServerResponse431();
 		void setServerResponse432();
 		void setServerResponse433();
-		void setServerResponseValid();
+		void setServerResponseNick();
 };
 
 }  // namespace Commands
