@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 19:05:54 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 23:28:03 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/08 23:49:37 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ std::string Bot::get_openai_response(const std::string& user_message)
 		json_payload += "{\"role\": \"user\", \"content\": \"" + escaped_prompt + "\"}";
 		json_payload += "], ";
 		json_payload += "\"max_tokens\": 40, ";
-		json_payload += "\"temperature\": 0.7";
+		json_payload += "\"temperature\": 0.2";
 		json_payload += "}";
 
 		std::cout << "JSON payload: " << json_payload << std::endl;
