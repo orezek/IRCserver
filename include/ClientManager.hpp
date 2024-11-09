@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:28 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/09 12:43:05 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/09 17:50:32 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <map>
 
 #include "Client.hpp"
-#include "Room.hpp"
+//#include "RoomManager.hpp"
 
 class ClientManager
 {
@@ -36,6 +36,7 @@ class ClientManager
 		// new
 		void loadClientsToFdSets(fd_set &readFds, fd_set &writeFds, fd_set &errrorFds, int &masterSocketFd, int &maxFd);
 		void initializeClientPresenceOnServer(int clientSocketFd, struct sockaddr_in ipClientAddress, std::string serverName);
+		void cleanClientSession(int &clientSocketFd);
 
 	private:
 		ClientManager();

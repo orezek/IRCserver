@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/09 12:42:30 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/09 17:46:50 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,69 @@ ConnectionHandler &ConnectionHandler::operator=(const ConnectionHandler &other)
 // Destructor implementation
 ConnectionHandler::~ConnectionHandler() {}
 
+// new implmentation
+int ConnectionHandler::initializeMasterSocketFd(int serverPortNumber)
+{
+	int masterSocketFd = -1;
+	try
+	{
+		masterSocketFd = enableSocket(masterSocketFd);
+		enableSocketReus(masterSocketFd);
+		enableSocketBinding(masterSocketFd, serverPortNumber);
+		enablePortListenning(masterSocketFd);
+		setFileDescriptorToNonBlockingState(masterSocketFd);
+	}
+	catch (const std::exception &e)
+	{
+		if (masterSocketFd != -1)
+		{
+			close(masterSocketFd);  // Ensure the socket is closed if it was opened
+		}
+		throw;  // either return an error code or throw exception. What to do next?
+	}
+	return (masterSocketFd);
+}
+
+int ConnectionHandler::enableSocket(int &masterSocketFd)
+{
+	if ((masterSocketFd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1)
+	{
+		throw std::runtime_error("Socket creation failed: " + std::string(strerror(errno)));
+	}
+	return (masterSocketFd);
+}
+
+void ConnectionHandler::enableSocketReus(int &masterSocketFd)
+{
+	int opt = 1;
+	if (setsockopt(this->masterSocketFd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
+	{
+		throw std::runtime_error("Failed to set SO_REUSEADDR option: " + std::string(strerror(errno)));
+	}
+}
+
+void ConnectionHandler::enableSocketBinding(int &masterSocketFd, int &serverPortNumber)
+{
+	struct sockaddr_in ipServerAddress;
+	ipServerAddress.sin_addr.s_addr = INADDR_ANY;  // all interfaces on the srv machine
+	ipServerAddress.sin_family = AF_INET;          // IPv4
+	ipServerAddress.sin_port = htons(this->serverPortNumber);
+	if (bind(masterSocketFd, (struct sockaddr *)&ipServerAddress, sizeof(ipServerAddress)) < 0)
+	{
+		throw std::runtime_error("Socket binding failed: " + std::string(strerror(errno)));
+	}
+}
+
+void ConnectionHandler::enablePortListenning(int &masterSocketFd)
+{
+	if (listen(masterSocketFd, MAX_CLIENTS) == -1)
+	{
+		throw std::runtime_error("Socket listening failed: " + std::string(strerror(errno)));
+	}
+}
+
+// end of new
+
 int ConnectionHandler::enableSocket(void)
 {
 	if ((this->masterSocketFd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1)
@@ -125,27 +188,16 @@ int ConnectionHandler::enablePortListenning(void)
 	return (0);
 }
 
+// new
+
+
+// end of new
+
 // inside the server main loop!!!
 
 void ConnectionHandler::prepareFdSetsForSelect(void)
 {
 	ClientManager::getInstance().loadClientsToFdSets(this->readFds, this->writeFds, this->errorFds, this->masterSocketFd, this->maxFd);
-	// FD_ZERO(&this->readFds);
-	// FD_ZERO(&this->writeFds);
-	// FD_ZERO(&this->errorFds);
-	// FD_SET(this->masterSocketFd, &this->readFds);  // add the master fd to the read_fds set
-	// this->maxFd = ClientManager::getInstance().getHighestClientFd(this->masterSocketFd);
-	// for (std::map<int, Client>::iterator it = ClientManager::getInstance().clients.begin(); it != ClientManager::getInstance().clients.end(); ++it)
-	// {
-	// 	Client &client = it->second;
-	// 	int clientSocketFd = it->first;
-	// 	FD_SET(clientSocketFd, &this->readFds);
-	// 	if (client.hasResponses())
-	// 	{
-	// 		FD_SET(clientSocketFd, &this->writeFds);
-	// 	}
-	// 	FD_SET(clientSocketFd, &this->errorFds);
-	// }
 }
 
 void ConnectionHandler::runSelect(void)
@@ -173,10 +225,6 @@ int ConnectionHandler::acceptNewClients(void)
 		this->setFileDescriptorToNonBlockingState(clientSocketFd);
 		ClientManager::getInstance().addClient(clientSocketFd);
 		ClientManager::getInstance().initializeClientPresenceOnServer(clientSocketFd, ipClientAddress, ServerDataManager::getInstance().getServerName());
-		// ClientManager::getInstance().getClient(clientSocketFd).initRawData();
-		// ClientManager::getInstance().getClient(clientSocketFd).setIpAddress(ipClientAddress);
-		// ClientManager::getInstance().getClient(clientSocketFd).setServername(ServerDataManager::getInstance().getServerName());
-		// ClientManager::getInstance().getClient(clientSocketFd).setNickname("*");
 		return (1);
 	}
 	return 0;
@@ -207,7 +255,9 @@ int ConnectionHandler::serverEventLoop(void)
 			}
 			if (client.isMarkedForDeletion() && !client.hasResponses())
 			{
-				terminateClientSession(clientIter);
+				ClientManager::getInstance().cleanClientSession(clientSocketFd);
+				clientIter = ClientManager::getInstance().deleteClient(clientIter);
+				close(clientSocketFd);
 				std::cout << "Client " << clientSocketFd << " session has been terminated and cleaned." << std::endl;
 			}
 			else
@@ -276,16 +326,6 @@ void ConnectionHandler::onRead(Client &client)
 void ConnectionHandler::onWrite(Client &client)
 {
 	client.sendAllResponses();
-}
-
-void ConnectionHandler::terminateClientSession(std::map<int, Client>::iterator &it)
-{
-	int clientSocketFd = it->first;
-	ClientManager::getInstance().getClient(clientSocketFd).deleteRawData();
-	RoomManager::getInstance().removeClientFromRooms(clientSocketFd);
-	RoomManager::getInstance().deleteAllEmptyRooms();
-	it = ClientManager::getInstance().deleteClient(it);
-	close(clientSocketFd);
 }
 
 int &ConnectionHandler::getMasterSocketFd(void)

@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:24 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/09 12:42:30 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/09 13:21:50 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,4 +123,11 @@ void ClientManager::initializeClientPresenceOnServer(int clientSocketFd, struct 
 	client.setIpAddress(ipClientAddress);
 	client.setServername(serverName);
 	client.setNickname("*");
+}
+
+void ClientManager::cleanClientSession(int& clientSocketFd)
+{
+	this->getClient(clientSocketFd).deleteRawData();
+	RoomManager::getInstance().removeClientFromRooms(clientSocketFd);
+	RoomManager::getInstance().deleteAllEmptyRooms();
 }

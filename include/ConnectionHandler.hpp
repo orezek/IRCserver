@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/09 12:41:21 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/09 17:48:16 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,13 @@ class ConnectionHandler
 		~ConnectionHandler();
 		ConnectionHandler &operator=(const ConnectionHandler &obj);
 
+		// new
+		int initializeMasterSocketFd(int serverPortNumber);
+		int enableSocket(int &masterSocketFd);
+		void enableSocketReus(int &masterSocketFd);
+		void enableSocketBinding(int &masterSocketFd, int &serverPortNumber);
+		void enablePortListenning(int &masterSocketFd);
+
 		// set socket
 		int enableSocket(void);
 		// set file descriptor to be non-blocking
@@ -62,7 +69,6 @@ class ConnectionHandler
 
 		int closeServerFd(void);
 		int &getMasterSocketFd(void);
-		void terminateClientSession(std::map<int, Client>::iterator &it);
 		// Events
 		int serverEventLoop(void);
 		void onError(Client &client, const std::string reason);
@@ -85,4 +91,5 @@ class ConnectionHandler
 		fd_set errorFds;
 		struct sockaddr_in ipServerAddress;
 		struct sockaddr_in ipClientAddress;
+		std::vector<int> connections;
 };
