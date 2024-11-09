@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 12:43:40 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/09 22:02:09 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int Client::getFd(void) const
 {
 	return (this->fd);
 }
-
+// to be re-implemented
 void Client::sendAllResponses(void)
 {
 	for (int i = 0; i < this->serverResponses.size(); i++)
@@ -69,8 +69,11 @@ void Client::sendAllResponses(void)
 				perror("Sending failed");
 			}
 		}
+		else
+		{
+			this->serverResponses[i].clear();
+		}
 	}
-	this->serverResponses.clear();
 }
 
 sockaddr_in Client::getIpAddress(void) const

@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:45:52 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/09 19:49:19 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/09 22:23:21 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,9 @@ void IrcServer::runIrcServer(void)
 		connHandler.prepareFdSetsForSelect();
 		// std::cout << "RUN Select" << std::endl;
 		connHandler.runSelect();
-		// std::cout << "Check for new clients" << std::endl;
-		connHandler.acceptNewClients();
 		// std::cout << "Handle new clients" << std::endl;
+		connHandler.acceptNewClients();
+		// std::cout << "Check for new clients" << std::endl;
 		connHandler.serverEventLoop();
 		// std::cout << "END of while" << std::endl;
 	}

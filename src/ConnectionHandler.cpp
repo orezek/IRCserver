@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/09 21:34:46 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/09 23:28:22 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,13 +238,11 @@ int ConnectionHandler::serverEventLoop(void)
 		while (it != this->connections.end())
 		{
 			clientSocketFd = *it;
-			Client *client = ClientManager::getInstance().findClient(clientSocketFd);
-
 			if (FD_ISSET(clientSocketFd, &errorFds))
 			{
 				onError(clientSocketFd, "socket error");
 			}
-			if (FD_ISSET(clientSocketFd, &readFds) && !client->isMarkedForDeletion())
+			if (FD_ISSET(clientSocketFd, &readFds))
 			{
 				onRead(clientSocketFd);
 			}
@@ -252,6 +250,8 @@ int ConnectionHandler::serverEventLoop(void)
 			{
 				onWrite(clientSocketFd);
 			}
+			IRCCommandHandler ircCommandHandler(clientSocketFd);
+			ircCommandHandler.processAllCommands();
 			ClientManager::getInstance().cleanClientSession(clientSocketFd);
 			++it;
 		}
@@ -318,11 +318,11 @@ void ConnectionHandler::onRead(int clientSocketFd)
 					std::cout << "Client " << clientSocketFd << " disconnected due to a message limit in partial read." << std::endl;
 				}
 			}
-			else
-			{
-				IRCCommandHandler ircCommandHandler(clientSocketFd);
-				ircCommandHandler.processAllCommands();
-			}
+			// else
+			// {
+			// 	IRCCommandHandler ircCommandHandler(clientSocketFd);
+			// 	ircCommandHandler.processAllCommands();
+			// }
 		}
 	}
 	else
