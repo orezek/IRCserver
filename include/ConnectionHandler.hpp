@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/31 18:19:40 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/09 20:03:27 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,16 +25,10 @@
 #include <netinet/in.h>  // sockaddr_in struct
 #include <sys/select.h>  // select call
 #include <sys/socket.h>  // socket(), bind(), listen(), accept() send()
-// Exceptions
-#include <stdexcept>
-// custom classes
-// #include "ClientRequest.hpp"
-// #include "ProcessData.hpp"
-// #include "ServerResponse.hpp"
-// #include "IrcServer.hpp"
-// #include "Client.hpp"
+
+#include <stdexcept>  // exceptions
+
 #include "ClientManager.hpp"
-// #include "ClientRequestHandler.hpp"
 #include "IRCCommandHandler.hpp"
 #include "IRCParser.hpp"
 #include "ServerDataManager.hpp"
@@ -48,10 +42,21 @@ class ConnectionHandler
 		~ConnectionHandler();
 		ConnectionHandler &operator=(const ConnectionHandler &obj);
 
+		// new
+		int initializeMasterSocketFd(int serverPortNumber);
+		int enableSocket(int &masterSocketFd);
+		void enableSocketReus(int &masterSocketFd);
+		void enableSocketBinding(int &masterSocketFd, int &serverPortNumber);
+		void enablePortListenning(int &masterSocketFd);
+
+		void onError(int clientSocketFd, std::string reason);
+		void onRead(int clientSocketFd);
+		void onWrite(int clientSocketFd);
+
 		// set socket
 		int enableSocket(void);
 		// set file descriptor to be non-blocking
-		int enableNonBlockingFd(int &fd);
+		int setFileDescriptorToNonBlockingState(int &fd);
 		// set socket to be re-usable
 		int enableSocketReus(void);
 		// set socket binding
@@ -59,24 +64,17 @@ class ConnectionHandler
 		// set socket to listenning mode
 		int enablePortListenning(void);
 		// resets fd_set, adds master socket to FD_SET and re-inserts fds to clientSockets vector
-		void prepareFdSetForSelect(void);
+		void prepareFdSetsForSelect(void);
 		// run select
 		void runSelect(void);
-		int checkForNewClients(void);
-		// this is the read event -- needs to be renamed
-		int serverEventLoop(void);
+		int acceptNewClients(void);
 		// recv and send system calls in loops
 		ssize_t recvAll(int socketFd, char *buffer, size_t bufferSize);
-		// ssize_t sendServerResponse(ServerResponse &serverResponse);
-		// check partiality of a message
-		bool isMessageValid(int clientSocketFd, char *buff, ssize_t bytesReceived);
 
-		// Getters and Setters extend as per need
-
-		int &getMasterSocketFd(void);
 		int closeServerFd(void);
-		void removeClientFromMap(std::map<int, Client>::iterator &it);
-		void terminateClientSession(std::map<int, Client>::iterator &it);
+		int &getMasterSocketFd(void);
+		// Events
+		int serverEventLoop(void);
 		void onError(Client &client, const std::string reason);
 		void onRead(Client &client);
 		void onWrite(Client &client);
@@ -87,15 +85,15 @@ class ConnectionHandler
 		const std::string ERR_INPUTTOOLONG;
 
 	private:
-		//void removeClientFromRooms(int clientSocketFd);
 		int serverPortNumber;
 		int masterSocketFd;
 		int selectResponse;
 		int maxFd;
-		socklen_t ipAddressLenSrv;
+		//socklen_t ipAddressLenSrv;
 		fd_set readFds;
 		fd_set writeFds;
 		fd_set errorFds;
-		struct sockaddr_in ipServerAddress;
-		struct sockaddr_in ipClientAddress;
+		// struct sockaddr_in ipServerAddress;
+		// struct sockaddr_in ipClientAddress;
+		std::vector<int> connections;
 };
