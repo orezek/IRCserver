@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/09 11:30:36 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/09 12:41:21 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ class ConnectionHandler
 		// set socket
 		int enableSocket(void);
 		// set file descriptor to be non-blocking
-		int enableNonBlockingFd(int &fd);
+		int setFileDescriptorToNonBlockingState(int &fd);
 		// set socket to be re-usable
 		int enableSocketReus(void);
 		// set socket binding
@@ -53,17 +53,16 @@ class ConnectionHandler
 		// set socket to listenning mode
 		int enablePortListenning(void);
 		// resets fd_set, adds master socket to FD_SET and re-inserts fds to clientSockets vector
-		void prepareFdSetForSelect(void);
+		void prepareFdSetsForSelect(void);
 		// run select
 		void runSelect(void);
-		int checkForNewClients(void);
+		int acceptNewClients(void);
 		// recv and send system calls in loops
 		ssize_t recvAll(int socketFd, char *buffer, size_t bufferSize);
 
 		int closeServerFd(void);
 		int &getMasterSocketFd(void);
 		void terminateClientSession(std::map<int, Client>::iterator &it);
-
 		// Events
 		int serverEventLoop(void);
 		void onError(Client &client, const std::string reason);

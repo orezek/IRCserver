@@ -6,11 +6,13 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:28 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/09 11:24:47 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/09 12:43:05 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
+#include <sys/select.h>
+
 #include <map>
 
 #include "Client.hpp"
@@ -29,7 +31,11 @@ class ClientManager
 		std::map<int, Client>::iterator deleteClient(std::map<int, Client>::iterator &it);
 		std::map<int, Client>::iterator getFirstClient(void);
 		std::map<int, Client>::iterator getLastClient(void);
-		int getHighestKey(int masterSocketFd) const;
+		int getHighestClientFd(int masterSocketFd) const;
+
+		// new
+		void loadClientsToFdSets(fd_set &readFds, fd_set &writeFds, fd_set &errrorFds, int &masterSocketFd, int &maxFd);
+		void initializeClientPresenceOnServer(int clientSocketFd, struct sockaddr_in ipClientAddress, std::string serverName);
 
 	private:
 		ClientManager();

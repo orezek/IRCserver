@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/09 11:33:01 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/09 12:42:30 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ int ConnectionHandler::enableSocketReus(void)
 	return (0);
 }
 
-int ConnectionHandler::enableNonBlockingFd(int &fd)
+int ConnectionHandler::setFileDescriptorToNonBlockingState(int &fd)
 {
 	if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1)
 	{
@@ -103,7 +103,6 @@ int ConnectionHandler::enableNonBlockingFd(int &fd)
 	}
 	return (0);
 }
-
 
 int ConnectionHandler::enableSocketBinding(void)
 {
@@ -128,24 +127,25 @@ int ConnectionHandler::enablePortListenning(void)
 
 // inside the server main loop!!!
 
-void ConnectionHandler::prepareFdSetForSelect(void)
+void ConnectionHandler::prepareFdSetsForSelect(void)
 {
-	FD_ZERO(&this->readFds);
-	FD_ZERO(&this->writeFds);
-	FD_ZERO(&this->errorFds);
-	FD_SET(this->masterSocketFd, &this->readFds);  // add the master fd to the read_fds set
-	this->maxFd = ClientManager::getInstance().getHighestKey(this->masterSocketFd);
-	for (std::map<int, Client>::iterator it = ClientManager::getInstance().clients.begin(); it != ClientManager::getInstance().clients.end(); ++it)
-	{
-		Client &client = it->second;
-		int clientSocketFd = it->first;
-		FD_SET(clientSocketFd, &this->readFds);
-		if (client.hasResponses())
-		{
-			FD_SET(clientSocketFd, &this->writeFds);
-		}
-		FD_SET(clientSocketFd, &this->errorFds);
-	}
+	ClientManager::getInstance().loadClientsToFdSets(this->readFds, this->writeFds, this->errorFds, this->masterSocketFd, this->maxFd);
+	// FD_ZERO(&this->readFds);
+	// FD_ZERO(&this->writeFds);
+	// FD_ZERO(&this->errorFds);
+	// FD_SET(this->masterSocketFd, &this->readFds);  // add the master fd to the read_fds set
+	// this->maxFd = ClientManager::getInstance().getHighestClientFd(this->masterSocketFd);
+	// for (std::map<int, Client>::iterator it = ClientManager::getInstance().clients.begin(); it != ClientManager::getInstance().clients.end(); ++it)
+	// {
+	// 	Client &client = it->second;
+	// 	int clientSocketFd = it->first;
+	// 	FD_SET(clientSocketFd, &this->readFds);
+	// 	if (client.hasResponses())
+	// 	{
+	// 		FD_SET(clientSocketFd, &this->writeFds);
+	// 	}
+	// 	FD_SET(clientSocketFd, &this->errorFds);
+	// }
 }
 
 void ConnectionHandler::runSelect(void)
@@ -159,7 +159,7 @@ void ConnectionHandler::runSelect(void)
 	}
 }
 
-int ConnectionHandler::checkForNewClients(void)
+int ConnectionHandler::acceptNewClients(void)
 {
 	int clientSocketFd;
 	socklen_t ipClientAddressLen = sizeof(this->ipClientAddress);
@@ -170,12 +170,13 @@ int ConnectionHandler::checkForNewClients(void)
 		{
 			throw std::runtime_error("Accept failed: " + std::string(strerror(errno)));
 		}
-		this->enableNonBlockingFd(clientSocketFd);
+		this->setFileDescriptorToNonBlockingState(clientSocketFd);
 		ClientManager::getInstance().addClient(clientSocketFd);
-		ClientManager::getInstance().getClient(clientSocketFd).initRawData();
-		ClientManager::getInstance().getClient(clientSocketFd).setIpAddress(ipClientAddress);
-		ClientManager::getInstance().getClient(clientSocketFd).setServername(ServerDataManager::getInstance().getServerName());
-		ClientManager::getInstance().getClient(clientSocketFd).setNickname("*");
+		ClientManager::getInstance().initializeClientPresenceOnServer(clientSocketFd, ipClientAddress, ServerDataManager::getInstance().getServerName());
+		// ClientManager::getInstance().getClient(clientSocketFd).initRawData();
+		// ClientManager::getInstance().getClient(clientSocketFd).setIpAddress(ipClientAddress);
+		// ClientManager::getInstance().getClient(clientSocketFd).setServername(ServerDataManager::getInstance().getServerName());
+		// ClientManager::getInstance().getClient(clientSocketFd).setNickname("*");
 		return (1);
 	}
 	return 0;

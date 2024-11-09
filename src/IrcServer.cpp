@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IrcServer.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:45:52 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 13:03:29 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/09 12:41:21 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,9 @@
 // 	this->ircPassword = "default";
 // }
 
-IrcServer::IrcServer(int serverPortNumber, std::string ircPassword) : serverPortNumber(serverPortNumber), ircPassword(ircPassword) {
-	ServerDataManager& serverData = ServerDataManager::getInstance(ircPassword, serverPortNumber);
+IrcServer::IrcServer(int serverPortNumber, std::string ircPassword) : serverPortNumber(serverPortNumber), ircPassword(ircPassword)
+{
+	ServerDataManager &serverData = ServerDataManager::getInstance(ircPassword, serverPortNumber);
 };
 
 IrcServer::IrcServer(const IrcServer &obj)
@@ -45,18 +46,18 @@ void IrcServer::runIrcServer(void)
 {
 	ConnectionHandler connHandler = ConnectionHandler(this->serverPortNumber);
 	connHandler.enableSocket();
-	connHandler.enableNonBlockingFd(connHandler.getMasterSocketFd());
+	connHandler.setFileDescriptorToNonBlockingState(connHandler.getMasterSocketFd());
 	connHandler.enableSocketReus();
 	connHandler.enableSocketBinding();
 	connHandler.enablePortListenning();
 	while (true)
 	{
 		// std::cout << "Prepare FD SET" << std::endl;
-		connHandler.prepareFdSetForSelect();
+		connHandler.prepareFdSetsForSelect();
 		// std::cout << "RUN Select" << std::endl;
 		connHandler.runSelect();
 		// std::cout << "Check for new clients" << std::endl;
-		connHandler.checkForNewClients();
+		connHandler.acceptNewClients();
 		// std::cout << "Handle new clients" << std::endl;
 		connHandler.serverEventLoop();
 		// std::cout << "END of while" << std::endl;

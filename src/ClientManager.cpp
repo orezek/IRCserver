@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:24 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/02 13:02:56 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/09 12:42:30 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ std::map<int, Client>::iterator ClientManager::getLastClient(void)
 	return (this->clients.end());
 }
 
-int ClientManager::getHighestKey(int masterSocketFd) const
+int ClientManager::getHighestClientFd(int masterSocketFd) const
 {
 	if (!clients.empty())
 	{
@@ -94,4 +94,33 @@ Client* ClientManager::findClient(const std::string& nick)
 bool ClientManager::clientExists(const std::string nick)
 {
 	return (this->findClient(nick) != NULL);
+}
+
+void ClientManager::loadClientsToFdSets(fd_set& readFds, fd_set& writeFds, fd_set& errorFds, int& masterSocketFd, int& highestClientFd)
+{
+	FD_ZERO(&readFds);
+	FD_ZERO(&writeFds);
+	FD_ZERO(&errorFds);
+	FD_SET(masterSocketFd, &readFds);
+	highestClientFd = this->getHighestClientFd(masterSocketFd);
+	for (std::map<int, Client>::iterator it = this->clients.begin(); it != this->clients.end(); ++it)
+	{
+		Client& client = it->second;
+		int clientSocketFd = it->first;
+		FD_SET(clientSocketFd, &readFds);
+		if (client.hasResponses())
+		{
+			FD_SET(clientSocketFd, &writeFds);
+		}
+		FD_SET(clientSocketFd, &errorFds);
+	}
+}
+
+void ClientManager::initializeClientPresenceOnServer(int clientSocketFd, struct sockaddr_in ipClientAddress, std::string serverName)
+{
+	Client& client = this->getClient(clientSocketFd);
+	client.initRawData();
+	client.setIpAddress(ipClientAddress);
+	client.setServername(serverName);
+	client.setNickname("*");
 }
