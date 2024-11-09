@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/07 23:07:52 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/09 11:33:01 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,25 +74,13 @@ ConnectionHandler &ConnectionHandler::operator=(const ConnectionHandler &other)
 }
 
 // Destructor implementation
-ConnectionHandler::~ConnectionHandler()
-{
-	// std::vector and std::string handle their own cleanup automatically
-}
+ConnectionHandler::~ConnectionHandler() {}
 
 int ConnectionHandler::enableSocket(void)
 {
 	if ((this->masterSocketFd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1)
 	{
 		throw std::runtime_error("Socket creation failed: " + std::string(strerror(errno)));
-	}
-	return (0);
-}
-
-int ConnectionHandler::enableNonBlockingFd(int &fd)
-{
-	if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1)
-	{
-		throw std::runtime_error("Non-blocking I/O failed: " + std::string(strerror(errno)));
 	}
 	return (0);
 }
@@ -106,6 +94,16 @@ int ConnectionHandler::enableSocketReus(void)
 	}
 	return (0);
 }
+
+int ConnectionHandler::enableNonBlockingFd(int &fd)
+{
+	if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1)
+	{
+		throw std::runtime_error("Non-blocking I/O failed: " + std::string(strerror(errno)));
+	}
+	return (0);
+}
+
 
 int ConnectionHandler::enableSocketBinding(void)
 {
@@ -161,22 +159,6 @@ void ConnectionHandler::runSelect(void)
 	}
 }
 
-/**
- * @brief Checks for new client connections on the master socket and handles them.
- *
- * This function checks whether a new client connection is waiting to be accepted
- * on the master socket. If a new client is found, the connection is accepted,
- * the client's IP and port are logged, and the client socket is added to the
- * `clientSockets` array. The function handles up to `MAX_CLIENTS` clients and
- * disconnects any additional clients if the limit is exceeded.
- *
- * @return
- * - `1` if a new client was successfully added to the `clientSockets` array.
- * - `-1` if the connection was rejected due to exceeding the max number of clients.
- * - `0` if no new clients are waiting to be accepted.
- *
- * @throws std::runtime_error if `accept()` fails.
- */
 int ConnectionHandler::checkForNewClients(void)
 {
 	int clientSocketFd;
@@ -188,35 +170,56 @@ int ConnectionHandler::checkForNewClients(void)
 		{
 			throw std::runtime_error("Accept failed: " + std::string(strerror(errno)));
 		}
-		std::cout << "New Client connected - IP: " << inet_ntoa(ipClientAddress.sin_addr)
-				  << " and Port: "
-				  << ntohs(ipClientAddress.sin_port)
-				  << std::endl;
+		this->enableNonBlockingFd(clientSocketFd);
 		ClientManager::getInstance().addClient(clientSocketFd);
 		ClientManager::getInstance().getClient(clientSocketFd).initRawData();
 		ClientManager::getInstance().getClient(clientSocketFd).setIpAddress(ipClientAddress);
 		ClientManager::getInstance().getClient(clientSocketFd).setServername(ServerDataManager::getInstance().getServerName());
 		ClientManager::getInstance().getClient(clientSocketFd).setNickname("*");
-		this->enableNonBlockingFd(clientSocketFd);
-		std::cout << "Testing connected clients after Accept line 224" << std::endl;
-		for (std::map<int, Client>::iterator it = ClientManager::getInstance().clients.begin(); it != ClientManager::getInstance().clients.end(); ++it)
-		{
-			std::cout << "Connected client fd: " << it->first << std::endl;
-		}
-		// end of test
 		return (1);
 	}
-	return 0;  // No new client to process
+	return 0;
 }
 
-void ConnectionHandler::terminateClientSession(std::map<int, Client>::iterator &it)
+int ConnectionHandler::serverEventLoop(void)
 {
-	int clientSocketFd = it->first;
-	ClientManager::getInstance().getClient(clientSocketFd).deleteRawData();
-	RoomManager::getInstance().removeClientFromRooms(clientSocketFd);
-	RoomManager::getInstance().deleteAllEmptyRooms();
-	it = ClientManager::getInstance().deleteClient(it);
-	close(clientSocketFd);
+	int clientSocketFd;
+	if (selectResponse > 0)
+	{
+		std::map<int, Client>::iterator clientIter = ClientManager::getInstance().getFirstClient();
+		while (clientIter != ClientManager::getInstance().getLastClient())
+		{
+			clientSocketFd = clientIter->first;
+			Client &client = clientIter->second;
+
+			if (FD_ISSET(clientSocketFd, &errorFds))
+			{
+				onError(client, "socket error.");
+			}
+			if (FD_ISSET(clientSocketFd, &readFds) && !client.isMarkedForDeletion())
+			{
+				onRead(client);
+			}
+			if (FD_ISSET(clientSocketFd, &writeFds))
+			{
+				onWrite(client);
+			}
+			if (client.isMarkedForDeletion() && !client.hasResponses())
+			{
+				terminateClientSession(clientIter);
+				std::cout << "Client " << clientSocketFd << " session has been terminated and cleaned." << std::endl;
+			}
+			else
+			{
+				++clientIter;
+			}
+		}
+	}
+	else if (selectResponse == 0)
+	{
+		std::cout << "Server inactive" << std::endl;
+	}
+	return (0);
 }
 
 void ConnectionHandler::onError(Client &client, const std::string reason)
@@ -274,44 +277,24 @@ void ConnectionHandler::onWrite(Client &client)
 	client.sendAllResponses();
 }
 
-int ConnectionHandler::serverEventLoop(void)
+void ConnectionHandler::terminateClientSession(std::map<int, Client>::iterator &it)
 {
-	int clientSocketFd;
-	if (selectResponse > 0)
-	{
-		std::map<int, Client>::iterator clientIter = ClientManager::getInstance().getFirstClient();
-		while (clientIter != ClientManager::getInstance().getLastClient())
-		{
-			clientSocketFd = clientIter->first;
-			Client &client = clientIter->second;
+	int clientSocketFd = it->first;
+	ClientManager::getInstance().getClient(clientSocketFd).deleteRawData();
+	RoomManager::getInstance().removeClientFromRooms(clientSocketFd);
+	RoomManager::getInstance().deleteAllEmptyRooms();
+	it = ClientManager::getInstance().deleteClient(it);
+	close(clientSocketFd);
+}
 
-			if (FD_ISSET(clientSocketFd, &errorFds))
-			{
-				onError(client, "socket error.");
-			}
-			if (FD_ISSET(clientSocketFd, &readFds) && !client.isMarkedForDeletion())
-			{
-				onRead(client);
-			}
-			if (FD_ISSET(clientSocketFd, &writeFds))
-			{
-				onWrite(client);
-			}
-			if (client.isMarkedForDeletion() && !client.hasResponses())
-			{
-				terminateClientSession(clientIter);
-				std::cout << "Client " << clientSocketFd << " session has been terminated and cleaned." << std::endl;
-			}
-			else
-			{
-				++clientIter;
-			}
-		}
-	}
-	else if (selectResponse == 0)
-	{
-		std::cout << "Server inactive" << std::endl;
-	}
+int &ConnectionHandler::getMasterSocketFd(void)
+{
+	return (this->masterSocketFd);
+}
+
+int ConnectionHandler::closeServerFd(void)
+{
+	close(this->masterSocketFd);
 	return (0);
 }
 
@@ -343,15 +326,4 @@ ssize_t ConnectionHandler::recvAll(int socketFd, char *buffer, size_t bufferSize
 			return (-1);
 		}
 	}
-}
-
-int &ConnectionHandler::getMasterSocketFd(void)
-{
-	return (this->masterSocketFd);
-}
-
-int ConnectionHandler::closeServerFd(void)
-{
-	close(this->masterSocketFd);
-	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/31 18:19:40 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/09 11:30:36 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,16 +25,10 @@
 #include <netinet/in.h>  // sockaddr_in struct
 #include <sys/select.h>  // select call
 #include <sys/socket.h>  // socket(), bind(), listen(), accept() send()
-// Exceptions
-#include <stdexcept>
-// custom classes
-// #include "ClientRequest.hpp"
-// #include "ProcessData.hpp"
-// #include "ServerResponse.hpp"
-// #include "IrcServer.hpp"
-// #include "Client.hpp"
+
+#include <stdexcept>  // exceptions
+
 #include "ClientManager.hpp"
-// #include "ClientRequestHandler.hpp"
 #include "IRCCommandHandler.hpp"
 #include "IRCParser.hpp"
 #include "ServerDataManager.hpp"
@@ -63,20 +57,15 @@ class ConnectionHandler
 		// run select
 		void runSelect(void);
 		int checkForNewClients(void);
-		// this is the read event -- needs to be renamed
-		int serverEventLoop(void);
 		// recv and send system calls in loops
 		ssize_t recvAll(int socketFd, char *buffer, size_t bufferSize);
-		// ssize_t sendServerResponse(ServerResponse &serverResponse);
-		// check partiality of a message
-		bool isMessageValid(int clientSocketFd, char *buff, ssize_t bytesReceived);
 
-		// Getters and Setters extend as per need
-
-		int &getMasterSocketFd(void);
 		int closeServerFd(void);
-		void removeClientFromMap(std::map<int, Client>::iterator &it);
+		int &getMasterSocketFd(void);
 		void terminateClientSession(std::map<int, Client>::iterator &it);
+
+		// Events
+		int serverEventLoop(void);
 		void onError(Client &client, const std::string reason);
 		void onRead(Client &client);
 		void onWrite(Client &client);
@@ -87,7 +76,6 @@ class ConnectionHandler
 		const std::string ERR_INPUTTOOLONG;
 
 	private:
-		//void removeClientFromRooms(int clientSocketFd);
 		int serverPortNumber;
 		int masterSocketFd;
 		int selectResponse;
