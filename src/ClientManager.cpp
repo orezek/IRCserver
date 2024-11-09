@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:24 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/09 19:27:13 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/09 20:10:13 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,8 @@ Client* ClientManager::findClient(int clientFd)
 	}
 	else
 	{
-		throw std::runtime_error("No client with desired FD found.");
+		return (NULL);
+		// throw std::runtime_error("No client with desired FD found.");
 	}
 }
 
@@ -133,8 +134,8 @@ void ClientManager::cleanClientSession(int& clientSocketFd)
 		if (toBeDeletedClient->isMarkedForDeletion() && !toBeDeletedClient->hasResponses())
 		{
 			//toDeleteClient->deleteRawData(); probably redumantary - client object will be deleted form clients later
-			RoomManager::getInstance().removeClientFromRooms(clientSocketFd);
-			RoomManager::getInstance().deleteAllEmptyRooms();
+			//RoomManager::getInstance().removeClientFromRooms(clientSocketFd);
+			//RoomManager::getInstance().deleteAllEmptyRooms();
 			this->clients.erase(clientSocketFd);
 		}
 

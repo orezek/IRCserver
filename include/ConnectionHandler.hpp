@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/09 19:40:42 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/09 20:03:27 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,11 +89,11 @@ class ConnectionHandler
 		int masterSocketFd;
 		int selectResponse;
 		int maxFd;
-		socklen_t ipAddressLenSrv;
+		//socklen_t ipAddressLenSrv;
 		fd_set readFds;
 		fd_set writeFds;
 		fd_set errorFds;
-		struct sockaddr_in ipServerAddress;
-		struct sockaddr_in ipClientAddress;
+		// struct sockaddr_in ipServerAddress;
+		// struct sockaddr_in ipClientAddress;
 		std::vector<int> connections;
 };

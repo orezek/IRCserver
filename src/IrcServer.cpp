@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:45:52 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/09 12:41:21 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/09 19:49:19 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,12 @@ IrcServer::~IrcServer() {};
 void IrcServer::runIrcServer(void)
 {
 	ConnectionHandler connHandler = ConnectionHandler(this->serverPortNumber);
-	connHandler.enableSocket();
-	connHandler.setFileDescriptorToNonBlockingState(connHandler.getMasterSocketFd());
-	connHandler.enableSocketReus();
-	connHandler.enableSocketBinding();
-	connHandler.enablePortListenning();
+	// connHandler.enableSocket();
+	// connHandler.setFileDescriptorToNonBlockingState(connHandler.getMasterSocketFd());
+	// connHandler.enableSocketReus();
+	// connHandler.enableSocketBinding();
+	// connHandler.enablePortListenning();
+	connHandler.initializeMasterSocketFd(this->serverPortNumber);
 	while (true)
 	{
 		// std::cout << "Prepare FD SET" << std::endl;
