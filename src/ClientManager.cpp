@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:24 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/09 13:21:50 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/09 19:27:13 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,22 @@ void ClientManager::initializeClientPresenceOnServer(int clientSocketFd, struct 
 
 void ClientManager::cleanClientSession(int& clientSocketFd)
 {
-	this->getClient(clientSocketFd).deleteRawData();
-	RoomManager::getInstance().removeClientFromRooms(clientSocketFd);
-	RoomManager::getInstance().deleteAllEmptyRooms();
+	Client *toBeDeletedClient = this->findClient(clientSocketFd);
+	if (toBeDeletedClient != NULL)
+	{
+		if (toBeDeletedClient->isMarkedForDeletion() && !toBeDeletedClient->hasResponses())
+		{
+			//toDeleteClient->deleteRawData(); probably redumantary - client object will be deleted form clients later
+			RoomManager::getInstance().removeClientFromRooms(clientSocketFd);
+			RoomManager::getInstance().deleteAllEmptyRooms();
+			this->clients.erase(clientSocketFd);
+		}
+
+	}
+	else
+	{
+		return;
+	}
 }
+
+

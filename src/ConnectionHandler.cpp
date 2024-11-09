@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/09 17:46:50 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/09 19:40:01 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,7 +189,151 @@ int ConnectionHandler::enablePortListenning(void)
 }
 
 // new
+void ConnectionHandler::prepareFdSetsForSelect(void)
+{
+	FD_ZERO(&readFds);
+	FD_ZERO(&writeFds);
+	FD_ZERO(&errorFds);
+	FD_SET(masterSocketFd, &readFds);
+	this->maxFd = masterSocketFd;
+	for (std::vector<int>::iterator it = this->connections.begin(); it != this->connections.end();)
+	{
+		int clientSocketFd = *it;
+		Client *client = ClientManager::getInstance().findClient(clientSocketFd);
+		if (client == NULL)
+		{
+			// Log a warning message
+			// Client was deleted in ClientManager
+			close(clientSocketFd);
+			it = connections.erase(it);
+		}
+		else
+		{
+			FD_SET(clientSocketFd, &readFds);
+			if (client->hasResponses())
+			{
+				FD_SET(clientSocketFd, &writeFds);
+			}
+			FD_SET(clientSocketFd, &errorFds);
+			if (clientSocketFd > maxFd)
+			{
+				maxFd = clientSocketFd;
+			}
+		}
+		++it;
+	}
+}
 
+// new eventLoop
+
+int ConnectionHandler::serverEventLoop(void)
+{
+	int clientSocketFd;
+	if (selectResponse > 0)
+	{
+		std::vector<int>:: iterator it = this->connections.begin();
+		while (it != this->connections.end())
+		{
+			clientSocketFd = *it;
+			Client *client = ClientManager::getInstance().findClient(clientSocketFd);
+
+			if (FD_ISSET(clientSocketFd, &errorFds))
+			{
+				onError(clientSocketFd);
+			}
+			if (FD_ISSET(clientSocketFd, &readFds) && !client->isMarkedForDeletion())
+			{
+				onRead(*client);
+			}
+			if (FD_ISSET(clientSocketFd, &writeFds))
+			{
+				onWrite(*client);
+			}
+			ClientManager::getInstance().cleanClientSession(clientSocketFd);
+			++it;
+		}
+	}
+	else if (selectResponse == 0)
+	{
+		std::cout << "Server inactive" << std::endl;
+	}
+	return (0);
+}
+
+void ConnectionHandler::onError(int clientSocketFd, std::string reason)
+{
+	Client *client = ClientManager::getInstance().findClient(clientSocketFd);
+	if (client != NULL)
+	{
+		 // this is probably wrong tricking the IRC to think client called QUIT
+		 // what choices do we have?
+		 // one: lets do it as is. Client will be deleted leater and fd + clients vector will handle prepareFdSetsForSelect(void)
+		 // second: force QUIT to all rooms client is currently connected, delete the client from clientManager
+		 // from all rooms, delete all empty rooms, close(fd), erase from connections vector
+		 // then have continue on the next line after onError()
+		client->setRawData("QUIT :" + reason + "\r\n");
+		IRCCommandHandler ircCommandHandler(client->getFd());
+		ircCommandHandler.processAllCommands();
+	}
+
+}
+
+void ConnectionHandler::onRead(int clientSocketFd)
+{
+	ssize_t bytesReceived = 0;
+	char recvBuff[MAX_BUFF_SIZE];
+	int clientBuffSize;
+	Client *client = ClientManager::getInstance().findClient(clientSocketFd);
+	if (client != NULL)
+	{
+		int clientSocketFd = client->getFd();
+		if ((bytesReceived = recvAll(clientSocketFd, recvBuff, MAX_BUFF_SIZE)) == -1)
+		{
+			this->onError(clientSocketFd, "Recv failed");
+			std::cout << "Recv failed " << clientSocketFd << ": " << strerror(errno) << std::endl;
+		}
+		// client closed connection
+		else if (bytesReceived == 0)
+		{
+			this->onError(clientSocketFd, "Client quit. ");
+			std::cout << "Client " << clientSocketFd << " quit. Pressed {Ctrl+c}" << std::endl;
+		}
+		// hard message limit
+		else if (bytesReceived > MESSAGE_SIZE)
+		{
+			this->onError(clientSocketFd, "Client disconnected due to a message limit.");
+			std::cout << "Client " << clientSocketFd << " disconnected due to a message limit." << std::endl;
+		}
+		else
+		{
+			client->appendRawData(recvBuff, bytesReceived);
+			if (client->getRawData().back() != '\n')  // back() is C++11 function
+			{
+				clientBuffSize = client->getRawData().size();
+				if (clientBuffSize > MESSAGE_SIZE)
+				{
+					this->onError(clientSocketFd, "Client disconnected due to a message limit in partial read.");
+					std::cout << "Client " << clientSocketFd << " disconnected due to a message limit in partial read." << std::endl;
+				}
+			}
+			else
+			{
+				IRCCommandHandler ircCommandHandler(clientSocketFd);
+				ircCommandHandler.processAllCommands();
+			}
+		}
+	}
+	else
+	{
+		// it should never be NULL! Here should be exception!
+	}
+}
+
+void ConnectionHandler::onWrite(int clientSocketFd)
+{
+	Client *client = ClientManager::getInstance().findClient(clientSocketFd);
+	client->sendAllResponses();
+}
 
 // end of new
 
@@ -223,6 +367,7 @@ int ConnectionHandler::acceptNewClients(void)
 			throw std::runtime_error("Accept failed: " + std::string(strerror(errno)));
 		}
 		this->setFileDescriptorToNonBlockingState(clientSocketFd);
+		this->connections.push_back(clientSocketFd);
 		ClientManager::getInstance().addClient(clientSocketFd);
 		ClientManager::getInstance().initializeClientPresenceOnServer(clientSocketFd, ipClientAddress, ServerDataManager::getInstance().getServerName());
 		return (1);

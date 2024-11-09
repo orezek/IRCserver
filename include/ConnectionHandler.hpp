@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/09 17:48:16 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/09 19:40:42 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,10 @@ class ConnectionHandler
 		void enableSocketReus(int &masterSocketFd);
 		void enableSocketBinding(int &masterSocketFd, int &serverPortNumber);
 		void enablePortListenning(int &masterSocketFd);
+
+		void onError(int clientSocketFd, std::string reason);
+		void onRead(int clientSocketFd);
+		void onWrite(int clientSocketFd);
 
 		// set socket
 		int enableSocket(void);
