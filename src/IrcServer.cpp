@@ -6,17 +6,12 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:45:52 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/09 22:23:21 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/09 23:46:12 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IrcServer.hpp"
 
-// IrcServer::IrcServer()
-// {
-// 	this->serverPortNumber = -1;
-// 	this->ircPassword = "default";
-// }
 
 IrcServer::IrcServer(int serverPortNumber, std::string ircPassword) : serverPortNumber(serverPortNumber), ircPassword(ircPassword)
 {
@@ -45,11 +40,6 @@ IrcServer::~IrcServer() {};
 void IrcServer::runIrcServer(void)
 {
 	ConnectionHandler connHandler = ConnectionHandler(this->serverPortNumber);
-	// connHandler.enableSocket();
-	// connHandler.setFileDescriptorToNonBlockingState(connHandler.getMasterSocketFd());
-	// connHandler.enableSocketReus();
-	// connHandler.enableSocketBinding();
-	// connHandler.enablePortListenning();
 	connHandler.initializeMasterSocketFd(this->serverPortNumber);
 	while (true)
 	{
