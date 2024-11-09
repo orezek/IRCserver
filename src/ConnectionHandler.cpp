@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/09 23:49:14 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/10 00:13:35 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,10 +223,10 @@ void ConnectionHandler::onRead(int clientSocketFd)
 	ssize_t bytesReceived = 0;
 	char recvBuff[MAX_BUFF_SIZE];
 	int clientBuffSize;
-	Client *client = ClientManager::getInstance().findClient(clientSocketFd);
-	if (client != NULL)
+	//Client *client = ClientManager::getInstance().findClient(clientSocketFd);
+	if (ClientManager::getInstance().findClient(clientSocketFd) != NULL)
 	{
-		int clientSocketFd = client->getFd();
+		//int clientSocketFd = ClientManager::getInstance().getClient(clientSocketFd).getFd();
 		if ((bytesReceived = recvAll(clientSocketFd, recvBuff, MAX_BUFF_SIZE)) == -1)
 		{
 			this->onError(clientSocketFd, "Recv failed");
@@ -246,10 +246,10 @@ void ConnectionHandler::onRead(int clientSocketFd)
 		}
 		else
 		{
-			client->appendRawData(recvBuff, bytesReceived);
-			if (client->getRawData().back() != '\n')  // back() is C++11 function
+			ClientManager::getInstance().getClient(clientSocketFd).appendRawData(recvBuff, bytesReceived);
+			if (ClientManager::getInstance().getClient(clientSocketFd).getRawData().back() != '\n')  // back() is C++11 function
 			{
-				clientBuffSize = client->getRawData().size();
+				clientBuffSize = ClientManager::getInstance().getClient(clientSocketFd).getRawData().size();
 				if (clientBuffSize > MESSAGE_SIZE)
 				{
 					this->onError(clientSocketFd, "Client disconnected due to a message limit in partial read.");
@@ -268,6 +268,12 @@ void ConnectionHandler::onRead(int clientSocketFd)
 		void(0);  // no-op it should never be NULL! Here should be exception!
 	}
 }
+
+/*
+appendRawDataToClient(fd, string)
+
+*/
+
 
 void ConnectionHandler::onWrite(int clientSocketFd)
 {
