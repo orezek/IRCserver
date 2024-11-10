@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 20:52:58 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/10 20:57:50 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,23 +18,14 @@ IRCCommandHandler::IRCCommandHandler(Client *client) : client(client)
 	{
 		throw std::runtime_error("Client unknown.");
 	}
-	clientFd = client->getFd();
 }
 
-IRCCommandHandler::IRCCommandHandler(int newClientFd) : clientFd(newClientFd)
-{
-	client = ClientManager::getInstance().findClient(clientFd);
-}
-
-// Copy constructor
 IRCCommandHandler::IRCCommandHandler(const IRCCommandHandler &refObj) : client(refObj.client) {}
 
-// Copy assignment operator
 IRCCommandHandler &IRCCommandHandler::operator=(const IRCCommandHandler &refObj)
 {
 	if (this != &refObj)
 	{
-		this->clientFd = refObj.clientFd;
 		this->client = refObj.client;
 	}
 	return (*this);
