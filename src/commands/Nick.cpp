@@ -123,17 +123,26 @@ bool Nick::isValidNick(std::string& nick)
 	return (true);
 }
 
+// bool Nick::isAlreadyUsedNick(std::string& nick)
+// {
+// 	ClientManager& clients = ClientManager::getInstance();
+
+// 	for (std::map<int, Client>::iterator it = clients.clients.begin(); it != clients.clients.end(); ++it)
+// 	{
+// 		std::string oldNick = it->second.getNickname();
+// 		if (nick == oldNick)
+// 		{
+// 			return (true);
+// 		}
+// 	}
+// 	return (false);
+// }
+
 bool Nick::isAlreadyUsedNick(std::string& nick)
 {
-	ClientManager& clients = ClientManager::getInstance();
-
-	for (std::map<int, Client>::iterator it = clients.clients.begin(); it != clients.clients.end(); ++it)
+	if(ClientManager::getInstance().findClient(nick) != NULL)
 	{
-		std::string oldNick = it->second.getNickname();
-		if (nick == oldNick)
-		{
-			return (true);
-		}
+		return (true);
 	}
 	return (false);
 }
