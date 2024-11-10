@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:24 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 20:23:43 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/10 20:46:32 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,15 +98,28 @@ void ClientManager::cleanClientSession(int& clientSocketFd)
 	}
 }
 
-std::vector<Client*> ClientManager::getClientsReadyForParsing()
+std::vector<Client*> ClientManager::getClientsForParsing()
 {
-	std::vector<Client*> clientsReadyForParsing;
+	std::vector<Client*> clientsForParsing;
 	for (std::map<int, Client>::iterator clientsIt = clients.begin(); clientsIt != clients.end(); ++clientsIt)
 	{
 		if (clientsIt->second.isReadyForParsing())
 		{
-			clientsReadyForParsing.push_back(&(clientsIt->second));
+			clientsForParsing.push_back(&(clientsIt->second));
 		}
 	}
-	return (clientsReadyForParsing);
+	return (clientsForParsing);
+}
+
+std::vector<Client*> ClientManager::getClientsForProcessing()
+{
+	std::vector<Client*> clientsForProcessing;
+	for (std::map<int, Client>::iterator clientsIt = clients.begin(); clientsIt != clients.end(); ++clientsIt)
+	{
+		if (clientsIt->second.isReadyForProcessing())
+		{
+			clientsForProcessing.push_back(&(clientsIt->second));
+		}
+	}
+	return (clientsForProcessing);
 }

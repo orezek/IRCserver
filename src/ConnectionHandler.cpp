@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 16:06:11 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/10 20:36:09 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,8 +190,8 @@ int ConnectionHandler::serverEventLoop(void)
 			{
 				onWrite(clientSocketFd);
 			}
-			IRCCommandHandler ircCommandHandler(clientSocketFd);
-			ircCommandHandler.processAllCommands();
+			// IRCCommandHandler ircCommandHandler(clientSocketFd);
+			// ircCommandHandler.processAllCommands();
 			ClientManager::getInstance().cleanClientSession(clientSocketFd);
 			++it;
 			std::cout << "End of EVENT LOOP ITERATION: " << std::endl;

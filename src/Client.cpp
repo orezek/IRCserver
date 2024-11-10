@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 20:22:27 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/10 20:41:54 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,6 +212,15 @@ ClientMessage Client::popMessage(void)
 	ClientMessage firstMessage = clientMessages.front();
 	clientMessages.erase(clientMessages.begin());
 	return firstMessage;
+}
+
+bool Client::isReadyForProcessing()
+{
+	if (!clientMessages.empty())
+	{
+		return (true);
+	}
+	return (false);
 }
 
 // User data management - here should be used inheritance :) first case of usage, now it makes sense

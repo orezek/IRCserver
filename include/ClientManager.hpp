@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:28 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 20:23:31 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/10 20:45:50 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ class ClientManager
 		void addClient(int clientSocketFd);
 		void initializeClientPresenceOnServer(int clientSocketFd, struct sockaddr_in ipClientAddress, std::string serverName);
 		void cleanClientSession(int &clientSocketFd);
-		std::vector<Client *> getClientsReadyForParsing();
+		std::vector<Client *> getClientsForParsing();
+		std::vector<Client *> getClientsForProcessing();
 
 	private:
 		ClientManager();

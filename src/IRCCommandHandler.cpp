@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRCCommandHandler.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 17:06:09 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/10 20:47:38 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,6 @@ void IRCCommandHandler::processAllCommands()
 {
 	try
 	{
-		IRCParser parser(clientFd);
-		parser.parse();
-
 		while (1)
 		{
 			ClientMessage clientMessage = client->popMessage();
@@ -68,7 +65,7 @@ void IRCCommandHandler::executeOneCommand(ClientMessage &clientMessage)
 
 	if (commandType == ClientMessage::CAP)
 	{
-		void(0); // no-op
+		void(0);  // no-op
 	}
 	else if (commandType == ClientMessage::PING)
 	{

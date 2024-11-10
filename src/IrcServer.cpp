@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:45:52 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 20:27:10 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/10 20:50:37 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,21 @@ void IrcServer::runIrcServer(void)
 		// std::cout << "END of while" << std::endl;
 
 		std::vector<Client *> clientsForParsing;
-		clientsForParsing = clientManager.getClientsReadyForParsing();
+		clientsForParsing = clientManager.getClientsForParsing();
 		for (std::vector<Client *>::iterator clientIt = clientsForParsing.begin(); clientIt != clientsForParsing.end(); ++clientIt)
 		{
-			Client *clientForParse = (*clientIt);
-			IRCCommandHandler commandHandler(clientForParse);
+			Client *client = (*clientIt);
+			IRCParser parser(client->getFd());
+			parser.parse();
+		}
+
+		std::vector<Client *> clientsForCommandsProcessing;
+		clientsForCommandsProcessing = clientManager.getClientsForProcessing();
+		for (std::vector<Client *>::iterator clientIt = clientsForCommandsProcessing.begin(); clientIt != clientsForCommandsProcessing.end(); ++clientIt)
+		{
+			Client *client = (*clientIt);
+			IRCCommandHandler commandHandler(client);
+			commandHandler.processAllCommands();
 		}
 	}
 	connHandler.closeServerFd();

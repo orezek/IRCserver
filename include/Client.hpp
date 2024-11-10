@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:09 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 20:31:43 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/10 20:41:19 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ class Client : public UserData
 		void addMessage(const ClientMessage message);
 		ClientMessage popMessage(void);  // Returns copy
 		std::string getFqdn(void);
+		bool isReadyForProcessing();
 
 	private:
 		const int fd;
