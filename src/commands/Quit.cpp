@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 19:48:17 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/10 15:57:51 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/10 23:26:33 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,20 +42,17 @@ void Quit::setServerResponseValid()
 	if (tokenQuitMessage != NULL)
 	{
 		std::string errorMessage = tokenQuitMessage->getText();
-		// !Check for the reason of QUIT? What was the reason/cause?
-		if (errorMessage == "Socket error" || errorMessage == "Recv failed" || errorMessage == "Client quit" || errorMessage == "Client disconnected due to a message limit." || errorMessage == "Client disconnected due to a message limit in partial read.")
+		if (errorMessage == "SOC_ERROR" || errorMessage == "RECV_ERROR" || errorMessage == "CLIENT_QUIT" || errorMessage == "MESSAGE_LIMIT_EXCEEDED" || errorMessage == "PARTIAL_MESSAGE_LIMIT_EXCEEDED")
 		{
 			std::string responseToOthers;
 			responseToOthers = ":" + client->getNickname() + "!" + client->getFqdn() + " QUIT :" + tokenQuitMessage->getText() + "\r\n";
 			addResponseToOthersOnceInAllRoomsIamIn(responseToOthers);
-			// addResponseToOthersOnceInAllRoomsIamInV2(responseToOthers);
-			std::cout << "QUIT errors: " << errorMessage << std::endl;
+			std::cout << "QUIT Socket Errors: " << errorMessage << std::endl;
 			return;
 		}
 		else
 		{
 			std::cout << "Client initiated self destruction! QUIT error: " << errorMessage << std::endl;
-			// Send it only to self if QUIT was initiated by itself.
 			std::string response = "ERROR :Closing link: (";
 			response.append(client->getUsername());
 			response.append("@");
@@ -81,7 +78,6 @@ void Quit::setServerResponseValid()
 			std::string responseToOthers;
 			responseToOthers = ":" + client->getNickname() + "!" + client->getFqdn() + " QUIT :" + tokenQuitMessage->getText() + "\r\n";
 			addResponseToOthersOnceInAllRoomsIamIn(responseToOthers);
-			// addResponseToOthersOnceInAllRoomsIamInV2(responseToOthers);
 		}
 	}
 	else
@@ -89,7 +85,7 @@ void Quit::setServerResponseValid()
 		void(0);  // should be exception
 	}
 }
-
+// Not used but works well.
 void Quit::addResponseToOthersOnceInAllRoomsIamInV2(std::string responseToOthers)
 {
 	RoomManager::getInstance().resetIterator();

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 21:11:38 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/10 23:20:16 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,9 @@ int Client::getFd(void) const
 }
 
 // TODO: this functionality will be moved to connection handler
-void Client::sendAllResponses(void)
+int Client::sendAllResponses(void)
 {
-	for (int i = 0; i < this->serverResponses.size(); /* incremented manually */)
+	for (int i = 0; i < this->serverResponses.size();)
 	{
 		const std::string& response = this->serverResponses[i];
 		int bytesSent = send(this->fd, response.c_str(), response.size(), 0);
@@ -69,12 +69,12 @@ void Client::sendAllResponses(void)
 			if (errno == EAGAIN || errno == EWOULDBLOCK)
 			{
 				// Socket is busy, retry later
-				return;
+				return (0);
 			}
 			else
 			{
 				perror("Sending failed");
-				return;  // Exit the function on error
+				return (-1);  // Exit the function on error
 			}
 		}
 		else if (bytesSent < response.size())
@@ -91,6 +91,7 @@ void Client::sendAllResponses(void)
 
 		++i;  // Only increment if we didn't erase
 	}
+	return (0);
 }
 
 sockaddr_in Client::getIpAddress(void) const

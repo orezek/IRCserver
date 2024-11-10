@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ClientManager.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:24 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 20:46:32 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/11 00:25:18 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,24 +77,36 @@ void ClientManager::initializeClientPresenceOnServer(int clientSocketFd, struct 
 	client.setNickname("*");
 }
 
-void ClientManager::cleanClientSession(int& clientSocketFd)
+void ClientManager::removeClientFromRoomsAndDeleteEmptyRooms(int clientSocketFd)
 {
 	Client* toBeDeletedClient = this->findClient(clientSocketFd);
 	if (toBeDeletedClient != NULL)
 	{
-		std::cout << "Client after clientMessage processing " << clientSocketFd << " has Respones: " << toBeDeletedClient->hasResponses() << std::endl;
 		if (toBeDeletedClient->isMarkedForDeletion() && !toBeDeletedClient->hasResponses())
 		{
-			std::cout << "Client to be deleted id: " << clientSocketFd << " has Respones: " << toBeDeletedClient->hasResponses() << std::endl;
+			std::cout << "Deleting client from rooms. FD: " << clientSocketFd << std::endl;
 			RoomManager::getInstance().removeClientFromRooms(clientSocketFd);
 			RoomManager::getInstance().deleteAllEmptyRooms();
-			this->clients.erase(clientSocketFd);
-			std::cout << "Client after deletion id: " << clientSocketFd << " has Respones: " << toBeDeletedClient->hasResponses() << std::endl;
 		}
 	}
 	else
 	{
 		return;
+	}
+}
+
+void ClientManager::removeMarkedForDeletionClients(void)
+{
+	for (std::map<int, Client>::iterator it = clients.begin(); it != clients.end();)
+	{
+		Client* client = &(it->second);
+		if (client->isMarkedForDeletion() && !client->hasResponses())
+		{
+			std::cout << "Removing Client from clients map. FD: " << client->getFd() << std::endl;
+			it = clients.erase(it);
+			continue;
+		}
+		++it;
 	}
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IrcServer.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:45:52 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 21:05:28 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/11 00:13:10 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,16 +44,17 @@ void IrcServer::runIrcServer(void)
 
 	while (true)
 	{
-		// std::cout << "Prepare FD SET" << std::endl;
+		std::cout << "Preparing FdSets" << std::endl;
 		connHandler.prepareFdSetsForSelect();
-		// std::cout << "RUN Select" << std::endl;
+		std::cout << "Running Select" << std::endl;
 		connHandler.runSelect();
-		// std::cout << "Handle new clients" << std::endl;
+		std::cout << "Checking for new connections" << std::endl;
 		connHandler.acceptNewClients();
-		// std::cout << "Check for new clients" << std::endl;
+		std::cout << "Running Event Loop" << std::endl;
 		connHandler.serverEventLoop();
 		// std::cout << "END of while" << std::endl;
 
+		std::cout << "Parsing Client Data" << std::endl;
 		std::vector<Client *> clientsForParsing;
 		clientsForParsing = clientManager.getClientsForParsing();
 		for (std::vector<Client *>::iterator clientIt = clientsForParsing.begin(); clientIt != clientsForParsing.end(); ++clientIt)
@@ -62,7 +63,7 @@ void IrcServer::runIrcServer(void)
 			IRCParser parser(client);
 			parser.makeClientMessages();
 		}
-
+		std::cout << "Processing Client Commands" << std::endl;
 		std::vector<Client *> clientsForCommandsProcessing;
 		clientsForCommandsProcessing = clientManager.getClientsForProcessing();
 		for (std::vector<Client *>::iterator clientIt = clientsForCommandsProcessing.begin(); clientIt != clientsForCommandsProcessing.end(); ++clientIt)
@@ -70,7 +71,11 @@ void IrcServer::runIrcServer(void)
 			Client *client = (*clientIt);
 			IRCCommandHandler commandHandler(client);
 			commandHandler.processCommands();
+			clientManager.removeClientFromRoomsAndDeleteEmptyRooms(client->getFd());
 		}
+		clientManager.removeMarkedForDeletionClients();
+		std::cout << "End of Server loop iteration" << std::endl;
+		std::cout << "----------------------------" << std::endl;
 	}
 	connHandler.closeServerFd();
 }
