@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/09 22:02:09 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/10 15:23:48 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ Client::Client(const Client& other) : fd(other.fd),  // Initialize const member 
 									  markedForDeletion(other.markedForDeletion),
 									  //   responses(other.responses),            // Assuming ServerResponseQueue has a valid copy constructor
 									  clientMessages(other.clientMessages)  // Deep copy vector
-									//   userData(other.userData)               // Deep copy UserData
+																			//   userData(other.userData)               // Deep copy UserData
 {
 	// If any other special deep-copy logic is needed for members, add it here.
 }
@@ -40,7 +40,7 @@ Client& Client::operator=(const Client& other)
 		markedForDeletion = other.markedForDeletion;
 		// responses = other.responses;            // Assuming ServerResponseQueue has a valid assignment operator
 		clientMessages = other.clientMessages;  // Deep copy vector
-		// userData = other.userData;              // Deep copy UserData
+												// userData = other.userData;              // Deep copy UserData
 	}
 	return (*this);
 }
@@ -53,26 +53,62 @@ int Client::getFd(void) const
 	return (this->fd);
 }
 // to be re-implemented
+// void Client::sendAllResponses(void)
+// {
+// 	for (int i = 0; i < this->serverResponses.size(); i++)
+// 	{
+// 		int bytesSent = send(this->fd, this->serverResponses[i].c_str(), this->serverResponses[i].size(), 0);
+// 		if (bytesSent == -1)
+// 		{
+// 			if (errno == EAGAIN || errno == EWOULDBLOCK)
+// 			{
+// 				continue;  // socket is busy, retry
+// 			}
+// 			else
+// 			{
+// 				perror("Sending failed");
+// 			}
+// 		}
+// 		else
+// 		{
+// 			this->serverResponses[i].clear();
+// 		}
+// 	}
+// }
+
 void Client::sendAllResponses(void)
 {
-	for (int i = 0; i < this->serverResponses.size(); i++)
+	for (int i = 0; i < this->serverResponses.size(); /* incremented manually */)
 	{
-		int bytesSent = send(this->fd, this->serverResponses[i].c_str(), this->serverResponses[i].size(), 0);
+		const std::string& response = this->serverResponses[i];
+		int bytesSent = send(this->fd, response.c_str(), response.size(), 0);
+
 		if (bytesSent == -1)
 		{
 			if (errno == EAGAIN || errno == EWOULDBLOCK)
 			{
-				continue;  // socket is busy, retry
+				// Socket is busy, retry later
+				return;
 			}
 			else
 			{
 				perror("Sending failed");
+				return;  // Exit the function on error
 			}
+		}
+		else if (bytesSent < response.size())
+		{
+			// Partial send occurred; only erase what was sent
+			this->serverResponses[i] = response.substr(bytesSent);
 		}
 		else
 		{
-			this->serverResponses[i].clear();
+			// Full message sent; erase the response from the vector
+			this->serverResponses.erase(this->serverResponses.begin() + i);
+			continue;  // Skip increment to avoid out-of-bounds access
 		}
+
+		++i;  // Only increment if we didn't erase
 	}
 }
 
