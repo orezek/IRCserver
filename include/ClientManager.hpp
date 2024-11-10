@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:28 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/09 17:50:32 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/10 11:55:34 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <map>
 
 #include "Client.hpp"
-//#include "RoomManager.hpp"
+#include "RoomManager.hpp"
 
 class ClientManager
 {
@@ -27,14 +27,13 @@ class ClientManager
 		Client &getClient(const int clientSocketFd);
 		bool clientExists(const std::string nickname);
 		void addClient(int clientSocketFd);
-		std::map<int, Client> clients;
-		std::map<int, Client>::iterator deleteClient(std::map<int, Client>::iterator &it);
-		std::map<int, Client>::iterator getFirstClient(void);
-		std::map<int, Client>::iterator getLastClient(void);
-		int getHighestClientFd(int masterSocketFd) const;
+		// std::map<int, Client>::iterator deleteClient(std::map<int, Client>::iterator &it);
+		// std::map<int, Client>::iterator getFirstClient(void);
+		// std::map<int, Client>::iterator getLastClient(void);
+		// int getHighestClientFd(int masterSocketFd) const;
 
 		// new
-		void loadClientsToFdSets(fd_set &readFds, fd_set &writeFds, fd_set &errrorFds, int &masterSocketFd, int &maxFd);
+		//void loadClientsToFdSets(fd_set &readFds, fd_set &writeFds, fd_set &errrorFds, int &masterSocketFd, int &maxFd);
 		void initializeClientPresenceOnServer(int clientSocketFd, struct sockaddr_in ipClientAddress, std::string serverName);
 		void cleanClientSession(int &clientSocketFd);
 
@@ -43,4 +42,5 @@ class ClientManager
 		~ClientManager();
 		ClientManager(const ClientManager &obj);
 		ClientManager &operator=(const ClientManager &obj);
+		std::map<int, Client> clients;
 };

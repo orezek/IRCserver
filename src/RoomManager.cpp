@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:34:33 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/07 12:14:45 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/10 12:25:30 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,6 +168,37 @@ Room *RoomManager::getNextRoom()
 	Room *roomPtr = &(currentRoomIt->second);
 	++this->currentRoomIt;
 	return (roomPtr);
+}
+
+std::string RoomManager::getFormattedNicknamess(std::string roomName)
+{
+	std::string response;
+	response.clear();
+	Room *room = this->getRoom(roomName);
+	if (room != NULL)
+	{
+		int i = 1;
+		while (i < room->getNoClients() + 1)
+		{
+			int *clientFd = room->findNthClient(i);
+			if (room->isOperator(*clientFd))
+			{
+				response.append("@");
+			}
+			if (ClientManager::getInstance().getClient(*clientFd).getNickname().empty())
+			{
+				response.append("*");
+			}
+			response.append(ClientManager::getInstance().getClient(*clientFd).getNickname());
+			++i;
+			if (i == room->getNoClients())
+			{
+				response.append(" ");
+			}
+		}
+
+	}
+	return (response);
 }
 
 

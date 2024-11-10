@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:55:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 16:50:12 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/10 11:50:38 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@
 #include <string>
 #include <vector>
 
-#include "ClientManager.hpp"
+//#include "ClientManager.hpp"
+//#include "RoomManager.hpp"
 
 class Room
 {

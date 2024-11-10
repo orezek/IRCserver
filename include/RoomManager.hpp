@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:34:46 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/07 12:47:54 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/10 12:24:07 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <sstream>
 #include <string>
 #include "Room.hpp"
+#include "ClientManager.hpp"
 
 class RoomManager
 {
@@ -36,6 +37,7 @@ class RoomManager
 		void resetIterator(void);
 		// Debugging purposes
 		std::string getRoomsAsString() const;
+		std::string getFormattedNicknamess(std::string roomname);
 	private:
 		RoomManager();
 		~RoomManager();

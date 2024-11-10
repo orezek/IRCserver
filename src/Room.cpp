@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Room.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:51:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 16:16:28 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/10 11:45:02 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,15 +185,16 @@ bool Room::isClientInRoom(const int clientFd) const
 	return std::find(clientFds.begin(), clientFds.end(), clientFd) != clientFds.end();
 }
 
-bool Room::isClientInRoom(const std::string nickname) const
-{
-	if (ClientManager::getInstance().clientExists(nickname))
-	{
-		int clientFd = ClientManager::getInstance().findClient(nickname)->getFd();
-		return std::find(clientFds.begin(), clientFds.end(), clientFd) != clientFds.end();
-	}
-	return (false);
-}
+// bool Room::isClientInRoom(const std::string nickname) const
+// {
+// 	//if (this->isClientInRoom(nickname))
+// 	if (ClientManager::getInstance().clientExists(nickname))
+// 	{
+// 		int clientFd = ClientManager::getInstance().findClient(nickname)->getFd();
+// 		return std::find(clientFds.begin(), clientFds.end(), clientFd) != clientFds.end();
+// 	}
+// 	return (false);
+// }
 
 // --- OUTSIDE OF THE CLASS ---
 std::ostream& operator<<(std::ostream& output, Room const& instance)
@@ -235,58 +236,59 @@ bool Room::isSecret(void)
 }
 
 // Higher level methods
-std::string Room::getFormattedNicknames()
-{
-	std::string response;
-	std::vector<int>::const_iterator it = this->clientFds.begin();
-	while (it != this->clientFds.end())
-	{
-		int clientFd = *it;
-		if (this->isOperator(clientFd))
-		{
-			response.append("@");
-		}
-		if (ClientManager::getInstance().getClient(clientFd).getNickname().empty())
-		{
-			response.append("*");
-		}
-		response.append(ClientManager::getInstance().getClient(clientFd).getNickname());
-		++it;
-		if (it != this->clientFds.end())
-		{
-			response.append(" ");
-		}
-	}
-	return (response);
-}
+// std::string Room::getFormattedNicknames()
+// {
+// 	std::string response;
+// 	std::vector<int>::const_iterator it = this->clientFds.begin();
+// 	while (it != this->clientFds.end())
+// 	{
+// 		int clientFd = *it;
+// 		if (this->isOperator(clientFd))
+// 		{
+// 			response.append("@");
+// 		}
+// 		if (ClientManager::getInstance().getClient(clientFd).getNickname().empty())
+// 		{
+// 			response.append("*");
+// 		}
+// 		response.append(ClientManager::getInstance().getClient(clientFd).getNickname());
+// 		++it;
+// 		if (it != this->clientFds.end())
+// 		{
+// 			response.append(" ");
+// 		}
+// 	}
+// 	return (response);
+// }
 // ??
 //: server 352 your_nick #room user host server nick H@ :0 Real Name
-std::string Room::getFormattedUserInfo()
-{
-	std::string response;
-	response.append("#");
-	response.append(this->getRoomName());
-	std::vector<int>::const_iterator it = this->clientFds.begin();
-	while (it != this->clientFds.end())
-	{
-		int clientFd = *it;
-		if (this->isOperator(clientFd))
-		{
-			response.append("@");
-		}
-		if (ClientManager::getInstance().getClient(clientFd).getNickname().empty())
-		{
-			response.append("*");
-		}
-		response.append(ClientManager::getInstance().getClient(clientFd).getNickname());
-		++it;
-		if (it != this->clientFds.end())
-		{
-			response.append(" ");
-		}
-	}
-	return (response);
-}
+
+// std::string Room::getFormattedUserInfo()
+// {
+// 	std::string response;
+// 	response.append("#");
+// 	response.append(this->getRoomName());
+// 	std::vector<int>::const_iterator it = this->clientFds.begin();
+// 	while (it != this->clientFds.end())
+// 	{
+// 		int clientFd = *it;
+// 		if (this->isOperator(clientFd))
+// 		{
+// 			response.append("@");
+// 		}
+// 		if (ClientManager::getInstance().getClient(clientFd).getNickname().empty())
+// 		{
+// 			response.append("*");
+// 		}
+// 		response.append(ClientManager::getInstance().getClient(clientFd).getNickname());
+// 		++it;
+// 		if (it != this->clientFds.end())
+// 		{
+// 			response.append(" ");
+// 		}
+// 	}
+// 	return (response);
+// }
 
 bool Room::isClientInInviteList(const int clientFd) const
 {
