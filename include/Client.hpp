@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:09 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 20:41:19 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/10 21:11:44 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ class Client : public UserData
 		struct sockaddr_in ipAddress;
 		std::string rawData;
 		bool markedForDeletion;
-		// UserData userData;
 		std::vector<ClientMessage> clientMessages;
 		std::vector<std::string> serverResponses;
 };
