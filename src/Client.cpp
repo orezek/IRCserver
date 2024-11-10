@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 15:23:48 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/10 20:22:27 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
+
+const static int MESSAGE_SIZE = 512;
 
 Client::Client(int fd) : fd(fd), markedForDeletion(false), rawData("")
 {
@@ -151,6 +153,24 @@ void Client::deleteRawData(void)
 void Client::initRawData(void)
 {
 	this->rawData.clear();
+}
+
+bool Client::isReadyForParsing()
+{
+	if (rawData.empty())
+	{
+		return (false);
+	}
+	else if (rawData.size() > MESSAGE_SIZE)
+	{
+		this->markForDeletion();
+		return (false);
+	}
+	else if (rawData.back() == '\n')
+	{
+		return (true);
+	}
+	return (false);
 }
 
 // Client status
