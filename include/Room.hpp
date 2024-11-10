@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:55:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 16:50:12 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/10 12:53:22 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 #include <sstream>
 #include <string>
 #include <vector>
-
-#include "ClientManager.hpp"
 
 class Room
 {
@@ -29,7 +27,6 @@ class Room
 		void addClient(int clientSocketFd);
 		void removeClient(int clientSocketFd);
 		bool isClientInRoom(const int clientSocketFd) const;
-		bool isClientInRoom(const std::string nickname) const;
 		std::string getRoomName() const;
 		std::string getRoomAsString() const;
 		int* findNthClient(int n);
@@ -65,11 +62,6 @@ class Room
 		bool isUserLimit(void);
 		// User stats
 		const int getNoClients(void) const;
-
-		// Higher level methods
-		// For NAMES command - gets nicknames of all clients in a room as string and marks if the client is an operator
-		std::string getFormattedNicknames();
-		std::string getFormattedUserInfo();
 
 	private:
 		std::string roomName;

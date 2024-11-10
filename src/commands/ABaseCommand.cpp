@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ABaseCommand.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 09:51:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/08 17:43:49 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/10 12:26:39 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void ABaseCommand::setServerResponse353(void)
 	response.append(" #");
 	response.append(this->room->getRoomName());
 	response.append(" :");
-	response.append(this->room->getFormattedNicknames());
+	response.append(RoomManager::getInstance().getFormattedNicknamess(this->room->getRoomName()));
 	response.append("\r\n");
 	addResponse(client, response);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:09 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 12:46:38 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/10 12:56:42 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,29 +54,7 @@ class Client : public UserData
 		// Message handling
 		void addMessage(const ClientMessage message);
 		ClientMessage popMessage(void);  // Returns copy
-
-		// User data management
-		// std::string getNickname(void);
-		// std::string getUsername(void);
-		// std::string getHostname(void);
-		// std::string getRealname(void);
 		std::string getFqdn(void);
-		// std::string getServername(void);
-		// bool isPassSent();
-		// bool isPassValid();
-		// bool isNickValid();
-		// bool isUserValid();
-		// bool isRegistered();
-		// void setNickname(std::string nickname);
-		// void setUsername(std::string username);
-		// void setHostname(std::string hostname);
-		// void setRealname(std::string realname);
-		// void setServername(std::string servername);
-		// void setPassSent(bool passSentValue);
-		// void setPassValid(bool passValue);
-		// void setNickValid(bool nickValue);
-		// void setUserValid(bool userValue);
-
 	private:
 		const int fd;
 		struct sockaddr_in ipAddress;

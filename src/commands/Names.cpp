@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Names.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 20:19:42 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 09:31:11 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/10 12:29:18 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void Names::setServerResponseNames(void)
 		std::cout << this->room->getRoomName() << std::endl;
 		if (this->room->isPublic())
 		{
-			this->setServerResponse353(this->room->getFormattedNicknames());
+			this->setServerResponse353(RoomManager::getInstance().getFormattedNicknamess(this->room->getRoomName()));
 		}
 		ABaseCommand::setServerResponse366();
 	}
