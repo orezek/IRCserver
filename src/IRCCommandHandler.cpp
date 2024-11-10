@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 20:57:50 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/10 21:05:28 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ IRCCommandHandler &IRCCommandHandler::operator=(const IRCCommandHandler &refObj)
 	return (*this);
 }
 
-void IRCCommandHandler::processAllCommands()
+void IRCCommandHandler::processCommands()
 {
 	try
 	{

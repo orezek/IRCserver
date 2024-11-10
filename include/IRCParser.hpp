@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:09:39 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/10 21:01:24 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/10 21:05:10 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,10 @@ class IRCParser
 {
 	public:
 		IRCParser(Client* client);
-		IRCParser(int newClientFd);
-		void parse();
+		void makeClientMessages();
 
 	private:
 		Client* client;
-		int clientFd;
 		std::string tempInputData;
 		std::vector<std::string> rawMessages;
 		ClientMessage clientMessage;

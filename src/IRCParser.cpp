@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/10 21:01:14 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/10 21:07:22 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,9 @@ IRCParser::IRCParser(Client* client) : client(client)
 	{
 		throw std::runtime_error("Client unknown.");
 	}
-	clientFd = client->getFd();
 }
 
-IRCParser::IRCParser(int newClientFd) : clientFd(newClientFd)
-{
-	client = ClientManager::getInstance().findClient(clientFd);
-}
-
-
-void IRCParser::parse()
+void IRCParser::makeClientMessages()
 {
 	this->splitRawDataToRawMessages();
 	client->deleteRawData();
