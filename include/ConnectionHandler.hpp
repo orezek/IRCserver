@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.hpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 20:48:40 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/10 23:14:27 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@
 #include <stdexcept>  // exceptions
 
 #include "ClientManager.hpp"
-// #include "IRCCommandHandler.hpp"
-// #include "IRCParser.hpp"
 #include "ServerDataManager.hpp"
 
 class ConnectionHandler
@@ -42,31 +40,24 @@ class ConnectionHandler
 		~ConnectionHandler();
 		ConnectionHandler &operator=(const ConnectionHandler &obj);
 
-		// new
+		// Server Connections
 		int initializeMasterSocketFd(int serverPortNumber);
 		int enableSocket(int &masterSocketFd);
 		void enableSocketReus(int &masterSocketFd);
 		void enableSocketBinding(int &masterSocketFd, int &serverPortNumber);
 		void enablePortListenning(int &masterSocketFd);
-
-		void onError(int clientSocketFd, std::string reason);
-		void onRead(int clientSocketFd);
-		void onWrite(int clientSocketFd);
-
-		// set file descriptor to be non-blocking
 		int setFileDescriptorToNonBlockingState(int &fd);
-		// resets fd_set, adds master socket to FD_SET and re-inserts fds to clientSockets vector
 		void prepareFdSetsForSelect(void);
-		// run select
 		void runSelect(void);
 		int acceptNewClients(void);
-		// recv and send system calls in loops
-		ssize_t recvAll(int socketFd, char *buffer, size_t bufferSize);
-
 		int closeServerFd(void);
 		int &getMasterSocketFd(void);
+		ssize_t recvAll(int socketFd, char *buffer, size_t bufferSize);
 		// Events
 		int serverEventLoop(void);
+		int onError(int clientSocketFd, std::string reason);
+		int onRead(int clientSocketFd);
+		int onWrite(int clientSocketFd);
 
 		const static int MAX_CLIENTS = 1024;
 		const static int MAX_BUFF_SIZE = 1024;

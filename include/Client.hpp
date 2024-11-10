@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:09 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 21:11:44 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/10 23:15:05 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ class Client : public UserData
 		// Response handling
 		bool hasResponses();
 		void addResponse(const std::string response);
-		void sendAllResponses(void);
+		int sendAllResponses(void);
 
 		// Message handling
 		void addMessage(const ClientMessage message);

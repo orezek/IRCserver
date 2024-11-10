@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ClientManager.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:28 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 20:45:50 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/10 23:55:36 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ class ClientManager
 		bool clientExists(const std::string nickname);
 		void addClient(int clientSocketFd);
 		void initializeClientPresenceOnServer(int clientSocketFd, struct sockaddr_in ipClientAddress, std::string serverName);
-		void cleanClientSession(int &clientSocketFd);
+		void removeClientFromRoomsAndDeleteEmptyRooms(int clientSocketFd);
+		void removeMarkedForDeletionClients(void);
 		std::vector<Client *> getClientsForParsing();
 		std::vector<Client *> getClientsForProcessing();
 
