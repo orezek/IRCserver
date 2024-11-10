@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   IrcServer.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:45:52 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/09 23:46:12 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/10 21:05:28 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IrcServer.hpp"
-
 
 IrcServer::IrcServer(int serverPortNumber, std::string ircPassword) : serverPortNumber(serverPortNumber), ircPassword(ircPassword)
 {
@@ -41,6 +40,8 @@ void IrcServer::runIrcServer(void)
 {
 	ConnectionHandler connHandler = ConnectionHandler(this->serverPortNumber);
 	connHandler.initializeMasterSocketFd(this->serverPortNumber);
+	ClientManager &clientManager = ClientManager::getInstance();
+
 	while (true)
 	{
 		// std::cout << "Prepare FD SET" << std::endl;
@@ -52,6 +53,24 @@ void IrcServer::runIrcServer(void)
 		// std::cout << "Check for new clients" << std::endl;
 		connHandler.serverEventLoop();
 		// std::cout << "END of while" << std::endl;
+
+		std::vector<Client *> clientsForParsing;
+		clientsForParsing = clientManager.getClientsForParsing();
+		for (std::vector<Client *>::iterator clientIt = clientsForParsing.begin(); clientIt != clientsForParsing.end(); ++clientIt)
+		{
+			Client *client = (*clientIt);
+			IRCParser parser(client);
+			parser.makeClientMessages();
+		}
+
+		std::vector<Client *> clientsForCommandsProcessing;
+		clientsForCommandsProcessing = clientManager.getClientsForProcessing();
+		for (std::vector<Client *>::iterator clientIt = clientsForCommandsProcessing.begin(); clientIt != clientsForCommandsProcessing.end(); ++clientIt)
+		{
+			Client *client = (*clientIt);
+			IRCCommandHandler commandHandler(client);
+			commandHandler.processCommands();
+		}
 	}
 	connHandler.closeServerFd();
 }

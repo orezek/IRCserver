@@ -3,14 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 15:23:48 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/10 21:11:38 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
+
+// TODO: this should be moved to somewhere else
+const static int MESSAGE_SIZE = 512;
 
 Client::Client(int fd) : fd(fd), markedForDeletion(false), rawData("")
 {
@@ -22,9 +25,9 @@ Client::Client(const Client& other) : fd(other.fd),  // Initialize const member 
 									  ipAddress(other.ipAddress),
 									  rawData(other.rawData),
 									  markedForDeletion(other.markedForDeletion),
-									  //   responses(other.responses),            // Assuming ServerResponseQueue has a valid copy constructor
-									  clientMessages(other.clientMessages)  // Deep copy vector
-																			//   userData(other.userData)               // Deep copy UserData
+									  clientMessages(other.clientMessages),   // Deep copy vector
+									  serverResponses(other.serverResponses)  // Assuming ServerResponseQueue has a valid copy constructor
+																			  //   userData(other.userData)               // Deep copy UserData
 {
 	// If any other special deep-copy logic is needed for members, add it here.
 }
@@ -38,9 +41,9 @@ Client& Client::operator=(const Client& other)
 		ipAddress = other.ipAddress;
 		rawData = other.rawData;
 		markedForDeletion = other.markedForDeletion;
-		// responses = other.responses;            // Assuming ServerResponseQueue has a valid assignment operator
-		clientMessages = other.clientMessages;  // Deep copy vector
-												// userData = other.userData;              // Deep copy UserData
+		clientMessages = other.clientMessages;    // Deep copy vector
+		serverResponses = other.serverResponses;  // Assuming ServerResponseQueue has a valid assignment operator
+												  // userData = other.userData;              // Deep copy UserData
 	}
 	return (*this);
 }
@@ -52,30 +55,8 @@ int Client::getFd(void) const
 {
 	return (this->fd);
 }
-// to be re-implemented
-// void Client::sendAllResponses(void)
-// {
-// 	for (int i = 0; i < this->serverResponses.size(); i++)
-// 	{
-// 		int bytesSent = send(this->fd, this->serverResponses[i].c_str(), this->serverResponses[i].size(), 0);
-// 		if (bytesSent == -1)
-// 		{
-// 			if (errno == EAGAIN || errno == EWOULDBLOCK)
-// 			{
-// 				continue;  // socket is busy, retry
-// 			}
-// 			else
-// 			{
-// 				perror("Sending failed");
-// 			}
-// 		}
-// 		else
-// 		{
-// 			this->serverResponses[i].clear();
-// 		}
-// 	}
-// }
 
+// TODO: this functionality will be moved to connection handler
 void Client::sendAllResponses(void)
 {
 	for (int i = 0; i < this->serverResponses.size(); /* incremented manually */)
@@ -153,6 +134,24 @@ void Client::initRawData(void)
 	this->rawData.clear();
 }
 
+bool Client::isReadyForParsing()
+{
+	if (rawData.empty())
+	{
+		return (false);
+	}
+	else if (rawData.size() > MESSAGE_SIZE)
+	{
+		this->markForDeletion();
+		return (false);
+	}
+	else if (rawData.back() == '\n')
+	{
+		return (true);
+	}
+	return (false);
+}
+
 // Client status
 bool Client::isMarkedForDeletion(void) const
 {
@@ -194,29 +193,14 @@ ClientMessage Client::popMessage(void)
 	return firstMessage;
 }
 
-// User data management - here should be used inheritance :) first case of usage, now it makes sense
-
-// std::string Client::getNickname(void)
-// {
-// 	return (userData.getNickname());
-// }
-
-// std::string Client::getUsername(void)
-// {
-// 	return (userData.getUsername());
-// }
-
-// // Getter for hostname
-// std::string Client::getHostname()
-// {
-// 	return userData.getHostname();
-// }
-
-// // Getter for realname
-// std::string Client::getRealname(void)
-// {
-// 	return (userData.getRealname());
-// }
+bool Client::isReadyForProcessing()
+{
+	if (!clientMessages.empty())
+	{
+		return (true);
+	}
+	return (false);
+}
 
 // Gets FQDN of the valid client
 std::string Client::getFqdn(void)
@@ -227,92 +211,3 @@ std::string Client::getFqdn(void)
 	str.append(this->getIpAddressAsString());
 	return (str);
 }
-// every client is aware of its server
-// std::string Client::getServername(void)
-// {
-// 	return (userData.getServername());
-// }
-
-// // Getter for passSent
-// bool Client::isPassSent()
-// {
-// 	return userData.isPassSent();
-// }
-
-// // Getter for passValid
-// bool Client::isPassValid()
-// {
-// 	return userData.isPassValid();
-// }
-
-// // Getter for nickValid
-// bool Client::isNickValid()
-// {
-// 	return userData.isNickValid();
-// }
-
-// // Getter for userValid
-// bool Client::isUserValid()
-// {
-// 	return userData.isUserValid();
-// }
-
-// Method to check if the client is fully registered
-// bool Client::isRegistered()
-// {
-// 	return isPassValid() && isNickValid() && isUserValid();
-// }
-
-// // Setter for nickname
-// void Client::setNickname(std::string nickname)
-// {
-// 	userData.setNickname(nickname);
-// }
-
-// // Setter for username
-// void Client::setUsername(std::string username)
-// {
-// 	userData.setUsername(username);
-// }
-
-// // Setter for hostname
-// void Client::setHostname(std::string hostname)
-// {
-// 	userData.setHostname(hostname);
-// }
-
-// // Setter for realname
-// void Client::setRealname(std::string realname)
-// {
-// 	userData.setRealname(realname);
-// }
-
-// // Setter for servername
-// void Client::setServername(std::string servername)
-// {
-// 	userData.setServername(servername);
-// }
-
-// // Setter for passSent
-// void Client::setPassSent(bool passSentValue)
-// {
-// 	userData.setPassSent(passSentValue);
-// }
-
-// // Setter for passValid
-// void Client::setPassValid(bool passValue)
-// {
-// 	userData.setPassValid(passValue);
-// }
-
-// // Setter for nickValid
-// void Client::setNickValid(bool nickValue)
-// {
-// 	userData.setNickValid(nickValue);
-// }
-
-// // Setter for userValid
-// void Client::setUserValid(bool userValue)
-// {
-// 	userData.setUserValid(userValue);
-// }

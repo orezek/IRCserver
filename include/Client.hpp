@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:09 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 12:56:42 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/10 21:11:44 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,13 @@ class Client : public UserData
 		void setIpAddress(const sockaddr_in ipAddress);
 		std::string getIpAddressAsString(void);
 		std::string getRawData(void) const;
+
+		// Rawdata management
 		void setRawData(const std::string& data);
 		void appendRawData(const char* data, ssize_t bytesReceived);
 		void deleteRawData();
 		void initRawData(void);
+		bool isReadyForParsing();
 
 		// Status management
 		bool isMarkedForDeletion() const;
@@ -55,12 +58,13 @@ class Client : public UserData
 		void addMessage(const ClientMessage message);
 		ClientMessage popMessage(void);  // Returns copy
 		std::string getFqdn(void);
+		bool isReadyForProcessing();
+
 	private:
 		const int fd;
 		struct sockaddr_in ipAddress;
 		std::string rawData;
 		bool markedForDeletion;
-		// UserData userData;
 		std::vector<ClientMessage> clientMessages;
 		std::vector<std::string> serverResponses;
 };
