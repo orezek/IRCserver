@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/09 20:03:27 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/10 12:55:24 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,16 +53,8 @@ class ConnectionHandler
 		void onRead(int clientSocketFd);
 		void onWrite(int clientSocketFd);
 
-		// set socket
-		int enableSocket(void);
 		// set file descriptor to be non-blocking
 		int setFileDescriptorToNonBlockingState(int &fd);
-		// set socket to be re-usable
-		int enableSocketReus(void);
-		// set socket binding
-		int enableSocketBinding(void);
-		// set socket to listenning mode
-		int enablePortListenning(void);
 		// resets fd_set, adds master socket to FD_SET and re-inserts fds to clientSockets vector
 		void prepareFdSetsForSelect(void);
 		// run select
@@ -75,9 +67,6 @@ class ConnectionHandler
 		int &getMasterSocketFd(void);
 		// Events
 		int serverEventLoop(void);
-		void onError(Client &client, const std::string reason);
-		void onRead(Client &client);
-		void onWrite(Client &client);
 
 		const static int MAX_CLIENTS = 1024;
 		const static int MAX_BUFF_SIZE = 1024;
@@ -89,11 +78,8 @@ class ConnectionHandler
 		int masterSocketFd;
 		int selectResponse;
 		int maxFd;
-		//socklen_t ipAddressLenSrv;
 		fd_set readFds;
 		fd_set writeFds;
 		fd_set errorFds;
-		// struct sockaddr_in ipServerAddress;
-		// struct sockaddr_in ipClientAddress;
 		std::vector<int> connections;
 };

@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:28 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 11:55:34 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/10 12:54:34 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,6 @@ class ClientManager
 		Client &getClient(const int clientSocketFd);
 		bool clientExists(const std::string nickname);
 		void addClient(int clientSocketFd);
-		// std::map<int, Client>::iterator deleteClient(std::map<int, Client>::iterator &it);
-		// std::map<int, Client>::iterator getFirstClient(void);
-		// std::map<int, Client>::iterator getLastClient(void);
-		// int getHighestClientFd(int masterSocketFd) const;
-
-		// new
-		//void loadClientsToFdSets(fd_set &readFds, fd_set &writeFds, fd_set &errrorFds, int &masterSocketFd, int &maxFd);
 		void initializeClientPresenceOnServer(int clientSocketFd, struct sockaddr_in ipClientAddress, std::string serverName);
 		void cleanClientSession(int &clientSocketFd);
 

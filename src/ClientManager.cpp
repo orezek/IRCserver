@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:24 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 11:17:04 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/10 12:54:04 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,34 +33,6 @@ Client& ClientManager::getClient(const int clientSocketFd)
 	return (this->clients.at(clientSocketFd));
 }
 
-// std::map<int, Client>::iterator ClientManager::deleteClient(std::map<int, Client>::iterator& it)
-// {
-// 	return (this->clients.erase(it));
-// }
-
-// std::map<int, Client>::iterator ClientManager::getFirstClient(void)
-// {
-// 	return (this->clients.begin());
-// }
-
-// std::map<int, Client>::iterator ClientManager::getLastClient(void)
-// {
-// 	return (this->clients.end());
-// }
-
-// int ClientManager::getHighestClientFd(int masterSocketFd) const
-// {
-// 	if (!clients.empty())
-// 	{
-// 		if (masterSocketFd < this->clients.rbegin()->first)
-// 		{
-// 			return (this->clients.rbegin()->first);
-// 		}
-// 		else
-// 			return (masterSocketFd);
-// 	}
-// 	return (masterSocketFd);
-// }
 
 Client* ClientManager::findClient(int clientFd)
 {
@@ -96,26 +68,6 @@ bool ClientManager::clientExists(const std::string nick)
 {
 	return (this->findClient(nick) != NULL);
 }
-
-// void ClientManager::loadClientsToFdSets(fd_set& readFds, fd_set& writeFds, fd_set& errorFds, int& masterSocketFd, int& highestClientFd)
-// {
-// 	FD_ZERO(&readFds);
-// 	FD_ZERO(&writeFds);
-// 	FD_ZERO(&errorFds);
-// 	FD_SET(masterSocketFd, &readFds);
-// 	highestClientFd = this->getHighestClientFd(masterSocketFd);
-// 	for (std::map<int, Client>::iterator it = this->clients.begin(); it != this->clients.end(); ++it)
-// 	{
-// 		Client& client = it->second;
-// 		int clientSocketFd = it->first;
-// 		FD_SET(clientSocketFd, &readFds);
-// 		if (client.hasResponses())
-// 		{
-// 			FD_SET(clientSocketFd, &writeFds);
-// 		}
-// 		FD_SET(clientSocketFd, &errorFds);
-// 	}
-// }
 
 void ClientManager::initializeClientPresenceOnServer(int clientSocketFd, struct sockaddr_in ipClientAddress, std::string serverName)
 {

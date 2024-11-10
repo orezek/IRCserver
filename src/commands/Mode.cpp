@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:14:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 18:01:29 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/10 12:42:11 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,7 @@ void Mode::execute(void)
 		}
 		if (token->getType() == Token::MODE_ROOM_OPERATOR_PARAMETER)
 		{
-			if (room->isClientInRoom(token->getText()))
+			if (RoomManager::getInstance().isClientInRoom(this->room->getRoomName(), token->getText()))
 			{
 				if (addOperator)
 				{

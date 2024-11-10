@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:34:33 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/10 12:25:30 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/10 12:49:51 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ RoomManager &RoomManager::getInstance()
 	static RoomManager instance;
 	return (instance);
 }
-
 
 void RoomManager::addRoom(std::string roomName)
 {
@@ -33,7 +32,6 @@ bool RoomManager::roomExist(std::string roomName)
 {
 	return this->roomList.find(roomName) != this->roomList.end();
 }
-
 
 void RoomManager::removeRoom(std::string roomName)
 {
@@ -196,11 +194,25 @@ std::string RoomManager::getFormattedNicknamess(std::string roomName)
 				response.append(" ");
 			}
 		}
-
 	}
 	return (response);
 }
 
+bool RoomManager::isClientInRoom(std::string roomName, const std::string nickname)
+{
+	int clientFd = -1;
+	if(!ClientManager::getInstance().clientExists(nickname))
+	{
+		return (false);
+	}
+	clientFd = ClientManager::getInstance().findClient(nickname)->getFd();
+	Room *room = this->getRoom(roomName);
+	if (room != NULL)
+	{
+		return (room->isClientInRoom(clientFd));
+	}
+	return (false);
+}
 
 // Resets iterator to the beginning of roomList
 void RoomManager::resetIterator()

@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:34:46 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/10 12:24:07 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/10 12:36:00 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ class RoomManager
 		// Debugging purposes
 		std::string getRoomsAsString() const;
 		std::string getFormattedNicknamess(std::string roomname);
+		bool isClientInRoom(const std::string nickname, std::string roomName);
 	private:
 		RoomManager();
 		~RoomManager();
