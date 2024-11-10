@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:45:52 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/11 00:13:10 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/11 00:41:46 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void IrcServer::runIrcServer(void)
 			commandHandler.processCommands();
 			clientManager.removeClientFromRoomsAndDeleteEmptyRooms(client->getFd());
 		}
-		clientManager.removeMarkedForDeletionClients();
+		clientManager.removeClientsMarkedForDeletion();
 		std::cout << "End of Server loop iteration" << std::endl;
 		std::cout << "----------------------------" << std::endl;
 	}

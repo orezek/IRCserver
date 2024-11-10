@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:24 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/11 00:25:18 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/11 00:41:46 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void ClientManager::removeClientFromRoomsAndDeleteEmptyRooms(int clientSocketFd)
 	}
 }
 
-void ClientManager::removeMarkedForDeletionClients(void)
+void ClientManager::removeClientsMarkedForDeletion(void)
 {
 	for (std::map<int, Client>::iterator it = clients.begin(); it != clients.end();)
 	{

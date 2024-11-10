@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:28 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 23:55:36 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/11 00:41:46 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ class ClientManager
 		void addClient(int clientSocketFd);
 		void initializeClientPresenceOnServer(int clientSocketFd, struct sockaddr_in ipClientAddress, std::string serverName);
 		void removeClientFromRoomsAndDeleteEmptyRooms(int clientSocketFd);
-		void removeMarkedForDeletionClients(void);
+		void removeClientsMarkedForDeletion(void);
 		std::vector<Client *> getClientsForParsing();
 		std::vector<Client *> getClientsForProcessing();
 
