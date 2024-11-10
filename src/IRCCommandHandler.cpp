@@ -6,13 +6,13 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 20:47:38 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/10 20:52:58 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IRCCommandHandler.hpp"
 
-IRCCommandHandler::IRCCommandHandler(Client *client) : client(client), serverData(ServerDataManager::getInstance())
+IRCCommandHandler::IRCCommandHandler(Client *client) : client(client)
 {
 	if (client == NULL)
 	{
@@ -21,13 +21,13 @@ IRCCommandHandler::IRCCommandHandler(Client *client) : client(client), serverDat
 	clientFd = client->getFd();
 }
 
-IRCCommandHandler::IRCCommandHandler(int newClientFd) : clientFd(newClientFd), serverData(ServerDataManager::getInstance())
+IRCCommandHandler::IRCCommandHandler(int newClientFd) : clientFd(newClientFd)
 {
 	client = ClientManager::getInstance().findClient(clientFd);
 }
 
 // Copy constructor
-IRCCommandHandler::IRCCommandHandler(const IRCCommandHandler &refObj) : client(refObj.client), serverData(refObj.serverData) {}
+IRCCommandHandler::IRCCommandHandler(const IRCCommandHandler &refObj) : client(refObj.client) {}
 
 // Copy assignment operator
 IRCCommandHandler &IRCCommandHandler::operator=(const IRCCommandHandler &refObj)
@@ -36,7 +36,6 @@ IRCCommandHandler &IRCCommandHandler::operator=(const IRCCommandHandler &refObj)
 	{
 		this->clientFd = refObj.clientFd;
 		this->client = refObj.client;
-		this->serverData = refObj.serverData;
 	}
 	return (*this);
 }

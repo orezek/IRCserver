@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRCCommandHandler.hpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:33 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 17:01:03 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/10 20:51:59 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@
 
 #include "Client.hpp"
 #include "ClientMessage.hpp"
-#include "IRCParser.hpp"
-#include "ServerDataManager.hpp"  // Will be deleted in the future
+// #include "IRCParser.hpp"
+// #include "ServerDataManager.hpp"  // Will be deleted in the future
 
 // commands
 #include "Join.hpp"
@@ -51,5 +51,5 @@ class IRCCommandHandler
 	private:
 		int clientFd;
 		Client *client;                 // will be deleted
-		ServerDataManager &serverData;  // Will be deleted in the future
+		// ServerDataManager &serverData;  // Will be deleted in the future
 };
