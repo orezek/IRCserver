@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 09:51:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/10 12:26:39 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/10 14:11:34 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,7 +245,7 @@ void ABaseCommand::setServerResponseWelcome()
 	addResponse(client, response);
 }
 
-// should be inline with QUIT command?
+// should be inline with QUIT command? Yes, it should!
 void ABaseCommand::setServerResponseInvalidAuthentication()
 {
 	std::string nickname = this->client->getNickname();

@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 00:13:35 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/10 16:06:11 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,9 +143,10 @@ void ConnectionHandler::prepareFdSetsForSelect(void)
 		{
 			// Log a warning message
 			// Client was deleted in ClientManager
+			std::cout << "Closing Client FD: " << clientSocketFd << std::endl;
+			std::cout << "Erasing Client from active sockets: " << clientSocketFd << std::endl;
 			close(clientSocketFd);
 			it = connections.erase(it);
-			std::cout << "Closing FD" << std::endl;
 			continue;
 		}
 		else
@@ -175,10 +176,11 @@ int ConnectionHandler::serverEventLoop(void)
 		std::vector<int>::iterator it = this->connections.begin();
 		while (it != this->connections.end())
 		{
+			std::cout << "Start of EVENT LOOP ITERATION: " << std::endl;
 			clientSocketFd = *it;
 			if (FD_ISSET(clientSocketFd, &errorFds))
 			{
-				onError(clientSocketFd, "socket error");
+				onError(clientSocketFd, "Socket error");
 			}
 			if (FD_ISSET(clientSocketFd, &readFds))
 			{
@@ -192,6 +194,7 @@ int ConnectionHandler::serverEventLoop(void)
 			ircCommandHandler.processAllCommands();
 			ClientManager::getInstance().cleanClientSession(clientSocketFd);
 			++it;
+			std::cout << "End of EVENT LOOP ITERATION: " << std::endl;
 		}
 	}
 	else if (selectResponse == 0)
@@ -206,15 +209,10 @@ void ConnectionHandler::onError(int clientSocketFd, std::string reason)
 	Client *client = ClientManager::getInstance().findClient(clientSocketFd);
 	if (client != NULL)
 	{
-		// this is probably wrong tricking the IRC to think client called QUIT
-		// what choices do we have?
-		// one: lets do it as is. Client will be deleted leater and fd + clients vector will handle prepareFdSetsForSelect(void)
-		// second: force QUIT to all rooms client is currently connected, delete the client from clientManager
-		// from all rooms, delete all empty rooms, close(fd), erase from connections vector
-		// then have continue on the next line after onError()
 		client->setRawData("QUIT :" + reason + "\r\n");
-		IRCCommandHandler ircCommandHandler(client->getFd());
-		ircCommandHandler.processAllCommands();
+		// cannot be here, processing only in one place!
+		// IRCCommandHandler ircCommandHandler(client->getFd());
+		// ircCommandHandler.processAllCommands();
 	}
 }
 
@@ -224,7 +222,7 @@ void ConnectionHandler::onRead(int clientSocketFd)
 	char recvBuff[MAX_BUFF_SIZE];
 	int clientBuffSize;
 	//Client *client = ClientManager::getInstance().findClient(clientSocketFd);
-	if (ClientManager::getInstance().findClient(clientSocketFd) != NULL)
+	if (ClientManager::getInstance().findClient(clientSocketFd) != NULL && !ClientManager::getInstance().findClient(clientSocketFd)->isMarkedForDeletion())
 	{
 		//int clientSocketFd = ClientManager::getInstance().getClient(clientSocketFd).getFd();
 		if ((bytesReceived = recvAll(clientSocketFd, recvBuff, MAX_BUFF_SIZE)) == -1)
@@ -235,7 +233,7 @@ void ConnectionHandler::onRead(int clientSocketFd)
 		// client closed connection
 		else if (bytesReceived == 0)
 		{
-			this->onError(clientSocketFd, "Client quit. ");
+			this->onError(clientSocketFd, "Client quit");
 			std::cout << "Client " << clientSocketFd << " quit. Pressed {Ctrl+c}" << std::endl;
 		}
 		// hard message limit

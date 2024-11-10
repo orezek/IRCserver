@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:24 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 12:54:04 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/10 16:06:22 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ Client& ClientManager::getClient(const int clientSocketFd)
 {
 	return (this->clients.at(clientSocketFd));
 }
-
 
 Client* ClientManager::findClient(int clientFd)
 {
@@ -80,22 +79,21 @@ void ClientManager::initializeClientPresenceOnServer(int clientSocketFd, struct 
 
 void ClientManager::cleanClientSession(int& clientSocketFd)
 {
-	Client *toBeDeletedClient = this->findClient(clientSocketFd);
+	Client* toBeDeletedClient = this->findClient(clientSocketFd);
 	if (toBeDeletedClient != NULL)
 	{
+		std::cout << "Client after clientMessage processing " << clientSocketFd << " has Respones: " << toBeDeletedClient->hasResponses() << std::endl;
 		if (toBeDeletedClient->isMarkedForDeletion() && !toBeDeletedClient->hasResponses())
 		{
-			//toDeleteClient->deleteRawData(); probably redumantary - client object will be deleted form clients later
+			std::cout << "Client to be deleted id: " << clientSocketFd << " has Respones: " << toBeDeletedClient->hasResponses() << std::endl;
 			RoomManager::getInstance().removeClientFromRooms(clientSocketFd);
 			RoomManager::getInstance().deleteAllEmptyRooms();
 			this->clients.erase(clientSocketFd);
+			std::cout << "Client after deletion id: " << clientSocketFd << " has Respones: " << toBeDeletedClient->hasResponses() << std::endl;
 		}
-
 	}
 	else
 	{
 		return;
 	}
 }
-
-
