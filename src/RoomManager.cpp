@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:34:33 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/11 10:13:27 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/11 10:29:49 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ std::string RoomManager::getRoomsAsString() const
 	int i = 1;
 
 	output << "-----------------------" << std::endl;
-	output << "Printing all Rooms: " << std::endl;
+	output << "All active rooms: " << std::endl;
 	for (std::map<std::string, Room>::const_iterator it = roomList.begin(); it != roomList.end(); ++it)
 	{
 		output << i;
