@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/11 09:58:31 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/11 15:32:10 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void IRCParser::makeClientMessages()
 		this->parseParameterTokens();
 		client->addMessage(clientMessage);
 
-		std::cout << clientMessage << std::endl;  // debug only
+		Logger::log(clientMessage);
 	}
 }
 
@@ -54,7 +54,7 @@ void IRCParser::splitRawDataToRawMessages()
 		rawMessages.push_back(rawMessage);
 		tempData = tempData.erase(0, pos + 1);
 
-		std::cout << "rawMessage = |" << rawMessage << "|" << std::endl;
+		Logger::log("rawMessage = |", rawMessage, "|");
 	}
 }
 void IRCParser::parsePrefixToken()
