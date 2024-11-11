@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/11 00:18:22 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/11 15:29:49 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,8 +143,8 @@ void ConnectionHandler::prepareFdSetsForSelect(void)
 		{
 			// Log a warning message
 			// Client was deleted in ClientManager
-			std::cout << "Closing Client FD: " << clientSocketFd << std::endl;
-			std::cout << "Erasing Client from active sockets: " << clientSocketFd << std::endl;
+			Logger::log("Closing Client FD: " + clientSocketFd);
+			Logger::log("Erasing Client from active sockets: " + clientSocketFd);
 			close(clientSocketFd);
 			it = connections.erase(it);
 			continue;
@@ -204,7 +204,7 @@ int ConnectionHandler::serverEventLoop(void)
 	}
 	else if (selectResponse == 0)
 	{
-		std::cout << "No Active Clients" << std::endl;
+		Logger::log("Server idle");
 	}
 	return (0);
 }
@@ -230,26 +230,26 @@ int ConnectionHandler::onRead(int clientSocketFd)
 		if ((bytesReceived = recvAll(clientSocketFd, recvBuff, MAX_BUFF_SIZE)) == -1)
 		{
 			this->onError(clientSocketFd, "RECV_ERROR");
-			std::cout << "Recv failed " << clientSocketFd << ": " << strerror(errno) << std::endl;
+			Logger::log("Recv failed ", clientSocketFd, ": ", strerror(errno));
 			return (-1);
 		}
 		// client closed connection
 		else if (bytesReceived == 0)
 		{
 			this->onError(clientSocketFd, "CLIENT_QUIT");
-			std::cout << "Client " << clientSocketFd << " quit. Pressed {Ctrl+c}" << std::endl;
+			Logger::log("Client ", clientSocketFd, " quit. Pressed {Ctrl+c}");
 			return (-1);
 		}
 		// hard message limit
 		else if (bytesReceived > MESSAGE_SIZE)
 		{
 			this->onError(clientSocketFd, "MESSAGE_LIMIT_EXCEEDED");
-			std::cout << "Client " << clientSocketFd << " disconnected due to a message limit." << std::endl;
+			Logger::log("Client ", clientSocketFd, " disconnected due to a message limit.");
 			return (-1);
 		}
 		else
 		{
-			std::cout << "Reading data from client. FD: " << clientSocketFd << std::endl;
+			Logger::log("Reading data from client. FD: ", clientSocketFd);
 			ClientManager::getInstance().getClient(clientSocketFd).appendRawData(recvBuff, bytesReceived);
 		}
 	}
@@ -265,7 +265,7 @@ int ConnectionHandler::onWrite(int clientSocketFd)
 	Client *client = ClientManager::getInstance().findClient(clientSocketFd);
 	if (client != NULL)
 	{
-		std::cout << "Writing processed data to client. FD: " << clientSocketFd << std::endl;
+		Logger::log("Writing processed data to client. FD: ", clientSocketFd);
 		if (client->sendAllResponses() == -1)
 		{
 			return (-1);
