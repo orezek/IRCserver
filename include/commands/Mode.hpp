@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:12:06 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 13:38:57 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/11 09:19:55 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ class Mode : public ABaseCommand
 		Mode(Client *client, ClientMessage &clientMessage);
 		~Mode();
 		void execute();
+		// void executeOld();
 
 	private:
 		void setServerResponse472(const std::string wrongMode, const std::string messag);
