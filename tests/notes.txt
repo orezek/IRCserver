@@ -1,1 +1,0 @@
-Makefile does not create obj/commands directory
