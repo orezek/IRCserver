@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:34:33 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/11 10:29:49 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/11 13:59:45 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,19 +93,20 @@ std::string RoomManager::getRoomsAsString() const
 	std::stringstream output;
 	int i = 1;
 
-	output << "-----------------------" << std::endl;
-	output << "All active rooms: " << std::endl;
+	// output << "-----------------------" << std::endl;
+	output << "ROOMS: " << std::endl;
 	for (std::map<std::string, Room>::const_iterator it = roomList.begin(); it != roomList.end(); ++it)
 	{
 		output << i;
-		output << ". Room: ";
-		output << " Key = " << it->first;
-		output << ", ";
+		output << ". ";
+		// output << "Room: ";
+		// output << " Key = " << it->first;
+		// output << ", ";
 		output << it->second;
 		output << std::endl;
 		i++;
 	}
-	output << "-----------------------";
+	// output << "-----------------------";
 	return (output.str());
 }
 
@@ -203,7 +204,7 @@ std::string RoomManager::getFormattedNicknamess(std::string roomName)
 bool RoomManager::isClientInRoom(std::string roomName, const std::string nickname)
 {
 	int clientFd = -1;
-	if(!ClientManager::getInstance().clientExists(nickname))
+	if (!ClientManager::getInstance().clientExists(nickname))
 	{
 		return (false);
 	}
