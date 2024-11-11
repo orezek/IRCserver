@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:24 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/11 10:29:39 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/11 14:00:01 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,18 +146,19 @@ std::string ClientManager::getClientsAsString() const
 	std::stringstream output;
 	int i = 1;
 
-	output << "-----------------------" << std::endl;
-	output << "All active clients: " << std::endl;
+	// output << "-----------------------" << std::endl;
+	output << "CLIENTS: " << std::endl;
 	for (std::map<int, Client>::const_iterator it = clients.begin(); it != clients.end(); ++it)
 	{
 		output << i;
-		output << ". Client: ";
-		output << " FD = " << it->first;
+		output << ". ";
+		// output << "Client: ";
+		output << "FD = " << it->first;
 		output << ", nick = ";
 		output << it->second.getNickname();
 		output << std::endl;
 		i++;
 	}
-	output << "-----------------------";
+	// output << "-----------------------";
 	return (output.str());
 }
