@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:28 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/11 10:23:47 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/11 15:04:00 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <map>
 
 #include "Client.hpp"
+#include "Logger.hpp"
 #include "RoomManager.hpp"
 
 class ClientManager

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:24 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/11 14:00:01 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/11 15:02:50 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void ClientManager::removeClientFromRoomsAndDeleteEmptyRooms(int clientSocketFd)
 	{
 		if (toBeDeletedClient->isMarkedForDeletion() && !toBeDeletedClient->hasResponses())
 		{
-			std::cout << "Deleting client from rooms. FD: " << clientSocketFd << std::endl;
+			Logger::log("Deleting client from rooms. FD: " + clientSocketFd);
 			RoomManager::getInstance().removeClientFromRooms(clientSocketFd);
 			RoomManager::getInstance().deleteAllEmptyRooms();
 		}
@@ -103,7 +103,7 @@ void ClientManager::removeClientsMarkedForDeletion(void)
 		Client* client = &(it->second);
 		if (client->isMarkedForDeletion() && !client->hasResponses())
 		{
-			std::cout << "Removing Client from clients map. FD: " << client->getFd() << std::endl;
+			Logger::log("Removing Client from clients map. FD: " + client->getFd());
 			std::map<int, Client>::iterator temp = it;
 			++it;
 			clients.erase(temp);
