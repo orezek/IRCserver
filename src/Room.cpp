@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Room.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:51:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 12:52:19 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/11 13:43:03 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ std::string Room::getRoomAsString() const
 
 	output << "RoomName = " << this->getRoomName();
 	output << ", ";
-	output << "Clients = ";
+	output << "Client FDs = ";
 	for (std::vector<int>::const_iterator it = clientFds.begin(); it != clientFds.end(); ++it)
 	{
 		output << *it;

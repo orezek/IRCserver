@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RoomManager.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:34:33 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/10 12:49:51 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/11 15:34:11 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void RoomManager::deleteEmptyRoom(std::string roomName)
 	std::map<std::string, Room>::iterator it = roomList.find(roomName);
 	if (it != roomList.end() && it->second.getNoClients() == 0)
 	{
-		std::cout << "Deleting an empty room: #" << it->first << std::endl;
+		Logger::log("Deleting an empty room: #", it->first);
 		this->roomList.erase(it);
 		this->totalNumberOfRooms--;
 	}
@@ -74,8 +74,10 @@ void RoomManager::deleteAllEmptyRooms(void)
 		Room *room = &(it->second);
 		if (room->getNoClients() == 0)
 		{
-			std::cout << "Deleting an empty room: #" << it->first << std::endl;
-			it = roomList.erase(it);
+			Logger::log("Deleting an empty room: #", it->first);
+			std::map<std::string, Room>::iterator temp = it;
+			++it;
+			roomList.erase(temp);
 			this->totalNumberOfRooms--;
 		}
 		else
@@ -91,19 +93,20 @@ std::string RoomManager::getRoomsAsString() const
 	std::stringstream output;
 	int i = 1;
 
-	output << "-----------------------" << std::endl;
-	output << "Printing all Rooms: " << std::endl;
+	// output << "-----------------------" << std::endl;
+	output << "ROOMS: " << std::endl;
 	for (std::map<std::string, Room>::const_iterator it = roomList.begin(); it != roomList.end(); ++it)
 	{
 		output << i;
-		output << ". Room: ";
-		output << " Key = " << it->first;
-		output << ", ";
+		output << ". ";
+		// output << "Room: ";
+		// output << " Key = " << it->first;
+		// output << ", ";
 		output << it->second;
 		output << std::endl;
 		i++;
 	}
-	output << "-----------------------";
+	// output << "-----------------------";
 	return (output.str());
 }
 
@@ -138,14 +141,14 @@ void RoomManager::removeClientFromRooms(const int clientSocketFd)
 			if (room->isOperator(clientSocketFd))
 			{
 				room->removeOperator(clientSocketFd);
-				std::cout << "The client is operator: removing client: " << clientSocketFd << " from room's operators - room: #" << it->first << std::endl;
+				Logger::log("The client is operator: removing client: ", clientSocketFd, " from room's operators - room: #", it->first);
 			}
 			if (room->isClientInInviteList(clientSocketFd))
 			{
 				room->removeInvitee(clientSocketFd);
-				std::cout << "The client is invitee: removing client: " << clientSocketFd << " from room's invitees - room: #" << it->first << std::endl;
+				Logger::log("The client is invitee: removing client: ", clientSocketFd, " from room's invitees - room: #", it->first);
 			}
-			std::cout << "Removing client: " << clientSocketFd << " from room: #" << it->first << std::endl;
+			Logger::log("Removing client: ", clientSocketFd, " from room: #", it->first);
 			room->removeClient(clientSocketFd);
 		}
 		++it;
@@ -201,7 +204,7 @@ std::string RoomManager::getFormattedNicknamess(std::string roomName)
 bool RoomManager::isClientInRoom(std::string roomName, const std::string nickname)
 {
 	int clientFd = -1;
-	if(!ClientManager::getInstance().clientExists(nickname))
+	if (!ClientManager::getInstance().clientExists(nickname))
 	{
 		return (false);
 	}

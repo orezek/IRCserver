@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IrcServer.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:45:52 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/11 00:41:46 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/11 14:28:59 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,38 +44,65 @@ void IrcServer::runIrcServer(void)
 
 	while (true)
 	{
-		std::cout << "Preparing FdSets" << std::endl;
+		Logger::log("/* ************************************************************************** */");
+		Logger::log("Preparing FdSets");
 		connHandler.prepareFdSetsForSelect();
-		std::cout << "Running Select" << std::endl;
+		Logger::log("Running Select");
 		connHandler.runSelect();
-		std::cout << "Checking for new connections" << std::endl;
+		Logger::log("Checking for new connections");
 		connHandler.acceptNewClients();
-		std::cout << "Running Event Loop" << std::endl;
+		Logger::log("Running Event Loop");
 		connHandler.serverEventLoop();
-		// std::cout << "END of while" << std::endl;
 
-		std::cout << "Parsing Client Data" << std::endl;
-		std::vector<Client *> clientsForParsing;
-		clientsForParsing = clientManager.getClientsForParsing();
-		for (std::vector<Client *>::iterator clientIt = clientsForParsing.begin(); clientIt != clientsForParsing.end(); ++clientIt)
-		{
-			Client *client = (*clientIt);
-			IRCParser parser(client);
-			parser.makeClientMessages();
-		}
-		std::cout << "Processing Client Commands" << std::endl;
-		std::vector<Client *> clientsForCommandsProcessing;
-		clientsForCommandsProcessing = clientManager.getClientsForProcessing();
-		for (std::vector<Client *>::iterator clientIt = clientsForCommandsProcessing.begin(); clientIt != clientsForCommandsProcessing.end(); ++clientIt)
-		{
-			Client *client = (*clientIt);
-			IRCCommandHandler commandHandler(client);
-			commandHandler.processCommands();
-			clientManager.removeClientFromRoomsAndDeleteEmptyRooms(client->getFd());
-		}
+		this->parseRequests();
+		this->processRequests();
+
 		clientManager.removeClientsMarkedForDeletion();
-		std::cout << "End of Server loop iteration" << std::endl;
-		std::cout << "----------------------------" << std::endl;
+
+		this->displayServerStats();
+
+		Logger::log("/* ************************************************************************** */");
 	}
 	connHandler.closeServerFd();
+}
+
+void IrcServer::parseRequests()
+{
+	Logger::log("Parsing client requests");
+	ClientManager &clientManager = ClientManager::getInstance();
+
+	std::vector<Client *> clientsForParsing;
+	clientsForParsing = clientManager.getClientsForParsing();
+
+	for (std::vector<Client *>::iterator clientIt = clientsForParsing.begin(); clientIt != clientsForParsing.end(); ++clientIt)
+	{
+		Client *client = (*clientIt);
+		IRCParser parser(client);
+		parser.makeClientMessages();
+	}
+}
+
+void IrcServer::processRequests()
+{
+	Logger::log("Processing client requests");
+
+	ClientManager &clientManager = ClientManager::getInstance();
+
+	std::vector<Client *> clientsForCommandsProcessing;
+	clientsForCommandsProcessing = clientManager.getClientsForProcessing();
+
+	for (std::vector<Client *>::iterator clientIt = clientsForCommandsProcessing.begin(); clientIt != clientsForCommandsProcessing.end(); ++clientIt)
+	{
+		Client *client = (*clientIt);
+		IRCCommandHandler commandHandler(client);
+		commandHandler.processCommands();
+		clientManager.removeClientFromRoomsAndDeleteEmptyRooms(client->getFd());  // will be deleted
+	}
+}
+
+void IrcServer::displayServerStats()
+{
+	Logger::log("\n----- || Server stats || -----");
+	Logger::log(RoomManager::getInstance().getRoomsAsString());
+	Logger::log(ClientManager::getInstance().getClientsAsString());
 }

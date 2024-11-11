@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ClientManager.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:24 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/11 00:41:46 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/11 15:02:50 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void ClientManager::removeClientFromRoomsAndDeleteEmptyRooms(int clientSocketFd)
 	{
 		if (toBeDeletedClient->isMarkedForDeletion() && !toBeDeletedClient->hasResponses())
 		{
-			std::cout << "Deleting client from rooms. FD: " << clientSocketFd << std::endl;
+			Logger::log("Deleting client from rooms. FD: " + clientSocketFd);
 			RoomManager::getInstance().removeClientFromRooms(clientSocketFd);
 			RoomManager::getInstance().deleteAllEmptyRooms();
 		}
@@ -97,16 +97,21 @@ void ClientManager::removeClientFromRoomsAndDeleteEmptyRooms(int clientSocketFd)
 
 void ClientManager::removeClientsMarkedForDeletion(void)
 {
-	for (std::map<int, Client>::iterator it = clients.begin(); it != clients.end();)
+	std::map<int, Client>::iterator it = clients.begin();
+	while (it != clients.end())
 	{
 		Client* client = &(it->second);
 		if (client->isMarkedForDeletion() && !client->hasResponses())
 		{
-			std::cout << "Removing Client from clients map. FD: " << client->getFd() << std::endl;
-			it = clients.erase(it);
-			continue;
+			Logger::log("Removing Client from clients map. FD: " + client->getFd());
+			std::map<int, Client>::iterator temp = it;
+			++it;
+			clients.erase(temp);
 		}
-		++it;
+		else
+		{
+			++it;
+		}
 	}
 }
 
@@ -134,4 +139,26 @@ std::vector<Client*> ClientManager::getClientsForProcessing()
 		}
 	}
 	return (clientsForProcessing);
+}
+
+std::string ClientManager::getClientsAsString() const
+{
+	std::stringstream output;
+	int i = 1;
+
+	// output << "-----------------------" << std::endl;
+	output << "CLIENTS: " << std::endl;
+	for (std::map<int, Client>::const_iterator it = clients.begin(); it != clients.end(); ++it)
+	{
+		output << i;
+		output << ". ";
+		// output << "Client: ";
+		output << "FD = " << it->first;
+		output << ", nick = ";
+		output << it->second.getNickname();
+		output << std::endl;
+		i++;
+	}
+	// output << "-----------------------";
+	return (output.str());
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 23:20:16 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/11 10:05:11 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,7 @@ bool Client::isReadyForParsing()
 		this->markForDeletion();
 		return (false);
 	}
-	else if (rawData.back() == '\n')
+	else if (rawData[rawData.size() - 1] == '\n')
 	{
 		return (true);
 	}

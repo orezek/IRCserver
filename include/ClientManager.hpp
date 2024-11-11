@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ClientManager.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:28 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/11 00:41:46 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/11 15:04:00 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <map>
 
 #include "Client.hpp"
+#include "Logger.hpp"
 #include "RoomManager.hpp"
 
 class ClientManager
@@ -32,6 +33,7 @@ class ClientManager
 		void removeClientsMarkedForDeletion(void);
 		std::vector<Client *> getClientsForParsing();
 		std::vector<Client *> getClientsForProcessing();
+		std::string getClientsAsString() const;
 
 	private:
 		ClientManager();

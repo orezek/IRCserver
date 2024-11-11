@@ -6,7 +6,7 @@
 #    By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/21 10:59:06 by mbartos           #+#    #+#              #
-#    Updated: 2024/10/26 14:36:52 by mbartos          ###   ########.fr        #
+#    Updated: 2024/11/11 14:32:03 by mbartos          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,8 +18,8 @@ NC =	\033[0m
 
 NAME =		ircserv
 
-CCP =		c++
-CFLAGS =	-g  \
+CCP =		c++ -std=c++98
+CFLAGS =	-g \
 			-I./include/ -I./include/commands
 
 SRC_PATH = ./src/
@@ -73,4 +73,7 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all re clean fclean
+logoff: CFLAGS += -DLOGGING_ENABLED=0
+logoff: re
+
+.PHONY: all re clean fclean log

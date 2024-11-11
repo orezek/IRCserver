@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RoomManager.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:34:46 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/10 12:36:00 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/11 15:36:17 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,10 @@
 #include <map>
 #include <sstream>
 #include <string>
-#include "Room.hpp"
+
 #include "ClientManager.hpp"
+#include "Logger.hpp"
+#include "Room.hpp"
 
 class RoomManager
 {
@@ -39,6 +41,7 @@ class RoomManager
 		std::string getRoomsAsString() const;
 		std::string getFormattedNicknamess(std::string roomname);
 		bool isClientInRoom(const std::string nickname, std::string roomName);
+
 	private:
 		RoomManager();
 		~RoomManager();
