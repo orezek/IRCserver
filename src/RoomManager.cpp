@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RoomManager.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:34:33 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/11 15:34:11 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/11 18:37:08 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,7 +204,7 @@ std::string RoomManager::getFormattedNicknamess(std::string roomName)
 bool RoomManager::isClientInRoom(std::string roomName, const std::string nickname)
 {
 	int clientFd = -1;
-	if (!ClientManager::getInstance().clientExists(nickname))
+	if (!ClientManager::getInstance().doesClientExist(nickname))
 	{
 		return (false);
 	}

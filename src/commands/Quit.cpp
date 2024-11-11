@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 19:48:17 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/10 23:26:33 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/11 19:10:45 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,17 +42,16 @@ void Quit::setServerResponseValid()
 	if (tokenQuitMessage != NULL)
 	{
 		std::string errorMessage = tokenQuitMessage->getText();
-		if (errorMessage == "SOC_ERROR" || errorMessage == "RECV_ERROR" || errorMessage == "CLIENT_QUIT" || errorMessage == "MESSAGE_LIMIT_EXCEEDED" || errorMessage == "PARTIAL_MESSAGE_LIMIT_EXCEEDED")
+		if (errorMessage == "SOC_ERROR" || errorMessage == "RECV_ERROR" || errorMessage == "CLIENT_CTRLC" || errorMessage == "MESSAGE_LIMIT_EXCEEDED" || errorMessage == "PARTIAL_MESSAGE_LIMIT_EXCEEDED")
 		{
 			std::string responseToOthers;
 			responseToOthers = ":" + client->getNickname() + "!" + client->getFqdn() + " QUIT :" + tokenQuitMessage->getText() + "\r\n";
 			addResponseToOthersOnceInAllRoomsIamIn(responseToOthers);
-			std::cout << "QUIT Socket Errors: " << errorMessage << std::endl;
-			return;
+			Logger::log("Client: ", client->getFd(), " system error: ", errorMessage);
 		}
 		else
 		{
-			std::cout << "Client initiated self destruction! QUIT error: " << errorMessage << std::endl;
+			Logger::log("Client: ",  client->getFd(), " initiated QUIT process :", errorMessage);
 			std::string response = "ERROR :Closing link: (";
 			response.append(client->getUsername());
 			response.append("@");
@@ -79,10 +78,12 @@ void Quit::setServerResponseValid()
 			responseToOthers = ":" + client->getNickname() + "!" + client->getFqdn() + " QUIT :" + tokenQuitMessage->getText() + "\r\n";
 			addResponseToOthersOnceInAllRoomsIamIn(responseToOthers);
 		}
+		ClientManager::getInstance().removeClientFromRooms(client->getFd());
+		ClientManager::getInstance().deleteEmptyRooms();
 	}
 	else
 	{
-		void(0);  // should be exception
+		void(0);
 	}
 }
 // Not used but works well.

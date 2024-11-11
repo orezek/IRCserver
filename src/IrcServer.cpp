@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IrcServer.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:45:52 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/11 14:28:59 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/11 19:35:39 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void IrcServer::runIrcServer(void)
 		this->parseRequests();
 		this->processRequests();
 
-		clientManager.removeClientsMarkedForDeletion();
+		clientManager.removeClients();
 
 		this->displayServerStats();
 
@@ -96,7 +96,6 @@ void IrcServer::processRequests()
 		Client *client = (*clientIt);
 		IRCCommandHandler commandHandler(client);
 		commandHandler.processCommands();
-		clientManager.removeClientFromRoomsAndDeleteEmptyRooms(client->getFd());  // will be deleted
 	}
 }
 

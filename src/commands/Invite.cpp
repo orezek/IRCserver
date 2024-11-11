@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 12:15:47 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 09:37:56 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/11 18:37:08 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void Invite::execute(void)
 			return;
 		}
 		// check Room and User existance
-		if ((roomExists = RoomManager::getInstance().roomExist(tokenRoomname->getText())) && (userExists = ClientManager::getInstance().clientExists(tokenUser->getText())))
+		if ((roomExists = RoomManager::getInstance().roomExist(tokenRoomname->getText())) && (userExists = ClientManager::getInstance().doesClientExist(tokenUser->getText())))
 		{
 			this->room = RoomManager::getInstance().getRoom(tokenRoomname->getText());
 			Client *invitee = ClientManager::getInstance().findClient(tokenUser->getText());

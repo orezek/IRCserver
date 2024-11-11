@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ClientManager.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:24 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/11 15:02:50 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/11 19:35:39 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ Client* ClientManager::findClient(const std::string& nick)
 	return (NULL);
 }
 
-bool ClientManager::clientExists(const std::string nick)
+bool ClientManager::doesClientExist(const std::string nick)
 {
 	return (this->findClient(nick) != NULL);
 }
@@ -77,17 +77,13 @@ void ClientManager::initializeClientPresenceOnServer(int clientSocketFd, struct 
 	client.setNickname("*");
 }
 
-void ClientManager::removeClientFromRoomsAndDeleteEmptyRooms(int clientSocketFd)
+void ClientManager::removeClientFromRooms(int clientSocketFd)
 {
 	Client* toBeDeletedClient = this->findClient(clientSocketFd);
 	if (toBeDeletedClient != NULL)
 	{
-		if (toBeDeletedClient->isMarkedForDeletion() && !toBeDeletedClient->hasResponses())
-		{
-			Logger::log("Deleting client from rooms. FD: " + clientSocketFd);
-			RoomManager::getInstance().removeClientFromRooms(clientSocketFd);
-			RoomManager::getInstance().deleteAllEmptyRooms();
-		}
+		Logger::log("Deleting client from rooms. FD: ", clientSocketFd);
+		RoomManager::getInstance().removeClientFromRooms(clientSocketFd);
 	}
 	else
 	{
@@ -95,7 +91,12 @@ void ClientManager::removeClientFromRoomsAndDeleteEmptyRooms(int clientSocketFd)
 	}
 }
 
-void ClientManager::removeClientsMarkedForDeletion(void)
+void ClientManager::deleteEmptyRooms(void)
+{
+	RoomManager::getInstance().deleteAllEmptyRooms();
+}
+
+void ClientManager::removeClients(void)
 {
 	std::map<int, Client>::iterator it = clients.begin();
 	while (it != clients.end())
@@ -103,7 +104,7 @@ void ClientManager::removeClientsMarkedForDeletion(void)
 		Client* client = &(it->second);
 		if (client->isMarkedForDeletion() && !client->hasResponses())
 		{
-			Logger::log("Removing Client from clients map. FD: " + client->getFd());
+			Logger::log("Removing Client from clients map. FD: ", client->getFd());
 			std::map<int, Client>::iterator temp = it;
 			++it;
 			clients.erase(temp);
