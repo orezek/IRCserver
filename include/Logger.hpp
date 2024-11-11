@@ -6,13 +6,14 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 14:06:13 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/11 14:32:07 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/11 15:30:42 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include <iostream>
+#include <sstream>
 #include <string>
 
 #ifndef LOGGING_ENABLED
@@ -21,8 +22,47 @@
 
 class Logger
 {
+
 	public:
-		static void log(const std::string& message);
+		template <typename T1>
+		static void log(const T1& arg1)
+		{
+#if LOGGING_ENABLED
+			std::ostringstream oss;
+			oss << arg1;
+			std::cout << oss.str() << std::endl;
+#endif
+		}
+
+		template <typename T1, typename T2>
+		static void log(const T1& arg1, const T2& arg2)
+		{
+#if LOGGING_ENABLED
+			std::ostringstream oss;
+			oss << arg1 << arg2;
+			std::cout << oss.str() << std::endl;
+#endif
+		}
+
+		template <typename T1, typename T2, typename T3>
+		static void log(const T1& arg1, const T2& arg2, const T3& arg3)
+		{
+#if LOGGING_ENABLED
+			std::ostringstream oss;
+			oss << arg1 << arg2 << arg3;
+			std::cout << oss.str() << std::endl;
+#endif
+		}
+
+		template <typename T1, typename T2, typename T3, typename T4>
+		static void log(const T1& arg1, const T2& arg2, const T3& arg3, const T4& arg4)
+		{
+#if LOGGING_ENABLED
+			std::ostringstream oss;
+			oss << arg1 << arg2 << arg3 << arg4;
+			std::cout << oss.str() << std::endl;
+#endif
+		}
 
 	private:
 		Logger();
