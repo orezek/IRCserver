@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRCParser.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:09:39 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/10 23:08:08 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/11 09:20:01 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ class IRCParser
 		// MODE functions
 		void parseAndAssignParametersAsMode();
 		void processModeRoom();
+		// void processModeRoomOld();
 		void processModeClient();
 
 		// WHO functions
