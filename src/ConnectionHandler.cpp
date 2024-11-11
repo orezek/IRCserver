@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/11 15:29:49 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/11 19:11:51 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,8 +143,8 @@ void ConnectionHandler::prepareFdSetsForSelect(void)
 		{
 			// Log a warning message
 			// Client was deleted in ClientManager
-			Logger::log("Closing Client FD: " + clientSocketFd);
-			Logger::log("Erasing Client from active sockets: " + clientSocketFd);
+			Logger::log("Closing Client FD: ",  clientSocketFd);
+			Logger::log("Erasing Client from active sockets: ",  clientSocketFd);
 			close(clientSocketFd);
 			it = connections.erase(it);
 			continue;
@@ -236,7 +236,7 @@ int ConnectionHandler::onRead(int clientSocketFd)
 		// client closed connection
 		else if (bytesReceived == 0)
 		{
-			this->onError(clientSocketFd, "CLIENT_QUIT");
+			this->onError(clientSocketFd, "CLIENT_CTRLC");
 			Logger::log("Client ", clientSocketFd, " quit. Pressed {Ctrl+c}");
 			return (-1);
 		}

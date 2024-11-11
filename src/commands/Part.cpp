@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Part.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 19:04:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 16:56:15 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/11 19:25:33 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ void Part::execute(void)
 		// setServerResponses uses this->room instance object - has to be deleted here otherwise segfault
 		if (deleteRoom)
 		{
+			Logger::log("Deleting room: ", tokenRoomname->getText());
 			RoomManager::getInstance().removeRoom(tokenRoomname->getText());
 		}
 		i++;

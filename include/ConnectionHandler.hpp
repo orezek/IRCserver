@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.hpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/11 15:06:23 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/11 18:27:29 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,15 @@ class ConnectionHandler
 		// Server Connections
 		int initializeMasterSocketFd(int serverPortNumber);
 		int enableSocket(int &masterSocketFd);
-		void enableSocketReus(int &masterSocketFd);
-		void enableSocketBinding(int &masterSocketFd, int &serverPortNumber);
-		void enablePortListenning(int &masterSocketFd);
 		int setFileDescriptorToNonBlockingState(int &fd);
-		void prepareFdSetsForSelect(void);
-		void runSelect(void);
 		int acceptNewClients(void);
 		int closeServerFd(void);
 		int &getMasterSocketFd(void);
+		void enableSocketBinding(int &masterSocketFd, int &serverPortNumber);
+		void enablePortListenning(int &masterSocketFd);
+		void prepareFdSetsForSelect(void);
+		void runSelect(void);
+		void enableSocketReus(int &masterSocketFd);
 		ssize_t recvAll(int socketFd, char *buffer, size_t bufferSize);
 		// Events
 		int serverEventLoop(void);
