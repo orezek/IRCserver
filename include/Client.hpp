@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:09 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 23:15:05 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/11 10:06:17 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include <sys/socket.h>
 
 #include <algorithm>
+#include <cerrno>
+#include <cstdio>
 #include <cstring>
 #include <string>
 #include <vector>

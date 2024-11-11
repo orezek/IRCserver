@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ClientManager.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:24 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/11 00:41:46 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/11 10:09:41 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,16 +97,21 @@ void ClientManager::removeClientFromRoomsAndDeleteEmptyRooms(int clientSocketFd)
 
 void ClientManager::removeClientsMarkedForDeletion(void)
 {
-	for (std::map<int, Client>::iterator it = clients.begin(); it != clients.end();)
+	std::map<int, Client>::iterator it = clients.begin();
+	while (it != clients.end())
 	{
 		Client* client = &(it->second);
 		if (client->isMarkedForDeletion() && !client->hasResponses())
 		{
 			std::cout << "Removing Client from clients map. FD: " << client->getFd() << std::endl;
-			it = clients.erase(it);
-			continue;
+			std::map<int, Client>::iterator temp = it;
+			++it;
+			clients.erase(temp);
 		}
-		++it;
+		else
+		{
+			++it;
+		}
 	}
 }
 

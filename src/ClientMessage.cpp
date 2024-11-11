@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:21 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/11 09:42:19 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/11 10:12:01 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ Token *ClientMessage::findNthTokenOfType(Token::Type type, int n)
 
 void ClientMessage::insertTokenAtBeforeFirstTokenType(Token &newToken, Token::Type type)
 {
-	for (std::vector<Token>::const_iterator it = tokens.begin(); it != tokens.end(); ++it)
+	for (std::vector<Token>::iterator it = tokens.begin(); it != tokens.end(); ++it)
 	{
 		if (it->getType() == type)
 		{

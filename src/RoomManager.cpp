@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RoomManager.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:34:33 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/10 12:49:51 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/11 10:13:27 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,9 @@ void RoomManager::deleteAllEmptyRooms(void)
 		if (room->getNoClients() == 0)
 		{
 			std::cout << "Deleting an empty room: #" << it->first << std::endl;
-			it = roomList.erase(it);
+			std::map<std::string, Room>::iterator temp = it;
+			++it;
+			roomList.erase(temp);
 			this->totalNumberOfRooms--;
 		}
 		else
