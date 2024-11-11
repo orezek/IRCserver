@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:34:33 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/11 13:59:45 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/11 15:34:11 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void RoomManager::deleteEmptyRoom(std::string roomName)
 	std::map<std::string, Room>::iterator it = roomList.find(roomName);
 	if (it != roomList.end() && it->second.getNoClients() == 0)
 	{
-		std::cout << "Deleting an empty room: #" << it->first << std::endl;
+		Logger::log("Deleting an empty room: #", it->first);
 		this->roomList.erase(it);
 		this->totalNumberOfRooms--;
 	}
@@ -74,7 +74,7 @@ void RoomManager::deleteAllEmptyRooms(void)
 		Room *room = &(it->second);
 		if (room->getNoClients() == 0)
 		{
-			std::cout << "Deleting an empty room: #" << it->first << std::endl;
+			Logger::log("Deleting an empty room: #", it->first);
 			std::map<std::string, Room>::iterator temp = it;
 			++it;
 			roomList.erase(temp);
@@ -141,14 +141,14 @@ void RoomManager::removeClientFromRooms(const int clientSocketFd)
 			if (room->isOperator(clientSocketFd))
 			{
 				room->removeOperator(clientSocketFd);
-				std::cout << "The client is operator: removing client: " << clientSocketFd << " from room's operators - room: #" << it->first << std::endl;
+				Logger::log("The client is operator: removing client: ", clientSocketFd, " from room's operators - room: #", it->first);
 			}
 			if (room->isClientInInviteList(clientSocketFd))
 			{
 				room->removeInvitee(clientSocketFd);
-				std::cout << "The client is invitee: removing client: " << clientSocketFd << " from room's invitees - room: #" << it->first << std::endl;
+				Logger::log("The client is invitee: removing client: ", clientSocketFd, " from room's invitees - room: #", it->first);
 			}
-			std::cout << "Removing client: " << clientSocketFd << " from room: #" << it->first << std::endl;
+			Logger::log("Removing client: ", clientSocketFd, " from room: #", it->first);
 			room->removeClient(clientSocketFd);
 		}
 		++it;
