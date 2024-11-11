@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 21:05:28 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/11 08:16:03 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,10 @@ void IRCCommandHandler::executeOneCommand(ClientMessage &clientMessage)
 	Commands::ABaseCommand *command = NULL;
 
 	if (commandType == ClientMessage::CAP)
+	{
+		void(0);  // no-op
+	}
+	else if (commandType == ClientMessage::WHOIS)
 	{
 		void(0);  // no-op
 	}

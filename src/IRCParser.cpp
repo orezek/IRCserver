@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/10 21:07:22 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/11 08:15:42 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,6 +160,10 @@ void IRCParser::assignCommandType()
 	{
 		clientMessage.setCommandType(ClientMessage::WHO);
 	}
+	else if (commandString == "WHOIS")
+	{
+		clientMessage.setCommandType(ClientMessage::WHOIS);
+	}
 	else
 	{
 		clientMessage.setCommandType(ClientMessage::UNKNOWN);
@@ -232,6 +236,9 @@ void IRCParser::parseParameterTokens()
 	{
 		parseParametersBySpace();
 		assignParametersAsWho();
+	}
+	else if (commandType == ClientMessage::WHOIS)
+	{
 	}
 	// add functionality for other commands
 }
