@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:45:52 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/11 14:05:04 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/11 14:28:59 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,14 @@ void IrcServer::runIrcServer(void)
 
 	while (true)
 	{
-		std::cout << "/* ************************************************************************** */" << std::endl;
-		std::cout << "Preparing FdSets" << std::endl;
+		Logger::log("/* ************************************************************************** */");
+		Logger::log("Preparing FdSets");
 		connHandler.prepareFdSetsForSelect();
-		std::cout << "Running Select" << std::endl;
+		Logger::log("Running Select");
 		connHandler.runSelect();
-		std::cout << "Checking for new connections" << std::endl;
+		Logger::log("Checking for new connections");
 		connHandler.acceptNewClients();
-		std::cout << "Running Event Loop" << std::endl;
+		Logger::log("Running Event Loop");
 		connHandler.serverEventLoop();
 
 		this->parseRequests();
@@ -61,14 +61,14 @@ void IrcServer::runIrcServer(void)
 
 		this->displayServerStats();
 
-		std::cout << "/* ************************************************************************** */" << std::endl;
+		Logger::log("/* ************************************************************************** */");
 	}
 	connHandler.closeServerFd();
 }
 
 void IrcServer::parseRequests()
 {
-	std::cout << "Parsing client requests" << std::endl;
+	Logger::log("Parsing client requests");
 	ClientManager &clientManager = ClientManager::getInstance();
 
 	std::vector<Client *> clientsForParsing;
@@ -84,7 +84,7 @@ void IrcServer::parseRequests()
 
 void IrcServer::processRequests()
 {
-	std::cout << "Processing client requests" << std::endl;
+	Logger::log("Processing client requests");
 
 	ClientManager &clientManager = ClientManager::getInstance();
 
@@ -102,8 +102,7 @@ void IrcServer::processRequests()
 
 void IrcServer::displayServerStats()
 {
-	std::cout << std::endl;
-	std::cout << "----- || Server stats || -----" << std::endl;
-	std::cout << RoomManager::getInstance().getRoomsAsString() << std::endl;
-	std::cout << ClientManager::getInstance().getClientsAsString() << std::endl;
+	Logger::log("\n----- || Server stats || -----");
+	Logger::log(RoomManager::getInstance().getRoomsAsString());
+	Logger::log(ClientManager::getInstance().getClientsAsString());
 }
