@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:21 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/06 15:20:23 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/11 09:42:19 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,4 +163,9 @@ void ClientMessage::resetIterator()
 {
 	currentTokenIt = tokens.begin();
 	iteratorInitialized = true;
+}
+
+int ClientMessage::size()
+{
+	return (this->tokens.size());
 }

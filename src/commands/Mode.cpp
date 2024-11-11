@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:14:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/11 09:13:45 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/11 09:45:22 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,15 +47,22 @@ void Mode::execute(void)
 		this->setServerResponse403(tokenRoom->getText());
 		return;
 	}
+
+	// if "MODE #room" is send, do nothing - WILL BE IMPLEMENTED IN THE FUTURE
+	Token *testToken;
+	if (clientMessage.size() == 2)
+	{
+		return;
+	}
+
 	this->room = RoomManager::getInstance().getRoom(tokenRoom->getText());
 	if (!room->isOperator(client->getFd()))
 	{
 		this->setServerResponse482();
 		return;
 	}
-	// execute modes one by one
-	//: UserNick!user@hostname MODE #ABC +i
-	// response creation test
+
+	// response creation
 	std::string nickname = client->getNickname();
 	if (nickname.empty())
 	{
@@ -65,12 +72,11 @@ void Mode::execute(void)
 	this->response = ":";
 	response.append(nickname);
 	response.append("!");
-	response.append(client->getFqdn());  // needs to be changed
+	response.append(client->getFqdn());
 	response.append(" MODE ");
 	response.append("#");
 	response.append(this->room->getRoomName());
 	response.append(" ");
-	//  end of response test
 
 	Token *token;
 	std::string responseFlags;
@@ -79,58 +85,43 @@ void Mode::execute(void)
 	clientMessage.resetIterator();
 	while ((token = clientMessage.getNextToken()) != NULL)
 	{
-		std::cout << token->getText() << std::endl;
 		if (token->getType() == Token::MODE_ROOM_INVITE_ONLY_ADD)
 		{
 			this->room->setInviteOnly(true);
 			responseFlags.append("+i");
-			continue;
 		}
-		if (token->getType() == Token::MODE_ROOM_INVITE_ONLY_REMOVE)
+		else if (token->getType() == Token::MODE_ROOM_INVITE_ONLY_REMOVE)
 		{
 			this->room->setInviteOnly(false);
 			responseFlags.append("-i");
-			continue;
 		}
-		if (token->getType() == Token::MODE_ROOM_PASSWORD_ADD)
+		else if (token->getType() == Token::MODE_ROOM_PASSWORD_ADD)
 		{
 			this->room->setPasswordRequired(true);
 			this->room->setPassword(token->getText());
 			responseFlags.append("+k");
 			responseParameters.append(" ");
 			responseParameters.append(token->getText());
-			continue;
 		}
-		if (token->getType() == Token::MODE_ROOM_PASSWORD_REMOVE)
+		else if (token->getType() == Token::MODE_ROOM_PASSWORD_REMOVE)
 		{
 			this->room->setPasswordRequired(false);
 			this->room->setPassword("");
 			responseFlags.append("-k");
 			responseParameters.append(" ");
 			responseParameters.append(token->getText());
-			continue;
 		}
-		// if (token->getType() == Token::MODE_ROOM_PASSWORD_PARAMETER)
-		// {
-		// 	if (room->isPasswordRequired())
-		// 	{
-		// 		this->room->setPassword(token->getText());
-		// 	}
-		// 	continue;
-		// }
-		if (token->getType() == Token::MODE_ROOM_TOPIC_RESTRICTIONS_ADD)
+		else if (token->getType() == Token::MODE_ROOM_TOPIC_RESTRICTIONS_ADD)
 		{
 			this->room->lockTopic();
 			responseFlags.append("+t");
-			continue;
 		}
-		if (token->getType() == Token::MODE_ROOM_TOPIC_RESTRICTIONS_REMOVE)
+		else if (token->getType() == Token::MODE_ROOM_TOPIC_RESTRICTIONS_REMOVE)
 		{
 			this->room->unlockTopic();
 			responseFlags.append("-t");
-			continue;
 		}
-		if (token->getType() == Token::MODE_ROOM_OPERATOR_ADD)
+		else if (token->getType() == Token::MODE_ROOM_OPERATOR_ADD)
 		{
 			if (RoomManager::getInstance().isClientInRoom(this->room->getRoomName(), token->getText()))
 			{
@@ -144,9 +135,8 @@ void Mode::execute(void)
 			{
 				setServerResponse401(token->getText());
 			}
-			continue;
 		}
-		if (token->getType() == Token::MODE_ROOM_OPERATOR_REMOVE)
+		else if (token->getType() == Token::MODE_ROOM_OPERATOR_REMOVE)
 		{
 			if (RoomManager::getInstance().isClientInRoom(this->room->getRoomName(), token->getText()))
 			{
@@ -160,35 +150,8 @@ void Mode::execute(void)
 			{
 				setServerResponse401(token->getText());
 			}
-			continue;
 		}
-		// if (token->getType() == Token::MODE_ROOM_OPERATOR_PARAMETER)
-		// {
-		// 	if (RoomManager::getInstance().isClientInRoom(this->room->getRoomName(), token->getText()))
-		// 	{
-		// 		if (addOperator)
-		// 		{
-		// 			room->addOperator(ClientManager::getInstance().findClient(token->getText())->getFd());
-		// 			response.append(" ");
-		// 			response.append(token->getText());
-		// 			addOperator = false;
-		// 			continue;
-		// 		}
-		// 		if (!addOperator)
-		// 		{
-		// 			room->removeOperator(ClientManager::getInstance().findClient(token->getText())->getFd());
-		// 			response.append(" ");
-		// 			response.append(token->getText());
-		// 			addOperator = false;
-		// 			continue;
-		// 		}
-		// 	}
-		// 	this->response = deleteSubstringFromEnd(this->response, "+o");
-		// 	this->response = deleteSubstringFromEnd(this->response, " -o");
-		// 	this->setServerResponse401(token->getText());
-		// 	continue;
-		// }
-		if (token->getType() == Token::MODE_ROOM_USER_LIMIT_ADD)
+		else if (token->getType() == Token::MODE_ROOM_USER_LIMIT_ADD)
 		{
 			int userLimit;
 			if (stringToInt(token->getText(), userLimit))
@@ -204,28 +167,26 @@ void Mode::execute(void)
 				{
 					this->setServerResponse472(" l", "invalid limit <1 - 1024>");
 				}
-				continue;
 			}
 			else
 			{
 				this->setServerResponse472(" l", "is unknown mode char to me");
 			}
-			continue;
 		}
-		if (token->getType() == Token::MODE_ROOM_USER_LIMIT_REMOVE)
+		else if (token->getType() == Token::MODE_ROOM_USER_LIMIT_REMOVE)
 		{
 			responseFlags.append("-l");
 			room->setUserLimit(0);
-			continue;
 		}
 	}
+
 	clientMessage.resetIterator();
+
 	if (!responseFlags.empty() || !responseParameters.empty())
 	{
 		this->response.append(responseFlags);
 		this->response.append(responseParameters);
 		this->response.append("\r\n");
-		std::cout << response << std::endl;
 		this->addResponse(room, response);
 	}
 }
