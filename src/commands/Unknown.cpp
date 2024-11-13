@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 11:21:17 by mbartos           #+#    #+#             */
-/*   Updated: 2024/10/26 15:55:59 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 10:56:34 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,6 @@ void Unknown::execute()
 void Unknown::setServerResponse421()
 {
 	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
 
 	std::string command = clientMessage.getCommandString();
 

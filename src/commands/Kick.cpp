@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 21:30:41 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 09:30:11 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 11:34:20 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ void Kick::execute(void)
 	Token *tokenUser = NULL;
 	Token *tokenMessage = NULL;
 	bool roomExists;
-	bool userExists;
 	bool hasMessage = false;
 	std::string message = "";
 
@@ -43,7 +42,7 @@ void Kick::execute(void)
 		setServerResponse451();
 		return;
 	}
-	
+
 	int i = 1;
 	do
 	{
@@ -71,7 +70,7 @@ void Kick::execute(void)
 				if (room->isOperator(client->getFd()))
 				{
 					// is kicked user in the room?
-					if (room->isClientInRoom(tokenUser->getText()))
+					if (RoomManager::getInstance().isClientInRoom(this->room->getRoomName(), tokenUser->getText()))
 					{
 						// kick
 						Client *kickedClient = ClientManager::getInstance().findClient(tokenUser->getText());
@@ -113,14 +112,11 @@ void Kick::execute(void)
 	} while (tokenUser != NULL);
 }
 
-//:server.name 441 Aldo Patrick #example_channel :They aren't on that channel
+//: server.name 441 Aldo Patrick #example_channel :They aren't on that channel
 void Kick::setServerResponse441(std::string kicked_user)
 {
 	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
+
 	this->response.clear();
 	this->response = ":";
 	this->response.append(serverData.getServerName());
@@ -134,14 +130,11 @@ void Kick::setServerResponse441(std::string kicked_user)
 	addResponse(client, response);
 }
 
-//:Aldo!user@hostname KICK #example_channel Patrick :Spamming not allowed
+//: Aldo!user@hostname KICK #example_channel Patrick :Spamming not allowed
 void Kick::setServerResponseKick(std::string message, std::string kicked_user)
 {
 	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
+
 	std::string response = ":";
 	response.append(nickname);
 	response.append("!user@hostname");
@@ -156,6 +149,5 @@ void Kick::setServerResponseKick(std::string message, std::string kicked_user)
 	this->addResponse(room, response);
 	this->addResponse(ClientManager::getInstance().findClient(kicked_user), response);
 }
-
 
 }  // namespace Commands

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserData.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 23:12:55 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 16:32:55 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/13 10:48:13 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,22 +38,26 @@ UserData &UserData::operator=(const UserData &obj)
 	return (*this);
 };
 
-std::string UserData::getNickname()
+std::string UserData::getNickname() const
 {
+	if (this->nickname.empty())
+	{
+		return ("*");
+	}
 	return (this->nickname);
 }
 
-std::string UserData::getUsername()
+std::string UserData::getUsername() const
 {
 	return (this->username);
 }
 
-std::string UserData::getHostname()
+std::string UserData::getHostname() const
 {
 	return (this->hostname);
 }
 
-std::string UserData::getRealname()
+std::string UserData::getRealname() const
 {
 	return (this->realname);
 }
@@ -149,12 +153,12 @@ void UserData::setUserValid(bool userValue)
 	}
 }
 
-std::string UserData::getServername()
+std::string UserData::getServername() const
 {
-	return(this->servername);
+	return (this->servername);
 }
 // <username> <hostname> <servername> <nickname> <H/G>*
 std::string UserData::getUserInfo(void)
 {
-	return (this->username + " " +  this->hostname + " " + servername + " " + nickname + " H");
+	return (this->username + " " + this->hostname + " " + servername + " " + nickname + " H");
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Quit.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 19:48:00 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/08 13:38:38 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/10 14:42:11 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ class Quit : public ABaseCommand
 
 	private:
 		void setServerResponseValid();
+		void addResponseToOthersOnceInAllRoomsIamInV2(std::string responseToOthers);
 };
 
 }  // namespace Commands

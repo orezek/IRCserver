@@ -15,9 +15,9 @@
 namespace Commands
 {
 
-Nick::Nick(Client* client, ClientMessage& clientMessage) : ABaseCommand(client, clientMessage), newNick(""), oldNick("") {}
+Nick::Nick(Client* client, ClientMessage& clientMessage) : ABaseCommand(client, clientMessage), oldNick(""), newNick("") {}
 
-Nick::Nick(Nick const& refObj) : ABaseCommand(refObj), newNick(refObj.newNick), oldNick(refObj.oldNick) {}
+Nick::Nick(Nick const& refObj) : ABaseCommand(refObj), oldNick(refObj.oldNick), newNick(refObj.newNick) {}
 
 Nick& Nick::operator=(Nick const& refObj)
 {
@@ -123,17 +123,26 @@ bool Nick::isValidNick(std::string& nick)
 	return (true);
 }
 
+// bool Nick::isAlreadyUsedNick(std::string& nick)
+// {
+// 	ClientManager& clients = ClientManager::getInstance();
+
+// 	for (std::map<int, Client>::iterator it = clients.clients.begin(); it != clients.clients.end(); ++it)
+// 	{
+// 		std::string oldNick = it->second.getNickname();
+// 		if (nick == oldNick)
+// 		{
+// 			return (true);
+// 		}
+// 	}
+// 	return (false);
+// }
+
 bool Nick::isAlreadyUsedNick(std::string& nick)
 {
-	ClientManager& clients = ClientManager::getInstance();
-
-	for (std::map<int, Client>::iterator it = clients.clients.begin(); it != clients.clients.end(); ++it)
+	if(ClientManager::getInstance().findClient(nick) != NULL)
 	{
-		std::string oldNick = it->second.getNickname();
-		if (nick == oldNick)
-		{
-			return (true);
-		}
+		return (true);
 	}
 	return (false);
 }

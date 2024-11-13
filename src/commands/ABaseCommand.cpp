@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 09:51:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/08 17:43:49 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 11:32:42 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,16 @@ ABaseCommand::ABaseCommand(Client* client, ClientMessage& clientMessage) : clien
 																		   room(NULL),
 																		   serverData(ServerDataManager::getInstance()) {}
 
-ABaseCommand::ABaseCommand(ABaseCommand const& refObj) : client(refObj.client), room(refObj.room), serverData(refObj.serverData), clientMessage(refObj.clientMessage) {};
+ABaseCommand::ABaseCommand(ABaseCommand const& refObj) : client(refObj.client), clientMessage(refObj.clientMessage), room(refObj.room), serverData(refObj.serverData) {};
 
 ABaseCommand& ABaseCommand::operator=(ABaseCommand const& refObj)
 {
 	if (this != &refObj)
 	{
 		this->client = refObj.client;
-		this->serverData = refObj.serverData;
 		this->clientMessage = refObj.clientMessage;
 		this->room = refObj.room;
+		this->serverData = refObj.serverData;
 	}
 	return (*this);
 };
@@ -41,10 +41,6 @@ ABaseCommand::~ABaseCommand() {}
 void ABaseCommand::setServerResponse332(void)
 {
 	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
 	std::string response = ":";
 	response.append(client->getServername());
 	response.append(" 332 ");
@@ -61,10 +57,6 @@ void ABaseCommand::setServerResponse332(void)
 void ABaseCommand::setServerResponse353(void)
 {
 	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
 	std::string response;
 	response = ":";
 	response.append(client->getServername());
@@ -73,7 +65,7 @@ void ABaseCommand::setServerResponse353(void)
 	response.append(" #");
 	response.append(this->room->getRoomName());
 	response.append(" :");
-	response.append(this->room->getFormattedNicknames());
+	response.append(RoomManager::getInstance().getFormattedNicknamess(this->room->getRoomName()));
 	response.append("\r\n");
 	addResponse(client, response);
 }
@@ -81,10 +73,6 @@ void ABaseCommand::setServerResponse353(void)
 void ABaseCommand::setServerResponse366(void)
 {
 	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
 	std::string response;
 	response = ":";
 	response.append(client->getServername());
@@ -104,11 +92,6 @@ void ABaseCommand::setServerResponse366(void)
 void ABaseCommand::setServerResponse401(const std::string invitee)
 {
 	std::string nickname = this->client->getNickname();
-
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
 	std::string response = ":";
 	response.append(client->getServername());
 	response.append(" 401 ");
@@ -123,10 +106,7 @@ void ABaseCommand::setServerResponse401(const std::string invitee)
 void ABaseCommand::setServerResponse403(std::string roomName)
 {
 	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
+
 	std::string response;
 	response = ":";
 	response.append(client->getServername());
@@ -143,10 +123,7 @@ void ABaseCommand::setServerResponse403(std::string roomName)
 void ABaseCommand::setServerResponse442(void)
 {
 	std::string nickname = this->client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
+
 	std::string response = ":";
 	response.append(client->getServername());
 	response.append(" 442 ");
@@ -163,10 +140,6 @@ void ABaseCommand::setServerResponse451()
 	std::string command = clientMessage.getCommandString();
 	std::string nickname = client->getNickname();
 
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
 	std::string response = ":";
 	response.append(client->getServername());
 	response.append(" 451 ");
@@ -183,10 +156,6 @@ void ABaseCommand::setServerResponse461()
 	std::string command = clientMessage.getCommandString();
 	std::string nickname = client->getNickname();
 
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
 	std::string response = ":";
 	response.append(client->getServername());
 	response.append(" 461 ");
@@ -201,10 +170,6 @@ void ABaseCommand::setServerResponse461()
 void ABaseCommand::setServerResponse462()
 {
 	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
 
 	std::string response = ":";
 	response.append(client->getServername());
@@ -219,10 +184,7 @@ void ABaseCommand::setServerResponse462()
 void ABaseCommand::setServerResponse482(void)
 {
 	std::string nickname = this->client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
+
 	std::string response = ":";
 	response.append(client->getServername());
 	response.append(" 482 ");
@@ -245,14 +207,10 @@ void ABaseCommand::setServerResponseWelcome()
 	addResponse(client, response);
 }
 
-// should be inline with QUIT command?
+// should be inline with QUIT command? Yes, it should!
 void ABaseCommand::setServerResponseInvalidAuthentication()
 {
 	std::string nickname = this->client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
 
 	std::string response = "ERROR :Closing link: (";
 	response.append(client->getFqdn());

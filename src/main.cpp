@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:02:47 by orezek            #+#    #+#             */
-/*   Updated: 2024/09/28 14:23:23 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/11 15:32:38 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,9 @@ int main(int argc, char *argv[])
 		irc.runIrcServer();
 	}
 	else
+	{
 		std::cout << "Invalid input! Insert <port> <password>" << std::endl;
+		return (1);
+	}
 	return (0);
 }

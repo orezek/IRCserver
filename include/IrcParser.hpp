@@ -1,12 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   IRCParser.hpp                                      :+:      :+:    :+:   */
+/*   IrcParser.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:09:39 by mbartos           #+#    #+#             */
+<<<<<<< HEAD:include/IRCParser.hpp
 /*   Updated: 2024/11/08 21:04:03 by orezek           ###   ########.fr       */
+=======
+/*   Updated: 2024/11/13 12:03:59 by mbartos          ###   ########.fr       */
+>>>>>>> 9cfd045fe028158209b04b48122e88bfe53007ad:include/IrcParser.hpp
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +20,17 @@
 #include <vector>
 
 #include "Client.hpp"
-#include "ClientManager.hpp"
 #include "ClientMessage.hpp"
-// #include "ClientRequest.hpp"
-// #include "Token.hpp"
+#include "Logger.hpp"
 
-class IRCParser
+class IrcParser
 {
 	public:
-		IRCParser(Client& client);
-		IRCParser(int newClientFd);
-		void parse();
+		IrcParser(Client* client);
+		void makeClientMessages();
 
 	private:
 		Client* client;
-		int clientFd;
 		std::string tempInputData;
 		std::vector<std::string> rawMessages;
 		ClientMessage clientMessage;
@@ -74,6 +74,7 @@ class IRCParser
 		// MODE functions
 		void parseAndAssignParametersAsMode();
 		void processModeRoom();
+		// void processModeRoomOld();
 		void processModeClient();
 
 		// WHO functions
@@ -84,9 +85,13 @@ class IRCParser
 		void assignTokenTypesAsPing();
 		void assignTokenTypesAsQuit();
 		void assignTokenTypesAsUser();
+<<<<<<< HEAD:include/IRCParser.hpp
 		
 		// BOT functions
 		void parseAndAssignParametersAsBot();
+=======
+
+>>>>>>> 9cfd045fe028158209b04b48122e88bfe53007ad:include/IrcParser.hpp
 		// general functions
 		std::string trim(const std::string& str);
 };

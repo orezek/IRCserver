@@ -6,21 +6,16 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:45:52 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 13:03:29 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/13 12:04:41 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IrcServer.hpp"
 
-// IrcServer::IrcServer()
-// {
-// 	this->serverPortNumber = -1;
-// 	this->ircPassword = "default";
-// }
-
-IrcServer::IrcServer(int serverPortNumber, std::string ircPassword) : serverPortNumber(serverPortNumber), ircPassword(ircPassword) {
-	ServerDataManager& serverData = ServerDataManager::getInstance(ircPassword, serverPortNumber);
-};
+IrcServer::IrcServer(int serverPortNumber, std::string ircPassword) : serverPortNumber(serverPortNumber), ircPassword(ircPassword)
+{
+	ServerDataManager::getInstance(ircPassword, serverPortNumber);
+}
 
 IrcServer::IrcServer(const IrcServer &obj)
 {
@@ -34,7 +29,6 @@ IrcServer &IrcServer::operator=(const IrcServer &obj)
 	{
 		this->serverPortNumber = obj.serverPortNumber;
 		this->ircPassword = obj.ircPassword;
-		// serverData cannot be coppied
 	}
 	return (*this);
 }
@@ -44,22 +38,69 @@ IrcServer::~IrcServer() {};
 void IrcServer::runIrcServer(void)
 {
 	ConnectionHandler connHandler = ConnectionHandler(this->serverPortNumber);
-	connHandler.enableSocket();
-	connHandler.enableNonBlockingFd(connHandler.getMasterSocketFd());
-	connHandler.enableSocketReus();
-	connHandler.enableSocketBinding();
-	connHandler.enablePortListenning();
+	connHandler.initializeMasterSocketFd();
+	ClientManager &clientManager = ClientManager::getInstance();
+
 	while (true)
 	{
-		// std::cout << "Prepare FD SET" << std::endl;
-		connHandler.prepareFdSetForSelect();
-		// std::cout << "RUN Select" << std::endl;
+		Logger::log("/* ************************************************************************** */");
+		Logger::log("Preparing FdSets");
+		connHandler.prepareFdSetsForSelect();
+		Logger::log("Running Select");
 		connHandler.runSelect();
-		// std::cout << "Check for new clients" << std::endl;
-		connHandler.checkForNewClients();
-		// std::cout << "Handle new clients" << std::endl;
+		Logger::log("Checking for new connections");
+		connHandler.acceptNewClients();
+		Logger::log("Running Event Loop");
 		connHandler.serverEventLoop();
-		// std::cout << "END of while" << std::endl;
+
+		this->parseRequests();
+		this->processRequests();
+
+		clientManager.removeClients();
+
+		this->displayServerStats();
+
+		Logger::log("/* ************************************************************************** */");
 	}
 	connHandler.closeServerFd();
+}
+
+void IrcServer::parseRequests()
+{
+	Logger::log("Parsing client requests");
+	ClientManager &clientManager = ClientManager::getInstance();
+
+	std::vector<Client *> clientsForParsing;
+	clientsForParsing = clientManager.getClientsForParsing();
+
+	for (std::vector<Client *>::iterator clientIt = clientsForParsing.begin(); clientIt != clientsForParsing.end(); ++clientIt)
+	{
+		Client *client = (*clientIt);
+		IrcParser parser(client);
+		parser.makeClientMessages();
+	}
+}
+
+void IrcServer::processRequests()
+{
+	Logger::log("Processing client requests");
+
+	ClientManager &clientManager = ClientManager::getInstance();
+
+	std::vector<Client *> clientsForCommandsProcessing;
+	clientsForCommandsProcessing = clientManager.getClientsForProcessing();
+
+	for (std::vector<Client *>::iterator clientIt = clientsForCommandsProcessing.begin(); clientIt != clientsForCommandsProcessing.end(); ++clientIt)
+	{
+		Client *client = (*clientIt);
+		IrcCommandHandler commandHandler(client);
+		commandHandler.processCommands();
+	}
+}
+
+void IrcServer::displayServerStats()
+{
+	Logger::log("\n----- || Server stats || -----");
+	Logger::log(RoomManager::getInstance().getRoomsAsString());
+	Logger::log(ClientManager::getInstance().getClientsAsString());
 }

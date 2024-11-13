@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.hpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/31 18:19:40 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/13 11:20:40 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,18 +25,11 @@
 #include <netinet/in.h>  // sockaddr_in struct
 #include <sys/select.h>  // select call
 #include <sys/socket.h>  // socket(), bind(), listen(), accept() send()
-// Exceptions
-#include <stdexcept>
-// custom classes
-// #include "ClientRequest.hpp"
-// #include "ProcessData.hpp"
-// #include "ServerResponse.hpp"
-// #include "IrcServer.hpp"
-// #include "Client.hpp"
+
+#include <stdexcept>  // exceptions
+
 #include "ClientManager.hpp"
-// #include "ClientRequestHandler.hpp"
-#include "IRCCommandHandler.hpp"
-#include "IRCParser.hpp"
+#include "Logger.hpp"
 #include "ServerDataManager.hpp"
 
 class ConnectionHandler
@@ -48,38 +41,24 @@ class ConnectionHandler
 		~ConnectionHandler();
 		ConnectionHandler &operator=(const ConnectionHandler &obj);
 
-		// set socket
-		int enableSocket(void);
-		// set file descriptor to be non-blocking
-		int enableNonBlockingFd(int &fd);
-		// set socket to be re-usable
-		int enableSocketReus(void);
-		// set socket binding
-		int enableSocketBinding(void);
-		// set socket to listenning mode
-		int enablePortListenning(void);
-		// resets fd_set, adds master socket to FD_SET and re-inserts fds to clientSockets vector
-		void prepareFdSetForSelect(void);
-		// run select
-		void runSelect(void);
-		int checkForNewClients(void);
-		// this is the read event -- needs to be renamed
-		int serverEventLoop(void);
-		// recv and send system calls in loops
-		ssize_t recvAll(int socketFd, char *buffer, size_t bufferSize);
-		// ssize_t sendServerResponse(ServerResponse &serverResponse);
-		// check partiality of a message
-		bool isMessageValid(int clientSocketFd, char *buff, ssize_t bytesReceived);
-
-		// Getters and Setters extend as per need
-
-		int &getMasterSocketFd(void);
+		// Server Connections
+		int initializeMasterSocketFd();
+		int enableSocket(int &masterSocketFd);
+		int setFileDescriptorToNonBlockingState(int &fd);
+		int acceptNewClients(void);
 		int closeServerFd(void);
-		void removeClientFromMap(std::map<int, Client>::iterator &it);
-		void terminateClientSession(std::map<int, Client>::iterator &it);
-		void onError(Client &client, const std::string reason);
-		void onRead(Client &client);
-		void onWrite(Client &client);
+		int &getMasterSocketFd(void);
+		void enableSocketBinding(int &masterSocketFd);
+		void enablePortListenning(int &masterSocketFd);
+		void prepareFdSetsForSelect(void);
+		void runSelect(void);
+		void enableSocketReus(int &masterSocketFd);
+		ssize_t recvAll(int socketFd, char *buffer, size_t bufferSize);
+		// Events
+		int serverEventLoop(void);
+		int onError(int clientSocketFd, std::string reason);
+		int onRead(int clientSocketFd);
+		int onWrite(int clientSocketFd);
 
 		const static int MAX_CLIENTS = 1024;
 		const static int MAX_BUFF_SIZE = 1024;
@@ -87,15 +66,12 @@ class ConnectionHandler
 		const std::string ERR_INPUTTOOLONG;
 
 	private:
-		//void removeClientFromRooms(int clientSocketFd);
 		int serverPortNumber;
 		int masterSocketFd;
 		int selectResponse;
 		int maxFd;
-		socklen_t ipAddressLenSrv;
 		fd_set readFds;
 		fd_set writeFds;
 		fd_set errorFds;
-		struct sockaddr_in ipServerAddress;
-		struct sockaddr_in ipClientAddress;
+		std::vector<int> connections;
 };

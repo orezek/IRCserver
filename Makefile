@@ -5,8 +5,6 @@
 #                                                     +:+ +:+         +:+      #
 #    By: orezek <orezek@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/11/08 20:51:02 by orezek            #+#    #+#              #
-#    Updated: 2024/11/08 20:51:04 by orezek           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,13 +17,61 @@ SRC_PATH = ./src/
 COMMANDS_PATH = ./src/commands/
 SRC =		$(wildcard $(SRC_PATH)*.cpp) $(wildcard $(COMMANDS_PATH)*.cpp)
 
-# Objects and dependencies
-OBJ_PATH =	obj/
-OBJ_COMMANDS_PATH = $(OBJ_PATH)commands/
-OBJ =		$(patsubst $(SRC_PATH)%.cpp,$(OBJ_PATH)%.o,$(wildcard $(SRC_PATH)*.cpp)) \
-			$(patsubst $(COMMANDS_PATH)%.cpp,$(OBJ_COMMANDS_PATH)%.o,$(wildcard $(COMMANDS_PATH)*.cpp))
+CCP =		c++ -std=c++98
+CFLAGS =	-g -Wall -Wextra -Werror\
+			-I./include/ -I./include/commands
 
-DEPS =		$(OBJ:.o=.d)
+# Source files
+SRC_PATH =		./src/
+COMMANDS_PATH =	./src/commands/
+
+SRC_FILES =		Client.cpp \
+				ClientManager.cpp \
+				ClientMessage.cpp \
+				ConnectionHandler.cpp \
+				IrcCommandHandler.cpp \
+				IrcParser.cpp \
+				IrcServer.cpp \
+				Logger.cpp \
+				main.cpp \
+				Room.cpp \
+				RoomManager.cpp \
+				ServerDataManager.cpp \
+				StringUtils.cpp \
+				Token.cpp \
+				UserData.cpp
+
+COMMAND_FILES =	ABaseCommand.cpp \
+				Invite.cpp \
+				Join.cpp \
+				Kick.cpp \
+				Mode.cpp \
+				Names.cpp \
+				Nick.cpp \
+				Part.cpp \
+				Pass.cpp \
+				Ping.cpp \
+				Privmsg.cpp \
+				Quit.cpp \
+				Topic.cpp \
+				Unknown.cpp \
+				User.cpp \
+				Who.cpp
+
+SRC = 		$(addprefix $(SRC_PATH), $(SRC_FILES)) \
+			$(addprefix $(COMMANDS_PATH), $(COMMAND_FILES))
+
+# Objects and dependencies
+OBJ_PATH =		obj/
+OBJ_COMMANDS_PATH = $(OBJ_PATH)commands/
+
+OBJ_FILES =		$(SRC_FILES:.cpp=.o)
+OBJ_COMMAND_FILES = $(COMMAND_FILES:.cpp=.o)
+
+OBJ =			$(addprefix $(OBJ_PATH), $(OBJ_FILES)) \
+				$(addprefix $(OBJ_COMMANDS_PATH), $(OBJ_COMMAND_FILES))
+
+DEPS =			$(OBJ:.o=.d)
 
 BIN_PATH = bin/
 
@@ -66,4 +112,7 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all re clean fclean
+logoff: CFLAGS += -DLOGGING_ENABLED=0
+logoff: re
+
+.PHONY: all re clean fclean logoff

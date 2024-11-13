@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:14:27 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 09:29:52 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 10:56:15 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ void Join::execute()
 	bool roomExists;
 	std::string roomPasword;
 	Token *tokenRoomname = NULL;
-
 
 	tokenRoomname = clientMessage.findNthTokenOfType(Token::ROOM_NAME, 1);
 	if (tokenRoomname == NULL)
@@ -141,10 +140,7 @@ void Join::setServerResponse475(void)
 {
 	//: server.name 475 Aldo #TEST :Cannot join channel (+k)
 	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
+
 	std::string response = ":";
 	response.append(serverData.getServerName());
 	response.append(" 475 ");
@@ -159,10 +155,7 @@ void Join::setServerResponseJoin(void)
 {
 	//: Aldo!user@hostname JOIN :#TEST
 	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
+
 	std::string response = ":";
 	response.append(nickname);
 	response.append("!user@hostname");
@@ -178,10 +171,7 @@ void Join::setServerResponse473(void)
 {
 	//: server.name 475 Aldo #TEST :Cannot join channel (+k)
 	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
+
 	std::string response = ":";
 	response.append(serverData.getServerName());
 	response.append(" 473 ");
@@ -196,10 +186,7 @@ void Join::setServerResponse473(void)
 void Join::setServerResponse471(void)
 {
 	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
+
 	std::string response = ":";
 	response.append(serverData.getServerName());
 	response.append(" 471 ");

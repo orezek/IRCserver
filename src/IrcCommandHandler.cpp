@@ -1,53 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   IRCCommandHandler.cpp                              :+:      :+:    :+:   */
+/*   IrcCommandHandler.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
+<<<<<<< HEAD:src/IRCCommandHandler.cpp
 /*   Updated: 2024/11/08 20:56:26 by orezek           ###   ########.fr       */
+=======
+/*   Updated: 2024/11/13 12:04:45 by mbartos          ###   ########.fr       */
+>>>>>>> 9cfd045fe028158209b04b48122e88bfe53007ad:src/IrcCommandHandler.cpp
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "IRCCommandHandler.hpp"
+#include "IrcCommandHandler.hpp"
 
-IRCCommandHandler::IRCCommandHandler(Client *client) : client(client), serverData(ServerDataManager::getInstance())
+IrcCommandHandler::IrcCommandHandler(Client *client) : client(client)
 {
 	if (client == NULL)
 	{
 		throw std::runtime_error("Client unknown.");
 	}
-	clientFd = client->getFd();
 }
 
-IRCCommandHandler::IRCCommandHandler(int newClientFd) : clientFd(newClientFd), serverData(ServerDataManager::getInstance())
-{
-	client = ClientManager::getInstance().findClient(clientFd);
-}
+IrcCommandHandler::IrcCommandHandler(const IrcCommandHandler &refObj) : client(refObj.client) {}
 
-// Copy constructor
-IRCCommandHandler::IRCCommandHandler(const IRCCommandHandler &refObj) : client(refObj.client), serverData(refObj.serverData) {}
-
-// Copy assignment operator
-IRCCommandHandler &IRCCommandHandler::operator=(const IRCCommandHandler &refObj)
+IrcCommandHandler &IrcCommandHandler::operator=(const IrcCommandHandler &refObj)
 {
 	if (this != &refObj)
 	{
-		this->clientFd = refObj.clientFd;
 		this->client = refObj.client;
-		this->serverData = refObj.serverData;
 	}
 	return (*this);
 }
 
-void IRCCommandHandler::processAllCommands()
+void IrcCommandHandler::processCommands()
 {
 	try
 	{
-		IRCParser parser(clientFd);
-		parser.parse();
-
 		while (1)
 		{
 			ClientMessage clientMessage = client->popMessage();
@@ -61,14 +52,18 @@ void IRCCommandHandler::processAllCommands()
 	}
 }
 
-void IRCCommandHandler::executeOneCommand(ClientMessage &clientMessage)
+void IrcCommandHandler::executeOneCommand(ClientMessage &clientMessage)
 {
 	ClientMessage::cmdTypes commandType = clientMessage.getCommandType();
 	Commands::ABaseCommand *command = NULL;
 
 	if (commandType == ClientMessage::CAP)
 	{
-		void(0); // no-op
+		void(0);  // no-op
+	}
+	else if (commandType == ClientMessage::WHOIS)
+	{
+		void(0);  // no-op
 	}
 	else if (commandType == ClientMessage::PING)
 	{

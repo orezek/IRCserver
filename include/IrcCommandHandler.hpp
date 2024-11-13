@@ -1,12 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   IRCCommandHandler.hpp                              :+:      :+:    :+:   */
+/*   IrcCommandHandler.hpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:33 by orezek            #+#    #+#             */
+<<<<<<< HEAD:include/IRCCommandHandler.hpp
 /*   Updated: 2024/11/08 20:54:59 by orezek           ###   ########.fr       */
+=======
+/*   Updated: 2024/11/13 12:04:41 by mbartos          ###   ########.fr       */
+>>>>>>> 9cfd045fe028158209b04b48122e88bfe53007ad:include/IrcCommandHandler.hpp
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +21,12 @@
 
 #include "Client.hpp"
 #include "ClientMessage.hpp"
-#include "IRCParser.hpp"
-#include "ServerDataManager.hpp"  // Will be deleted in the future
 
 // commands
+<<<<<<< HEAD:include/IRCCommandHandler.hpp
 #include "Bot.hpp"
+=======
+>>>>>>> 9cfd045fe028158209b04b48122e88bfe53007ad:include/IrcCommandHandler.hpp
 #include "Invite.hpp"
 #include "Join.hpp"
 #include "Kick.hpp"
@@ -38,19 +43,17 @@
 #include "User.hpp"
 #include "Who.hpp"
 
-class IRCCommandHandler
+class IrcCommandHandler
 {
 	public:
-		IRCCommandHandler(Client *client);
-		IRCCommandHandler(int clientFd);
-		IRCCommandHandler(const IRCCommandHandler &refObj);
-		IRCCommandHandler &operator=(const IRCCommandHandler &refObj);
+		IrcCommandHandler(Client *client);
+		IrcCommandHandler(int clientFd);
+		IrcCommandHandler(const IrcCommandHandler &refObj);
+		IrcCommandHandler &operator=(const IrcCommandHandler &refObj);
 
-		void processAllCommands();
+		void processCommands();
 		void executeOneCommand(ClientMessage &clientMessage);
 
 	private:
-		int clientFd;
-		Client *client;                 // will be deleted
-		ServerDataManager &serverData;  // Will be deleted in the future
+		Client *client;
 };

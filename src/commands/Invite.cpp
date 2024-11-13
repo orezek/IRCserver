@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 12:15:47 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 09:37:56 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 11:34:09 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ Invite::~Invite() {}
 void Invite::execute(void)
 {
 	bool roomExists;
-	bool userExists;
-	bool userIsOperator;
 
 	Token *tokenRoomname = NULL;
 	Token *tokenUser = NULL;
@@ -50,7 +48,7 @@ void Invite::execute(void)
 			return;
 		}
 		// check Room and User existance
-		if ((roomExists = RoomManager::getInstance().roomExist(tokenRoomname->getText())) && (userExists = ClientManager::getInstance().clientExists(tokenUser->getText())))
+		if ((roomExists = RoomManager::getInstance().roomExist(tokenRoomname->getText())) && (ClientManager::getInstance().doesClientExist(tokenUser->getText())))
 		{
 			this->room = RoomManager::getInstance().getRoom(tokenRoomname->getText());
 			Client *invitee = ClientManager::getInstance().findClient(tokenUser->getText());
@@ -91,10 +89,7 @@ void Invite::execute(void)
 void Invite::setServerResponseInvite(const std::string invitee)
 {
 	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
+
 	std::string response = ":";
 	response.append(nickname);
 	response.append("!user@hostname");
@@ -110,10 +105,7 @@ void Invite::setServerResponseInvite(const std::string invitee)
 void Invite::setServerResponse341(const std::string invitee)
 {
 	std::string nickname = this->client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
+
 	std::string response = ":";
 	response.append(serverData.getServerName());
 	response.append(" 341 ");
@@ -131,10 +123,6 @@ void Invite::setServerResponse443(const std::string invitee)
 {
 	std::string nickname = this->client->getNickname();
 
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
 	std::string response = ":";
 	response.append(serverData.getServerName());
 	response.append(" 401 ");

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 19:04:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 16:56:15 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 10:56:25 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ void Part::execute(void)
 		// setServerResponses uses this->room instance object - has to be deleted here otherwise segfault
 		if (deleteRoom)
 		{
+			Logger::log("Deleting room: ", tokenRoomname->getText());
 			RoomManager::getInstance().removeRoom(tokenRoomname->getText());
 		}
 		i++;
@@ -107,10 +108,7 @@ void Part::setServerResponsePart(void)
 {
 	//: Aldo!user@hostname PART #TEST :<message>
 	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
+
 	std::string response;
 	response.append(":");
 	response.append(nickname);

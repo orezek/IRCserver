@@ -1,23 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   IRCParser.cpp                                      :+:      :+:    :+:   */
+/*   IrcParser.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
+<<<<<<< HEAD:src/IRCParser.cpp
 /*   Updated: 2024/11/08 21:06:17 by orezek           ###   ########.fr       */
+=======
+/*   Updated: 2024/11/13 12:05:34 by mbartos          ###   ########.fr       */
+>>>>>>> 9cfd045fe028158209b04b48122e88bfe53007ad:src/IrcParser.cpp
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "IRCParser.hpp"
+#include "IrcParser.hpp"
 
-IRCParser::IRCParser(int newClientFd) : clientFd(newClientFd)
+IrcParser::IrcParser(Client* client) : client(client)
 {
-	client = ClientManager::getInstance().findClient(clientFd);
+	if (client == NULL)
+	{
+		throw std::runtime_error("Client unknown.");
+	}
 }
 
-void IRCParser::parse()
+void IrcParser::makeClientMessages()
 {
 	this->splitRawDataToRawMessages();
 	client->deleteRawData();
@@ -32,12 +39,12 @@ void IRCParser::parse()
 		this->parseParameterTokens();
 		client->addMessage(clientMessage);
 
-		std::cout << clientMessage << std::endl;  // debug only
+		Logger::log(clientMessage);
 	}
 }
 
 // ---- PRIVATE ----
-void IRCParser::splitRawDataToRawMessages()
+void IrcParser::splitRawDataToRawMessages()
 {
 	const std::string delimiters = "\n";
 	std::string tempData = client->getRawData();
@@ -51,10 +58,10 @@ void IRCParser::splitRawDataToRawMessages()
 		rawMessages.push_back(rawMessage);
 		tempData = tempData.erase(0, pos + 1);
 
-		std::cout << "rawMessage = |" << rawMessage << "|" << std::endl;
+		Logger::log("rawMessage = |", rawMessage, "|");
 	}
 }
-void IRCParser::parsePrefixToken()
+void IrcParser::parsePrefixToken()
 {
 	// trim leading spaces?
 	if (tempInputData[0] == ':')
@@ -70,7 +77,7 @@ void IRCParser::parsePrefixToken()
 	}
 }
 
-void IRCParser::parseCommandToken()
+void IrcParser::parseCommandToken()
 {
 	int cmdStart = tempInputData.find_first_not_of(" \t\r\n");
 	int cmdEnd = tempInputData.find_first_of(" \t\r\n", cmdStart);
@@ -86,7 +93,7 @@ void IRCParser::parseCommandToken()
 	}
 }
 
-void IRCParser::assignCommandType()
+void IrcParser::assignCommandType()
 {
 	Token* tokenCommand = clientMessage.findNthTokenOfType(Token::COMMAND, 1);
 	if (tokenCommand == NULL)
@@ -157,9 +164,15 @@ void IRCParser::assignCommandType()
 	{
 		clientMessage.setCommandType(ClientMessage::WHO);
 	}
+<<<<<<< HEAD:src/IRCParser.cpp
 	else if (commandString == "BOT")
 	{
 		clientMessage.setCommandType(ClientMessage::BOT);
+=======
+	else if (commandString == "WHOIS")
+	{
+		clientMessage.setCommandType(ClientMessage::WHOIS);
+>>>>>>> 9cfd045fe028158209b04b48122e88bfe53007ad:src/IrcParser.cpp
 	}
 	else
 	{
@@ -167,7 +180,7 @@ void IRCParser::assignCommandType()
 	}
 }
 
-void IRCParser::parseParameterTokens()
+void IrcParser::parseParameterTokens()
 {
 	ClientMessage::cmdTypes commandType = clientMessage.getCommandType();
 
@@ -234,14 +247,20 @@ void IRCParser::parseParameterTokens()
 		parseParametersBySpace();
 		assignParametersAsWho();
 	}
+<<<<<<< HEAD:src/IRCParser.cpp
 	else if (commandType == ClientMessage::BOT)
 	{
 		parseAndAssignParametersAsKick();
+=======
+	else if (commandType == ClientMessage::WHOIS)
+	{
+		// will be implemented later
+>>>>>>> 9cfd045fe028158209b04b48122e88bfe53007ad:src/IrcParser.cpp
 	}
 	// add functionality for other commands
 }
 
-void IRCParser::assignParametersAsWho()
+void IrcParser::assignParametersAsWho()
 {
 	Token* tokenClientOrRoom = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
 
@@ -271,9 +290,8 @@ void IRCParser::assignParametersAsWho()
 	this->tempInputData.clear();
 }
 
-void IRCParser::processModeRoom()
+void IrcParser::processModeRoom()
 {
-	// if it is room:
 	char signFlag = '0';
 	Token* tokenToProcess;
 
@@ -293,18 +311,19 @@ void IRCParser::processModeRoom()
 			{
 				if (signFlag == '+')
 				{
-					Token tokenK(Token::MODE_ROOM_PASSWORD_ADD, "+k");
-					clientMessage.insertTokenBeforeLastTokenType(tokenK, Token::PROCESSED);
 					Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
 					if (token != NULL)
 					{
-						token->setType(Token::MODE_ROOM_PASSWORD_PARAMETER);
+						token->setType(Token::MODE_ROOM_PASSWORD_ADD);
 					}
 				}
 				else if (signFlag == '-')
 				{
-					Token tokenK(Token::MODE_ROOM_PASSWORD_REMOVE, "-k");
-					clientMessage.insertTokenBeforeLastTokenType(tokenK, Token::PROCESSED);
+					Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+					if (token != NULL)
+					{
+						token->setType(Token::MODE_ROOM_PASSWORD_REMOVE);
+					}
 				}
 			}
 			else if (character == 'i')
@@ -312,12 +331,12 @@ void IRCParser::processModeRoom()
 				if (signFlag == '+')
 				{
 					Token tokenI(Token::MODE_ROOM_INVITE_ONLY_ADD, "+i");
-					clientMessage.insertTokenAtBeforeFirstTokenType(tokenI, Token::PROCESSED);
+					clientMessage.insertTokenAtBeforeFirstTokenType(tokenI, Token::NOT_ASSIGNED);
 				}
 				else if (signFlag == '-')
 				{
 					Token tokenI(Token::MODE_ROOM_INVITE_ONLY_REMOVE, "-i");
-					clientMessage.insertTokenBeforeLastTokenType(tokenI, Token::PROCESSED);
+					clientMessage.insertTokenAtBeforeFirstTokenType(tokenI, Token::NOT_ASSIGNED);
 				}
 			}
 			else if (character == 't')
@@ -325,48 +344,47 @@ void IRCParser::processModeRoom()
 				if (signFlag == '+')
 				{
 					Token tokenT(Token::MODE_ROOM_TOPIC_RESTRICTIONS_ADD, "+t");
-					clientMessage.insertTokenBeforeLastTokenType(tokenT, Token::PROCESSED);
+					clientMessage.insertTokenAtBeforeFirstTokenType(tokenT, Token::NOT_ASSIGNED);
 				}
 				else if (signFlag == '-')
 				{
 					Token tokenT(Token::MODE_ROOM_TOPIC_RESTRICTIONS_REMOVE, "-t");
-					clientMessage.insertTokenBeforeLastTokenType(tokenT, Token::PROCESSED);
+					clientMessage.insertTokenAtBeforeFirstTokenType(tokenT, Token::NOT_ASSIGNED);
 				}
 			}
 			else if (character == 'o')
 			{
 				if (signFlag == '+')
 				{
-					Token tokenO(Token::MODE_ROOM_OPERATOR_ADD, "+o");
-					clientMessage.insertTokenBeforeLastTokenType(tokenO, Token::PROCESSED);
+					Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+					if (token != NULL)
+					{
+						token->setType(Token::MODE_ROOM_OPERATOR_ADD);
+					}
 				}
 				else if (signFlag == '-')
 				{
-					Token tokenO(Token::MODE_ROOM_OPERATOR_REMOVE, "-o");
-					clientMessage.insertTokenBeforeLastTokenType(tokenO, Token::PROCESSED);
-				}
-				Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
-				if (token != NULL)
-				{
-					token->setType(Token::MODE_ROOM_OPERATOR_PARAMETER);
+					Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+					if (token != NULL)
+					{
+						token->setType(Token::MODE_ROOM_OPERATOR_REMOVE);
+					}
 				}
 			}
 			else if (character == 'l')
 			{
 				if (signFlag == '+')
 				{
-					Token tokenL(Token::MODE_ROOM_USER_LIMIT_ADD, "+l");
-					clientMessage.insertTokenBeforeLastTokenType(tokenL, Token::PROCESSED);
+					Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+					if (token != NULL)
+					{
+						token->setType(Token::MODE_ROOM_USER_LIMIT_ADD);
+					}
 				}
 				else if (signFlag == '-')
 				{
-					Token tokenL(Token::MODE_ROOM_USER_LIMIT_REMOVE, "-l");
-					clientMessage.insertTokenBeforeLastTokenType(tokenL, Token::PROCESSED);
-				}
-				Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
-				if (token != NULL)
-				{
-					token->setType(Token::MODE_ROOM_USER_LIMIT_PARAMETER);
+					Token tokenT(Token::MODE_ROOM_TOPIC_RESTRICTIONS_REMOVE, "-l");
+					clientMessage.insertTokenAtBeforeFirstTokenType(tokenT, Token::NOT_ASSIGNED);
 				}
 			}
 			textToProcess = textToProcess.substr(1);
@@ -375,9 +393,113 @@ void IRCParser::processModeRoom()
 	clientMessage.deleteAllProcessedTokens();
 }
 
-void IRCParser::processModeClient() {};
+// void IrcParser::processModeRoomOld()
+// {
+// 	// if it is room:
+// 	char signFlag = '0';
+// 	Token* tokenToProcess;
 
-void IRCParser::parseAndAssignParametersAsMode()
+// 	while ((tokenToProcess = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1)))
+// 	{
+// 		signFlag = '0';
+// 		tokenToProcess->setType(Token::PROCESSED);
+// 		std::string textToProcess = tokenToProcess->getText();
+// 		while (!textToProcess.empty())
+// 		{
+// 			char character = textToProcess[0];
+// 			if (character == '+' || character == '-')
+// 			{
+// 				signFlag = character;
+// 			}
+// 			else if (character == 'k')
+// 			{
+// 				if (signFlag == '+')
+// 				{
+// 					Token tokenK(Token::MODE_ROOM_PASSWORD_ADD, "+k");
+// 					clientMessage.insertTokenBeforeLastTokenType(tokenK, Token::PROCESSED);
+// 					Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+// 					if (token != NULL)
+// 					{
+// 						token->setType(Token::MODE_ROOM_PASSWORD_PARAMETER);
+// 					}
+// 				}
+// 				else if (signFlag == '-')
+// 				{
+// 					Token tokenK(Token::MODE_ROOM_PASSWORD_REMOVE, "-k");
+// 					clientMessage.insertTokenBeforeLastTokenType(tokenK, Token::PROCESSED);
+// 				}
+// 			}
+// 			else if (character == 'i')
+// 			{
+// 				if (signFlag == '+')
+// 				{
+// 					Token tokenI(Token::MODE_ROOM_INVITE_ONLY_ADD, "+i");
+// 					clientMessage.insertTokenAtBeforeFirstTokenType(tokenI, Token::PROCESSED);
+// 				}
+// 				else if (signFlag == '-')
+// 				{
+// 					Token tokenI(Token::MODE_ROOM_INVITE_ONLY_REMOVE, "-i");
+// 					clientMessage.insertTokenBeforeLastTokenType(tokenI, Token::PROCESSED);
+// 				}
+// 			}
+// 			else if (character == 't')
+// 			{
+// 				if (signFlag == '+')
+// 				{
+// 					Token tokenT(Token::MODE_ROOM_TOPIC_RESTRICTIONS_ADD, "+t");
+// 					clientMessage.insertTokenBeforeLastTokenType(tokenT, Token::PROCESSED);
+// 				}
+// 				else if (signFlag == '-')
+// 				{
+// 					Token tokenT(Token::MODE_ROOM_TOPIC_RESTRICTIONS_REMOVE, "-t");
+// 					clientMessage.insertTokenBeforeLastTokenType(tokenT, Token::PROCESSED);
+// 				}
+// 			}
+// 			else if (character == 'o')
+// 			{
+// 				if (signFlag == '+')
+// 				{
+// 					Token tokenO(Token::MODE_ROOM_OPERATOR_ADD, "+o");
+// 					clientMessage.insertTokenBeforeLastTokenType(tokenO, Token::PROCESSED);
+// 				}
+// 				else if (signFlag == '-')
+// 				{
+// 					Token tokenO(Token::MODE_ROOM_OPERATOR_REMOVE, "-o");
+// 					clientMessage.insertTokenBeforeLastTokenType(tokenO, Token::PROCESSED);
+// 				}
+// 				Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+// 				if (token != NULL)
+// 				{
+// 					token->setType(Token::MODE_ROOM_OPERATOR_PARAMETER);
+// 				}
+// 			}
+// 			else if (character == 'l')
+// 			{
+// 				if (signFlag == '+')
+// 				{
+// 					Token tokenL(Token::MODE_ROOM_USER_LIMIT_ADD, "+l");
+// 					clientMessage.insertTokenBeforeLastTokenType(tokenL, Token::PROCESSED);
+// 				}
+// 				else if (signFlag == '-')
+// 				{
+// 					Token tokenL(Token::MODE_ROOM_USER_LIMIT_REMOVE, "-l");
+// 					clientMessage.insertTokenBeforeLastTokenType(tokenL, Token::PROCESSED);
+// 				}
+// 				Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
+// 				if (token != NULL)
+// 				{
+// 					token->setType(Token::MODE_ROOM_USER_LIMIT_PARAMETER);
+// 				}
+// 			}
+// 			textToProcess = textToProcess.substr(1);
+// 		}
+// 	}
+// 	clientMessage.deleteAllProcessedTokens();
+// }
+
+void IrcParser::processModeClient() {};
+
+void IrcParser::parseAndAssignParametersAsMode()
 {
 	parseParametersBySpace();
 
@@ -425,7 +547,7 @@ void IRCParser::parseAndAssignParametersAsMode()
 	tempInputData.clear();
 }
 
-void IRCParser::parseAndAssignParametersAsNames()
+void IrcParser::parseAndAssignParametersAsNames()
 {
 	tempInputData = trim(tempInputData);
 	size_t posRoomsEnd = tempInputData.find_first_of(" \t");
@@ -449,7 +571,7 @@ void IRCParser::parseAndAssignParametersAsNames()
 	this->tempInputData.clear();
 }
 
-void IRCParser::parseAndAssignParametersAsTopic()
+void IrcParser::parseAndAssignParametersAsTopic()
 {
 	tempInputData = trim(tempInputData);
 	size_t posRoomEnd = tempInputData.find_first_of(" \t");
@@ -493,7 +615,7 @@ void IRCParser::parseAndAssignParametersAsTopic()
 	tempInputData.clear();
 }
 
-void IRCParser::parseAndAssignParametersAsKick()
+void IrcParser::parseAndAssignParametersAsKick()
 {
 	tempInputData = trim(tempInputData);
 	size_t posRoomEnd = tempInputData.find_first_of(" \t");
@@ -569,7 +691,7 @@ void IRCParser::parseAndAssignParametersAsKick()
 	tempInputData.clear();
 }
 
-void IRCParser::assignParametersAsInvite()
+void IrcParser::assignParametersAsInvite()
 {
 	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
 	if (token != NULL)
@@ -589,7 +711,7 @@ void IRCParser::assignParametersAsInvite()
 	}
 }
 
-void IRCParser::parseAndAssignParametersAsPart()
+void IrcParser::parseAndAssignParametersAsPart()
 {
 	tempInputData = trim(tempInputData);
 	size_t posRoomsEnd = tempInputData.find_first_of(" \t");
@@ -652,7 +774,7 @@ void IRCParser::parseAndAssignParametersAsPart()
 	tempInputData.clear();
 }
 
-void IRCParser::parseAndAssignParametersAsJoin()
+void IrcParser::parseAndAssignParametersAsJoin()
 {
 	tempInputData = trim(tempInputData);
 	size_t posRoomsEnd = tempInputData.find_first_of(" \t");
@@ -715,7 +837,7 @@ void IRCParser::parseAndAssignParametersAsJoin()
 	tempInputData.clear();
 }
 
-void IRCParser::processRoom(const std::string& room)
+void IrcParser::processRoom(const std::string& room)
 {
 	std::string trimmedRoom = trim(room);
 
@@ -736,7 +858,7 @@ void IRCParser::processRoom(const std::string& room)
 	}
 }
 
-void IRCParser::processClient(const std::string& client)
+void IrcParser::processClient(const std::string& client)
 {
 	std::string trimmedClient = trim(client);
 
@@ -748,7 +870,7 @@ void IRCParser::processClient(const std::string& client)
 	clientMessage.addToken(tokenClient);
 }
 
-void IRCParser::processRoomPassword(const std::string& password)
+void IrcParser::processRoomPassword(const std::string& password)
 {
 	std::string trimmedPassword = trim(password);
 
@@ -761,7 +883,7 @@ void IRCParser::processRoomPassword(const std::string& password)
 	clientMessage.addToken(tokenRoomPassword);
 }
 
-void IRCParser::parseAndAssignParametersAsPrivmsg()
+void IrcParser::parseAndAssignParametersAsPrivmsg()
 {
 	tempInputData = trim(tempInputData);
 	size_t pos = tempInputData.find_first_of(" \t");
@@ -805,6 +927,7 @@ void IRCParser::parseAndAssignParametersAsPrivmsg()
 	tempInputData.clear();
 }
 
+<<<<<<< HEAD:src/IRCParser.cpp
 void IRCParser::parseAndAssignParametersAsBot()
 {
 	tempInputData = trim(tempInputData);
@@ -869,6 +992,9 @@ void IRCParser::parseAndAssignParametersAsBot()
 }
 
 void IRCParser::processClientOrRoom(const std::string& clientOrRoom)
+=======
+void IrcParser::processClientOrRoom(const std::string& clientOrRoom)
+>>>>>>> 9cfd045fe028158209b04b48122e88bfe53007ad:src/IrcParser.cpp
 {
 	std::string trimmedClientOrRoom = trim(clientOrRoom);
 
@@ -896,10 +1022,10 @@ void IRCParser::processClientOrRoom(const std::string& clientOrRoom)
 	}
 }
 
-void IRCParser::parseParametersBySpace()
+void IrcParser::parseParametersBySpace()
 {
 	std::string delimiters = " \t\r\n";
-	int pos = 0;
+	std::string::size_type pos = 0;
 	std::string parameter;
 
 	while ((pos = tempInputData.find_first_of(delimiters)) != std::string::npos)
@@ -915,10 +1041,10 @@ void IRCParser::parseParametersBySpace()
 	}
 }
 
-void IRCParser::parseParametersAsUser()
+void IrcParser::parseParametersAsUser()
 {
 	std::string delimiters = " \t\r\n";
-	int pos = 0;
+	std::string::size_type pos = 0;
 	std::string parameter;
 
 	while ((pos = tempInputData.find_first_of(delimiters)) != std::string::npos && clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 3) == NULL)
@@ -960,7 +1086,7 @@ void IRCParser::parseParametersAsUser()
 	}
 }
 
-void IRCParser::parseParametersAsOneText()
+void IrcParser::parseParametersAsOneText()
 {
 	std::string delimiters = "\r\n";
 	std::string parameter;
@@ -982,7 +1108,7 @@ void IRCParser::parseParametersAsOneText()
 	}
 }
 
-void IRCParser::assignTokenTypesAsNick()
+void IrcParser::assignTokenTypesAsNick()
 {
 	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
 	if (token != NULL)
@@ -991,7 +1117,7 @@ void IRCParser::assignTokenTypesAsNick()
 	}
 }
 
-void IRCParser::assignTokenTypesAsPass()
+void IrcParser::assignTokenTypesAsPass()
 {
 	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
 	if (token != NULL)
@@ -1000,7 +1126,7 @@ void IRCParser::assignTokenTypesAsPass()
 	}
 }
 
-void IRCParser::assignTokenTypesAsPing()
+void IrcParser::assignTokenTypesAsPing()
 {
 	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
 	if (token != NULL)
@@ -1009,7 +1135,7 @@ void IRCParser::assignTokenTypesAsPing()
 	}
 }
 
-void IRCParser::assignTokenTypesAsQuit()
+void IrcParser::assignTokenTypesAsQuit()
 {
 	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
 	if (token != NULL)
@@ -1018,7 +1144,7 @@ void IRCParser::assignTokenTypesAsQuit()
 	}
 }
 
-void IRCParser::assignTokenTypesAsUser()
+void IrcParser::assignTokenTypesAsUser()
 {
 	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
 	if (token != NULL)
@@ -1042,7 +1168,7 @@ void IRCParser::assignTokenTypesAsUser()
 	}
 }
 
-std::string IRCParser::trim(const std::string& str)
+std::string IrcParser::trim(const std::string& str)
 {
 	size_t first = str.find_first_not_of(" \t\r\n");
 	if (first == std::string::npos)

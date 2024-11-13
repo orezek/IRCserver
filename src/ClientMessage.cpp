@@ -6,22 +6,24 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:21 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/06 15:20:23 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 11:42:31 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ClientMessage.hpp"
 
-ClientMessage::ClientMessage() : commandType(NOT_ASSIGNED) {}
+ClientMessage::ClientMessage() : commandType(NOT_ASSIGNED), iteratorInitialized(false) {}
 
-ClientMessage::ClientMessage(ClientMessage const &refObj) : commandType(refObj.commandType), tokens(refObj.tokens) {}
+ClientMessage::ClientMessage(ClientMessage const &refObj) : tokens(refObj.tokens), commandType(refObj.commandType), iteratorInitialized(refObj.iteratorInitialized), currentTokenIt(refObj.currentTokenIt) {}
 
 ClientMessage &ClientMessage::operator=(ClientMessage const &refObj)
 {
 	if (this != &refObj)
 	{
-		this->commandType = refObj.commandType;
 		this->tokens = refObj.tokens;
+		this->commandType = refObj.commandType;
+		iteratorInitialized = refObj.iteratorInitialized;
+		currentTokenIt = refObj.currentTokenIt;
 	}
 	return (*this);
 }
@@ -54,7 +56,7 @@ Token *ClientMessage::findNthTokenOfType(Token::Type type, int n)
 
 void ClientMessage::insertTokenAtBeforeFirstTokenType(Token &newToken, Token::Type type)
 {
-	for (std::vector<Token>::const_iterator it = tokens.begin(); it != tokens.end(); ++it)
+	for (std::vector<Token>::iterator it = tokens.begin(); it != tokens.end(); ++it)
 	{
 		if (it->getType() == type)
 		{
@@ -126,22 +128,6 @@ std::string ClientMessage::getCommandString()
 	}
 }
 
-// --- PRIVATE ---
-
-// --- OUTSIDE OF THE CLASS ---
-std::ostream &operator<<(std::ostream &output, ClientMessage const &instance)
-{
-	output << "---- ClientMessage ----" << std::endl;
-	output << "All tokens:" << std::endl;
-	for (std::vector<Token>::const_iterator tokenIt = instance.tokens.begin(); tokenIt != instance.tokens.end(); ++tokenIt)
-	{
-		output << "Token: Type = " << tokenIt->getType();
-		output << ", text = |" << tokenIt->getText() << "|" << std::endl;
-	}
-	output << "-----------------------";
-	return (output);
-}
-
 Token *ClientMessage::getNextToken()
 {
 	if (!this->iteratorInitialized || this->tokens.empty())
@@ -158,9 +144,43 @@ Token *ClientMessage::getNextToken()
 	return (tokenPtr);
 }
 
-// Resets iterator to the beginning of roomList
 void ClientMessage::resetIterator()
 {
 	currentTokenIt = tokens.begin();
 	iteratorInitialized = true;
+}
+
+int ClientMessage::size()
+{
+	return (this->tokens.size());
+}
+
+// --- PRIVATE ---
+
+// --- OUTSIDE OF THE CLASS ---
+// std::ostream &operator<<(std::ostream &output, ClientMessage const &instance)
+// {
+// 	output << "---- ClientMessage ----" << std::endl;
+// 	output << "All tokens:" << std::endl;
+// 	while ((tempToken = instance.getNextToken()) != NULL)
+// 	{
+// 		output << "Token: Type = " << tempToken->getType();
+// 		output << ", text = |" << tempToken->getText() << "|" << std::endl;
+// 	}
+// 	output << "-----------------------";
+// 	return (output);
+// }
+
+
+std::ostream &operator<<(std::ostream &output, ClientMessage const &instance)
+{
+	output << "---- ClientMessage ----" << std::endl;
+	output << "All tokens:" << std::endl;
+	for (std::vector<Token>::const_iterator tokenIt = instance.tokens.begin(); tokenIt != instance.tokens.end(); ++tokenIt)
+	{
+		output << "Token: Type = " << tokenIt->getType();
+		output << ", text = |" << tokenIt->getText() << "|" << std::endl;
+	}
+	output << "-----------------------";
+	return (output);
 }
