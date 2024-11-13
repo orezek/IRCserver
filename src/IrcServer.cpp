@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:45:52 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/13 12:04:41 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 17:52:08 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,23 @@ IrcServer &IrcServer::operator=(const IrcServer &obj)
 
 IrcServer::~IrcServer() {};
 
+volatile bool _stop = false;
+
+void signalHandler(int signal) {
+	if (signal == SIGINT) {
+		std::cout << "\nReceived SIGINT. Shutting down." << std::endl;
+		exit(1);
+	}
+}
+
 void IrcServer::runIrcServer(void)
 {
 	ConnectionHandler connHandler = ConnectionHandler(this->serverPortNumber);
 	connHandler.initializeMasterSocketFd();
 	ClientManager &clientManager = ClientManager::getInstance();
 
-	while (true)
+	signal(SIGINT, signalHandler);
+	while (1)
 	{
 		Logger::log("/* ************************************************************************** */");
 		Logger::log("Preparing FdSets");

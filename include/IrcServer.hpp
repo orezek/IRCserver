@@ -6,11 +6,14 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:40:08 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/13 12:05:44 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 16:55:21 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
+
+#include <csignal>
+
 #include "ConnectionHandler.hpp"
 #include "IrcCommandHandler.hpp"
 #include "IrcParser.hpp"
