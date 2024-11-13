@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/11 10:05:11 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 10:25:28 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,8 @@ bool Client::isReadyForParsing()
 	else if (rawData.size() > MESSAGE_SIZE)
 	{
 		this->markForDeletion();
-		return (false);
+		this->setRawData("QUIT :Request is too long.\r\n");
+		return (true);
 	}
 	else if (rawData[rawData.size() - 1] == '\n')
 	{
