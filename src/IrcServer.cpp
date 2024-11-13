@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IrcServer.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:45:52 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/11 19:35:39 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/13 11:23:31 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 
 IrcServer::IrcServer(int serverPortNumber, std::string ircPassword) : serverPortNumber(serverPortNumber), ircPassword(ircPassword)
 {
-	ServerDataManager &serverData = ServerDataManager::getInstance(ircPassword, serverPortNumber);
-};
+}
 
 IrcServer::IrcServer(const IrcServer &obj)
 {
@@ -29,7 +28,6 @@ IrcServer &IrcServer::operator=(const IrcServer &obj)
 	{
 		this->serverPortNumber = obj.serverPortNumber;
 		this->ircPassword = obj.ircPassword;
-		// serverData cannot be coppied
 	}
 	return (*this);
 }
@@ -39,7 +37,7 @@ IrcServer::~IrcServer() {};
 void IrcServer::runIrcServer(void)
 {
 	ConnectionHandler connHandler = ConnectionHandler(this->serverPortNumber);
-	connHandler.initializeMasterSocketFd(this->serverPortNumber);
+	connHandler.initializeMasterSocketFd();
 	ClientManager &clientManager = ClientManager::getInstance();
 
 	while (true)
