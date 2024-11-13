@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ABaseCommand.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 09:51:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/13 11:32:42 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 20:46:35 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,8 +201,8 @@ void ABaseCommand::setServerResponseWelcome()
 	std::string response;
 
 	response = ":" + client->getServername() + " 001 " + client->getNickname() + " :Welcome to the IRC network, " + client->getNickname() + "!" + client->getUsername() + "@" + client->getHostname() + "\n";
-	response.append(":" + client->getServername() + " 002 " + client->getNickname() + " :Your host is " + client->getServername() + ", running version XXXX\n");
-	response.append(":" + client->getServername() + " 003 " + client->getNickname() + " :This server was created XXXXXXXXXXXXXX" + "\n");
+	response.append(":" + client->getServername() + " 002 " + client->getNickname() + " :Your host is " + client->getServername() + ", running version "  + ServerDataManager::getInstance().getServerVersion() + "\n");
+	response.append(":" + client->getServername() + " 003 " + client->getNickname() + " :This server was created " + ServerDataManager::getInstance().getServerTime() + "\n");
 	response.append(":" + client->getServername() + " 004 " + client->getNickname() + " " + client->getServername() + " \n");
 	addResponse(client, response);
 }
