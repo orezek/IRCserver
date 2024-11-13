@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   IRCParser.cpp                                      :+:      :+:    :+:   */
+/*   IrcParser.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/13 11:22:31 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 12:05:34 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "IRCParser.hpp"
+#include "IrcParser.hpp"
 
-IRCParser::IRCParser(Client* client) : client(client)
+IrcParser::IrcParser(Client* client) : client(client)
 {
 	if (client == NULL)
 	{
@@ -20,7 +20,7 @@ IRCParser::IRCParser(Client* client) : client(client)
 	}
 }
 
-void IRCParser::makeClientMessages()
+void IrcParser::makeClientMessages()
 {
 	this->splitRawDataToRawMessages();
 	client->deleteRawData();
@@ -40,7 +40,7 @@ void IRCParser::makeClientMessages()
 }
 
 // ---- PRIVATE ----
-void IRCParser::splitRawDataToRawMessages()
+void IrcParser::splitRawDataToRawMessages()
 {
 	const std::string delimiters = "\n";
 	std::string tempData = client->getRawData();
@@ -57,7 +57,7 @@ void IRCParser::splitRawDataToRawMessages()
 		Logger::log("rawMessage = |", rawMessage, "|");
 	}
 }
-void IRCParser::parsePrefixToken()
+void IrcParser::parsePrefixToken()
 {
 	// trim leading spaces?
 	if (tempInputData[0] == ':')
@@ -73,7 +73,7 @@ void IRCParser::parsePrefixToken()
 	}
 }
 
-void IRCParser::parseCommandToken()
+void IrcParser::parseCommandToken()
 {
 	int cmdStart = tempInputData.find_first_not_of(" \t\r\n");
 	int cmdEnd = tempInputData.find_first_of(" \t\r\n", cmdStart);
@@ -89,7 +89,7 @@ void IRCParser::parseCommandToken()
 	}
 }
 
-void IRCParser::assignCommandType()
+void IrcParser::assignCommandType()
 {
 	Token* tokenCommand = clientMessage.findNthTokenOfType(Token::COMMAND, 1);
 	if (tokenCommand == NULL)
@@ -170,7 +170,7 @@ void IRCParser::assignCommandType()
 	}
 }
 
-void IRCParser::parseParameterTokens()
+void IrcParser::parseParameterTokens()
 {
 	ClientMessage::cmdTypes commandType = clientMessage.getCommandType();
 
@@ -244,7 +244,7 @@ void IRCParser::parseParameterTokens()
 	// add functionality for other commands
 }
 
-void IRCParser::assignParametersAsWho()
+void IrcParser::assignParametersAsWho()
 {
 	Token* tokenClientOrRoom = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
 
@@ -274,7 +274,7 @@ void IRCParser::assignParametersAsWho()
 	this->tempInputData.clear();
 }
 
-void IRCParser::processModeRoom()
+void IrcParser::processModeRoom()
 {
 	char signFlag = '0';
 	Token* tokenToProcess;
@@ -377,7 +377,7 @@ void IRCParser::processModeRoom()
 	clientMessage.deleteAllProcessedTokens();
 }
 
-// void IRCParser::processModeRoomOld()
+// void IrcParser::processModeRoomOld()
 // {
 // 	// if it is room:
 // 	char signFlag = '0';
@@ -481,9 +481,9 @@ void IRCParser::processModeRoom()
 // 	clientMessage.deleteAllProcessedTokens();
 // }
 
-void IRCParser::processModeClient() {};
+void IrcParser::processModeClient() {};
 
-void IRCParser::parseAndAssignParametersAsMode()
+void IrcParser::parseAndAssignParametersAsMode()
 {
 	parseParametersBySpace();
 
@@ -531,7 +531,7 @@ void IRCParser::parseAndAssignParametersAsMode()
 	tempInputData.clear();
 }
 
-void IRCParser::parseAndAssignParametersAsNames()
+void IrcParser::parseAndAssignParametersAsNames()
 {
 	tempInputData = trim(tempInputData);
 	size_t posRoomsEnd = tempInputData.find_first_of(" \t");
@@ -555,7 +555,7 @@ void IRCParser::parseAndAssignParametersAsNames()
 	this->tempInputData.clear();
 }
 
-void IRCParser::parseAndAssignParametersAsTopic()
+void IrcParser::parseAndAssignParametersAsTopic()
 {
 	tempInputData = trim(tempInputData);
 	size_t posRoomEnd = tempInputData.find_first_of(" \t");
@@ -599,7 +599,7 @@ void IRCParser::parseAndAssignParametersAsTopic()
 	tempInputData.clear();
 }
 
-void IRCParser::parseAndAssignParametersAsKick()
+void IrcParser::parseAndAssignParametersAsKick()
 {
 	tempInputData = trim(tempInputData);
 	size_t posRoomEnd = tempInputData.find_first_of(" \t");
@@ -675,7 +675,7 @@ void IRCParser::parseAndAssignParametersAsKick()
 	tempInputData.clear();
 }
 
-void IRCParser::assignParametersAsInvite()
+void IrcParser::assignParametersAsInvite()
 {
 	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
 	if (token != NULL)
@@ -695,7 +695,7 @@ void IRCParser::assignParametersAsInvite()
 	}
 }
 
-void IRCParser::parseAndAssignParametersAsPart()
+void IrcParser::parseAndAssignParametersAsPart()
 {
 	tempInputData = trim(tempInputData);
 	size_t posRoomsEnd = tempInputData.find_first_of(" \t");
@@ -758,7 +758,7 @@ void IRCParser::parseAndAssignParametersAsPart()
 	tempInputData.clear();
 }
 
-void IRCParser::parseAndAssignParametersAsJoin()
+void IrcParser::parseAndAssignParametersAsJoin()
 {
 	tempInputData = trim(tempInputData);
 	size_t posRoomsEnd = tempInputData.find_first_of(" \t");
@@ -821,7 +821,7 @@ void IRCParser::parseAndAssignParametersAsJoin()
 	tempInputData.clear();
 }
 
-void IRCParser::processRoom(const std::string& room)
+void IrcParser::processRoom(const std::string& room)
 {
 	std::string trimmedRoom = trim(room);
 
@@ -842,7 +842,7 @@ void IRCParser::processRoom(const std::string& room)
 	}
 }
 
-void IRCParser::processClient(const std::string& client)
+void IrcParser::processClient(const std::string& client)
 {
 	std::string trimmedClient = trim(client);
 
@@ -854,7 +854,7 @@ void IRCParser::processClient(const std::string& client)
 	clientMessage.addToken(tokenClient);
 }
 
-void IRCParser::processRoomPassword(const std::string& password)
+void IrcParser::processRoomPassword(const std::string& password)
 {
 	std::string trimmedPassword = trim(password);
 
@@ -867,7 +867,7 @@ void IRCParser::processRoomPassword(const std::string& password)
 	clientMessage.addToken(tokenRoomPassword);
 }
 
-void IRCParser::parseAndAssignParametersAsPrivmsg()
+void IrcParser::parseAndAssignParametersAsPrivmsg()
 {
 	tempInputData = trim(tempInputData);
 	size_t pos = tempInputData.find_first_of(" \t");
@@ -911,7 +911,7 @@ void IRCParser::parseAndAssignParametersAsPrivmsg()
 	tempInputData.clear();
 }
 
-void IRCParser::processClientOrRoom(const std::string& clientOrRoom)
+void IrcParser::processClientOrRoom(const std::string& clientOrRoom)
 {
 	std::string trimmedClientOrRoom = trim(clientOrRoom);
 
@@ -939,7 +939,7 @@ void IRCParser::processClientOrRoom(const std::string& clientOrRoom)
 	}
 }
 
-void IRCParser::parseParametersBySpace()
+void IrcParser::parseParametersBySpace()
 {
 	std::string delimiters = " \t\r\n";
 	std::string::size_type pos = 0;
@@ -958,7 +958,7 @@ void IRCParser::parseParametersBySpace()
 	}
 }
 
-void IRCParser::parseParametersAsUser()
+void IrcParser::parseParametersAsUser()
 {
 	std::string delimiters = " \t\r\n";
 	std::string::size_type pos = 0;
@@ -1003,7 +1003,7 @@ void IRCParser::parseParametersAsUser()
 	}
 }
 
-void IRCParser::parseParametersAsOneText()
+void IrcParser::parseParametersAsOneText()
 {
 	std::string delimiters = "\r\n";
 	std::string parameter;
@@ -1025,7 +1025,7 @@ void IRCParser::parseParametersAsOneText()
 	}
 }
 
-void IRCParser::assignTokenTypesAsNick()
+void IrcParser::assignTokenTypesAsNick()
 {
 	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
 	if (token != NULL)
@@ -1034,7 +1034,7 @@ void IRCParser::assignTokenTypesAsNick()
 	}
 }
 
-void IRCParser::assignTokenTypesAsPass()
+void IrcParser::assignTokenTypesAsPass()
 {
 	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
 	if (token != NULL)
@@ -1043,7 +1043,7 @@ void IRCParser::assignTokenTypesAsPass()
 	}
 }
 
-void IRCParser::assignTokenTypesAsPing()
+void IrcParser::assignTokenTypesAsPing()
 {
 	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
 	if (token != NULL)
@@ -1052,7 +1052,7 @@ void IRCParser::assignTokenTypesAsPing()
 	}
 }
 
-void IRCParser::assignTokenTypesAsQuit()
+void IrcParser::assignTokenTypesAsQuit()
 {
 	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
 	if (token != NULL)
@@ -1061,7 +1061,7 @@ void IRCParser::assignTokenTypesAsQuit()
 	}
 }
 
-void IRCParser::assignTokenTypesAsUser()
+void IrcParser::assignTokenTypesAsUser()
 {
 	Token* token = clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 1);
 	if (token != NULL)
@@ -1085,7 +1085,7 @@ void IRCParser::assignTokenTypesAsUser()
 	}
 }
 
-std::string IRCParser::trim(const std::string& str)
+std::string IrcParser::trim(const std::string& str)
 {
 	size_t first = str.find_first_not_of(" \t\r\n");
 	if (first == std::string::npos)
