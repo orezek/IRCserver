@@ -6,7 +6,7 @@
 #    By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/21 10:59:06 by mbartos           #+#    #+#              #
-#    Updated: 2024/11/13 10:57:40 by mbartos          ###   ########.fr        #
+#    Updated: 2024/11/13 11:59:30 by mbartos          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,18 +22,57 @@ CCP =		c++ -std=c++98
 CFLAGS =	-g -Wall -Wextra -Werror\
 			-I./include/ -I./include/commands
 
-SRC_PATH = ./src/
-COMMANDS_PATH = ./src/commands/
+# Source files
+SRC_PATH =		./src/
+COMMANDS_PATH =	./src/commands/
 
-SRC =		$(wildcard $(SRC_PATH)*.cpp) $(wildcard $(COMMANDS_PATH)*.cpp)
+SRC_FILES =		Client.cpp \
+				ClientManager.cpp \
+				ClientMessage.cpp \
+				ConnectionHandler.cpp \
+				IRCCommandHandler.cpp \
+				IRCParser.cpp \
+				IrcServer.cpp \
+				Logger.cpp \
+				main.cpp \
+				Room.cpp \
+				RoomManager.cpp \
+				ServerDataManager.cpp \
+				StringUtils.cpp \
+				Token.cpp \
+				UserData.cpp
+
+COMMAND_FILES =	ABaseCommand.cpp \
+				Invite.cpp \
+				Join.cpp \
+				Kick.cpp \
+				Mode.cpp \
+				Names.cpp \
+				Nick.cpp \
+				Part.cpp \
+				Pass.cpp \
+				Ping.cpp \
+				Privmsg.cpp \
+				Quit.cpp \
+				Topic.cpp \
+				Unknown.cpp \
+				User.cpp \
+				Who.cpp
+
+SRC = 		$(addprefix $(SRC_PATH), $(SRC_FILES)) \
+			$(addprefix $(COMMANDS_PATH), $(COMMAND_FILES))
 
 # Objects and dependencies
-OBJ_PATH =	obj/
+OBJ_PATH =		obj/
 OBJ_COMMANDS_PATH = $(OBJ_PATH)commands/
-OBJ =		$(patsubst $(SRC_PATH)%.cpp,$(OBJ_PATH)%.o,$(wildcard $(SRC_PATH)*.cpp)) \
-			$(patsubst $(COMMANDS_PATH)%.cpp,$(OBJ_COMMANDS_PATH)%.o,$(wildcard $(COMMANDS_PATH)*.cpp))
 
-DEPS =		$(OBJ:.o=.d)
+OBJ_FILES =		$(SRC_FILES:.cpp=.o)
+OBJ_COMMAND_FILES = $(COMMAND_FILES:.cpp=.o)
+
+OBJ =			$(addprefix $(OBJ_PATH), $(OBJ_FILES)) \
+				$(addprefix $(OBJ_COMMANDS_PATH), $(OBJ_COMMAND_FILES))
+
+DEPS =			$(OBJ:.o=.d)
 
 BIN_PATH = bin/
 
@@ -76,4 +115,4 @@ re: fclean all
 logoff: CFLAGS += -DLOGGING_ENABLED=0
 logoff: re
 
-.PHONY: all re clean fclean log
+.PHONY: all re clean fclean logoff
