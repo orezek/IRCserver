@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Names.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 20:19:42 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 12:29:18 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/13 10:56:23 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,10 +102,7 @@ void Names::setServerResponseNames(void)
 void Names::setServerResponse366(std::string invalidRoom)
 {
 	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
+
 	std::string response;
 	response = ":";
 	response.append(client->getServername());
@@ -121,10 +118,7 @@ void Names::setServerResponse366(std::string invalidRoom)
 void Names::setServerResponse353(std::string nicknamesAsString)
 {
 	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
+
 	std::string response;
 	response = ":";
 	response.append(client->getServername());

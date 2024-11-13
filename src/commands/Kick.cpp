@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 21:30:41 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 12:40:25 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/13 10:56:17 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,10 +117,7 @@ void Kick::execute(void)
 void Kick::setServerResponse441(std::string kicked_user)
 {
 	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
+
 	this->response.clear();
 	this->response = ":";
 	this->response.append(serverData.getServerName());
@@ -138,10 +135,7 @@ void Kick::setServerResponse441(std::string kicked_user)
 void Kick::setServerResponseKick(std::string message, std::string kicked_user)
 {
 	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
+
 	std::string response = ":";
 	response.append(nickname);
 	response.append("!user@hostname");

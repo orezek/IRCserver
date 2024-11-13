@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:14:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/11 09:45:22 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 10:56:21 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,7 @@ void Mode::execute(void)
 
 	// response creation
 	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
+
 	this->response.clear();
 	this->response = ":";
 	response.append(nickname);
@@ -396,10 +393,7 @@ void Mode::execute(void)
 void Mode::setServerResponse472(const std::string wrongMode, const std::string message)
 {
 	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
+
 	std::string response;
 	response.append(nickname);
 	response.append("!");
