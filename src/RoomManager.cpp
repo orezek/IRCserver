@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RoomManager.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:34:33 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/11 18:37:08 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/13 10:52:23 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,16 +186,12 @@ std::string RoomManager::getFormattedNicknamess(std::string roomName)
 			{
 				response.append("@");
 			}
-			if (ClientManager::getInstance().getClient(*clientFd).getNickname().empty())
-			{
-				response.append("*");
-			}
 			response.append(ClientManager::getInstance().getClient(*clientFd).getNickname());
-			++i;
-			if (i == room->getNoClients())
+			if (i != room->getNoClients())
 			{
 				response.append(" ");
 			}
+			++i;
 		}
 	}
 	return (response);
