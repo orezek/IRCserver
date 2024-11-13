@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 19:05:54 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/13 23:11:06 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/13 23:25:18 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ Bot::~Bot() {}
 void Bot::execute(void)
 {
 
-	Token* tokenRoomname = NULL;
-	tokenRoomname = clientMessage.findNthTokenOfType(Token::ROOM_NAME, 1);
+	//Token* tokenRoomname = NULL;
+	//tokenRoomname = clientMessage.findNthTokenOfType(Token::ROOM_NAME, 1);
 	// if (tokenRoomname == NULL)
 	// {
 	// 	setServerResponse461();
@@ -39,12 +39,12 @@ void Bot::execute(void)
 		return;
 	}
 
-	this->room = RoomManager::getInstance().getRoom((tokenRoomname->getText()));
-	if (!room->isClientInRoom(client->getFd()))
-	{
-		setServerResponse442();
-		return;
-	}
+	// this->room = RoomManager::getInstance().getRoom((tokenRoomname->getText()));
+	// if (!room->isClientInRoom(client->getFd()))
+	// {
+	// 	setServerResponse442();
+	// 	return;
+	// }
 	Token* tokenMessage = clientMessage.findNthTokenOfType(Token::MESSAGE, 1);
 	std::string message;
 	if (tokenMessage == NULL)
@@ -57,7 +57,7 @@ void Bot::execute(void)
 	}
 	std::cout << message << std::endl;
 	std::string chatMessage = this->process_bot_command(message);
-	std::cout << chatMessage << std::endl;
+	//std::cout << chatMessage << std::endl;
 	this->setServerResponseBot(chatMessage);
 }
 
@@ -72,7 +72,7 @@ void Bot::setServerResponseBot(std::string message)
 	response.append("irc.bot@api.openai.com");
 	response.append(" BOT ");
 	response.append("#");
-	response.append(this->room->getRoomName());
+	//response.append(this->room->getRoomName());
 	response.append(" :");
 	response.append(message);
 	response.append("\r\n");
@@ -92,7 +92,8 @@ size_t Bot::WriteCallback(void* contents, size_t size, size_t nmemb, void* userp
 // Function to send request to OpenAI API
 std::string Bot::get_openai_response(const std::string& user_message)
 {
-	const std::string OPENAI_API_KEY = ""; // add your own API key.
+	const std::string OPENAI_API_KEY = "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";
+
 	CURL* curl;
 	CURLcode res;
 	std::string readBuffer;
@@ -164,7 +165,7 @@ std::string Bot::get_openai_response(const std::string& user_message)
 		curl_easy_cleanup(curl);
 		curl_slist_free_all(headers);
 	}
-	std::cout << readBuffer << std::endl;
+	//std::cout << readBuffer << std::endl;
 	return readBuffer;
 }
 
