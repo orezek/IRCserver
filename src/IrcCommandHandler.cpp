@@ -1,16 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   IrcCommandHandler.cpp                              :+:      :+:    :+:   */
+/*   IRCCommandHandler.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-<<<<<<< HEAD:src/IRCCommandHandler.cpp
-/*   Updated: 2024/11/08 20:56:26 by orezek           ###   ########.fr       */
-=======
-/*   Updated: 2024/11/13 12:04:45 by mbartos          ###   ########.fr       */
->>>>>>> 9cfd045fe028158209b04b48122e88bfe53007ad:src/IrcCommandHandler.cpp
+/*   Updated: 2024/11/13 15:05:12 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
