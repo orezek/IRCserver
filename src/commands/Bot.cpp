@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 19:05:54 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/13 23:09:00 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/13 23:11:06 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ size_t Bot::WriteCallback(void* contents, size_t size, size_t nmemb, void* userp
 // Function to send request to OpenAI API
 std::string Bot::get_openai_response(const std::string& user_message)
 {
-	const std::string OPENAI_API_KEY = "add_your_own_api_key";
+	const std::string OPENAI_API_KEY = ""; // add your own API key.
 	CURL* curl;
 	CURLcode res;
 	std::string readBuffer;
