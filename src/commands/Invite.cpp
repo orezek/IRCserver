@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 12:15:47 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/13 10:56:10 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 11:34:09 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ Invite::~Invite() {}
 void Invite::execute(void)
 {
 	bool roomExists;
-	bool userExists;
-	bool userIsOperator;
 
 	Token *tokenRoomname = NULL;
 	Token *tokenUser = NULL;
@@ -50,7 +48,7 @@ void Invite::execute(void)
 			return;
 		}
 		// check Room and User existance
-		if ((roomExists = RoomManager::getInstance().roomExist(tokenRoomname->getText())) && (userExists = ClientManager::getInstance().doesClientExist(tokenUser->getText())))
+		if ((roomExists = RoomManager::getInstance().roomExist(tokenRoomname->getText())) && (ClientManager::getInstance().doesClientExist(tokenUser->getText())))
 		{
 			this->room = RoomManager::getInstance().getRoom(tokenRoomname->getText());
 			Client *invitee = ClientManager::getInstance().findClient(tokenUser->getText());

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:21 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/13 11:18:12 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 11:42:31 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 
 ClientMessage::ClientMessage() : commandType(NOT_ASSIGNED), iteratorInitialized(false) {}
 
-ClientMessage::ClientMessage(ClientMessage const &refObj) : commandType(refObj.commandType), tokens(refObj.tokens), iteratorInitialized(refObj.iteratorInitialized), currentTokenIt(refObj.currentTokenIt) {}
+ClientMessage::ClientMessage(ClientMessage const &refObj) : tokens(refObj.tokens), commandType(refObj.commandType), iteratorInitialized(refObj.iteratorInitialized), currentTokenIt(refObj.currentTokenIt) {}
 
 ClientMessage &ClientMessage::operator=(ClientMessage const &refObj)
 {
 	if (this != &refObj)
 	{
-		this->commandType = refObj.commandType;
 		this->tokens = refObj.tokens;
+		this->commandType = refObj.commandType;
 		iteratorInitialized = refObj.iteratorInitialized;
 		currentTokenIt = refObj.currentTokenIt;
 	}
@@ -158,15 +158,28 @@ int ClientMessage::size()
 // --- PRIVATE ---
 
 // --- OUTSIDE OF THE CLASS ---
-std::ostream &operator<<(std::ostream &output, ClientMessage &instance)
+// std::ostream &operator<<(std::ostream &output, ClientMessage const &instance)
+// {
+// 	output << "---- ClientMessage ----" << std::endl;
+// 	output << "All tokens:" << std::endl;
+// 	while ((tempToken = instance.getNextToken()) != NULL)
+// 	{
+// 		output << "Token: Type = " << tempToken->getType();
+// 		output << ", text = |" << tempToken->getText() << "|" << std::endl;
+// 	}
+// 	output << "-----------------------";
+// 	return (output);
+// }
+
+
+std::ostream &operator<<(std::ostream &output, ClientMessage const &instance)
 {
 	output << "---- ClientMessage ----" << std::endl;
 	output << "All tokens:" << std::endl;
-	Token* tempToken;
-	while ((tempToken = instance.getNextToken()) != NULL)
+	for (std::vector<Token>::const_iterator tokenIt = instance.tokens.begin(); tokenIt != instance.tokens.end(); ++tokenIt)
 	{
-		output << "Token: Type = " << tempToken->getType();
-		output << ", text = |" << tempToken->getText() << "|" << std::endl;
+		output << "Token: Type = " << tokenIt->getType();
+		output << ", text = |" << tokenIt->getText() << "|" << std::endl;
 	}
 	output << "-----------------------";
 	return (output);

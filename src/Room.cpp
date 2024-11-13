@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:51:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/13 11:07:38 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 11:30:27 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,27 +15,29 @@
 Room::Room(std::string roomName) : roomName(roomName),
 								   password(),
 								   passwordRequired(false),
+								   userLimit(0),
 								   topic(),
-								   inviteOnly(false),
 								   topicLocked(false),
+								   inviteOnly(false),
 								   privateRoom(false),
 								   publicRoom(true),
-								   secretRoom(false),
-								   userLimit(0) {}
+								   secretRoom(false)
+								    {}
 
 Room::Room(const Room& obj) : roomName(obj.roomName),
+							  password(obj.password),
+							  passwordRequired(obj.passwordRequired),
 							  clientFds(obj.clientFds),
 							  operators(obj.operators),
 							  invitees(obj.invitees),
-							  password(obj.password),
-							  passwordRequired(obj.passwordRequired),
+							  userLimit(obj.userLimit),
 							  topic(obj.topic),
-							  inviteOnly(obj.inviteOnly),
 							  topicLocked(obj.topicLocked),
+							  inviteOnly(obj.inviteOnly),
 							  privateRoom(obj.privateRoom),
 							  publicRoom(obj.publicRoom),
-							  secretRoom(obj.secretRoom),
-							  userLimit(obj.userLimit) {}
+							  secretRoom(obj.secretRoom)
+							   {}
 
 Room::~Room() {}
 
@@ -44,18 +46,18 @@ Room& Room::operator=(const Room& obj)
 	if (this != &obj)
 	{
 		this->roomName = obj.roomName;
+		this->password = obj.password;
+		this->passwordRequired = obj.passwordRequired;
 		this->clientFds = obj.clientFds;
 		this->operators = obj.operators;
 		this->invitees = obj.invitees;
-		this->password = obj.password;
-		this->passwordRequired = obj.passwordRequired;
+		this->userLimit = obj.userLimit;
 		this->topic = obj.topic;
-		this->inviteOnly = obj.inviteOnly;
 		this->topicLocked = obj.topicLocked;
+		this->inviteOnly = obj.inviteOnly;
 		this->privateRoom = obj.privateRoom;
 		this->publicRoom = obj.publicRoom;
 		this->secretRoom = obj.secretRoom;
-		this->userLimit = obj.userLimit;
 	}
 	return (*this);
 }
@@ -170,9 +172,10 @@ std::string Room::getRoomAsString() const
 	return (output.str());
 }
 
-int* Room::findNthClient(int n)
+int* Room::findNthClient(size_t n)
 {
 	// Check if n is within the valid range
+	// ssize_t tempN = static_cast<ssize_t> n;
 	if (n > 0 && n <= clientFds.size())
 	{
 		return (&clientFds[n - 1]);  // Return a pointer to the nth element (1-based index)

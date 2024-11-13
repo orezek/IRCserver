@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 09:51:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/13 10:56:04 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 11:32:42 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,16 @@ ABaseCommand::ABaseCommand(Client* client, ClientMessage& clientMessage) : clien
 																		   room(NULL),
 																		   serverData(ServerDataManager::getInstance()) {}
 
-ABaseCommand::ABaseCommand(ABaseCommand const& refObj) : client(refObj.client), room(refObj.room), serverData(refObj.serverData), clientMessage(refObj.clientMessage) {};
+ABaseCommand::ABaseCommand(ABaseCommand const& refObj) : client(refObj.client), clientMessage(refObj.clientMessage), room(refObj.room), serverData(refObj.serverData) {};
 
 ABaseCommand& ABaseCommand::operator=(ABaseCommand const& refObj)
 {
 	if (this != &refObj)
 	{
 		this->client = refObj.client;
-		this->serverData = refObj.serverData;
 		this->clientMessage = refObj.clientMessage;
 		this->room = refObj.room;
+		this->serverData = refObj.serverData;
 	}
 	return (*this);
 };

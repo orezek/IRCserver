@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 21:30:41 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/13 10:56:17 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 11:34:20 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ void Kick::execute(void)
 	Token *tokenUser = NULL;
 	Token *tokenMessage = NULL;
 	bool roomExists;
-	bool userExists;
 	bool hasMessage = false;
 	std::string message = "";
 

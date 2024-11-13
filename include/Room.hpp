@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:55:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/13 11:07:19 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 11:30:33 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ class Room
 		bool isClientInRoom(const int clientSocketFd) const;
 		std::string getRoomName() const;
 		std::string getRoomAsString() const;
-		int* findNthClient(int n);
+		int* findNthClient(size_t n);
 		// Room password is MODE -k
 		const std::string& getPassword() const;
 		void setPassword(std::string password);
@@ -66,14 +66,14 @@ class Room
 	private:
 		std::string roomName;
 		std::string password;  // mode k
-		int userLimit;         // mode l
 		bool passwordRequired;
-		std::string topic;
 		std::vector<int> clientFds;
 		std::vector<int> operators;
 		std::vector<int> invitees;
-		bool inviteOnly;   // mode i
+		int userLimit;         // mode l
+		std::string topic;
 		bool topicLocked;  // mode t
+		bool inviteOnly;   // mode i
 		// for visibility options - standard IRC channel options
 		bool privateRoom;
 		bool publicRoom;

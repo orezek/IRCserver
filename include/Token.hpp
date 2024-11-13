@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 19:24:12 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/04 21:37:55 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 11:31:09 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,6 @@ class Token
 		void setText(std::string newText);
 
 	private:
-		std::string text;
 		Token::Type type;
+		std::string text;
 };
