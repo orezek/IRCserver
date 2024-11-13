@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/13 11:20:30 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 20:11:33 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,22 +60,24 @@ ConnectionHandler::~ConnectionHandler() {}
 int ConnectionHandler::initializeMasterSocketFd()
 {
 	int masterSocketFd = -1;
+	masterSocketFd = enableSocket(masterSocketFd);
+	enableSocketReus(masterSocketFd);
 	try
 	{
-		masterSocketFd = enableSocket(masterSocketFd);
-		enableSocketReus(masterSocketFd);
 		enableSocketBinding(masterSocketFd);
-		enablePortListenning(masterSocketFd);
-		setFileDescriptorToNonBlockingState(masterSocketFd);
 	}
 	catch (const std::exception &e)
 	{
 		if (masterSocketFd != -1)
 		{
 			close(masterSocketFd);  // Ensure the socket is closed if it was opened
+			Logger::log(e.what(), ". Make sure port: ", this->serverPortNumber, " is available.");
+			exit(1);
 		}
-		throw;  // either return an error code or throw exception. What to do next?
+		return (-1);
 	}
+	enablePortListenning(masterSocketFd);
+	setFileDescriptorToNonBlockingState(masterSocketFd);
 	this->masterSocketFd = masterSocketFd;
 	return (masterSocketFd);
 }
@@ -141,8 +143,6 @@ void ConnectionHandler::prepareFdSetsForSelect(void)
 		Client *client = ClientManager::getInstance().findClient(clientSocketFd);
 		if (client == NULL)
 		{
-			// Log a warning message
-			// Client was deleted in ClientManager
 			Logger::log("Closing Client FD: ",  clientSocketFd);
 			Logger::log("Erasing Client from active sockets: ",  clientSocketFd);
 			close(clientSocketFd);
