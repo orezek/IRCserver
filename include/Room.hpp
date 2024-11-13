@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Room.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:55:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/10 12:53:22 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/13 11:07:19 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ class Room
 		void setUserLimit(int userLimit);
 		bool isUserLimit(void);
 		// User stats
-		const int getNoClients(void) const;
+		int getNoClients(void) const;
 
 	private:
 		std::string roomName;

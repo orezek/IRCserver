@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:51:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/11 13:43:03 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 11:07:38 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,7 @@ bool Room::isOperator(const int clientFd)
 	return (std::find(operators.begin(), operators.end(), clientFd) != operators.end());
 }
 
-const int Room::getNoClients(void) const
+int Room::getNoClients(void) const
 {
 	return (this->clientFds.size());
 }
