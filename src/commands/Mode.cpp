@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:14:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/11 09:45:22 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 11:34:50 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ Mode::~Mode() {}
 void Mode::execute(void)
 {
 	Token *tokenRoom = clientMessage.findNthTokenOfType(Token::ROOM_NAME, 1);
-	bool addOperator = false;
-	bool addUserLimit = false;
 
 	// if it is mode for client, skip execution - WILL BE IMPLEMENTED IN THE FUTURE
 	Token *tokenClient = clientMessage.findNthTokenOfType(Token::NICK_NAME, 1);
@@ -49,7 +47,6 @@ void Mode::execute(void)
 	}
 
 	// if "MODE #room" is send, do nothing - WILL BE IMPLEMENTED IN THE FUTURE
-	Token *testToken;
 	if (clientMessage.size() == 2)
 	{
 		return;
@@ -64,10 +61,7 @@ void Mode::execute(void)
 
 	// response creation
 	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
+
 	this->response.clear();
 	this->response = ":";
 	response.append(nickname);
@@ -396,10 +390,7 @@ void Mode::execute(void)
 void Mode::setServerResponse472(const std::string wrongMode, const std::string message)
 {
 	std::string nickname = client->getNickname();
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
+
 	std::string response;
 	response.append(nickname);
 	response.append("!");

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 23:12:55 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/11 11:11:03 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 10:48:13 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,10 @@ UserData &UserData::operator=(const UserData &obj)
 
 std::string UserData::getNickname() const
 {
+	if (this->nickname.empty())
+	{
+		return ("*");
+	}
 	return (this->nickname);
 }
 
@@ -151,10 +155,10 @@ void UserData::setUserValid(bool userValue)
 
 std::string UserData::getServername() const
 {
-	return(this->servername);
+	return (this->servername);
 }
 // <username> <hostname> <servername> <nickname> <H/G>*
 std::string UserData::getUserInfo(void)
 {
-	return (this->username + " " +  this->hostname + " " + servername + " " + nickname + " H");
+	return (this->username + " " + this->hostname + " " + servername + " " + nickname + " H");
 }

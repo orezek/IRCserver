@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/11 10:05:11 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 11:05:28 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,24 +15,23 @@
 // TODO: this should be moved to somewhere else
 const static int MESSAGE_SIZE = 512;
 
-Client::Client(int fd) : fd(fd), markedForDeletion(false), rawData("")
+Client::Client(int fd) : fd(fd), rawData(""), markedForDeletion(false)
 {
 	memset(&this->ipAddress, 0, sizeof(this->ipAddress));
 }
 
-// Copy Constructor
-Client::Client(const Client& other) : fd(other.fd),  // Initialize const member directly
-									  ipAddress(other.ipAddress),
-									  rawData(other.rawData),
-									  markedForDeletion(other.markedForDeletion),
-									  clientMessages(other.clientMessages),   // Deep copy vector
-									  serverResponses(other.serverResponses)  // Assuming ServerResponseQueue has a valid copy constructor
-																			  //   userData(other.userData)               // Deep copy UserData
+Client::Client(const Client& other)
+	: UserData(other)  // Call base class copy constructor
+	  ,
+	  fd(other.fd),
+	  ipAddress(other.ipAddress),
+	  rawData(other.rawData),
+	  markedForDeletion(other.markedForDeletion),
+	  clientMessages(other.clientMessages),
+	  serverResponses(other.serverResponses)
 {
-	// If any other special deep-copy logic is needed for members, add it here.
 }
 
-// Copy Assignment Operator
 Client& Client::operator=(const Client& other)
 {
 	if (this != &other)
@@ -59,10 +58,11 @@ int Client::getFd(void) const
 // TODO: this functionality will be moved to connection handler
 int Client::sendAllResponses(void)
 {
-	for (int i = 0; i < this->serverResponses.size();)
+	for (size_t i = 0; i < this->serverResponses.size();)
 	{
 		const std::string& response = this->serverResponses[i];
-		int bytesSent = send(this->fd, response.c_str(), response.size(), 0);
+		const size_t responseSize = response.size();
+		ssize_t bytesSent = send(this->fd, response.c_str(), responseSize, 0);
 
 		if (bytesSent == -1)
 		{
@@ -77,7 +77,7 @@ int Client::sendAllResponses(void)
 				return (-1);  // Exit the function on error
 			}
 		}
-		else if (bytesSent < response.size())
+		else if (static_cast<size_t>(bytesSent) < responseSize)
 		{
 			// Partial send occurred; only erase what was sent
 			this->serverResponses[i] = response.substr(bytesSent);
@@ -144,7 +144,8 @@ bool Client::isReadyForParsing()
 	else if (rawData.size() > MESSAGE_SIZE)
 	{
 		this->markForDeletion();
-		return (false);
+		this->setRawData("QUIT :Request is too long.\r\n");
+		return (true);
 	}
 	else if (rawData[rawData.size() - 1] == '\n')
 	{

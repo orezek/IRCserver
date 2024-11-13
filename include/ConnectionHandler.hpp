@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.hpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/11 18:27:29 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/13 11:20:40 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,13 @@ class ConnectionHandler
 		ConnectionHandler &operator=(const ConnectionHandler &obj);
 
 		// Server Connections
-		int initializeMasterSocketFd(int serverPortNumber);
+		int initializeMasterSocketFd();
 		int enableSocket(int &masterSocketFd);
 		int setFileDescriptorToNonBlockingState(int &fd);
 		int acceptNewClients(void);
 		int closeServerFd(void);
 		int &getMasterSocketFd(void);
-		void enableSocketBinding(int &masterSocketFd, int &serverPortNumber);
+		void enableSocketBinding(int &masterSocketFd);
 		void enablePortListenning(int &masterSocketFd);
 		void prepareFdSetsForSelect(void);
 		void runSelect(void);

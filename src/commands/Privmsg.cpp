@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 13:02:55 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/08 17:30:49 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 10:56:29 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,10 +118,6 @@ void Privmsg::setValidResponsePrefix()
 {
 	std::string nickname = client->getNickname();
 
-	if (nickname.empty())
-	{
-		nickname = "*";
-	}
 	validResponsePrefix = ":";
 	validResponsePrefix.append(nickname);
 	validResponsePrefix.append("!");

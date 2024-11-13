@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:18 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/11 09:41:31 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 11:40:24 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ class ClientMessage
 		void insertTokenBeforeLastTokenType(Token &newToken, Token::Type type);
 		void deleteAllProcessedTokens();
 		Token *findNthTokenOfType(Token::Type type, int n);
-		std::vector<Token> tokens;
 
 		void setCommandType(cmdTypes);
 		cmdTypes getCommandType();
@@ -66,6 +65,7 @@ class ClientMessage
 		Token *getNextToken(void);
 		void resetIterator(void);
 		int size();
+		std::vector<Token> tokens;
 
 	private:
 		cmdTypes commandType;

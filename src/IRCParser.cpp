@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/11 15:32:10 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 11:22:31 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -942,7 +942,7 @@ void IRCParser::processClientOrRoom(const std::string& clientOrRoom)
 void IRCParser::parseParametersBySpace()
 {
 	std::string delimiters = " \t\r\n";
-	int pos = 0;
+	std::string::size_type pos = 0;
 	std::string parameter;
 
 	while ((pos = tempInputData.find_first_of(delimiters)) != std::string::npos)
@@ -961,7 +961,7 @@ void IRCParser::parseParametersBySpace()
 void IRCParser::parseParametersAsUser()
 {
 	std::string delimiters = " \t\r\n";
-	int pos = 0;
+	std::string::size_type pos = 0;
 	std::string parameter;
 
 	while ((pos = tempInputData.find_first_of(delimiters)) != std::string::npos && clientMessage.findNthTokenOfType(Token::NOT_ASSIGNED, 3) == NULL)

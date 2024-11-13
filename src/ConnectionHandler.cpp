@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/11 19:11:51 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/13 11:20:30 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,14 @@ ConnectionHandler &ConnectionHandler::operator=(const ConnectionHandler &other)
 ConnectionHandler::~ConnectionHandler() {}
 
 // new implmentation
-int ConnectionHandler::initializeMasterSocketFd(int serverPortNumber)
+int ConnectionHandler::initializeMasterSocketFd()
 {
 	int masterSocketFd = -1;
 	try
 	{
 		masterSocketFd = enableSocket(masterSocketFd);
 		enableSocketReus(masterSocketFd);
-		enableSocketBinding(masterSocketFd, serverPortNumber);
+		enableSocketBinding(masterSocketFd);
 		enablePortListenning(masterSocketFd);
 		setFileDescriptorToNonBlockingState(masterSocketFd);
 	}
@@ -98,7 +98,7 @@ void ConnectionHandler::enableSocketReus(int &masterSocketFd)
 	}
 }
 
-void ConnectionHandler::enableSocketBinding(int &masterSocketFd, int &serverPortNumber)
+void ConnectionHandler::enableSocketBinding(int &masterSocketFd)
 {
 	struct sockaddr_in ipServerAddress;
 	ipServerAddress.sin_addr.s_addr = INADDR_ANY;  // all interfaces on the srv machine
@@ -223,7 +223,6 @@ int ConnectionHandler::onRead(int clientSocketFd)
 {
 	ssize_t bytesReceived = 0;
 	char recvBuff[MAX_BUFF_SIZE];
-	int clientBuffSize;
 	if (ClientManager::getInstance().findClient(clientSocketFd) != NULL && !ClientManager::getInstance().findClient(clientSocketFd)->isMarkedForDeletion())
 	{
 		// int clientSocketFd = ClientManager::getInstance().getClient(clientSocketFd).getFd();
