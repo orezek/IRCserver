@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:33 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/13 15:05:30 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/13 22:35:41 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 #include "Unknown.hpp"
 #include "User.hpp"
 #include "Who.hpp"
+#include "Bot.hpp"
 
 class IrcCommandHandler
 {

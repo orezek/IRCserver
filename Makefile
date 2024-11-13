@@ -8,18 +8,19 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME =		ircserv
-CCP =		c++
-CFLAGS =	-g -I./include/ -I./include/commands -I/opt/homebrew/Cellar/cjson/1.7.18/include
-LIBS =      -L/opt/homebrew/lib -lcurl -lcjson  # Correctly link libcjson
+# CCP =		c++
+# CFLAGS =	-g -I./include/ -I./include/commands -I/opt/homebrew/Cellar/cjson/1.7.18/include
+# LIBS =      -L/opt/homebrew/lib -lcurl -lcjson  # Correctly link libcjson
 
+NAME =		ircserv
 SRC_PATH = ./src/
 COMMANDS_PATH = ./src/commands/
 SRC =		$(wildcard $(SRC_PATH)*.cpp) $(wildcard $(COMMANDS_PATH)*.cpp)
 
 CCP =		c++ -std=c++98
 CFLAGS =	-g -Wall -Wextra -Werror\
-			-I./include/ -I./include/commands
+			-I./include/ -I./include/commands -I/opt/homebrew/Cellar/cjson/1.7.18/include
+LIBS =		-L/opt/homebrew/lib -lcurl -lcjson  # Correctly link libcjson - BOT
 
 # Source files
 SRC_PATH =		./src/
@@ -56,7 +57,8 @@ COMMAND_FILES =	ABaseCommand.cpp \
 				Topic.cpp \
 				Unknown.cpp \
 				User.cpp \
-				Who.cpp
+				Who.cpp \
+				Bot.cpp
 
 SRC = 		$(addprefix $(SRC_PATH), $(SRC_FILES)) \
 			$(addprefix $(COMMANDS_PATH), $(COMMAND_FILES))

@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 19:05:54 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 23:49:37 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/13 23:09:00 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,16 @@ void Bot::execute(void)
 
 	Token* tokenRoomname = NULL;
 	tokenRoomname = clientMessage.findNthTokenOfType(Token::ROOM_NAME, 1);
-	if (tokenRoomname == NULL)
-	{
-		setServerResponse461();
-		return;
-	}
-	if ((!RoomManager::getInstance().roomExist(tokenRoomname->getText())))
-	{
-		setServerResponse403(tokenRoomname->getText());
-		return;
-	}
+	// if (tokenRoomname == NULL)
+	// {
+	// 	setServerResponse461();
+	// 	return;
+	// }
+	// if ((!RoomManager::getInstance().roomExist(tokenRoomname->getText())))
+	// {
+	// 	setServerResponse403(tokenRoomname->getText());
+	// 	return;
+	// }
 
 	if (!client->isRegistered())
 	{
@@ -92,7 +92,7 @@ size_t Bot::WriteCallback(void* contents, size_t size, size_t nmemb, void* userp
 // Function to send request to OpenAI API
 std::string Bot::get_openai_response(const std::string& user_message)
 {
-	const std::string OPENAI_API_KEY = "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";
+	const std::string OPENAI_API_KEY = "add_your_own_api_key";
 	CURL* curl;
 	CURLcode res;
 	std::string readBuffer;
@@ -106,7 +106,7 @@ std::string Bot::get_openai_response(const std::string& user_message)
 		headers = curl_slist_append(headers, "Content-Type: application/json");
 
 		// Construct the prompt inside this function
-		std::string prompt = "Respond with a witty, programmer-humor reply no longer than 160 characters. User: " + user_message + " Bot:";
+		std::string prompt = "You a IRC BOT and your role is a senior design systems architect in software engineering, your role is to review the current design work and provide constructive feedback that aligns with industry standards in software development and design. Evaluate the work based on its adherence to best practices, compliance with design principles, and technical precision. Assess whether the work meets professional expectations for software design, identifying any elements that need improvement for a refined and polished result. Offer actionable suggestions to guide the designer towards enhancing clarity, usability, and alignment with industry standards. Reply no longer than 160 characters. User: " + user_message + " Bot:";
 
 		// Escape special characters in the prompt
 		std::string escaped_prompt;
@@ -131,7 +131,7 @@ std::string Bot::get_openai_response(const std::string& user_message)
 		std::string json_payload = "{";
 		json_payload += "\"model\": \"gpt-4o-mini\", ";
 		json_payload += "\"messages\": [";
-		json_payload += "{\"role\": \"system\", \"content\": \"You are a helpful assistant.\"}, ";
+		json_payload += "{\"role\": \"system\", \"content\": \"You are a system archytect and a teacher.\"}, ";
 		json_payload += "{\"role\": \"user\", \"content\": \"" + escaped_prompt + "\"}";
 		json_payload += "], ";
 		json_payload += "\"max_tokens\": 40, ";

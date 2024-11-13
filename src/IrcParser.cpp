@@ -1,16 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   IrcParser.cpp                                      :+:      :+:    :+:   */
+/*   IRCParser.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-<<<<<<< HEAD:src/IRCParser.cpp
-/*   Updated: 2024/11/08 21:06:17 by orezek           ###   ########.fr       */
-=======
-/*   Updated: 2024/11/13 12:05:34 by mbartos          ###   ########.fr       */
->>>>>>> 9cfd045fe028158209b04b48122e88bfe53007ad:src/IrcParser.cpp
+/*   Updated: 2024/11/13 22:42:36 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,15 +160,13 @@ void IrcParser::assignCommandType()
 	{
 		clientMessage.setCommandType(ClientMessage::WHO);
 	}
-<<<<<<< HEAD:src/IRCParser.cpp
 	else if (commandString == "BOT")
 	{
 		clientMessage.setCommandType(ClientMessage::BOT);
-=======
+	}
 	else if (commandString == "WHOIS")
 	{
 		clientMessage.setCommandType(ClientMessage::WHOIS);
->>>>>>> 9cfd045fe028158209b04b48122e88bfe53007ad:src/IrcParser.cpp
 	}
 	else
 	{
@@ -247,15 +241,13 @@ void IrcParser::parseParameterTokens()
 		parseParametersBySpace();
 		assignParametersAsWho();
 	}
-<<<<<<< HEAD:src/IRCParser.cpp
 	else if (commandType == ClientMessage::BOT)
 	{
 		parseAndAssignParametersAsKick();
-=======
+	}
 	else if (commandType == ClientMessage::WHOIS)
 	{
 		// will be implemented later
->>>>>>> 9cfd045fe028158209b04b48122e88bfe53007ad:src/IrcParser.cpp
 	}
 	// add functionality for other commands
 }
@@ -927,8 +919,7 @@ void IrcParser::parseAndAssignParametersAsPrivmsg()
 	tempInputData.clear();
 }
 
-<<<<<<< HEAD:src/IRCParser.cpp
-void IRCParser::parseAndAssignParametersAsBot()
+void IrcParser::parseAndAssignParametersAsBot()
 {
 	tempInputData = trim(tempInputData);
 	size_t posRoomsEnd = tempInputData.find_first_of(" \t");
@@ -991,10 +982,7 @@ void IRCParser::parseAndAssignParametersAsBot()
 	tempInputData.clear();
 }
 
-void IRCParser::processClientOrRoom(const std::string& clientOrRoom)
-=======
 void IrcParser::processClientOrRoom(const std::string& clientOrRoom)
->>>>>>> 9cfd045fe028158209b04b48122e88bfe53007ad:src/IrcParser.cpp
 {
 	std::string trimmedClientOrRoom = trim(clientOrRoom);
 

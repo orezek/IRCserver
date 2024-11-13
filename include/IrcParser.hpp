@@ -1,16 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   IrcParser.hpp                                      :+:      :+:    :+:   */
+/*   IRCParser.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:09:39 by mbartos           #+#    #+#             */
-<<<<<<< HEAD:include/IRCParser.hpp
-/*   Updated: 2024/11/08 21:04:03 by orezek           ###   ########.fr       */
-=======
-/*   Updated: 2024/11/13 12:03:59 by mbartos          ###   ########.fr       */
->>>>>>> 9cfd045fe028158209b04b48122e88bfe53007ad:include/IrcParser.hpp
+/*   Updated: 2024/11/13 22:40:25 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,13 +81,10 @@ class IrcParser
 		void assignTokenTypesAsPing();
 		void assignTokenTypesAsQuit();
 		void assignTokenTypesAsUser();
-<<<<<<< HEAD:include/IRCParser.hpp
-		
+
 		// BOT functions
 		void parseAndAssignParametersAsBot();
-=======
 
->>>>>>> 9cfd045fe028158209b04b48122e88bfe53007ad:include/IrcParser.hpp
 		// general functions
 		std::string trim(const std::string& str);
 };

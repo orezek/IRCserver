@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:12:18 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/13 15:04:17 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/13 22:37:19 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ class ClientMessage
 			MODE,
 			WHO,
 			WHOIS,
+			BOT,
 			UNKNOWN = 99
 		};
 
