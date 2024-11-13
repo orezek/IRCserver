@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerDataManager.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 20:01:51 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 16:31:17 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 20:44:25 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,11 @@ bool ServerDataManager::isPortValid(int port)
 ServerDataManager::ServerDataManager(const std::string &password, int portNumber) : serverPassword(password), serverPortNumber(portNumber)
 {
 	serverName = "irc.brdevstudio.com";
+	setCurrentDateTime();
+	setServerVersion("1.0.0.0");
 }
 
 ServerDataManager::~ServerDataManager() {};
-
-// void ServerDataManager::setServerPassword(const std::string &serverPassword)
-// {
-// 	this->serverPassword = serverPassword;
-// }
 
 const std::string &ServerDataManager::getServerPassword(void)
 {
@@ -70,15 +67,36 @@ const int &ServerDataManager::getServerPortNumber(void)
 	return (serverPortNumber);
 }
 
-// void ServerDataManager::setServerPortNumber(const int &serverPortNumber)
-// {
-// 	this->serverPortNumber = serverPortNumber;
-// }
+void ServerDataManager::setCurrentDateTime(void)
+{
+	// Get the current time
+	std::time_t now = std::time(0);
 
-// void ServerDataManager::validateWaitingUser(int clientFd)
-// {
-// 	User *waitingUser = waitingUsers.findUser(clientFd);
+	// Convert to local time
+	std::tm *localTime = std::localtime(&now);
 
-// 	users.addUser(waitingUser);
-// 	waitingUsers.deleteUser(waitingUser);
-// }
+	// Manually format the date and time into a string
+	std::ostringstream oss;
+	oss << (1900 + localTime->tm_year) << "-"
+		<< (localTime->tm_mon + 1) << "-"
+		<< localTime->tm_mday << " "
+		<< localTime->tm_hour << ":"
+		<< localTime->tm_min << ":"
+		<< localTime->tm_sec;
+
+	this->serverTime = oss.str();
+}
+
+std::string ServerDataManager::getServerTime(void)
+{
+	return (this->serverTime);
+}
+
+void ServerDataManager::setServerVersion(std::string version)
+{
+	this->serverVersion = version;
+}
+std::string ServerDataManager::getServerVersion(void)
+{
+	return (this->serverVersion);
+}
