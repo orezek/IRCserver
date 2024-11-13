@@ -6,7 +6,7 @@
 #    By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/21 10:59:06 by mbartos           #+#    #+#              #
-#    Updated: 2024/11/13 11:59:30 by mbartos          ###   ########.fr        #
+#    Updated: 2024/11/13 12:05:27 by mbartos          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,8 +30,8 @@ SRC_FILES =		Client.cpp \
 				ClientManager.cpp \
 				ClientMessage.cpp \
 				ConnectionHandler.cpp \
-				IRCCommandHandler.cpp \
-				IRCParser.cpp \
+				IrcCommandHandler.cpp \
+				IrcParser.cpp \
 				IrcServer.cpp \
 				Logger.cpp \
 				main.cpp \

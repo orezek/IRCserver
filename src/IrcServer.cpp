@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:45:52 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/13 11:49:43 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 12:04:41 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void IrcServer::parseRequests()
 	for (std::vector<Client *>::iterator clientIt = clientsForParsing.begin(); clientIt != clientsForParsing.end(); ++clientIt)
 	{
 		Client *client = (*clientIt);
-		IRCParser parser(client);
+		IrcParser parser(client);
 		parser.makeClientMessages();
 	}
 }
@@ -93,7 +93,7 @@ void IrcServer::processRequests()
 	for (std::vector<Client *>::iterator clientIt = clientsForCommandsProcessing.begin(); clientIt != clientsForCommandsProcessing.end(); ++clientIt)
 	{
 		Client *client = (*clientIt);
-		IRCCommandHandler commandHandler(client);
+		IrcCommandHandler commandHandler(client);
 		commandHandler.processCommands();
 	}
 }

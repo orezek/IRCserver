@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   IRCCommandHandler.cpp                              :+:      :+:    :+:   */
+/*   IrcCommandHandler.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/11 08:16:03 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 12:04:45 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "IRCCommandHandler.hpp"
+#include "IrcCommandHandler.hpp"
 
-IRCCommandHandler::IRCCommandHandler(Client *client) : client(client)
+IrcCommandHandler::IrcCommandHandler(Client *client) : client(client)
 {
 	if (client == NULL)
 	{
@@ -20,9 +20,9 @@ IRCCommandHandler::IRCCommandHandler(Client *client) : client(client)
 	}
 }
 
-IRCCommandHandler::IRCCommandHandler(const IRCCommandHandler &refObj) : client(refObj.client) {}
+IrcCommandHandler::IrcCommandHandler(const IrcCommandHandler &refObj) : client(refObj.client) {}
 
-IRCCommandHandler &IRCCommandHandler::operator=(const IRCCommandHandler &refObj)
+IrcCommandHandler &IrcCommandHandler::operator=(const IrcCommandHandler &refObj)
 {
 	if (this != &refObj)
 	{
@@ -31,7 +31,7 @@ IRCCommandHandler &IRCCommandHandler::operator=(const IRCCommandHandler &refObj)
 	return (*this);
 }
 
-void IRCCommandHandler::processCommands()
+void IrcCommandHandler::processCommands()
 {
 	try
 	{
@@ -48,7 +48,7 @@ void IRCCommandHandler::processCommands()
 	}
 }
 
-void IRCCommandHandler::executeOneCommand(ClientMessage &clientMessage)
+void IrcCommandHandler::executeOneCommand(ClientMessage &clientMessage)
 {
 	ClientMessage::cmdTypes commandType = clientMessage.getCommandType();
 	Commands::ABaseCommand *command = NULL;
