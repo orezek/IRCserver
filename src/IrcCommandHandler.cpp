@@ -6,14 +6,15 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/14 21:12:20 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 21:58:27 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IrcCommandHandler.hpp"
 
 IrcCommandHandler::IrcCommandHandler(Client *client) : client(client)
-{}
+{
+}
 
 IrcCommandHandler::IrcCommandHandler(const IrcCommandHandler &refObj) : client(refObj.client) {}
 
@@ -28,18 +29,20 @@ IrcCommandHandler &IrcCommandHandler::operator=(const IrcCommandHandler &refObj)
 
 void IrcCommandHandler::processCommands()
 {
-	try
+	ClientMessage *clientMessage;
+	while (1)
 	{
-		while (1)
+		clientMessage = client->getTopMessage();
+		if (clientMessage != NULL)
 		{
-			ClientMessage clientMessage = client->popMessage();
-			this->executeOneCommand(clientMessage);
+			this->executeOneCommand(*clientMessage);
+			client->removeTopMessage();
+			clientMessage = NULL;
 		}
-	}
-	catch (const std::runtime_error &e)
-	{
-		// no more clientMessages in client to process
-		return;
+		else
+		{
+			return;
+		}
 	}
 }
 
