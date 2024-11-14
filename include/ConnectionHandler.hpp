@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/14 21:05:19 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 22:18:28 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,13 @@
 #include <iostream>
 #include <map>
 #include <vector>
+
 // Socket programing related libs.
 #include <arpa/inet.h>   // inet_ntoa()
 #include <fcntl.h>       // socket non-blocking mode
 #include <netinet/in.h>  // sockaddr_in struct
 #include <sys/select.h>  // select call
 #include <sys/socket.h>  // socket(), bind(), listen(), accept() send()
-
-#include <stdexcept>  // exceptions
 
 #include "ClientManager.hpp"
 #include "ErrorLogger.hpp"

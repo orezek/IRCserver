@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:34:33 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/13 10:52:23 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 22:26:00 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,15 +113,6 @@ std::string RoomManager::getRoomsAsString() const
 // PRIVATE
 RoomManager::RoomManager() {}
 RoomManager::~RoomManager() {}
-RoomManager::RoomManager(const RoomManager &obj) : roomList(obj.roomList) {}
-RoomManager &RoomManager::operator=(const RoomManager &obj)
-{
-	if (this != &obj)
-	{
-		this->roomList = obj.roomList;
-	}
-	return (*this);
-}
 
 // --- OUTSIDE OF THE CLASS ---
 std::ostream &operator<<(std::ostream &output, RoomManager const &instance)

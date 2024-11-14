@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 14:13:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/08 11:25:00 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 22:33:00 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,9 @@ void User::execute()
 
 	if (client->isRegistered())
 	{
-		// user already registered, send 462 "You may not reregister" response
 		this->setServerResponse462();
 		return;
 	}
-
-	// TODO: check parameters, if they are valid
 
 	bool wasRegistered = client->isRegistered();
 

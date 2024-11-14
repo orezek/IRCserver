@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 00:03:56 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/11 11:09:21 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 22:20:51 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ class UserData
 {
 	public:
 		UserData();
-		// UserData(int clientFd);
 		~UserData();
 		UserData(const UserData &obj);
 		UserData &operator=(const UserData &obj);

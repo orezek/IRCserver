@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ABaseCommand.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 09:51:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/13 20:46:35 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/14 22:32:06 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,9 @@ namespace Commands
 
 ABaseCommand::ABaseCommand(Client* client, ClientMessage& clientMessage) : client(client),
 																		   clientMessage(clientMessage),
-																		   room(NULL),
-																		   serverData(ServerDataManager::getInstance()) {}
+																		   room(NULL) {}
 
-ABaseCommand::ABaseCommand(ABaseCommand const& refObj) : client(refObj.client), clientMessage(refObj.clientMessage), room(refObj.room), serverData(refObj.serverData) {};
+ABaseCommand::ABaseCommand(ABaseCommand const& refObj) : client(refObj.client), clientMessage(refObj.clientMessage), room(refObj.room) {};
 
 ABaseCommand& ABaseCommand::operator=(ABaseCommand const& refObj)
 {
@@ -29,7 +28,6 @@ ABaseCommand& ABaseCommand::operator=(ABaseCommand const& refObj)
 		this->client = refObj.client;
 		this->clientMessage = refObj.clientMessage;
 		this->room = refObj.room;
-		this->serverData = refObj.serverData;
 	}
 	return (*this);
 };

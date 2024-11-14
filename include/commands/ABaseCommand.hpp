@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 11:10:59 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/13 11:32:13 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 22:27:43 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ class ABaseCommand
 		Client* client;
 		ClientMessage& clientMessage;
 		Room* room;
-		ServerDataManager& serverData;
+		// ServerDataManager& serverData;
 
 		// Send response to Room or Client
 		void addResponse(Client* client, std::string response);

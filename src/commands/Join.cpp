@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:14:27 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/13 10:56:15 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 22:30:12 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,7 @@ void Join::setServerResponse475(void)
 	std::string nickname = client->getNickname();
 
 	std::string response = ":";
-	response.append(serverData.getServerName());
+	response.append(client->getServername());
 	response.append(" 475 ");
 	response.append(nickname);
 	response.append(" #");
@@ -173,7 +173,7 @@ void Join::setServerResponse473(void)
 	std::string nickname = client->getNickname();
 
 	std::string response = ":";
-	response.append(serverData.getServerName());
+	response.append(client->getServername());
 	response.append(" 473 ");
 	response.append(nickname);
 	response.append(" #");
@@ -188,7 +188,7 @@ void Join::setServerResponse471(void)
 	std::string nickname = client->getNickname();
 
 	std::string response = ":";
-	response.append(serverData.getServerName());
+	response.append(client->getServername());
 	response.append(" 471 ");
 	response.append(nickname);
 	response.append(" #");

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 21:30:41 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/13 11:34:20 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 22:30:25 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ void Kick::setServerResponse441(std::string kicked_user)
 
 	this->response.clear();
 	this->response = ":";
-	this->response.append(serverData.getServerName());
+	this->response.append(client->getServername());
 	this->response.append(" 441 ");
 	this->response.append(nickname);
 	this->response.append(" ");
