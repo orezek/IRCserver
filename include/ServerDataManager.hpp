@@ -37,12 +37,15 @@ class ServerDataManager
 		const std::string &getServerPassword(void);
 		const std::string &getServerName(void);
 		const int &getServerPortNumber(void);
+		int getMasterSocketFd() const;
+		void setMasterSocketFd(int masterFd);
 		// void setServerPortNumber(const int &setServerPortNumber);  // delete if const?
 
 	private:
 		std::string serverPassword;
 		std::string serverName;
 		int serverPortNumber;
+		int masterSocketFd;
 
 		ServerDataManager(const std::string &password, int portNumber);
 		~ServerDataManager();

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 20:01:51 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 16:31:17 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/13 18:43:03 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ bool ServerDataManager::isPortValid(int port)
 	return (false);
 }
 
-ServerDataManager::ServerDataManager(const std::string &password, int portNumber) : serverPassword(password), serverPortNumber(portNumber)
+ServerDataManager::ServerDataManager(const std::string &password, int portNumber) : serverPassword(password), serverPortNumber(portNumber), masterSocketFd(-1)
 {
 	serverName = "irc.brdevstudio.com";
 }
@@ -68,6 +68,16 @@ const std::string &ServerDataManager::getServerName(void)
 const int &ServerDataManager::getServerPortNumber(void)
 {
 	return (serverPortNumber);
+}
+
+int ServerDataManager::getMasterSocketFd() const
+{
+	return (this->masterSocketFd);
+}
+
+void ServerDataManager::setMasterSocketFd(int masterFd)
+{
+	this->masterSocketFd = masterFd;
 }
 
 // void ServerDataManager::setServerPortNumber(const int &serverPortNumber)
