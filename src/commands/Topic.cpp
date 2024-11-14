@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:35:58 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/14 22:31:32 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 22:44:29 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,13 @@ void Topic::execute(void)
 				// topic has message i.e is not empty
 				if (room->isTopicSet())
 				{
-					std::cout << "Topic Set" << std::endl;
+					Logger::log("Topic Set");
 					this->setServerResponse332();
 				}
 				// not topic to show i.e is empty
 				else
 				{
-					std::cout << "No Topic Set" << std::endl;
+					Logger::log("No Topic Set");
 					this->setServerResponse331();
 				}
 			}

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:45:52 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/14 21:48:51 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 22:42:17 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ IrcServer::~IrcServer() {};
 void signalHandler(int sigNum)
 {
 	(void)sigNum;
-	std::cout << "Received SIGINT. Shutting down." << std::endl;
+	Logger::log("Received SIGINT. Shutting down.");
 	_stop = true;
 	return;
 }

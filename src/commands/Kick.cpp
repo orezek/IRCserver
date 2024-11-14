@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 21:30:41 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/14 22:30:25 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 22:43:46 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,6 @@ void Kick::execute(void)
 			// no more users to kick ass to
 			return;
 		}
-		std::cout << tokenRoom->getText() << std::endl;
-		std::cout << tokenUser->getText() << std::endl;
 		if ((tokenMessage = clientMessage.findNthTokenOfType(Token::MESSAGE, 1)) != NULL)
 		{
 			hasMessage = true;

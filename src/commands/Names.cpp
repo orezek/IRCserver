@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 20:19:42 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/13 10:56:23 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 22:44:04 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void Names::execute(void)
 		{
 			// :server.name 366 ClientNick #nonexistent_channel :End of /NAMES list.
 			setServerResponse366(tokenRoomname->getText());
-			std::cout << "Room does not exist!" << std::endl;
+			Logger::log("Room does not exist!");
 		}
 		i++;
 	} while (tokenRoomname != NULL);
@@ -85,7 +85,6 @@ void Names::setServerResponseNames(void)
 	RoomManager::getInstance().resetIterator();
 	while ((this->room = RoomManager::getInstance().getNextRoom()) != NULL)
 	{
-		std::cout << this->room->getRoomName() << std::endl;
 		if (this->room->isPublic())
 		{
 			this->setServerResponse353(RoomManager::getInstance().getFormattedNicknamess(this->room->getRoomName()));
