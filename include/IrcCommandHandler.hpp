@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:33 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/13 12:04:41 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 22:40:11 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,14 @@ class IrcCommandHandler
 {
 	public:
 		IrcCommandHandler(Client *client);
-		IrcCommandHandler(int clientFd);
 		IrcCommandHandler(const IrcCommandHandler &refObj);
 		IrcCommandHandler &operator=(const IrcCommandHandler &refObj);
+		~IrcCommandHandler();
 
 		void processCommands();
 		void executeOneCommand(ClientMessage &clientMessage);
 
 	private:
 		Client *client;
+		Commands::ABaseCommand *command;
 };
