@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/13 11:20:30 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 20:40:57 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ int ConnectionHandler::initializeMasterSocketFd()
 		enableSocketBinding(masterSocketFd);
 		enablePortListenning(masterSocketFd);
 		setFileDescriptorToNonBlockingState(masterSocketFd);
+		ServerDataManager::getInstance().setMasterSocketFd(masterSocketFd);
 	}
 	catch (const std::exception &e)
 	{
@@ -143,8 +144,8 @@ void ConnectionHandler::prepareFdSetsForSelect(void)
 		{
 			// Log a warning message
 			// Client was deleted in ClientManager
-			Logger::log("Closing Client FD: ",  clientSocketFd);
-			Logger::log("Erasing Client from active sockets: ",  clientSocketFd);
+			Logger::log("Closing Client FD: ", clientSocketFd);
+			Logger::log("Erasing Client from active sockets: ", clientSocketFd);
 			close(clientSocketFd);
 			it = connections.erase(it);
 			continue;
@@ -277,15 +278,13 @@ int ConnectionHandler::onWrite(int clientSocketFd)
 	return (0);
 }
 
-void ConnectionHandler::runSelect(void)
+int ConnectionHandler::runSelect(void)
 {
 	struct timeval tv;
 	tv.tv_sec = 5;
 	tv.tv_usec = 0;
-	if ((selectResponse = select(this->maxFd + 1, &this->readFds, &this->writeFds, &this->errorFds, &tv)) == -1)
-	{
-		throw std::runtime_error("Select failed: " + std::string(strerror(errno)));
-	}
+	selectResponse = select(this->maxFd + 1, &this->readFds, &this->writeFds, &this->errorFds, &tv);
+	return (selectResponse);
 }
 
 int ConnectionHandler::acceptNewClients(void)
@@ -298,7 +297,7 @@ int ConnectionHandler::acceptNewClients(void)
 		clientSocketFd = accept(this->masterSocketFd, (struct sockaddr *)&ipClientAddress, &ipClientAddressLen);
 		if (clientSocketFd == -1)
 		{
-			throw std::runtime_error("Accept failed: " + std::string(strerror(errno)));
+			return (-1);
 		}
 		this->setFileDescriptorToNonBlockingState(clientSocketFd);
 		this->connections.push_back(clientSocketFd);
@@ -314,9 +313,12 @@ int &ConnectionHandler::getMasterSocketFd(void)
 	return (this->masterSocketFd);
 }
 
-int ConnectionHandler::closeServerFd(void)
+int ConnectionHandler::closeServerFds(void)
 {
-	close(this->masterSocketFd);
+	int masterSocketFd = ServerDataManager::getInstance().getMasterSocketFd();
+	close(masterSocketFd);
+	ClientManager::getInstance().closeAllClients();
+	// close(this->masterSocketFd);
 	return (0);
 }
 
