@@ -6,19 +6,14 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/13 12:04:45 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 21:12:20 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IrcCommandHandler.hpp"
 
 IrcCommandHandler::IrcCommandHandler(Client *client) : client(client)
-{
-	if (client == NULL)
-	{
-		throw std::runtime_error("Client unknown.");
-	}
-}
+{}
 
 IrcCommandHandler::IrcCommandHandler(const IrcCommandHandler &refObj) : client(refObj.client) {}
 

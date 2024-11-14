@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ClientManager.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:24 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/11 19:35:39 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/14 21:11:22 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ Client* ClientManager::findClient(int clientFd)
 	else
 	{
 		return (NULL);
-		// throw std::runtime_error("No client with desired FD found.");
 	}
 }
 
@@ -162,4 +161,12 @@ std::string ClientManager::getClientsAsString() const
 	}
 	// output << "-----------------------";
 	return (output.str());
+}
+
+void ClientManager::closeAllClients()
+{
+	for (std::map<int, Client>::const_iterator it = clients.begin(); it != clients.end(); ++it)
+	{
+		close(it->first);
+	}
 }

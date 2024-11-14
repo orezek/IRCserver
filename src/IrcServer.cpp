@@ -6,11 +6,13 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:45:52 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/13 12:04:41 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 21:48:51 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IrcServer.hpp"
+
+volatile bool _stop = false;
 
 IrcServer::IrcServer(int serverPortNumber, std::string ircPassword) : serverPortNumber(serverPortNumber), ircPassword(ircPassword)
 {
@@ -35,34 +37,51 @@ IrcServer &IrcServer::operator=(const IrcServer &obj)
 
 IrcServer::~IrcServer() {};
 
+void signalHandler(int sigNum)
+{
+	(void)sigNum;
+	std::cout << "Received SIGINT. Shutting down." << std::endl;
+	_stop = true;
+	return;
+}
+
 void IrcServer::runIrcServer(void)
 {
+	signal(SIGINT, signalHandler);
 	ConnectionHandler connHandler = ConnectionHandler(this->serverPortNumber);
-	connHandler.initializeMasterSocketFd();
 	ClientManager &clientManager = ClientManager::getInstance();
 
-	while (true)
+	if (connHandler.initializeMasterSocketFd() == -1)
+	{
+		_stop = true;
+	}
+
+	while (!_stop)
 	{
 		Logger::log("/* ************************************************************************** */");
 		Logger::log("Preparing FdSets");
 		connHandler.prepareFdSetsForSelect();
 		Logger::log("Running Select");
-		connHandler.runSelect();
+		if (connHandler.runSelect() == -1)
+		{
+			break;
+		}
 		Logger::log("Checking for new connections");
-		connHandler.acceptNewClients();
+		if (connHandler.acceptNewClients() == -1)
+		{
+			break;
+		}
 		Logger::log("Running Event Loop");
 		connHandler.serverEventLoop();
-
 		this->parseRequests();
 		this->processRequests();
 
 		clientManager.removeClients();
-
 		this->displayServerStats();
 
 		Logger::log("/* ************************************************************************** */");
 	}
-	connHandler.closeServerFd();
+	connHandler.closeServerFds();
 }
 
 void IrcServer::parseRequests()

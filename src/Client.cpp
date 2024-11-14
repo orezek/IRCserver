@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/13 11:05:28 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 21:47:24 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int Client::sendAllResponses(void)
 			else
 			{
 				perror("Sending failed");
-				return (-1);  // Exit the function on error
+				return (-1);
 			}
 		}
 		else if (static_cast<size_t>(bytesSent) < responseSize)

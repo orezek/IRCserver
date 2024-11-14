@@ -1,17 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ServerDataManager.hpp                                     :+:      :+:    :+:   */
+/*   ServerDataManager.hpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/22 19:57:16 by orezek            #+#    #+#             */
-/*   Updated: 2024/10/16 10:14:27 by mbartos          ###   ########.fr       */
+/*   Created: 2024/11/14 20:45:38 by mbartos           #+#    #+#             */
+/*   Updated: 2024/11/14 20:46:09 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
+#include <ctime>
 #include <map>
+#include <sstream>
 #include <vector>
 #include <ctime>
 #include <sstream>
@@ -23,6 +25,9 @@ class ServerDataManager
 		const std::string &getServerPassword(void);
 		const std::string &getServerName(void);
 		const int &getServerPortNumber(void);
+		int getMasterSocketFd() const;
+		void setMasterSocketFd(int masterFd);
+		// void setServerPortNumber(const int &setServerPortNumber);  // delete if const?
 		std::string getServerTime(void);
 		std::string getServerVersion(void);
 
@@ -30,6 +35,7 @@ class ServerDataManager
 		std::string serverPassword;
 		std::string serverName;
 		int serverPortNumber;
+		int masterSocketFd;
 		std::string serverVersion;
 		std::string serverTime;
 

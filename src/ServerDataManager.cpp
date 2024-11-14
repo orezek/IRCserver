@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerDataManager.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 20:01:51 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/13 20:44:25 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/14 21:39:53 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,6 @@ ServerDataManager &ServerDataManager::getInstance(const std::string &password, i
 
 	if (!initialized)
 	{
-		if (!ServerDataManager::isPasswordValid(password) || !ServerDataManager::isPortValid(portNumber))
-		{
-			throw std::runtime_error("ServerDataManager must be initialized with valid parameters.");
-		}
 		initialized = true;
 	}
 
@@ -43,7 +39,7 @@ bool ServerDataManager::isPortValid(int port)
 	return (false);
 }
 
-ServerDataManager::ServerDataManager(const std::string &password, int portNumber) : serverPassword(password), serverPortNumber(portNumber)
+ServerDataManager::ServerDataManager(const std::string &password, int portNumber) : serverPassword(password), serverPortNumber(portNumber), masterSocketFd(-1)
 {
 	serverName = "irc.brdevstudio.com";
 	setCurrentDateTime();
@@ -65,6 +61,16 @@ const std::string &ServerDataManager::getServerName(void)
 const int &ServerDataManager::getServerPortNumber(void)
 {
 	return (serverPortNumber);
+}
+
+int ServerDataManager::getMasterSocketFd() const
+{
+	return (this->masterSocketFd);
+}
+
+void ServerDataManager::setMasterSocketFd(int masterFd)
+{
+	this->masterSocketFd = masterFd;
 }
 
 void ServerDataManager::setCurrentDateTime(void)

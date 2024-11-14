@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionHandler.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/13 20:11:33 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/14 21:38:00 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,24 +61,38 @@ int ConnectionHandler::initializeMasterSocketFd()
 {
 	int masterSocketFd = -1;
 	masterSocketFd = enableSocket(masterSocketFd);
-	enableSocketReus(masterSocketFd);
-	try
+	if (masterSocketFd == -1)
 	{
-		enableSocketBinding(masterSocketFd);
-	}
-	catch (const std::exception &e)
-	{
-		if (masterSocketFd != -1)
-		{
-			close(masterSocketFd);  // Ensure the socket is closed if it was opened
-			Logger::log(e.what(), ". Make sure port: ", this->serverPortNumber, " is available.");
-			exit(1);
-		}
 		return (-1);
 	}
-	enablePortListenning(masterSocketFd);
-	setFileDescriptorToNonBlockingState(masterSocketFd);
+
 	this->masterSocketFd = masterSocketFd;
+	ServerDataManager::getInstance().setMasterSocketFd(masterSocketFd);
+
+	if (enableSocketReus(masterSocketFd) == -1)
+	{
+		return (-1);
+	}
+	if (enableSocketBinding(masterSocketFd) == -1)
+	{
+		return (-1);
+	}
+	if (enablePortListenning(masterSocketFd) == -1)
+	{
+		return (-1);
+	}
+	if (setFileDescriptorToNonBlockingState(masterSocketFd) == -1)
+	{
+		return (-1);
+	}
+	if (enablePortListenning(masterSocketFd) == -1)
+	{
+		return (-1);
+	}
+	if (setFileDescriptorToNonBlockingState(masterSocketFd) == -1)
+	{
+		return (-1);
+	}
 	return (masterSocketFd);
 }
 
@@ -86,21 +100,25 @@ int ConnectionHandler::enableSocket(int &masterSocketFd)
 {
 	if ((masterSocketFd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1)
 	{
-		throw std::runtime_error("Socket creation failed: " + std::string(strerror(errno)));
+		ErrorLogger::log("MasterSocket creation failed: ", std::string(strerror(errno)));
+		ErrorLogger::log("Make sure port: ", this->serverPortNumber, " is available.");
+		return (-1);
 	}
 	return (masterSocketFd);
 }
 
-void ConnectionHandler::enableSocketReus(int &masterSocketFd)
+int ConnectionHandler::enableSocketReus(int &masterSocketFd)
 {
 	int opt = 1;
 	if (setsockopt(masterSocketFd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
 	{
-		throw std::runtime_error("Failed to set SO_REUSEADDR option: " + std::string(strerror(errno)));
+		ErrorLogger::log("Failed to set SO_REUSEADDR option: ", std::string(strerror(errno)));
+		return (-1);
 	}
+	return (1);
 }
 
-void ConnectionHandler::enableSocketBinding(int &masterSocketFd)
+int ConnectionHandler::enableSocketBinding(int &masterSocketFd)
 {
 	struct sockaddr_in ipServerAddress;
 	ipServerAddress.sin_addr.s_addr = INADDR_ANY;  // all interfaces on the srv machine
@@ -108,25 +126,30 @@ void ConnectionHandler::enableSocketBinding(int &masterSocketFd)
 	ipServerAddress.sin_port = htons(this->serverPortNumber);
 	if (bind(masterSocketFd, (struct sockaddr *)&ipServerAddress, sizeof(ipServerAddress)) < 0)
 	{
-		throw std::runtime_error("Socket binding failed: " + std::string(strerror(errno)));
+		ErrorLogger::log("Socket binding failed: ", std::string(strerror(errno)));
+		return (-1);
 	}
+	return (1);
 }
 
-void ConnectionHandler::enablePortListenning(int &masterSocketFd)
+int ConnectionHandler::enablePortListenning(int &masterSocketFd)
 {
 	if (listen(masterSocketFd, MAX_CLIENTS) == -1)
 	{
-		throw std::runtime_error("Socket listening failed: " + std::string(strerror(errno)));
+		ErrorLogger::log("Socket listening failed: ", std::string(strerror(errno)));
+		return (-1);
 	}
+	return (1);
 }
 
 int ConnectionHandler::setFileDescriptorToNonBlockingState(int &fd)
 {
 	if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1)
 	{
-		throw std::runtime_error("Non-blocking I/O failed: " + std::string(strerror(errno)));
+		ErrorLogger::log("Non-blocking I/O failed: ", std::string(strerror(errno)));
+		return (-1);
 	}
-	return (0);
+	return (1);
 }
 
 // new
@@ -143,8 +166,8 @@ void ConnectionHandler::prepareFdSetsForSelect(void)
 		Client *client = ClientManager::getInstance().findClient(clientSocketFd);
 		if (client == NULL)
 		{
-			Logger::log("Closing Client FD: ",  clientSocketFd);
-			Logger::log("Erasing Client from active sockets: ",  clientSocketFd);
+			Logger::log("Closing Client FD: ", clientSocketFd);
+			Logger::log("Erasing Client from active sockets: ", clientSocketFd);
 			close(clientSocketFd);
 			it = connections.erase(it);
 			continue;
@@ -277,15 +300,13 @@ int ConnectionHandler::onWrite(int clientSocketFd)
 	return (0);
 }
 
-void ConnectionHandler::runSelect(void)
+int ConnectionHandler::runSelect(void)
 {
 	struct timeval tv;
 	tv.tv_sec = 5;
 	tv.tv_usec = 0;
-	if ((selectResponse = select(this->maxFd + 1, &this->readFds, &this->writeFds, &this->errorFds, &tv)) == -1)
-	{
-		throw std::runtime_error("Select failed: " + std::string(strerror(errno)));
-	}
+	selectResponse = select(this->maxFd + 1, &this->readFds, &this->writeFds, &this->errorFds, &tv);
+	return (selectResponse);
 }
 
 int ConnectionHandler::acceptNewClients(void)
@@ -298,7 +319,7 @@ int ConnectionHandler::acceptNewClients(void)
 		clientSocketFd = accept(this->masterSocketFd, (struct sockaddr *)&ipClientAddress, &ipClientAddressLen);
 		if (clientSocketFd == -1)
 		{
-			throw std::runtime_error("Accept failed: " + std::string(strerror(errno)));
+			return (-1);
 		}
 		this->setFileDescriptorToNonBlockingState(clientSocketFd);
 		this->connections.push_back(clientSocketFd);
@@ -314,9 +335,12 @@ int &ConnectionHandler::getMasterSocketFd(void)
 	return (this->masterSocketFd);
 }
 
-int ConnectionHandler::closeServerFd(void)
+int ConnectionHandler::closeServerFds(void)
 {
-	close(this->masterSocketFd);
+	int masterSocketFd = ServerDataManager::getInstance().getMasterSocketFd();
+	close(masterSocketFd);
+	ClientManager::getInstance().closeAllClients();
+	// close(this->masterSocketFd);
 	return (0);
 }
 
