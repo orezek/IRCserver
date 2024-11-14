@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:09 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/11 10:06:17 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 21:58:41 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,9 @@ class Client : public UserData
 
 		// Message handling
 		void addMessage(const ClientMessage message);
-		ClientMessage popMessage(void);  // Returns copy
+		// ClientMessage popMessage(void);      // Returns copy
+		ClientMessage* getTopMessage(void);  // Returns copy
+		void removeTopMessage(void);
 		std::string getFqdn(void);
 		bool isReadyForProcessing();
 

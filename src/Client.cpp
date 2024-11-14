@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/14 21:47:24 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 21:58:37 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,16 +183,35 @@ void Client::addMessage(const ClientMessage message)
 }
 
 // return a copy of the message and the original is deleted
-ClientMessage Client::popMessage(void)
+// ClientMessage Client::popMessage()
+// {
+// 	if (clientMessages.empty())
+// 	{
+// 		throw std::runtime_error("No messages available");
+// 	}
+
+// 	ClientMessage firstMessage = clientMessages.front();
+// 	clientMessages.erase(clientMessages.begin());
+// 	return firstMessage;
+// }
+
+ClientMessage* Client::getTopMessage()
 {
 	if (clientMessages.empty())
 	{
-		throw std::runtime_error("No messages available");
+		return (NULL);
 	}
 
-	ClientMessage firstMessage = clientMessages.front();
-	clientMessages.erase(clientMessages.begin());
-	return firstMessage;
+	ClientMessage* firstMessage = &clientMessages.front();
+	return (firstMessage);
+}
+
+void Client::removeTopMessage()
+{
+	if (!clientMessages.empty())
+	{
+		clientMessages.erase(clientMessages.begin());
+	}
 }
 
 bool Client::isReadyForProcessing()
