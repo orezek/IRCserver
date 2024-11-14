@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 19:48:17 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/13 11:35:57 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 22:06:24 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,51 +39,45 @@ void Quit::setServerResponseValid()
 {
 	Token* tokenQuitMessage = clientMessage.findNthTokenOfType(Token::MESSAGE, 1);
 
+	std::string errorMessage;
 	if (tokenQuitMessage != NULL)
 	{
-		std::string errorMessage = tokenQuitMessage->getText();
-		if (errorMessage == "SOC_ERROR" || errorMessage == "RECV_ERROR" || errorMessage == "CLIENT_CTRLC" || errorMessage == "MESSAGE_LIMIT_EXCEEDED" || errorMessage == "PARTIAL_MESSAGE_LIMIT_EXCEEDED")
-		{
-			std::string responseToOthers;
-			responseToOthers = ":" + client->getNickname() + "!" + client->getFqdn() + " QUIT :" + tokenQuitMessage->getText() + "\r\n";
-			addResponseToOthersOnceInAllRoomsIamIn(responseToOthers);
-			Logger::log("Client: ", client->getFd(), " system error: ", errorMessage);
-		}
-		else
-		{
-			Logger::log("Client: ",  client->getFd(), " initiated QUIT process :", errorMessage);
-			std::string response = "ERROR :Closing link: (";
-			response.append(client->getUsername());
-			response.append("@");
-			response.append(client->getHostname());
-			response.append(") ");
-			if (tokenQuitMessage == NULL)
-			{
-				response.append("[Client Exited]");
-			}
-			else
-			{
-				response.append("[Quit: ");
-				response.append(tokenQuitMessage->getText());
-				response.append("]");
-			}
-			response.append("\r\n");
-			client->addResponse(response);
-
-			RoomManager& roomManager = RoomManager::getInstance();
-			roomManager.resetIterator();
-
-			std::string responseToOthers;
-			responseToOthers = ":" + client->getNickname() + "!" + client->getFqdn() + " QUIT :" + tokenQuitMessage->getText() + "\r\n";
-			addResponseToOthersOnceInAllRoomsIamIn(responseToOthers);
-		}
-		ClientManager::getInstance().removeClientFromRooms(client->getFd());
-		ClientManager::getInstance().deleteEmptyRooms();
+		errorMessage = tokenQuitMessage->getText();
+	}
+	if (errorMessage == "SOC_ERROR" || errorMessage == "RECV_ERROR" || errorMessage == "CLIENT_CTRLC" || errorMessage == "MESSAGE_LIMIT_EXCEEDED" || errorMessage == "PARTIAL_MESSAGE_LIMIT_EXCEEDED")
+	{
+		Logger::log("Client: ", client->getFd(), " system error: ", errorMessage);
+		std::string responseToOthers;
+		responseToOthers = ":" + client->getNickname() + "!" + client->getFqdn() + " QUIT :" + errorMessage + "\r\n";
+		addResponseToOthersOnceInAllRoomsIamIn(responseToOthers);
 	}
 	else
 	{
-		void(0);
+		Logger::log("Client: ", client->getFd(), " initiated QUIT process :", errorMessage);
+		std::string response = "ERROR :Closing link: (";
+		response.append(client->getUsername());
+		response.append("@");
+		response.append(client->getHostname());
+		response.append(") ");
+		if (errorMessage.empty())
+		{
+			response.append("[Client Exited]");
+		}
+		else
+		{
+			response.append("[Quit: ");
+			response.append(errorMessage);
+			response.append("]");
+		}
+		response.append("\r\n");
+		client->addResponse(response);
+
+		std::string responseToOthers;
+		responseToOthers = ":" + client->getNickname() + "!" + client->getFqdn() + " QUIT :" + errorMessage + "\r\n";
+		addResponseToOthersOnceInAllRoomsIamIn(responseToOthers);
 	}
+	ClientManager::getInstance().removeClientFromRooms(client->getFd());
+	ClientManager::getInstance().deleteEmptyRooms();
 }
 // Not used but works well.
 void Quit::addResponseToOthersOnceInAllRoomsIamInV2(std::string responseToOthers)
