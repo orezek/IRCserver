@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:45:52 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/13 17:52:08 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 20:25:41 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,14 @@ IrcServer::~IrcServer() {};
 
 volatile bool _stop = false;
 
-void signalHandler(int signal) {
-	if (signal == SIGINT) {
-		std::cout << "\nReceived SIGINT. Shutting down." << std::endl;
-		exit(1);
-	}
+// #include "ClientManager.hpp"
+
+void signalHandler(int sigNum)
+{
+	(void)sigNum;
+	std::cout << "Received SIGINT. Shutting down." << std::endl;
+	_stop = true;
+	return;
 }
 
 void IrcServer::runIrcServer(void)
@@ -51,28 +54,32 @@ void IrcServer::runIrcServer(void)
 	ClientManager &clientManager = ClientManager::getInstance();
 
 	signal(SIGINT, signalHandler);
-	while (1)
+	while (!_stop)
 	{
 		Logger::log("/* ************************************************************************** */");
 		Logger::log("Preparing FdSets");
 		connHandler.prepareFdSetsForSelect();
 		Logger::log("Running Select");
-		connHandler.runSelect();
+		if (connHandler.runSelect() == -1)
+		{
+			break ;
+		}
 		Logger::log("Checking for new connections");
-		connHandler.acceptNewClients();
+		if (connHandler.acceptNewClients() == -1)
+		{
+			break ;
+		}
 		Logger::log("Running Event Loop");
 		connHandler.serverEventLoop();
-
 		this->parseRequests();
 		this->processRequests();
 
 		clientManager.removeClients();
-
 		this->displayServerStats();
 
 		Logger::log("/* ************************************************************************** */");
 	}
-	connHandler.closeServerFd();
+	connHandler.closeServerFds();
 }
 
 void IrcServer::parseRequests()
