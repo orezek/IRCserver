@@ -6,7 +6,7 @@
 #    By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/21 10:59:06 by mbartos           #+#    #+#              #
-#    Updated: 2024/11/13 12:05:27 by mbartos          ###   ########.fr        #
+#    Updated: 2024/11/14 22:57:25 by mbartos          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,6 @@ SRC_FILES =		Client.cpp \
 				IrcCommandHandler.cpp \
 				IrcParser.cpp \
 				IrcServer.cpp \
-				Logger.cpp \
 				main.cpp \
 				Room.cpp \
 				RoomManager.cpp \
