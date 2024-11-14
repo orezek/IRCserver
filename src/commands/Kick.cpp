@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 21:30:41 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/13 11:34:20 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 22:43:46 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,6 @@ void Kick::execute(void)
 			// no more users to kick ass to
 			return;
 		}
-		std::cout << tokenRoom->getText() << std::endl;
-		std::cout << tokenUser->getText() << std::endl;
 		if ((tokenMessage = clientMessage.findNthTokenOfType(Token::MESSAGE, 1)) != NULL)
 		{
 			hasMessage = true;
@@ -119,7 +117,7 @@ void Kick::setServerResponse441(std::string kicked_user)
 
 	this->response.clear();
 	this->response = ":";
-	this->response.append(serverData.getServerName());
+	this->response.append(client->getServername());
 	this->response.append(" 441 ");
 	this->response.append(nickname);
 	this->response.append(" ");

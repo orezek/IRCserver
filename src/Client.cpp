@@ -6,13 +6,13 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:09:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/14 21:58:37 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 22:22:14 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 
-// TODO: this should be moved to somewhere else
+// This could be moved to somewhere else
 const static int MESSAGE_SIZE = 512;
 
 Client::Client(int fd) : fd(fd), rawData(""), markedForDeletion(false)
@@ -21,7 +21,7 @@ Client::Client(int fd) : fd(fd), rawData(""), markedForDeletion(false)
 }
 
 Client::Client(const Client& other)
-	: UserData(other)  // Call base class copy constructor
+	: UserData(other)
 	  ,
 	  fd(other.fd),
 	  ipAddress(other.ipAddress),
@@ -35,27 +35,23 @@ Client::Client(const Client& other)
 Client& Client::operator=(const Client& other)
 {
 	if (this != &other)
-	{  // Check for self-assignment
-		// We cannot assign to `fd` since it's a const member, so leave it unchanged.
+	{
 		ipAddress = other.ipAddress;
 		rawData = other.rawData;
 		markedForDeletion = other.markedForDeletion;
-		clientMessages = other.clientMessages;    // Deep copy vector
-		serverResponses = other.serverResponses;  // Assuming ServerResponseQueue has a valid assignment operator
-												  // userData = other.userData;              // Deep copy UserData
+		clientMessages = other.clientMessages;
+		serverResponses = other.serverResponses;
 	}
 	return (*this);
 }
 
 Client::~Client() {}
 
-// Client socket info
 int Client::getFd(void) const
 {
 	return (this->fd);
 }
 
-// TODO: this functionality will be moved to connection handler
 int Client::sendAllResponses(void)
 {
 	for (size_t i = 0; i < this->serverResponses.size();)
@@ -89,7 +85,7 @@ int Client::sendAllResponses(void)
 			continue;  // Skip increment to avoid out-of-bounds access
 		}
 
-		++i;  // Only increment if we didn't erase
+		++i;
 	}
 	return (0);
 }
@@ -109,7 +105,6 @@ std::string Client::getIpAddressAsString(void)
 	return (inet_ntoa(this->ipAddress.sin_addr));
 }
 
-// Raw Data from socket
 std::string Client::getRawData(void) const
 {
 	return (this->rawData);
@@ -154,7 +149,6 @@ bool Client::isReadyForParsing()
 	return (false);
 }
 
-// Client status
 bool Client::isMarkedForDeletion(void) const
 {
 	return (this->markedForDeletion);
@@ -165,7 +159,6 @@ void Client::markForDeletion(void)
 	this->markedForDeletion = true;
 }
 
-// Response methods - need adjustments
 void Client::addResponse(const std::string response)
 {
 	this->serverResponses.push_back(response);
@@ -176,24 +169,10 @@ bool Client::hasResponses()
 	return (!this->serverResponses.empty());
 }
 
-// creates a copy and adds it to the vector
 void Client::addMessage(const ClientMessage message)
 {
 	this->clientMessages.push_back(message);
 }
-
-// return a copy of the message and the original is deleted
-// ClientMessage Client::popMessage()
-// {
-// 	if (clientMessages.empty())
-// 	{
-// 		throw std::runtime_error("No messages available");
-// 	}
-
-// 	ClientMessage firstMessage = clientMessages.front();
-// 	clientMessages.erase(clientMessages.begin());
-// 	return firstMessage;
-// }
 
 ClientMessage* Client::getTopMessage()
 {
@@ -223,7 +202,6 @@ bool Client::isReadyForProcessing()
 	return (false);
 }
 
-// Gets FQDN of the valid client
 std::string Client::getFqdn(void)
 {
 	std::string str;

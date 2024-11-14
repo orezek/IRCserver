@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ABaseCommand.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 09:51:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/13 20:46:35 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/14 22:42:45 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,9 @@ namespace Commands
 
 ABaseCommand::ABaseCommand(Client* client, ClientMessage& clientMessage) : client(client),
 																		   clientMessage(clientMessage),
-																		   room(NULL),
-																		   serverData(ServerDataManager::getInstance()) {}
+																		   room(NULL) {}
 
-ABaseCommand::ABaseCommand(ABaseCommand const& refObj) : client(refObj.client), clientMessage(refObj.clientMessage), room(refObj.room), serverData(refObj.serverData) {};
+ABaseCommand::ABaseCommand(ABaseCommand const& refObj) : client(refObj.client), clientMessage(refObj.clientMessage), room(refObj.room) {};
 
 ABaseCommand& ABaseCommand::operator=(ABaseCommand const& refObj)
 {
@@ -29,7 +28,6 @@ ABaseCommand& ABaseCommand::operator=(ABaseCommand const& refObj)
 		this->client = refObj.client;
 		this->clientMessage = refObj.clientMessage;
 		this->room = refObj.room;
-		this->serverData = refObj.serverData;
 	}
 	return (*this);
 };
@@ -49,7 +47,7 @@ void ABaseCommand::setServerResponse332(void)
 	response.append(this->room->getRoomName());
 	response.append(" :");
 	response.append(this->room->getTopic());
-	std::cout << this->room->getTopic() << std::endl;
+	Logger::log(this->room->getTopic());
 	response.append("\r\n");
 	this->addResponse(client, response);
 }
@@ -201,7 +199,7 @@ void ABaseCommand::setServerResponseWelcome()
 	std::string response;
 
 	response = ":" + client->getServername() + " 001 " + client->getNickname() + " :Welcome to the IRC network, " + client->getNickname() + "!" + client->getUsername() + "@" + client->getHostname() + "\n";
-	response.append(":" + client->getServername() + " 002 " + client->getNickname() + " :Your host is " + client->getServername() + ", running version "  + ServerDataManager::getInstance().getServerVersion() + "\n");
+	response.append(":" + client->getServername() + " 002 " + client->getNickname() + " :Your host is " + client->getServername() + ", running version " + ServerDataManager::getInstance().getServerVersion() + "\n");
 	response.append(":" + client->getServername() + " 003 " + client->getNickname() + " :This server was created " + ServerDataManager::getInstance().getServerTime() + "\n");
 	response.append(":" + client->getServername() + " 004 " + client->getNickname() + " " + client->getServername() + " \n");
 	addResponse(client, response);

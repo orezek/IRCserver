@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 12:15:47 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/13 11:34:09 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 22:29:59 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void Invite::setServerResponse341(const std::string invitee)
 	std::string nickname = this->client->getNickname();
 
 	std::string response = ":";
-	response.append(serverData.getServerName());
+	response.append(client->getServername());
 	response.append(" 341 ");
 	response.append(nickname);
 	response.append(" ");
@@ -124,7 +124,7 @@ void Invite::setServerResponse443(const std::string invitee)
 	std::string nickname = this->client->getNickname();
 
 	std::string response = ":";
-	response.append(serverData.getServerName());
+	response.append(client->getServername());
 	response.append(" 401 ");
 	response.append(nickname);
 	response.append(" ");

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 13:05:16 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/13 10:56:27 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 22:30:48 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void Pass::execute()
 	}
 
 	std::string passedPassword = tokenPassedPassword->getText();
-	std::string serverPassword = this->serverData.getServerPassword();
+	std::string serverPassword = ServerDataManager::getInstance().getServerPassword();
 
 	if (passedPassword == serverPassword)
 	{

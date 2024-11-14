@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 22:25:17 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/14 21:58:27 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 22:38:52 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,27 @@
 
 IrcCommandHandler::IrcCommandHandler(Client *client) : client(client)
 {
+	command = NULL;
 }
 
-IrcCommandHandler::IrcCommandHandler(const IrcCommandHandler &refObj) : client(refObj.client) {}
+IrcCommandHandler::IrcCommandHandler(const IrcCommandHandler &refObj) : client(refObj.client), command(refObj.command) {}
 
 IrcCommandHandler &IrcCommandHandler::operator=(const IrcCommandHandler &refObj)
 {
 	if (this != &refObj)
 	{
 		this->client = refObj.client;
+		this->command = refObj.command;
 	}
 	return (*this);
+}
+
+IrcCommandHandler::~IrcCommandHandler()
+{
+	if (this->command != NULL)
+	{
+		delete this->command;
+	}
 }
 
 void IrcCommandHandler::processCommands()
@@ -49,7 +59,7 @@ void IrcCommandHandler::processCommands()
 void IrcCommandHandler::executeOneCommand(ClientMessage &clientMessage)
 {
 	ClientMessage::cmdTypes commandType = clientMessage.getCommandType();
-	Commands::ABaseCommand *command = NULL;
+	command = NULL;
 
 	if (commandType == ClientMessage::CAP)
 	{
@@ -124,5 +134,6 @@ void IrcCommandHandler::executeOneCommand(ClientMessage &clientMessage)
 	{
 		command->execute();
 		delete command;
+		command = NULL;
 	}
 }

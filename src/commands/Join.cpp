@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:14:27 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/13 10:56:15 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 22:43:12 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,6 @@ void Join::execute()
 				setServerResponseJoin();                     // join notification
 				if (this->room->isTopicSet())                // room has a topic - send it to the new client
 				{
-					std::cout << this->room->getRoomName() << std::endl;
 					setServerResponse332();
 				}
 				setServerResponse353();
@@ -112,8 +111,7 @@ void Join::execute()
 			else
 			{
 				// Ignore: client is already in the room
-				// TODO: conditional logging or (void)0;  // no-op; placeholder for future logic
-				std::cout << "Client " << client->getFd() << " is already in the room: " << room->getRoomName() << std::endl;
+				Logger::log("Client ", client->getFd(), " is already in the room: ", room->getRoomName());
 			}
 		}
 		// room does not exist
@@ -142,7 +140,7 @@ void Join::setServerResponse475(void)
 	std::string nickname = client->getNickname();
 
 	std::string response = ":";
-	response.append(serverData.getServerName());
+	response.append(client->getServername());
 	response.append(" 475 ");
 	response.append(nickname);
 	response.append(" #");
@@ -173,7 +171,7 @@ void Join::setServerResponse473(void)
 	std::string nickname = client->getNickname();
 
 	std::string response = ":";
-	response.append(serverData.getServerName());
+	response.append(client->getServername());
 	response.append(" 473 ");
 	response.append(nickname);
 	response.append(" #");
@@ -188,7 +186,7 @@ void Join::setServerResponse471(void)
 	std::string nickname = client->getNickname();
 
 	std::string response = ":";
-	response.append(serverData.getServerName());
+	response.append(client->getServername());
 	response.append(" 471 ");
 	response.append(nickname);
 	response.append(" #");

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 13:05:16 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/08 09:33:00 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 22:31:20 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void Ping::execute()
 		return;
 	}
 
-	if (tokenServerName->getText() == serverData.getServerName())
+	if (tokenServerName->getText() == client->getServername())
 	{
 		// ping message was addressed to this server, send valid PONG response
 		this->setServerResponseValid();
@@ -54,7 +54,7 @@ void Ping::execute()
 // ---- PRIVATE ----
 void Ping::setServerResponseValid()
 {
-	std::string response = ":" + serverData.getServerName() + " PONG " + serverData.getServerName() + " :" + serverData.getServerName() + "\n";
+	std::string response = ":" + client->getServername() + " PONG " + client->getServername() + " :" + client->getServername() + "\n";
 
 	client->addResponse(response);
 }

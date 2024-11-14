@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 19:24:12 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/13 11:31:09 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 22:20:40 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ class Token
 	public:
 		enum Type
 		{
-			NOT_ASSIGNED = -1,  // DO WE NEED IT?
+			NOT_ASSIGNED = -1,
 			PREFIX,
 			COMMAND,
 			NICK_NAME,        // NICK command, PRIVMSG
@@ -35,25 +35,21 @@ class Token
 			// MODE for ROOM
 			MODE_ROOM_PASSWORD_ADD,               // MODE command "+k"
 			MODE_ROOM_PASSWORD_REMOVE,            // MODE command "-k"
-			MODE_ROOM_PASSWORD_PARAMETER,         // MODE command "+k"
 			MODE_ROOM_INVITE_ONLY_ADD,            // MODE command "+i"
 			MODE_ROOM_INVITE_ONLY_REMOVE,         // MODE command "-i"
 			MODE_ROOM_TOPIC_RESTRICTIONS_ADD,     // MODE command "+t"
 			MODE_ROOM_TOPIC_RESTRICTIONS_REMOVE,  // MODE command "-t"
 			MODE_ROOM_OPERATOR_ADD,               // MODE command "+o"
 			MODE_ROOM_OPERATOR_REMOVE,            // MODE command "-o"
-			MODE_ROOM_OPERATOR_PARAMETER,         // MODE command "+-o"
 			MODE_ROOM_USER_LIMIT_ADD,             // MODE command "+l"
 			MODE_ROOM_USER_LIMIT_REMOVE,          // MODE command "-l"
-			MODE_ROOM_USER_LIMIT_PARAMETER,       // MODE command "+-l"
-			PROCESSED = 99,                       // MODE flag for processed string - will be modified in future
+			PROCESSED = 99,                       // MODE flag for processed string
 
 			// MODE for CLIENT
 			OTHER = 999
 		};
 
 		Token(Type type, std::string text);
-		// Token();
 		~Token();
 		Token(Token const&);
 		Token& operator=(Token const&);

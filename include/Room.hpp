@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:55:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/13 11:30:33 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 22:19:00 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ class Room
 		std::string topic;
 		bool topicLocked;  // mode t
 		bool inviteOnly;   // mode i
-		// for visibility options - standard IRC channel options
+		// standard IRC channel visibility options
 		bool privateRoom;
 		bool publicRoom;
 		bool secretRoom;

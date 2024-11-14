@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 20:45:38 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/14 20:46:09 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 22:26:51 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ class ServerDataManager
 		const int &getServerPortNumber(void);
 		int getMasterSocketFd() const;
 		void setMasterSocketFd(int masterFd);
-		// void setServerPortNumber(const int &setServerPortNumber);  // delete if const?
 		std::string getServerTime(void);
 		std::string getServerVersion(void);
 
@@ -40,6 +39,8 @@ class ServerDataManager
 		std::string serverTime;
 
 		ServerDataManager(const std::string &password, int portNumber);
+		ServerDataManager(const ServerDataManager &obj);
+		ServerDataManager &operator=(const ServerDataManager &obj);
 		~ServerDataManager();
 
 		static bool isPasswordValid(const std::string &password);
