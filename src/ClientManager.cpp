@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:24 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/14 20:29:21 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 21:11:22 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ Client* ClientManager::findClient(int clientFd)
 	else
 	{
 		return (NULL);
-		// throw std::runtime_error("No client with desired FD found.");
 	}
 }
 

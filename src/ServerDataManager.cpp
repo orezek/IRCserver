@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 20:01:51 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/14 20:44:55 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 21:39:53 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,6 @@ ServerDataManager &ServerDataManager::getInstance(const std::string &password, i
 
 	if (!initialized)
 	{
-		if (!ServerDataManager::isPasswordValid(password) || !ServerDataManager::isPortValid(portNumber))
-		{
-			throw std::runtime_error("ServerDataManager must be initialized with valid parameters.");
-		}
 		initialized = true;
 	}
 
@@ -77,10 +73,6 @@ void ServerDataManager::setMasterSocketFd(int masterFd)
 	this->masterSocketFd = masterFd;
 }
 
-// void ServerDataManager::setServerPortNumber(const int &serverPortNumber)
-// {
-// 	this->serverPortNumber = serverPortNumber;
-// }
 void ServerDataManager::setCurrentDateTime(void)
 {
 	// Get the current time

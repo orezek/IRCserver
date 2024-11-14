@@ -6,11 +6,13 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:45:52 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/14 20:25:41 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 21:48:51 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IrcServer.hpp"
+
+volatile bool _stop = false;
 
 IrcServer::IrcServer(int serverPortNumber, std::string ircPassword) : serverPortNumber(serverPortNumber), ircPassword(ircPassword)
 {
@@ -35,10 +37,6 @@ IrcServer &IrcServer::operator=(const IrcServer &obj)
 
 IrcServer::~IrcServer() {};
 
-volatile bool _stop = false;
-
-// #include "ClientManager.hpp"
-
 void signalHandler(int sigNum)
 {
 	(void)sigNum;
@@ -49,11 +47,15 @@ void signalHandler(int sigNum)
 
 void IrcServer::runIrcServer(void)
 {
+	signal(SIGINT, signalHandler);
 	ConnectionHandler connHandler = ConnectionHandler(this->serverPortNumber);
-	connHandler.initializeMasterSocketFd();
 	ClientManager &clientManager = ClientManager::getInstance();
 
-	signal(SIGINT, signalHandler);
+	if (connHandler.initializeMasterSocketFd() == -1)
+	{
+		_stop = true;
+	}
+
 	while (!_stop)
 	{
 		Logger::log("/* ************************************************************************** */");
@@ -62,12 +64,12 @@ void IrcServer::runIrcServer(void)
 		Logger::log("Running Select");
 		if (connHandler.runSelect() == -1)
 		{
-			break ;
+			break;
 		}
 		Logger::log("Checking for new connections");
 		if (connHandler.acceptNewClients() == -1)
 		{
-			break ;
+			break;
 		}
 		Logger::log("Running Event Loop");
 		connHandler.serverEventLoop();

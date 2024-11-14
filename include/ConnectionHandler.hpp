@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/14 20:40:54 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 21:05:19 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 #include <stdexcept>  // exceptions
 
 #include "ClientManager.hpp"
+#include "ErrorLogger.hpp"
 #include "Logger.hpp"
 #include "ServerDataManager.hpp"
 
@@ -48,11 +49,11 @@ class ConnectionHandler
 		int acceptNewClients(void);
 		int closeServerFds(void);
 		int &getMasterSocketFd(void);
-		void enableSocketBinding(int &masterSocketFd);
-		void enablePortListenning(int &masterSocketFd);
+		int enableSocketBinding(int &masterSocketFd);
+		int enablePortListenning(int &masterSocketFd);
 		void prepareFdSetsForSelect(void);
 		int runSelect(void);
-		void enableSocketReus(int &masterSocketFd);
+		int enableSocketReus(int &masterSocketFd);
 		ssize_t recvAll(int socketFd, char *buffer, size_t bufferSize);
 		// Events
 		int serverEventLoop(void);
