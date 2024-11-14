@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 21:30:41 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/14 23:05:58 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 23:06:20 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,10 +73,6 @@ void Kick::execute(void)
 						// kick
 						Client *kickedClient = ClientManager::getInstance().findClient(tokenUser->getText());
 						room->removeClient(kickedClient->getFd());
-						if (room->isOperator(kickedClient->getFd()))
-						{
-							room->removeOperator(kickedClient->getFd());
-						}
 						if (hasMessage)
 						{
 							message = tokenMessage->getText();
