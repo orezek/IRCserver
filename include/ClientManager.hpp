@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ClientManager.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 23:46:28 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/11 19:35:39 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/14 20:29:26 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #include <sys/select.h>
+#include <unistd.h>
 
 #include <map>
 
@@ -35,6 +36,7 @@ class ClientManager
 		std::vector<Client *> getClientsForParsing();
 		std::vector<Client *> getClientsForProcessing();
 		std::string getClientsAsString() const;
+		void closeAllClients();
 
 	private:
 		ClientManager();
