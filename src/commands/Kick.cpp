@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 21:30:41 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/14 22:43:46 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/14 23:05:58 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ void Kick::setServerResponseKick(std::string message, std::string kicked_user)
 	response.append(nickname);
 	response.append("!user@hostname");
 	response.append(" KICK ");
-	response.append(":#");
+	response.append("#");
 	response.append(this->room->getRoomName());
 	response.append(" ");
 	response.append(kicked_user);
