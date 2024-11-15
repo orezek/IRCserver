@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 13:02:55 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/13 10:56:29 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/15 12:51:09 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,15 +93,22 @@ void Privmsg::addResponseToRoomsAndClients()
 		{
 			std::string roomnameToSend = tokenRoomname->getText();
 			Room* roomToSend = RoomManager::getInstance().getRoom(roomnameToSend);
-			if (roomToSend != NULL && roomToSend->isClientInRoom(client->getFd()))
+			if (roomToSend != NULL)
 			{
-				// Is messageToSend correct? check with inspircd
-				std::string messageToSend = validResponsePrefix;
-				messageToSend.append("#");
-				messageToSend.append(roomnameToSend);
-				messageToSend.append(" ");
-				messageToSend.append(this->messageResponse);
-				this->addResponseToOthersInRoom(roomToSend, messageToSend);
+				if (roomToSend->isClientInRoom(client->getFd()))
+				{
+					// Is messageToSend correct? check with inspircd
+					std::string messageToSend = validResponsePrefix;
+					messageToSend.append("#");
+					messageToSend.append(roomnameToSend);
+					messageToSend.append(" ");
+					messageToSend.append(this->messageResponse);
+					this->addResponseToOthersInRoom(roomToSend, messageToSend);
+				}
+				else
+				{
+					this->setServerResponse404(roomnameToSend);
+				}
 			}
 			else
 			{

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 09:51:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/15 10:58:27 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/15 12:49:48 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,22 @@ void ABaseCommand::setServerResponse403(std::string roomName)
 	response.append("#");
 	response.append(roomName);
 	response.append(" :No such channel\r\n");
+	addResponse(client, response);
+}
+
+void ABaseCommand::setServerResponse404(std::string roomName)
+{
+	std::string nickname = client->getNickname();
+
+	std::string response;
+	response = ":";
+	response.append(client->getServername());
+	response.append(" 404 ");
+	response.append(nickname);
+	response.append(" ");
+	response.append("#");
+	response.append(roomName);
+	response.append(" :Cannot send to channel\r\n");
 	addResponse(client, response);
 }
 

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 11:10:59 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/14 22:27:43 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/15 12:50:50 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ class ABaseCommand
 		// Common error responses
 		void setServerResponse401(const std::string nickname);  // ERR_NOSUCHNICK
 		void setServerResponse403(std::string roomName);        // ERR_NOSUCHCHANNEL
+		void setServerResponse404(std::string roomName);        // ERR_CANNOTSENDTOCHAN
 		void setServerResponse442();                            // ERR_NOTONCHANNEL
 		void setServerResponse451();
 		void setServerResponse461();

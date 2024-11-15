@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:14:27 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/15 10:30:29 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/15 14:06:55 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,7 @@ void Join::setServerResponse475(void)
 	response.append(" :Cannot join channel (+k)\r\n");
 	this->addResponse(client, response);
 }
+
 // Successfull join to the channell
 void Join::setServerResponseJoin(void)
 {

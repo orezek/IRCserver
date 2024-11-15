@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Who.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 09:22:52 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/15 07:31:14 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/15 13:47:27 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void Who::setServerResponse352()
 		response.append(":");
 		response.append(user.getServername());
 		response.append(" 352 ");
-		response.append(user.getNickname());
+		response.append(client->getNickname());
 		response.append(" #");
 		response.append(room->getRoomName());
 		response.append(" ");
@@ -94,7 +94,7 @@ void Who::setServerResponse315()
 	response.append(client->getNickname());
 	response.append(" #");
 	response.append(room->getRoomName());
-	response.append(" :End of /WHO list\r\n");
+	response.append(" :End of /WHO list.\r\n");
 	addResponse(client, response);
 }
 
