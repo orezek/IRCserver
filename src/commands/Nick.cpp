@@ -69,7 +69,6 @@ void Nick::execute()
 	{
 		client->markForDeletion();
 		setServerResponseInvalidAuthentication();
-		// response for kick user with invalid password
 	}
 	else if (!wasRegistered && client->isRegistered())
 	{
@@ -188,9 +187,7 @@ void Nick::setServerResponseNick()
 	std::string response = ":";
 	response.append(oldNick);
 	response.append("!");
-	response.append(client->getUsername());
-	response.append("@");
-	response.append(client->getHostname());
+	response.append(client->getFqdn());
 	response.append(" NICK :");
 	response.append(newNick);
 	response.append("\r\n");
