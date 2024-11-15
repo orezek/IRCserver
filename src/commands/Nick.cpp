@@ -188,7 +188,7 @@ void Nick::setServerResponseNick()
 	response.append(oldNick);
 	response.append("!");
 	response.append(client->getFqdn());
-	response.append(" NICK :");
+	response.append(" NICK ");
 	response.append(newNick);
 	response.append("\r\n");
 

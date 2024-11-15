@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:14:27 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/15 10:30:29 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/15 13:03:59 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,7 @@ void Join::setServerResponseJoin(void)
 	response.append(nickname);
 	response.append("!");
 	response.append(client->getFqdn());
-	response.append(" JOIN :");
+	response.append(" JOIN ");
 	response.append("#");
 	response.append(this->room->getRoomName());
 	response.append("\r\n");
