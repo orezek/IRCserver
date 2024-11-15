@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 09:51:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/15 12:49:48 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/15 16:07:20 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void ABaseCommand::setServerResponse353(void)
 	response.append(client->getServername());
 	response.append(" 353 ");
 	response.append(nickname);
-	response.append(" #");
+	response.append(" = #");
 	response.append(this->room->getRoomName());
 	response.append(" :");
 	response.append(RoomManager::getInstance().getFormattedNicknamess(this->room->getRoomName()));
