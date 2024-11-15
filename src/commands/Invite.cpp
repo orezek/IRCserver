@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 12:15:47 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/15 07:31:25 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/15 10:30:23 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,17 +97,18 @@ void Invite::execute(void)
 }
 
 // send to Invitee
-//: Aldo!user@hostname INVITE Patrick :#invite_only_channel
+//: Aldo!user@hostname INVITE Patrick #invite_only_channel
 void Invite::setServerResponseInvite(const std::string invitee)
 {
 	std::string nickname = client->getNickname();
 
 	std::string response = ":";
 	response.append(nickname);
-	response.append("!user@hostname");
+	response.append("!");
+	response.append(client->getFqdn());
 	response.append(" INVITE ");
 	response.append(invitee);
-	response.append(" :#");
+	response.append(" #");
 	response.append(this->room->getRoomName());
 	response.append("\r\n");
 	this->addResponse(ClientManager::getInstance().findClient(invitee), response);
