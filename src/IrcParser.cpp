@@ -6,14 +6,15 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:11:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/14 21:12:15 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/15 12:37:05 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IrcParser.hpp"
 
 IrcParser::IrcParser(Client* client) : client(client)
-{}
+{
+}
 
 void IrcParser::makeClientMessages()
 {
@@ -362,7 +363,7 @@ void IrcParser::processModeRoom()
 				}
 				else if (signFlag == '-')
 				{
-					Token tokenT(Token::MODE_ROOM_TOPIC_RESTRICTIONS_REMOVE, "-l");
+					Token tokenT(Token::MODE_ROOM_USER_LIMIT_REMOVE, "-l");
 					clientMessage.insertTokenAtBeforeFirstTokenType(tokenT, Token::NOT_ASSIGNED);
 				}
 			}
