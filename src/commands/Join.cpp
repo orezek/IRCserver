@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:14:27 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/14 22:43:12 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/15 10:30:29 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,12 +151,13 @@ void Join::setServerResponse475(void)
 // Successfull join to the channell
 void Join::setServerResponseJoin(void)
 {
-	//: Aldo!user@hostname JOIN :#TEST
+	//: Aldo!user@hostname JOIN #TEST
 	std::string nickname = client->getNickname();
 
 	std::string response = ":";
 	response.append(nickname);
-	response.append("!user@hostname");
+	response.append("!");
+	response.append(client->getFqdn());
 	response.append(" JOIN :");
 	response.append("#");
 	response.append(this->room->getRoomName());

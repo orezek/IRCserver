@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 09:51:45 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/14 22:42:45 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/15 10:58:27 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -290,8 +290,6 @@ void ABaseCommand::addResponseToOthersOnceInAllRoomsIamIn(std::string response)
 			i++;
 		} while (clientFd != NULL);
 
-		//
-		room->removeClient(client->getFd());
 	} while (room != NULL);
 	roomManager.resetIterator();
 }

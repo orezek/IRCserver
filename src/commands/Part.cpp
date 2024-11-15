@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 19:04:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/13 10:56:25 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/15 10:30:00 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,8 @@ void Part::setServerResponsePart(void)
 	std::string response;
 	response.append(":");
 	response.append(nickname);
-	response.append("!user@hostname");
+	response.append("!");
+	response.append(client->getFqdn());
 	response.append(" PART ");
 	response.append("#");
 	response.append(this->room->getRoomName());

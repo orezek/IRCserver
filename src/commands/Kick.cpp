@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 21:30:41 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/15 07:31:21 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/15 10:29:37 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,8 @@ void Kick::setServerResponseKick(std::string message, std::string kicked_user)
 
 	std::string response = ":";
 	response.append(nickname);
-	response.append("!user@hostname");
+	response.append("!");
+	response.append(client->getFqdn());
 	response.append(" KICK ");
 	response.append("#");
 	response.append(this->room->getRoomName());

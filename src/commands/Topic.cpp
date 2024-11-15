@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:35:58 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/15 07:31:19 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/15 10:39:16 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,13 +138,15 @@ void Topic::setServerResponseTopic(void)
 	std::string nickname = client->getNickname();
 
 	this->response.clear();
+	this->response = ":";
 	this->response.append(nickname);
-	this->response.append("!user@hostname");
+	this->response.append("!");
+	this->response.append(client->getFqdn());
 	this->response.append(" TOPIC ");
-	this->response.append(":#");
+	this->response.append("#");
 	this->response.append(this->room->getRoomName());
-	this->response.append(" :New channel topic set by ");
-	this->response.append(client->getNickname());
+	this->response.append(" :");
+	this->response.append(room->getTopic());
 	this->response.append("\r\n");
 	this->addResponse(room, response);
 }
