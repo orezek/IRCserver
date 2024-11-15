@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Who.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 09:22:52 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/14 22:32:37 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/15 07:31:14 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,17 @@
 namespace Commands
 {
 Who::Who(Client *client, ClientMessage &clientMessage) : ABaseCommand(client, clientMessage) {}
+
+Who::Who(Who const &refObj) : ABaseCommand(refObj) {}
+
+Who &Who::operator=(const Who &refObj)
+{
+	if (this != &refObj)
+	{
+	}
+	return (*this);
+}
+
 Who::~Who() {}
 
 void Who::execute(void)
@@ -42,8 +53,7 @@ void Who::execute(void)
 	this->setServerResponse352();
 }
 
-
-//:server 352 <requesting_nickname> #room <username> <hostname> <servername> <nickname> <H/G>* <status> :<hopcount> <realname>
+//: server 352 <requesting_nickname> #room <username> <hostname> <servername> <nickname> <H/G>* <status> :<hopcount> <realname>
 void Who::setServerResponse352()
 {
 	int i = 1;
@@ -75,8 +85,7 @@ void Who::setServerResponse352()
 	this->setServerResponse315();
 }
 
-
-//:server 315 nickname #room :End of /WHO list
+//: server 315 nickname #room :End of /WHO list
 void Who::setServerResponse315()
 {
 	std::string response = ":";

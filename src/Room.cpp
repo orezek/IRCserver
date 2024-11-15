@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Room.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:51:45 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/13 11:30:27 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/15 07:32:55 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ Room::Room(std::string roomName) : roomName(roomName),
 								   privateRoom(false),
 								   publicRoom(true),
 								   secretRoom(false)
-								    {}
+{
+}
 
 Room::Room(const Room& obj) : roomName(obj.roomName),
 							  password(obj.password),
@@ -37,7 +38,8 @@ Room::Room(const Room& obj) : roomName(obj.roomName),
 							  privateRoom(obj.privateRoom),
 							  publicRoom(obj.publicRoom),
 							  secretRoom(obj.secretRoom)
-							   {}
+{
+}
 
 Room::~Room() {}
 

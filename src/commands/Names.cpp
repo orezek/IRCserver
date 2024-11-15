@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Names.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 20:19:42 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/14 22:44:04 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/15 07:24:50 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,15 @@
 namespace Commands
 {
 Names::Names(Client *client, ClientMessage &clientMessage) : ABaseCommand(client, clientMessage) {}
+
+Names::Names(Names const &refObj) : ABaseCommand(refObj) {}
+
+Names &Names::operator=(const Names &refObj)
+{
+	if (this != &refObj){}
+	return (*this);
+}
 Names::~Names() {}
-// impelement cp constructor, assignment operator
 void Names::execute(void)
 {
 	bool roomExists;

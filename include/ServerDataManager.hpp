@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerDataManager.hpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 20:45:38 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/14 22:26:51 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/15 07:32:31 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 #include <map>
 #include <sstream>
 #include <vector>
-#include <ctime>
-#include <sstream>
 
 class ServerDataManager
 {

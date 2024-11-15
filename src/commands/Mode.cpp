@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:14:07 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/14 22:43:31 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/15 07:21:44 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,18 @@
 namespace Commands
 {
 Mode::Mode(Client *client, ClientMessage &clientMessage) : ABaseCommand(client, clientMessage) {}
+
+Mode::Mode(Mode const &refObj) : ABaseCommand(refObj), response(refObj.response) {}
+
+Mode &Mode::operator=(const Mode &refObj)
+{
+	if (this != &refObj)
+	{
+		this->response = refObj.response;
+	}
+	return (*this);
+}
+
 Mode::~Mode() {}
 
 void Mode::execute(void)

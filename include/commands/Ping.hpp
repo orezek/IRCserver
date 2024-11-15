@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Ping.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 11:21:07 by mbartos           #+#    #+#             */
-/*   Updated: 2024/11/08 13:38:44 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/15 07:32:05 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ class Ping : public ABaseCommand
 		void execute();
 
 	private:
-
 		void setServerResponseValid();
 };
 

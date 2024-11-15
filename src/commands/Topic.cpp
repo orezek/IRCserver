@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:35:58 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/14 22:44:29 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/15 07:31:19 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,19 @@
 namespace Commands
 {
 Topic::Topic(Client *client, ClientMessage &clientMessage) : ABaseCommand(client, clientMessage) {}
-Topic::~Topic() {}
 
-// TODO impelement cp constructor, assignment operator
+Topic::Topic(Topic const &refObj) : ABaseCommand(refObj), response(refObj.response) {}
+
+Topic &Topic::operator=(const Topic &refObj)
+{
+	if (this != &refObj)
+	{
+		this->response = refObj.response;
+	}
+	return (*this);
+}
+
+Topic::~Topic() {}
 
 void Topic::execute(void)
 {

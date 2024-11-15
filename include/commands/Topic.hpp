@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:35:35 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 13:38:36 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/15 07:32:11 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ class Topic : public ABaseCommand
 {
 	public:
 		Topic(Client *client, ClientMessage &clientMessage);
+		Topic(const Topic &refObj);
+		Topic &operator=(Topic const &refObj);
 		~Topic();
 		void execute(void);
 
