@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 12:14:39 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/08 13:39:10 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/15 07:31:48 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ class Invite : public ABaseCommand
 	public:
 		Invite(Client *client, ClientMessage &clientMessage);
 		~Invite();
+		Invite(const Invite &refObj);
+		Invite &operator=(Invite const &refObj);
 		void execute(void);
 
 	private:

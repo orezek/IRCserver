@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 12:15:47 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/14 22:29:59 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/15 07:31:25 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,18 @@
 namespace Commands
 {
 Invite::Invite(Client *client, ClientMessage &clientMessage) : ABaseCommand(client, clientMessage) {}
+
+Invite::Invite(Invite const &refObj) : ABaseCommand(refObj), response(refObj.response) {}
+
+Invite &Invite::operator=(const Invite &refObj)
+{
+	if (this != &refObj)
+	{
+		this->response = refObj.response;
+	}
+	return (*this);
+}
+
 Invite::~Invite() {}
 // TODO impelement cp constructor, assignment operator
 void Invite::execute(void)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 21:30:41 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/14 23:06:20 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/11/15 07:31:21 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,19 @@
 namespace Commands
 {
 Kick::Kick(Client *client, ClientMessage &clientMessage) : ABaseCommand(client, clientMessage) {}
-Kick::~Kick() {}
 
-// TODO impelement cp constructor, assignment operator
+Kick::Kick(Kick const &refObj) : ABaseCommand(refObj), response(refObj.response) {}
+
+Kick &Kick::operator=(const Kick &refObj)
+{
+	if (this != &refObj)
+	{
+		this->response = refObj.response;
+	}
+	return (*this);
+}
+
+Kick::~Kick() {}
 
 void Kick::execute(void)
 {
