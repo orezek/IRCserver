@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 21:41:15 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/15 07:32:26 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/17 23:10:45 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ class ConnectionHandler
 		int onRead(int clientSocketFd);
 		int onWrite(int clientSocketFd);
 
-		const static int MAX_CLIENTS = 1024;
+		const static int MAX_CLIENTS = FD_SETSIZE - 1;
+		const static int MAX_CLIENT_QUEUE = 5;
 		const static int MAX_BUFF_SIZE = 1024;
 		const static int MESSAGE_SIZE = 512;
 		const std::string ERR_INPUTTOOLONG;
