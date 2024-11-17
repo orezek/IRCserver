@@ -6,7 +6,7 @@
 /*   By: orezek <orezek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:35:00 by orezek            #+#    #+#             */
-/*   Updated: 2024/11/15 07:32:44 by orezek           ###   ########.fr       */
+/*   Updated: 2024/11/17 23:24:43 by orezek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,23 +73,15 @@ int ConnectionHandler::initializeMasterSocketFd()
 	{
 		return (-1);
 	}
+	if (setFileDescriptorToNonBlockingState(masterSocketFd) == -1)
+	{
+		return (-1);
+	}
+	if (enablePortListenning(masterSocketFd) == -1)
+	{
+		return (-1);
+	}
 	if (enableSocketBinding(masterSocketFd) == -1)
-	{
-		return (-1);
-	}
-	if (enablePortListenning(masterSocketFd) == -1)
-	{
-		return (-1);
-	}
-	if (setFileDescriptorToNonBlockingState(masterSocketFd) == -1)
-	{
-		return (-1);
-	}
-	if (enablePortListenning(masterSocketFd) == -1)
-	{
-		return (-1);
-	}
-	if (setFileDescriptorToNonBlockingState(masterSocketFd) == -1)
 	{
 		return (-1);
 	}
@@ -118,6 +110,16 @@ int ConnectionHandler::enableSocketReus(int &masterSocketFd)
 	return (1);
 }
 
+int ConnectionHandler::enablePortListenning(int &masterSocketFd)
+{
+	if (listen(masterSocketFd, MAX_CLIENT_QUEUE) == -1)
+	{
+		ErrorLogger::log("Socket listening failed: ", std::string(strerror(errno)));
+		return (-1);
+	}
+	return (1);
+}
+
 int ConnectionHandler::enableSocketBinding(int &masterSocketFd)
 {
 	struct sockaddr_in ipServerAddress;
@@ -132,15 +134,6 @@ int ConnectionHandler::enableSocketBinding(int &masterSocketFd)
 	return (1);
 }
 
-int ConnectionHandler::enablePortListenning(int &masterSocketFd)
-{
-	if (listen(masterSocketFd, MAX_CLIENTS) == -1)
-	{
-		ErrorLogger::log("Socket listening failed: ", std::string(strerror(errno)));
-		return (-1);
-	}
-	return (1);
-}
 
 int ConnectionHandler::setFileDescriptorToNonBlockingState(int &fd)
 {
@@ -187,6 +180,41 @@ void ConnectionHandler::prepareFdSetsForSelect(void)
 		}
 		++it;
 	}
+}
+
+int ConnectionHandler::runSelect(void)
+{
+	struct timeval tv;
+	tv.tv_sec = 5;
+	tv.tv_usec = 0;
+	selectResponse = select(this->maxFd + 1, &this->readFds, &this->writeFds, &this->errorFds, &tv);
+	return (selectResponse);
+}
+
+int ConnectionHandler::acceptNewClients(void)
+{
+	int clientSocketFd;
+	struct sockaddr_in ipClientAddress;
+	socklen_t ipClientAddressLen = sizeof(ipClientAddress);
+	if (FD_ISSET(this->masterSocketFd, &this->readFds))
+	{
+		clientSocketFd = accept(this->masterSocketFd, (struct sockaddr *)&ipClientAddress, &ipClientAddressLen);
+		if (clientSocketFd == -1)
+		{
+			return (-1);
+		}
+		if (this->connections.size() >= MAX_CLIENTS)
+		{
+			close(clientSocketFd);
+			return (0);
+		}
+		this->setFileDescriptorToNonBlockingState(clientSocketFd);
+		this->connections.push_back(clientSocketFd);
+		ClientManager::getInstance().addClient(clientSocketFd);
+		ClientManager::getInstance().initializeClientPresenceOnServer(clientSocketFd, ipClientAddress, ServerDataManager::getInstance().getServerName());
+		return (1);
+	}
+	return 0;
 }
 
 // new eventLoop
@@ -298,36 +326,6 @@ int ConnectionHandler::onWrite(int clientSocketFd)
 		void(0);  // no-op // should never be NULL! Exception
 	}
 	return (0);
-}
-
-int ConnectionHandler::runSelect(void)
-{
-	struct timeval tv;
-	tv.tv_sec = 5;
-	tv.tv_usec = 0;
-	selectResponse = select(this->maxFd + 1, &this->readFds, &this->writeFds, &this->errorFds, &tv);
-	return (selectResponse);
-}
-
-int ConnectionHandler::acceptNewClients(void)
-{
-	int clientSocketFd;
-	struct sockaddr_in ipClientAddress;
-	socklen_t ipClientAddressLen = sizeof(ipClientAddress);
-	if (FD_ISSET(this->masterSocketFd, &this->readFds))
-	{
-		clientSocketFd = accept(this->masterSocketFd, (struct sockaddr *)&ipClientAddress, &ipClientAddressLen);
-		if (clientSocketFd == -1)
-		{
-			return (-1);
-		}
-		this->setFileDescriptorToNonBlockingState(clientSocketFd);
-		this->connections.push_back(clientSocketFd);
-		ClientManager::getInstance().addClient(clientSocketFd);
-		ClientManager::getInstance().initializeClientPresenceOnServer(clientSocketFd, ipClientAddress, ServerDataManager::getInstance().getServerName());
-		return (1);
-	}
-	return 0;
 }
 
 int &ConnectionHandler::getMasterSocketFd(void)
